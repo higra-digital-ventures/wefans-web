@@ -62,3 +62,15 @@ export const buyMoment = (listingId: string) =>
 
 export const fetchActivity = (limit = 20) =>
   request<{ sales: import('./types').RecentSale[] }>('GET', `/api/v1/market/activity?limit=${limit}`);
+
+export const getNonce = () => request<{ nonce: string; expiresAt: string }>('GET', '/api/v1/checkin/nonce');
+
+export const submitCheckin = (body: {
+  fixtureId: string;
+  lat: number;
+  lng: number;
+  accuracy: number;
+  isMock: boolean;
+  attestationToken: string;
+  nonce: string;
+}) => request<{ status: string; reason?: string; grantedPackInventoryId?: string }>('POST', '/api/v1/checkin', body);

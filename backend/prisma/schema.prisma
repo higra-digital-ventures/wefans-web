@@ -607,3 +607,15 @@ model WalletTransaction {
 
   @@index([userId])
 }
+
+// Nonce de curta validade para o challenge-response do check-in (A2.2 item 7).
+model CheckinNonce {
+  id        String    @id @default(cuid())
+  value     String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}

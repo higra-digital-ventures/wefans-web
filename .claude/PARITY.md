@@ -52,6 +52,16 @@
 - [x] Web: `/mercado` (filtros/ordenação), `/mercado/atividade`, ações (comprar/vender/cancelar) no Momento
 - [x] Testes: 11/11 de integração (taxa, ASP, score dinâmico, anti-anômalo, própria-compra)
 
+## Fase CK — Check-in por geolocalização (aceite) — FECHA O MVP ⭐
+- [x] `GET /checkin/nonce` (challenge-response), `GET /fixtures/active`, `POST /checkin`, `GET /checkin/history`
+- [x] Validação 100% server-side (A2.2): jogo+janela, **geofence haversine**, sinais de mock,
+  precisão, nonce single-use, unicidade por jogo, **teleport/velocidade** → REVIEW, atestado (simulado na web)
+- [x] ✅ dentro do raio+janela → **minta o pacote** (reusa `services/mint` via PackInventory);
+  fora do raio / fora da janela / mock / atestado inválido / nonce inválido → **não** dá; **nunca duplica**
+- [x] Fila de **revisão de fraude** do admin (`/admin/checkins/review`, `/resolve`) + `requireAdmin`
+- [x] Web: `/checkin` (simulador do fluxo do app) — check-in no estádio → revelação do pacote
+- [x] Testes: 13/13 de integração (todas as rejeições + fluxo feliz + duplicado + histórico)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -96,4 +106,4 @@
 |----------|--------|
 | Wishlist / Lista de desejos | ✅ (toggle na edição + grade no perfil) |
 | Parallels (variantes visuais) | ✅ (campo `parallel` exibido em cartas/detalhe) |
-| Check-in por geolocalização (A2) | ⬜ (Fase CK) |
+| Check-in por geolocalização (A2) | ✅ (server-side; atestação simulada na web até o app) |

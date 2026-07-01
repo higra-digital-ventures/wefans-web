@@ -11,6 +11,8 @@ import type {
   MarketListing,
   RecentSale,
   TemplateMarket,
+  ActiveFixture,
+  CheckinHistoryItem,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -99,6 +101,17 @@ export async function getActivityServer(limit = 20): Promise<RecentSale[]> {
 
 export async function getTemplateMarketServer(id: string): Promise<TemplateMarket | null> {
   return serverFetch<TemplateMarket>(`/api/v1/market/template/${id}`);
+}
+
+// null = não autenticado; [] = logado sem jogos ativos.
+export async function getActiveFixturesServer(): Promise<ActiveFixture[] | null> {
+  const data = await serverFetch<{ fixtures: ActiveFixture[] }>('/api/v1/fixtures/active');
+  return data ? data.fixtures : null;
+}
+
+export async function getCheckinHistoryServer(): Promise<CheckinHistoryItem[]> {
+  const data = await serverFetch<{ checkins: CheckinHistoryItem[] }>('/api/v1/checkin/history');
+  return data?.checkins ?? [];
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

@@ -10,6 +10,7 @@ import { packRoutes } from './packs';
 import { collectionRoutes } from './collection';
 import { userRoutes } from './users';
 import { marketRoutes } from './market';
+import { checkinRoutes } from './checkin';
 
 /**
  * Agregador das rotas da v1. Novas áreas (market, checkin…) são registradas aqui
@@ -27,4 +28,5 @@ export async function apiV1(app: FastifyInstance) {
   await app.register(collectionRoutes);
   await app.register(userRoutes);
   await app.register(marketRoutes);
+  await app.register(checkinRoutes);
 }

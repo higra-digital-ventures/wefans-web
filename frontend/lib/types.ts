@@ -107,6 +107,26 @@ export type RecentSale = {
   template: TemplateDTO;
 };
 
+export type ActiveFixture = {
+  id: string;
+  homeTeam: string;
+  awayTeam: string;
+  stadium: { name: string; city: string; lat: number; lng: number; radiusMeters: number };
+  kickoffAt: string;
+  checkinClosesAt: string;
+  rewardPackName: string;
+  checkinStatus: string | null;
+};
+
+export type CheckinHistoryItem = {
+  id: string;
+  status: string;
+  reason: string | null;
+  grantedPackInventoryId: string | null;
+  createdAt: string;
+  fixture: { home: string; away: string; stadium: string };
+};
+
 export type TemplateMarket = {
   aspCents: number;
   floorCents: number | null;

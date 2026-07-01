@@ -1,7 +1,8 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { verifyAccessToken, verifySessionToken } from './tokens';
-import { unauthorized } from './errors';
+import { forbidden, unauthorized } from './errors';
 import { env } from '../env';
+import { prisma } from '../db';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -38,4 +39,13 @@ export async function requireAuth(req: FastifyRequest, _reply: FastifyReply) {
 /** preHandler: autenticação opcional; popula req.userId se houver. */
 export async function optionalAuth(req: FastifyRequest, _reply: FastifyReply) {
   req.userId = resolveUserId(req);
+}
+
+/** preHandler: exige usuário admin (isAdmin). */
+export async function requireAdmin(req: FastifyRequest, _reply: FastifyReply) {
+  const uid = resolveUserId(req);
+  if (!uid) throw unauthorized();
+  const user = await prisma.user.findUnique({ where: { id: uid }, select: { isAdmin: true } });
+  if (!user?.isAdmin) throw forbidden();
+  req.userId = uid;
 }

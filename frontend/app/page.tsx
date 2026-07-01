@@ -137,8 +137,8 @@ export default async function Home() {
 
       <footer className="mt-16 border-t border-line pt-6 text-xs text-muted">
         Conteúdo 100% fictício · sem marcas/imagens reais (ver{' '}
-        <span className="font-mono">.claude/LEGAL.md</span>). Próxima fase:{' '}
-        <span className="text-ink">Check-in por geolocalização (fecha o MVP)</span>.
+        <span className="font-mono">.claude/LEGAL.md</span>). <span className="text-ink">MVP completo</span>{' '}
+        (Fases 0–4 + Check-in). v2: Ofertas, Drops com fila, Vitrines, Missões, Rankings, Pelada.
       </footer>
     </main>
   );

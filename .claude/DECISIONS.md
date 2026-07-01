@@ -60,6 +60,20 @@
 - **2026-07-01 — `package.json#prisma.seed` está deprecado** (Prisma 7 pedirá
   `prisma.config.ts`). Mantido no Prisma 6 (funciona com aviso); migrar ao subir p/ Prisma 7.
 
+## Fase CK — check-in por geolocalização
+- **2026-07-01 — [Fase CK] — Atestação de dispositivo SIMULADA na web.**
+  **Motivo:** Play Integrity / App Attest exigem o **app Flutter real** (ainda inexistente).
+  `verifyAttestation()` aceita tokens de dev (`dev-ok`/`dev-*`) fora de produção; em
+  produção retorna `false` (plugar **Firebase App Check** quando o app existir). Todo o
+  resto da validação (janela, **geofence haversine**, sinais de mock, precisão, **nonce**
+  challenge-response, unicidade `(userId,fixtureId)`, **teleport/velocidade** → REVIEW) é
+  **real e 100% server-side**. A página web `/checkin` é um **simulador** do fluxo do app.
+- **2026-07-01 — [Fase CK] — Rejeições "duras" não persistem CheckIn.** Rejeições por regra
+  (fora do raio/janela, mock, precisão, atestado, nonce) são **logadas** e retornadas, mas
+  **não criam linha** `CheckIn` — assim o usuário legítimo pode **retentar** (com novo nonce).
+  Só `VALID` e `REVIEW` persistem, ocupando o slot único `(userId,fixtureId)` — garante
+  "1 pacote por jogo" e nunca duplica sob concorrência (unique + P2002 tratado).
+
 ## Adiado para fases posteriores (não construído na Fase 0)
 - Auth real (cookie web + JWT/refresh app) — **Fase 1**. Seed já grava `passwordHash` com bcrypt.
 - Lógica dos serviços `mint`/`market`/`checkin` — **Fases 2/4/CK** (na Fase 0 só a estrutura).
