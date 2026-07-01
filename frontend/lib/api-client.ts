@@ -41,3 +41,9 @@ export const openPack = (inventoryId: string) =>
     'POST',
     `/api/v1/packs/inventory/${inventoryId}/open`,
   );
+
+export const addWishlist = (templateId: string) =>
+  request('POST', `/api/v1/me/wishlist/${templateId}`);
+
+export const removeWishlist = (templateId: string) =>
+  request('DELETE', `/api/v1/me/wishlist/${templateId}`);

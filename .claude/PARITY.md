@@ -35,6 +35,13 @@
 - [x] Web: `/pacotes`, `/pacote/[id]` (Lances possíveis por tier), `/abrir/[id]` (revelação),
   `/colecao`, `/momento/[id]`, `/lance/[id]`, `/explorar`; carta do Lance (prancheta neon 2D)
 
+## Fase 3 — Coleção + Procedência + Perfil (aceite)
+- [x] **Procedência**: linha do tempo de transações no Momento (`MINT` gravado; BUY/SELL na Fase 4)
+- [x] **Perfil** enriquecido: nº de Lances, distribuição por tier, histórico de pacotes abertos
+- [x] **Perfil público** `/u/[username]` (scores + coleção; não expõe e-mail/saldo)
+- [x] **Wishlist** (seção 11.13): toggle na página da edição + grade no perfil
+- [x] (Coleção com grid/filtros e detalhe do Momento já entregues na Fase 2)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -69,14 +76,14 @@
 | 29 | Survivor pool | Mata-mata | 9 | ⬜ |
 | 30 | Carteira + depósito | idem (simulado) | 1 | ✅ |
 | 31 | Withdraw / redeem físico | Saque / resgate | 13 | ⬜ |
-| 32 | Provenance | Procedência | 3 | ⬜ |
-| 33 | Perfil com score/stats | Perfil | 3 | 🟨 (base na Fase 1) |
+| 32 | Provenance | Procedência | 3 | ✅ |
+| 33 | Perfil com score/stats | Perfil | 3 | ✅ |
 | 34 | Code of Conduct / anti-wash | Conduta / preço anômalo | 4 | ⬜ |
 | 35 | Painel admin | Admin | 10 | ⬜ |
 
 ## Conceitos novos das telas (seção 11.13)
 | Conceito | Status |
 |----------|--------|
-| Wishlist / Lista de desejos | 🟨 (modelo `Wishlist` criado) |
+| Wishlist / Lista de desejos | ✅ (toggle na edição + grade no perfil) |
 | Parallels (variantes visuais) | ✅ (campo `parallel` exibido em cartas/detalhe) |
 | Check-in por geolocalização (A2) | ⬜ (Fase CK) |

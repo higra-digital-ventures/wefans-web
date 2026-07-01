@@ -1,6 +1,6 @@
 import { Prisma, type PrismaClient, type Tier, type EditionType } from '@prisma/client';
 import { notFound } from '../lib/errors';
-import { toMomentDTO, toTemplateDetailDTO, toTemplateDTO } from '../lib/dto';
+import { toMomentDTO, toTemplateDetailDTO, toTemplateDTO, toTransactionDTO } from '../lib/dto';
 
 // Regra de visibilidade (seção 10.1): queries públicas só enxergam PUBLICADO.
 
@@ -61,7 +61,17 @@ export async function getMomentDetail(db: PrismaClient, id: string) {
     include: { template: { include: { player: true } }, owner: { select: { username: true } } },
   });
   if (!moment) throw notFound('Momento não encontrado');
-  return { ...toMomentDTO(moment), ownerUsername: moment.owner?.username ?? null };
+  // Procedência: histórico de transações do Moment (MINT já gravado; BUY/SELL/GIFT na Fase 4/5).
+  const txs = await db.transaction.findMany({
+    where: { momentId: id },
+    include: { buyer: { select: { username: true } }, seller: { select: { username: true } } },
+    orderBy: { createdAt: 'asc' },
+  });
+  return {
+    ...toMomentDTO(moment),
+    ownerUsername: moment.owner?.username ?? null,
+    provenance: txs.map(toTransactionDTO),
+  };
 }
 
 export async function listCollection(db: PrismaClient, userId: string, filters: TemplateFilters) {

@@ -1,7 +1,7 @@
 import type { PrismaClient, Prisma } from '@prisma/client';
 import type { ServiceContext } from './context';
-import { badRequest, unauthorized } from '../lib/errors';
-import { toTeamDTO, toUserDTO } from '../lib/dto';
+import { badRequest, notFound, unauthorized } from '../lib/errors';
+import { toMomentDTO, toPublicUserDTO, toTeamDTO, toUserDTO } from '../lib/dto';
 
 export async function getMe(ctx: ServiceContext) {
   const userId = ctx.userId;
@@ -30,4 +30,43 @@ export async function updateFavoriteTeam(db: PrismaClient, userId: string, teamI
 export async function listPublishedTeams(db: PrismaClient | Prisma.TransactionClient) {
   const teams = await db.team.findMany({ where: { status: 'PUBLICADO' }, orderBy: { name: 'asc' } });
   return teams.map(toTeamDTO);
+}
+
+/** Estatísticas do perfil: nº de Lances, distribuição por tier e histórico de pacotes abertos. */
+export async function getMyStats(db: PrismaClient, userId: string) {
+  const [moments, openedPacks] = await Promise.all([
+    db.moment.findMany({ where: { ownerId: userId, burned: false }, select: { template: { select: { tier: true } } } }),
+    db.packInventory.findMany({
+      where: { ownerId: userId, opened: true },
+      include: { pack: { select: { name: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+    }),
+  ]);
+  const tierCounts: Record<string, number> = {};
+  for (const m of moments) tierCounts[m.template.tier] = (tierCounts[m.template.tier] ?? 0) + 1;
+  return {
+    momentCount: moments.length,
+    tierCounts,
+    openedPacks: openedPacks.map((p) => ({ id: p.id, packName: p.pack.name, createdAt: p.createdAt.toISOString() })),
+  };
+}
+
+/** Perfil público por username (não expõe e-mail/saldo). */
+export async function getPublicProfile(db: PrismaClient, username: string) {
+  const user = await db.user.findUnique({ where: { username }, include: { favoriteTeam: true } });
+  if (!user) throw notFound('Perfil não encontrado');
+  const momentCount = await db.moment.count({ where: { ownerId: user.id, burned: false } });
+  return toPublicUserDTO(user, user.favoriteTeam, momentCount);
+}
+
+export async function getPublicCollection(db: PrismaClient, username: string) {
+  const user = await db.user.findUnique({ where: { username }, select: { id: true } });
+  if (!user) throw notFound('Perfil não encontrado');
+  const moments = await db.moment.findMany({
+    where: { ownerId: user.id, burned: false },
+    include: { template: { include: { player: true } } },
+    orderBy: { mintedAt: 'desc' },
+  });
+  return moments.map(toMomentDTO);
 }

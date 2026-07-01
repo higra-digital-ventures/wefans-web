@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, type ReactNode } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { deposit, logout, patchFavoriteTeam } from '@/lib/api-client';
 import { brl, dateTime } from '@/lib/format';
@@ -12,10 +13,14 @@ export default function PerfilClient({
   me,
   wallet,
   teams,
+  momentCount,
+  children,
 }: {
   me: UserDTO;
   wallet: Wallet | null;
   teams: TeamDTO[];
+  momentCount: number;
+  children?: ReactNode;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -38,6 +43,7 @@ export default function PerfilClient({
   const kpis = [
     { label: 'Pontuação wefans', value: me.topShotScore.toLocaleString('pt-BR') },
     { label: 'Score do Colecionador', value: me.collectorScore.toLocaleString('pt-BR') },
+    { label: 'Lances', value: momentCount.toLocaleString('pt-BR') },
     { label: 'Fichas de Troca', value: me.tradeTickets },
     { label: 'Saldo', value: brl(me.balanceCents) },
   ];
@@ -59,6 +65,9 @@ export default function PerfilClient({
               <span className="ml-2 rounded bg-accent2/20 px-2 py-0.5 text-xs text-accent2">admin</span>
             )}
           </p>
+          <Link href={`/u/${me.username}`} className="text-sm text-accent3 hover:underline">
+            ver perfil público →
+          </Link>
         </div>
         <button
           type="button"
@@ -77,7 +86,7 @@ export default function PerfilClient({
       )}
 
       {/* KPIs */}
-      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {kpis.map((k) => (
           <div key={k.label} className={card}>
             <div className="font-display text-2xl text-ink">{k.value}</div>
@@ -183,6 +192,8 @@ export default function PerfilClient({
           <p className="text-sm text-muted">Nenhum lançamento ainda. Faça um depósito acima.</p>
         )}
       </section>
+
+      {children}
     </main>
   );
 }

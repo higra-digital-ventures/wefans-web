@@ -5,9 +5,15 @@ import type {
   Player,
   Team,
   Template,
+  Transaction,
   User,
   WalletTransaction,
 } from '@prisma/client';
+
+type TxWithActors = Transaction & {
+  buyer?: { username: string } | null;
+  seller?: { username: string } | null;
+};
 
 type TemplateWithPlayer = Template & { player: Player };
 type MomentWithTemplate = Moment & { template: TemplateWithPlayer };
@@ -118,5 +124,29 @@ export function toPackInventoryDTO(inv: PackInventoryWithPack) {
     opened: inv.opened,
     createdAt: inv.createdAt.toISOString(),
     pack: toPackDTO(inv.pack),
+  };
+}
+
+export function toTransactionDTO(tx: TxWithActors) {
+  return {
+    id: tx.id,
+    type: tx.type,
+    amountCents: tx.amountCents,
+    feeCents: tx.feeCents,
+    buyer: tx.buyer?.username ?? null,
+    seller: tx.seller?.username ?? null,
+    createdAt: tx.createdAt.toISOString(),
+  };
+}
+
+export function toPublicUserDTO(user: User, favoriteTeam: Team | null, momentCount: number) {
+  return {
+    username: user.username,
+    topShotScore: user.topShotScore,
+    collectorScore: user.collectorScore,
+    isAdmin: user.isAdmin,
+    momentCount,
+    favoriteTeam: favoriteTeam ? toTeamDTO(favoriteTeam) : null,
+    createdAt: user.createdAt.toISOString(),
   };
 }

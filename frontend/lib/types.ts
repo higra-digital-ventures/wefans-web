@@ -58,6 +58,16 @@ export type TemplateDTO = {
   counts?: { existing: number; circulating: number; burned: number; listed: number };
 };
 
+export type ProvenanceTx = {
+  id: string;
+  type: string;
+  amountCents: number;
+  feeCents: number;
+  buyer: string | null;
+  seller: string | null;
+  createdAt: string;
+};
+
 export type MomentDTO = {
   id: string;
   serial: number;
@@ -70,6 +80,23 @@ export type MomentDTO = {
   mintedAt: string;
   template: TemplateDTO;
   ownerUsername?: string | null;
+  provenance?: ProvenanceTx[];
+};
+
+export type ProfileStats = {
+  momentCount: number;
+  tierCounts: Record<string, number>;
+  openedPacks: { id: string; packName: string; createdAt: string }[];
+};
+
+export type PublicProfile = {
+  username: string;
+  topShotScore: number;
+  collectorScore: number;
+  isAdmin: boolean;
+  momentCount: number;
+  favoriteTeam: TeamDTO | null;
+  createdAt: string;
 };
 
 export type PackDTO = {

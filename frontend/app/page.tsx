@@ -118,7 +118,7 @@ export default async function Home() {
       <footer className="mt-16 border-t border-line pt-6 text-xs text-muted">
         Conteúdo 100% fictício · sem marcas/imagens reais (ver{' '}
         <span className="font-mono">.claude/LEGAL.md</span>). Próxima fase:{' '}
-        <span className="text-ink">Procedência + Mercado (Buy Now, ASP, Pontuação)</span>.
+        <span className="text-ink">Mercado — Buy Now, listar/deslistar, taxa, ASP, Pontuação dinâmica</span>.
       </footer>
     </main>
   );

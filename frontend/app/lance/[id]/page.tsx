@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getTemplateServer } from '@/lib/api-server';
+import { getTemplateServer, getWishlistServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import OwnershipStats from '@/components/OwnershipStats';
+import WishlistButton from '@/components/WishlistButton';
 import { TIER_META, editionLabel } from '@/lib/tiers';
 import { brl } from '@/lib/format';
 
@@ -10,8 +11,10 @@ export const dynamic = 'force-dynamic';
 
 export default async function LancePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const t = await getTemplateServer(id);
+  const [t, wishlist] = await Promise.all([getTemplateServer(id), getWishlistServer()]);
   if (!t) notFound();
+  const canWish = wishlist !== null;
+  const wished = wishlist?.some((w) => w.id === t.id) ?? false;
 
   const meta = TIER_META[t.tier];
   const counts = t.counts ?? {
@@ -73,12 +76,15 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
             />
           </div>
 
-          <Link
-            href="/pacotes"
-            className="mt-8 inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-white"
-          >
-            Conseguir nos pacotes
-          </Link>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link
+              href="/pacotes"
+              className="inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-white"
+            >
+              Conseguir nos pacotes
+            </Link>
+            <WishlistButton templateId={t.id} canWish={canWish} initialWished={wished} />
+          </div>
         </div>
       </div>
     </main>

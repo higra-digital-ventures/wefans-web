@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getMomentServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import OwnershipStats from '@/components/OwnershipStats';
+import Provenance from '@/components/Provenance';
 import { TIER_META, editionLabel } from '@/lib/tiers';
 import { brl, dateTime } from '@/lib/format';
 
@@ -78,6 +79,8 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
             </h2>
             <OwnershipStats existing={t.mintedCount} circulating={t.circulatingCount} burned={burned} />
           </div>
+
+          <Provenance items={m.provenance ?? []} />
         </div>
       </div>
     </main>

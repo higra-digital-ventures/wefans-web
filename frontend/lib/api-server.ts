@@ -6,6 +6,8 @@ import type {
   PackDTO,
   TemplateDTO,
   MomentDTO,
+  ProfileStats,
+  PublicProfile,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -60,6 +62,26 @@ export async function getMomentServer(id: string): Promise<MomentDTO | null> {
 export async function getTemplateServer(id: string): Promise<TemplateDTO | null> {
   const data = await serverFetch<{ template: TemplateDTO }>(`/api/v1/catalog/templates/${id}`);
   return data?.template ?? null;
+}
+
+export async function getMyStatsServer(): Promise<ProfileStats | null> {
+  return serverFetch<ProfileStats>('/api/v1/me/stats');
+}
+
+// null = não autenticado; [] = logado sem itens.
+export async function getWishlistServer(): Promise<TemplateDTO[] | null> {
+  const data = await serverFetch<{ templates: TemplateDTO[] }>('/api/v1/me/wishlist');
+  return data ? data.templates : null;
+}
+
+export async function getPublicProfileServer(username: string): Promise<PublicProfile | null> {
+  const data = await serverFetch<{ profile: PublicProfile }>(`/api/v1/users/${username}`);
+  return data?.profile ?? null;
+}
+
+export async function getPublicCollectionServer(username: string): Promise<MomentDTO[]> {
+  const data = await serverFetch<{ moments: MomentDTO[] }>(`/api/v1/users/${username}/collection`);
+  return data?.moments ?? [];
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.
