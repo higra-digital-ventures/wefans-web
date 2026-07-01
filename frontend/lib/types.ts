@@ -396,6 +396,7 @@ export type TemplateMarket = {
   floorListingId: string | null;
   floorMomentId: string | null;
   activeListings: number;
+  lockedCount: number;
   recentSales: { amountCents: number; createdAt: string }[];
 };
 

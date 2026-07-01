@@ -6,8 +6,8 @@ import {
   getMomentOffersServer,
   getTemplateMarketServer,
 } from '@/lib/api-server';
-import LanceCard from '@/components/LanceCard';
-import OwnershipStats from '@/components/OwnershipStats';
+import Moment3D from '@/components/Moment3D';
+import OwnershipGauge from '@/components/OwnershipGauge';
 import Provenance from '@/components/Provenance';
 import MomentActions from '@/components/MomentActions';
 import OffersPanel from '@/components/OffersPanel';
@@ -49,7 +49,24 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
       </div>
 
       <div className="grid gap-8 md:grid-cols-[minmax(0,340px)_1fr]">
-        <LanceCard template={t} serial={m.serial} live />
+        <div>
+          <Moment3D
+            data={{
+              playerName: t.player.name,
+              club: t.player.club,
+              jersey: t.player.jersey,
+              title: t.title,
+              playType: t.playType,
+              matchDate: t.matchDate,
+              competition: t.competition,
+              serialLabel: editionLabel(t, m.serial),
+              tierLabel: meta.label,
+              tierColor: meta.color,
+              trajectory: t.trajectory,
+            }}
+          />
+          <p className="mt-2 text-center text-[11px] text-muted">arraste para girar o 3D Moment</p>
+        </div>
 
         <div>
           <span
@@ -120,11 +137,11 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted">
               Propriedade da edição
             </h2>
-            <OwnershipStats
+            <OwnershipGauge
               existing={t.mintedCount}
-              circulating={t.circulatingCount}
+              listed={tm?.activeListings ?? 0}
+              locked={tm?.lockedCount ?? 0}
               burned={burned}
-              listed={tm?.activeListings}
             />
           </div>
 

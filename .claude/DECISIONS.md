@@ -31,10 +31,9 @@
   A migração inicial (`init`) é criada com `prisma migrate dev` e **commitada**. O
   `npm run setup` (clone novo) aplica com `prisma migrate deploy` (não-interativo);
   desenvolvimento usa `npm run db:migrate:dev`. `prisma generate` roda no `postinstall`.
-- **2026-07-01 — [Fase 0] — Fontes (Anton/Outfit/Space Mono) adiadas para a Fase 11.**
-  **Motivo:** `next/font/google` baixa fontes em build-time (dependência de rede);
-  na Fase 0 usamos um stack de fontes do sistema com as **variáveis CSS** já nomeadas
-  (`--font-display`, `--font-text`, `--font-mono`) para trocar sem refatorar depois.
+- **2026-07-01 — [Fase 0→11] — Fontes: system stack na Fase 0; na Fase 11 entraram as
+  fontes da marca via `next/font/google` (Anton/Outfit/Space Mono) injetando as mesmas
+  variáveis CSS (`--font-display/text/mono`) — troca sem refatorar, como planejado.
 
 ## Pendências de referência
 - **2026-07-01 — Protótipos HTML ausentes.** `wefans.html` e `wefans_3d_moment.html`

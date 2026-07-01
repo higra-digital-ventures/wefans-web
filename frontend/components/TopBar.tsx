@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getMe } from '@/lib/api-server';
 import { brl } from '@/lib/format';
+import MobileNav from './MobileNav';
 
 // Top bar global (seção 11.2). Itens de fases futuras ficam esmaecidos ("Em breve").
 const NAV: { label: string; href?: string }[] = [
@@ -20,7 +21,8 @@ export default async function TopBar() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 md:gap-6">
+          <MobileNav items={NAV.filter((n): n is { label: string; href: string } => !!n.href)} />
           <Link
             href="/"
             className="bg-sunset bg-clip-text font-display text-2xl font-black uppercase tracking-tight text-transparent"

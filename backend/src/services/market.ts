@@ -167,6 +167,10 @@ export async function listRecentSales(db: PrismaClient, limit = 25) {
 
 /** Floor, ASP, nº à venda e vendas recentes (Pricing Helper) de uma edição. */
 export async function getTemplateMarket(db: PrismaClient, templateId: string) {
+  const now = new Date();
+  const lockedCount = await db.moment.count({
+    where: { templateId, burned: false, OR: [{ locked: true, lockedUntil: { gt: now } }, { tempLockUntil: { gt: now } }] },
+  });
   const [template, floor, activeListings, recentSales] = await Promise.all([
     db.template.findUnique({ where: { id: templateId }, select: { aspCents: true } }),
     db.listing.findFirst({
@@ -189,6 +193,7 @@ export async function getTemplateMarket(db: PrismaClient, templateId: string) {
     floorListingId: floor?.id ?? null,
     floorMomentId: floor?.moment.id ?? null,
     activeListings,
+    lockedCount,
     recentSales: recentSales.map((s) => ({ amountCents: s.amountCents, createdAt: s.createdAt.toISOString() })),
   };
 }

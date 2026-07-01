@@ -14,7 +14,8 @@
     "db:migrate:dev": "npm -w backend run prisma:migrate",
     "db:seed": "npm -w backend run seed",
     "setup": "npm install && npm run db:up && npm run db:migrate && npm run db:seed",
-    "build": "npm -w backend run build && npm -w frontend run build"
+    "build": "npm -w backend run build && npm -w frontend run build",
+    "test:integration": "bash backend/tests/run-integration.sh"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

@@ -160,3 +160,14 @@
 | Wishlist / Lista de desejos | ✅ (toggle na edição + grade no perfil) |
 | Parallels (variantes visuais) | ✅ (campo `parallel` exibido em cartas/detalhe) |
 | Check-in por geolocalização (A2) | ✅ (server-side; atestação simulada na web até o app) |
+
+## Fase 11 — Polimento (aceite)
+- [x] **3D Moment (Three.js)** ⭐: cubo com moldura neon por raridade; faces = lance
+  (prancheta+trajetória+camisa) · escudo holográfico · painel de stats · marca wefans;
+  **arraste para girar**, auto-rotação no idle, `prefers-reduced-motion` desliga
+- [x] **Medidor semicircular de propriedade** (Não listados · À venda · Travados · Queimados)
+- [x] Fontes da marca (Anton/Outfit/Space Mono via next/font); foco visível por teclado
+- [x] Menu mobile (hamburger) na top bar; skeletons de carregamento nas grades
+- [x] **Testes formalizados** (seção 9): `npm run test:integration` — 10 suítes (auth, mint
+  concorrente, mercado, check-in, ofertas/locks/desafios, drops, vitrines/missões/fichas,
+  rankings/flash, pelada, admin/cron) com re-seed entre elas

@@ -14,10 +14,21 @@
   --accent2: #9d4edd; /* violeta neon */
   --accent3: #21d4e0; /* ciano neon */
 
-  /* Fontes: system stack por ora; Anton/Outfit/Space Mono entram na Fase 11 (ver DECISIONS.md). */
-  --font-display: 'Anton', 'Arial Narrow', system-ui, sans-serif;
-  --font-text: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
+  /* Fontes: variáveis injetadas pelo next/font no <html> (Anton/Outfit/Space Mono).
+     Fallbacks aqui cobrem SSR sem as classes. */
+}
+
+html:not([class*='__variable']) {
+  --font-display: 'Arial Narrow', system-ui, sans-serif;
+  --font-text: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', monospace;
+}
+
+/* acessibilidade: foco visível por teclado (seção 11.11) */
+:focus-visible {
+  outline: 2px solid var(--accent3);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 body {
