@@ -265,6 +265,48 @@ export type QuestDTO = {
 
 export type TicketPack = PackDTO & { ticketCost: number };
 
+export type FastBreakRunDTO = {
+  id: string;
+  name: string;
+  survivor: boolean;
+  lineupSize: number;
+  startsAt: string;
+  endsAt: string;
+  myWins: number;
+  eliminated: boolean;
+  days: { id: string; dayNumber: number; gameDate: string; statKey: string; targetScore: number; closed: boolean }[];
+};
+
+export type FastBreakDayDetail = {
+  id: string;
+  runId: string;
+  runName: string;
+  survivor: boolean;
+  lineupSize: number;
+  dayNumber: number;
+  gameDate: string;
+  statKey: string;
+  targetScore: number;
+  closed: boolean;
+  eliminated: boolean;
+  my: { momentIds: string[]; captainMomentId: string | null; score: number; won: boolean; submitted: boolean } | null;
+  eligible: {
+    playerId: string;
+    playerName: string;
+    moments: { id: string; serial: number; tier: string; maxUses: number }[];
+    used: number;
+    maxUses: number;
+  }[];
+  board: { rank: number; username: string; score: number | null; won: boolean | null }[];
+};
+
+export type FastBreakStandings = {
+  id: string;
+  name: string;
+  survivor: boolean;
+  standings: { rank: number; username: string; wins: number; totalScore: number; days: number; eliminated: boolean }[];
+};
+
 export type ActiveFixture = {
   id: string;
   homeTeam: string;

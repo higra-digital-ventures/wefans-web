@@ -137,8 +137,8 @@ export default async function Home() {
 
       <footer className="mt-16 border-t border-line pt-6 text-xs text-muted">
         Conteúdo 100% fictício · sem marcas/imagens reais (ver{' '}
-        <span className="font-mono">.claude/LEGAL.md</span>). <span className="text-ink">30/35 itens de paridade</span>{' '}
-        no ar. Próximo (v2): Pelada (Fast Break), Admin, polimento.
+        <span className="font-mono">.claude/LEGAL.md</span>). <span className="text-ink">32/35 itens de paridade</span>{' '}
+        no ar. Próximo: Admin completo + jobs, depois polimento.
       </footer>
     </main>
   );

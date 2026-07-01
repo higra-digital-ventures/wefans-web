@@ -403,12 +403,37 @@ async function main() {
 
   // ---------------------------------------------------------------- Fast Break (Pelada, 7 dias)
   const run = await prisma.fastBreakRun.create({
-    data: { name: 'Pelada Temporada 1 — Semana 1', startsAt: days(-1), endsAt: days(6), lineupSize: 5, survivor: false },
+    data: {
+      name: 'Pelada Temporada 1 — Semana 1',
+      startsAt: days(-1),
+      endsAt: days(6),
+      lineupSize: 5,
+      survivor: false,
+      rewardPackId: checkinPack.id, // marco de 3 vitórias → pacote
+    },
   });
-  const statKeys = ['gols', 'assistencias', 'defesas', 'desarmes', 'notas', 'gols', 'assistencias'];
-  for (let d = 0; d < 7; d++) {
+  // alvo compatível com a stat (5 jogadores; captain 2×): gols ~0.7/j, defesas ~3/j, nota ~7.5/j
+  const dayPlan: { stat: string; target: number }[] = [
+    { stat: 'gols', target: 4 },
+    { stat: 'assistencias', target: 4 },
+    { stat: 'defesas', target: 15 },
+    { stat: 'desarmes', target: 12 },
+    { stat: 'nota', target: 38 },
+    { stat: 'gols', target: 5 },
+    { stat: 'assistencias', target: 5 },
+  ];
+  for (let d = 0; d < dayPlan.length; d++) {
     await prisma.fastBreakDay.create({
-      data: { runId: run.id, dayNumber: d + 1, gameDate: days(-1 + d), statKey: statKeys[d], targetScore: 20 + d * 3 },
+      data: { runId: run.id, dayNumber: d + 1, gameDate: days(-1 + d), statKey: dayPlan[d].stat, targetScore: dayPlan[d].target },
+    });
+  }
+  // Mata-mata (survivor): quem perde está fora. Alvos altíssimos = eliminação demonstrável.
+  const survivorRun = await prisma.fastBreakRun.create({
+    data: { name: 'Mata-mata Relâmpago', startsAt: days(-1), endsAt: days(2), lineupSize: 5, survivor: true },
+  });
+  for (let d = 0; d < 2; d++) {
+    await prisma.fastBreakDay.create({
+      data: { runId: survivorRun.id, dayNumber: d + 1, gameDate: days(-1 + d), statKey: 'gols', targetScore: 999 },
     });
   }
 

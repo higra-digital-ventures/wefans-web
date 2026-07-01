@@ -480,24 +480,26 @@ model ChecklistClaim {
 // ----------------------------- fast break (pelada) -----------------------------
 
 model FastBreakRun {
-  id         String   @id @default(cuid())
-  name       String
-  startsAt   DateTime
-  endsAt     DateTime
-  lineupSize Int      @default(5)
-  survivor   Boolean  @default(false)
+  id           String  @id @default(cuid())
+  name         String
+  startsAt     DateTime
+  endsAt       DateTime
+  lineupSize   Int     @default(5)
+  survivor     Boolean @default(false)
+  rewardPackId String? // pacote concedido nos marcos de vitórias
 
   days         FastBreakDay[]
   momentUsages MomentUsage[]
 }
 
 model FastBreakDay {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   runId       String
   dayNumber   Int
   gameDate    DateTime
-  statKey     String // gols, assistencias, defesas, desarmes...
+  statKey     String // gols, assistencias, defesas, desarmes, nota
   targetScore Int
+  closedAt    DateTime? // dia fechado (resultados calculados)
 
   run     FastBreakRun      @relation(fields: [runId], references: [id])
   lineups FastBreakLineup[]
@@ -518,6 +520,7 @@ model FastBreakLineup {
   day  FastBreakDay @relation(fields: [dayId], references: [id])
   user User         @relation(fields: [userId], references: [id])
 
+  @@unique([dayId, userId])
   @@index([dayId])
   @@index([userId])
 }

@@ -108,6 +108,11 @@ export const snapshotLeaderboard = (leaderboardId: string) =>
 export const claimChecklist = (checklistId: string) =>
   request<{ claimed: boolean; bonusPoints: number }>('POST', `/api/v1/checklists/${checklistId}/claim`);
 
+export const submitFastbreakLineup = (dayId: string, momentIds: string[], captainMomentId?: string) =>
+  request('POST', `/api/v1/fastbreak/days/${dayId}/lineup`, { momentIds, captainMomentId });
+export const closeFastbreakDay = (dayId: string) =>
+  request('POST', `/api/v1/admin/fastbreak/days/${dayId}/close`);
+
 export const joinDrop = (dropId: string) => request('POST', `/api/v1/drops/${dropId}/join`);
 export const startDrop = (dropId: string) => request('POST', `/api/v1/admin/drops/${dropId}/start`);
 export const buyDropPack = (dropId: string, packId: string) =>

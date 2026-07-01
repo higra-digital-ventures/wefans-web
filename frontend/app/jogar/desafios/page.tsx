@@ -82,7 +82,10 @@ export default async function DesafiosPage() {
           <Link href="/jogar/checklists" className="text-accent3 hover:underline">
             Checklists
           </Link>
-          <span className="text-muted/50" title="Em breve"> · Pelada</span>
+          <span className="text-muted"> · </span>
+          <Link href="/jogar/pelada" className="text-accent3 hover:underline">
+            Pelada
+          </Link>
         </span>
       </div>
       <p className="mb-8 text-muted">Complete coleções e forje Lances para ganhar recompensas.</p>

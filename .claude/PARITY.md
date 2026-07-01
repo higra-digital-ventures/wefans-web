@@ -96,6 +96,15 @@
 - [x] Web: `/jogar/rankings` (+detalhe com travar/snapshot admin), `/jogar/checklists`, FLASH no hub/detalhe
 - [x] Testes: 21/21 de integração (travar/pontos/duplo, checklist ×2 destinos, snapshot/prêmio/liberação, flash determinístico)
 
+## Fase 9 — Pelada (Fast Break) (aceite)
+- [x] Runs com dias (statKey + alvo do dia); escalar **5 Lances de jogadores distintos**; **captain 2×**
+- [x] **Fadiga por ASP**: usos por jogador no run conforme valor do Moment; consumo no submit; recusa quando esgota
+- [x] **Fechar o dia** (admin): score via stats simuladas (determinístico) vs alvo → won; idempotente
+- [x] Leaderboards **diário** (board do dia) e **do run** (vitórias, desempate por score total)
+- [x] **Marcos**: 3ª vitória no run concede pacote (`rewardPackId`); **survivor**: derrota elimina
+- [x] Web: `/jogar/pelada` (runs, dias, standings) + `/jogar/pelada/dia/[id]` (escalação com fadiga/captain, board)
+- [x] Testes: 19/19 de integração (tamanho/distintos/captain, fadiga real, fechar/estável, survivor eliminação)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -126,8 +135,8 @@
 | 25 | Collector Score | Score do Colecionador | 6 | ✅ |
 | 26 | Leaderboards Time/Jogador | Rankings | 8 | ✅ |
 | 27 | Checklists | Checklists | 8 | ✅ |
-| 28 | Fast Break (fantasy) | Pelada | 9 | ⬜ |
-| 29 | Survivor pool | Mata-mata | 9 | ⬜ |
+| 28 | Fast Break (fantasy) | Pelada | 9 | ✅ |
+| 29 | Survivor pool | Mata-mata | 9 | ✅ |
 | 30 | Carteira + depósito | idem (simulado) | 1 | ✅ |
 | 31 | Withdraw / redeem físico | Saque / resgate | 13 | ⬜ |
 | 32 | Provenance | Procedência | 3 | ✅ |

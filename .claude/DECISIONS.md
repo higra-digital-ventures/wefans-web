@@ -74,6 +74,17 @@
   Só `VALID` e `REVIEW` persistem, ocupando o slot único `(userId,fixtureId)` — garante
   "1 pacote por jogo" e nunca duplica sob concorrência (unique + P2002 tratado).
 
+## Fase 9 — Pelada (Fast Break)
+- **2026-07-01 — [Fase 9] — Parâmetros do jogo (afináveis em `services/fastbreak.ts`):**
+  captain multiplica a stat por **2×**; marco de recompensa = **3 vitórias** no run
+  (concede `run.rewardPackId`); **fadiga por ASP**: usos por jogador no run =
+  `<R$10→1 · <R$50→2 · <R$200→3 · <R$1000→4 · ≥R$1000→5` (ASP em centavos do melhor
+  Moment do jogador — "o sistema prioriza o Moment com mais usos disponíveis").
+- **2026-07-01 — [Fase 9] — Fechamento do dia é ação de admin** (`/admin/fastbreak/days/:id/close`);
+  o cron da Fase 10 automatiza. Survivor: derrota em dia fechado ⇒ eliminado (derivado
+  das lineups, sem campo extra). Migração hand-written (`migrate dev` agora recusa
+  ambiente não-interativo; SQL equivalente + `migrate deploy`).
+
 ## Adiado para fases posteriores (não construído na Fase 0)
 - Auth real (cookie web + JWT/refresh app) — **Fase 1**. Seed já grava `passwordHash` com bcrypt.
 - Lógica dos serviços `mint`/`market`/`checkin` — **Fases 2/4/CK** (na Fase 0 só a estrutura).

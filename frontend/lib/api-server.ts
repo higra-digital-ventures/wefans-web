@@ -28,6 +28,9 @@ import type {
   LeaderboardSummary,
   LeaderboardDetail,
   ChecklistDTO,
+  FastBreakRunDTO,
+  FastBreakDayDetail,
+  FastBreakStandings,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -207,6 +210,21 @@ export async function getLeaderboardServer(id: string): Promise<LeaderboardDetai
 export async function getChecklistsServer(): Promise<ChecklistDTO[]> {
   const data = await serverFetch<{ checklists: ChecklistDTO[] }>('/api/v1/checklists');
   return data?.checklists ?? [];
+}
+
+export async function getFastbreakRunsServer(): Promise<FastBreakRunDTO[]> {
+  const data = await serverFetch<{ runs: FastBreakRunDTO[] }>('/api/v1/fastbreak');
+  return data?.runs ?? [];
+}
+
+export async function getFastbreakDayServer(id: string): Promise<FastBreakDayDetail | null> {
+  const data = await serverFetch<{ day: FastBreakDayDetail }>(`/api/v1/fastbreak/days/${id}`);
+  return data?.day ?? null;
+}
+
+export async function getFastbreakStandingsServer(runId: string): Promise<FastBreakStandings | null> {
+  const data = await serverFetch<{ leaderboard: FastBreakStandings }>(`/api/v1/fastbreak/runs/${runId}/leaderboard`);
+  return data?.leaderboard ?? null;
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

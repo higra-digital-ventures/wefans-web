@@ -20,6 +20,7 @@ import { showcaseRoutes } from './showcases';
 import { questRoutes } from './quests';
 import { ticketRoutes } from './tickets';
 import { leaderboardRoutes } from './leaderboards';
+import { fastbreakRoutes } from './fastbreak';
 
 /**
  * Agregador das rotas da v1. Novas áreas (market, checkin…) são registradas aqui
@@ -47,4 +48,5 @@ export async function apiV1(app: FastifyInstance) {
   await app.register(questRoutes);
   await app.register(ticketRoutes);
   await app.register(leaderboardRoutes);
+  await app.register(fastbreakRoutes);
 }
