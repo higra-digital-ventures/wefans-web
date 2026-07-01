@@ -1,13 +1,14 @@
 import type { PrismaClient, Prisma } from '@prisma/client';
 import type { ServiceContext } from './context';
-import { badRequest, notFound, unauthorized } from '../lib/errors';
+import { badRequest, unauthorized } from '../lib/errors';
 import { toTeamDTO, toUserDTO } from '../lib/dto';
 
 export async function getMe(ctx: ServiceContext) {
   const userId = ctx.userId;
   if (!userId) throw unauthorized();
   const user = await ctx.db.user.findUnique({ where: { id: userId }, include: { favoriteTeam: true } });
-  if (!user) throw notFound('Usuário não encontrado');
+  // Sessão válida cujo usuário não existe mais (ex.: banco re-semeado) = deslogado.
+  if (!user) throw unauthorized();
   return toUserDTO(user, user.favoriteTeam);
 }
 

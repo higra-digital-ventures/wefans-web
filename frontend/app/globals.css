@@ -33,6 +33,21 @@ body {
   background-attachment: fixed;
 }
 
+/* Revelação de pacote (Fase 2). O cubo 3D (Three.js) fica para a Fase 11. */
+@keyframes wf-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.9) rotateY(22deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.wf-reveal {
+  animation: wf-reveal 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

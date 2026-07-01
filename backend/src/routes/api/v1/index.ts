@@ -5,6 +5,9 @@ import { authRoutes } from './auth';
 import { meRoutes } from './me';
 import { walletRoutes } from './wallet';
 import { teamRoutes } from './teams';
+import { catalogRoutes } from './catalog';
+import { packRoutes } from './packs';
+import { collectionRoutes } from './collection';
 
 /**
  * Agregador das rotas da v1. Novas áreas (market, checkin…) são registradas aqui
@@ -17,4 +20,7 @@ export async function apiV1(app: FastifyInstance) {
   await app.register(meRoutes);
   await app.register(walletRoutes);
   await app.register(teamRoutes);
+  await app.register(catalogRoutes);
+  await app.register(packRoutes);
+  await app.register(collectionRoutes);
 }

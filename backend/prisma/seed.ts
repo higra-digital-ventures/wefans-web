@@ -57,6 +57,8 @@ async function wipe() {
   await prisma.set.deleteMany();
   await prisma.series.deleteMany();
   await prisma.player.deleteMany();
+  await prisma.walletTransaction.deleteMany();
+  await prisma.refreshToken.deleteMany();
   await prisma.user.deleteMany();
   await prisma.team.deleteMany();
   await prisma.stadium.deleteMany();

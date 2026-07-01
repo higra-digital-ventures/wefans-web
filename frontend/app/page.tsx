@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getHealth, getSystemStats, type Health, type SystemStats } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
@@ -44,6 +45,20 @@ export default async function Home() {
           Momentos de futebol colecionáveis. Fundação <span className="text-ink">API-first</span> no ar —
           backend, banco e catálogo semeado conversando com a web.
         </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/pacotes"
+            className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Abrir pacotes
+          </Link>
+          <Link
+            href="/explorar"
+            className="rounded-lg border border-line px-5 py-2.5 text-ink transition-colors hover:border-accent/40"
+          >
+            Explorar catálogo
+          </Link>
+        </div>
       </header>
 
       {/* Status da API */}
@@ -103,7 +118,7 @@ export default async function Home() {
       <footer className="mt-16 border-t border-line pt-6 text-xs text-muted">
         Conteúdo 100% fictício · sem marcas/imagens reais (ver{' '}
         <span className="font-mono">.claude/LEGAL.md</span>). Próxima fase:{' '}
-        <span className="text-ink">Catálogo + Pacotes + Mint + Lances</span>.
+        <span className="text-ink">Procedência + Mercado (Buy Now, ASP, Pontuação)</span>.
       </footer>
     </main>
   );

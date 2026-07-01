@@ -32,3 +32,12 @@ export const deposit = (amountCents: number) =>
 
 export const patchFavoriteTeam = (favoriteTeamId: string | null) =>
   request('PATCH', '/api/v1/me', { favoriteTeamId });
+
+export const buyPack = (packId: string) =>
+  request<{ inventoryId: string; balanceCents: number }>('POST', `/api/v1/packs/${packId}/buy`);
+
+export const openPack = (inventoryId: string) =>
+  request<{ moments: import('./types').MomentDTO[] }>(
+    'POST',
+    `/api/v1/packs/inventory/${inventoryId}/open`,
+  );

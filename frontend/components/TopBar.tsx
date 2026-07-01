@@ -2,8 +2,14 @@ import Link from 'next/link';
 import { getMe } from '@/lib/api-server';
 import { brl } from '@/lib/format';
 
-// Top bar global (seção 11.2). Itens de navegação de fases futuras ficam esmaecidos.
-const NAV = ['Explorar', 'Drops', 'Mercado', 'Jogar', 'Coleção'];
+// Top bar global (seção 11.2). Itens de fases futuras ficam esmaecidos ("Em breve").
+const NAV: { label: string; href?: string }[] = [
+  { label: 'Explorar', href: '/explorar' },
+  { label: 'Pacotes', href: '/pacotes' },
+  { label: 'Mercado' },
+  { label: 'Jogar' },
+  { label: 'Coleção', href: '/colecao' },
+];
 
 export default async function TopBar() {
   const me = await getMe();
@@ -19,11 +25,21 @@ export default async function TopBar() {
             wefans
           </Link>
           <nav className="hidden items-center gap-5 md:flex">
-            {NAV.map((item) => (
-              <span key={item} className="cursor-default text-sm text-muted/60" title="Em breve">
-                {item}
-              </span>
-            ))}
+            {NAV.map((item) =>
+              item.href ? (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="text-sm text-muted transition-colors hover:text-ink"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span key={item.label} className="cursor-default text-sm text-muted/50" title="Em breve">
+                  {item.label}
+                </span>
+              ),
+            )}
           </nav>
         </div>
 
