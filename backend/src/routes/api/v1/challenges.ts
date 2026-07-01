@@ -18,7 +18,8 @@ export async function challengeRoutes(app: FastifyInstance) {
 
   app.post('/challenges/:id/submit', { preHandler: requireAuth }, async (req) => {
     const { id } = idParam.parse(req.params);
-    const { momentIds } = z.object({ momentIds: z.array(z.string()).min(1) }).parse(req.body);
+    // FLASH não exige Moments (critério é avaliado contra as stats simuladas).
+    const { momentIds } = z.object({ momentIds: z.array(z.string()).default([]) }).parse(req.body ?? {});
     return submitChallenge(prisma, req.userId!, id, momentIds);
   });
 }

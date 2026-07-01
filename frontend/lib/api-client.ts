@@ -101,6 +101,13 @@ export const redeemMomentTicket = (momentId: string) =>
 export const redeemTicketsForPack = (packId: string) =>
   request<{ inventoryId: string; tradeTickets: number }>('POST', `/api/v1/tickets/packs/${packId}/redeem`);
 
+export const lockToLeaderboard = (leaderboardId: string, momentId: string) =>
+  request<{ locked: boolean; points: number }>('POST', `/api/v1/leaderboards/${leaderboardId}/lock`, { momentId });
+export const snapshotLeaderboard = (leaderboardId: string) =>
+  request('POST', `/api/v1/admin/leaderboards/${leaderboardId}/snapshot`);
+export const claimChecklist = (checklistId: string) =>
+  request<{ claimed: boolean; bonusPoints: number }>('POST', `/api/v1/checklists/${checklistId}/claim`);
+
 export const joinDrop = (dropId: string) => request('POST', `/api/v1/drops/${dropId}/join`);
 export const startDrop = (dropId: string) => request('POST', `/api/v1/admin/drops/${dropId}/start`);
 export const buyDropPack = (dropId: string, packId: string) =>

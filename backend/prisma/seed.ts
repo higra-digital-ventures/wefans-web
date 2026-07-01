@@ -41,8 +41,11 @@ async function wipe() {
   await prisma.fastBreakDay.deleteMany();
   await prisma.momentUsage.deleteMany();
   await prisma.fastBreakRun.deleteMany();
+  await prisma.leaderboardLock.deleteMany();
   await prisma.leaderboardEntry.deleteMany();
   await prisma.leaderboard.deleteMany();
+  await prisma.checklistClaim.deleteMany();
+  await prisma.questClaim.deleteMany();
   await prisma.checklist.deleteMany();
   await prisma.challengeEntry.deleteMany();
   await prisma.challenge.deleteMany();
@@ -381,19 +384,22 @@ async function main() {
 
   // ---------------------------------------------------------------- Rankings + Checklist
   await prisma.leaderboard.create({
-    data: { kind: 'TEAM', refKey: serpentes.name, name: `Ranking ${serpentes.name}`, rewardsJson: { top1: 'Pacote Lendário' } },
-  });
-  await prisma.leaderboard.create({
-    data: { kind: 'PLAYER', refKey: players[0].id, name: `Ranking ${players[0].name}`, rewardsJson: { top1: 'Pacote Lendário' } },
-  });
-  await prisma.checklist.create({
     data: {
-      name: 'Checklist Base — Temporada 1',
-      kind: 'SET',
-      requiredTemplateIds: baseTemplates.slice(0, 5).map((t) => t.id),
-      bonusPoints: 500,
+      kind: 'TEAM',
+      refKey: serpentes.name,
+      name: `Ranking ${serpentes.name}`,
+      rewardsJson: { top1: 'Pacote de Troca — Lendário', top1PackId: ticketPack.id },
     },
   });
+  await prisma.leaderboard.create({
+    data: {
+      kind: 'PLAYER',
+      refKey: players[0].id,
+      name: `Ranking ${players[0].name}`,
+      rewardsJson: { top1: 'Pacote de Troca — Lendário', top1PackId: ticketPack.id },
+    },
+  });
+  // (checklist é criado após os Moments do colecionador, alinhado à coleção dele)
 
   // ---------------------------------------------------------------- Fast Break (Pelada, 7 dias)
   const run = await prisma.fastBreakRun.create({
@@ -485,6 +491,27 @@ async function main() {
       requiredTemplateIds: [seedTemplates[0].id],
       rewardTemplateId: templates.find((t) => t.tier === Tier.GALACTICO)?.id ?? null,
       burnOnComplete: true,
+    },
+  });
+  // Desafio Relâmpago (Fase 8): tenha o Lance de um jogador que marcar hoje (stats simuladas).
+  await prisma.challenge.create({
+    data: {
+      type: ChallengeType.FLASH,
+      name: 'Artilheiro do Dia',
+      description: 'Tenha o Lance de um jogador que marcar gol hoje (stats simuladas) e resgate um pacote.',
+      startsAt: days(-1),
+      endsAt: days(30),
+      rewardPackId: checkinPack.id,
+      flashRuleJson: { rule: 'own_moment_of_scorer', stat: 'gols', min: 1 },
+    },
+  });
+  // Checklist alinhado à coleção do colecionador (bônus vai pro ranking do time + Collector Score).
+  await prisma.checklist.create({
+    data: {
+      name: `Checklist ${serpentes.name} — Temporada 1`,
+      kind: serpentes.name,
+      requiredTemplateIds: [seedTemplates[2].id, seedTemplates[3].id],
+      bonusPoints: 500,
     },
   });
 

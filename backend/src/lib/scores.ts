@@ -25,5 +25,14 @@ export async function recomputeUserScores(tx: Prisma.TransactionClient, userId: 
   let collectorScore = moments.reduce((s, m) => s + TIER_POINTS[m.template.tier], 0);
   const completedChallenges = await tx.challengeEntry.count({ where: { userId, completedAt: { not: null } } });
   collectorScore += completedChallenges * CHALLENGE_BONUS;
+  // bônus de checklists resgatados (regra 4/12)
+  const claims = await tx.checklistClaim.findMany({ where: { userId }, select: { checklistId: true } });
+  if (claims.length) {
+    const checklists = await tx.checklist.findMany({
+      where: { id: { in: claims.map((c) => c.checklistId) } },
+      select: { bonusPoints: true },
+    });
+    collectorScore += checklists.reduce((s, c) => s + c.bonusPoints, 0);
+  }
   await tx.user.update({ where: { id: userId }, data: { topShotScore, collectorScore } });
 }

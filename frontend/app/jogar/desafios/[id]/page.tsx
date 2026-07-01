@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getChallengeServer, getMe } from '@/lib/api-server';
 import ChallengeBuilder from '@/components/ChallengeBuilder';
+import FlashClaim from '@/components/FlashClaim';
 import LanceCard from '@/components/LanceCard';
 
 export const dynamic = 'force-dynamic';
@@ -19,13 +20,17 @@ export default async function ChallengeDetailPage({ params }: { params: Promise<
       <div className="mt-2 flex items-center gap-3">
         <h1 className="font-display text-4xl uppercase text-ink">{challenge.name}</h1>
         <span className="rounded-full bg-panel2 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-          {challenge.type === 'CRAFTING' ? 'Forja' : 'Padrão'}
+          {challenge.type === 'CRAFTING' ? 'Forja' : challenge.type === 'FLASH' ? '⚡ Relâmpago' : 'Padrão'}
         </span>
       </div>
       <p className="mb-6 text-muted">{challenge.description}</p>
 
       <div className="grid gap-8 md:grid-cols-[1fr_minmax(0,280px)]">
-        <ChallengeBuilder challenge={challenge} isAuthed={!!me} />
+        {challenge.type === 'FLASH' && challenge.flash ? (
+          <FlashClaim challenge={challenge} isAuthed={!!me} />
+        ) : (
+          <ChallengeBuilder challenge={challenge} isAuthed={!!me} />
+        )}
 
         {challenge.rewardTemplate ? (
           <div>

@@ -25,6 +25,9 @@ import type {
   ShowcaseDetail,
   QuestDTO,
   TicketPack,
+  LeaderboardSummary,
+  LeaderboardDetail,
+  ChecklistDTO,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -189,6 +192,21 @@ export async function getQuestsServer(): Promise<QuestDTO[]> {
 export async function getTicketPacksServer(): Promise<TicketPack[]> {
   const data = await serverFetch<{ packs: TicketPack[] }>('/api/v1/tickets/packs');
   return data?.packs ?? [];
+}
+
+export async function getLeaderboardsServer(): Promise<LeaderboardSummary[]> {
+  const data = await serverFetch<{ leaderboards: LeaderboardSummary[] }>('/api/v1/leaderboards');
+  return data?.leaderboards ?? [];
+}
+
+export async function getLeaderboardServer(id: string): Promise<LeaderboardDetail | null> {
+  const data = await serverFetch<{ leaderboard: LeaderboardDetail }>(`/api/v1/leaderboards/${id}`);
+  return data?.leaderboard ?? null;
+}
+
+export async function getChecklistsServer(): Promise<ChecklistDTO[]> {
+  const data = await serverFetch<{ checklists: ChecklistDTO[] }>('/api/v1/checklists');
+  return data?.checklists ?? [];
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

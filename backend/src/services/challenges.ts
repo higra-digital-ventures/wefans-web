@@ -1,14 +1,50 @@
 import { Prisma, type PrismaClient } from '@prisma/client';
 import { badRequest, notFound } from '../lib/errors';
 import { isMomentLocked } from '../lib/moment';
+import { simulateDay } from '../lib/matchSim';
 import { toTemplateDTO } from '../lib/dto';
 import { recomputeUserScores } from '../lib/scores';
 import { withDbRetry } from '../lib/tx';
 
-/** Desafios STANDARD/CRAFTING com progresso do usuário (Challenge Hub, seção 11.9). */
+type Db = PrismaClient | Prisma.TransactionClient;
+
+/**
+ * Avalia o critério FLASH contra as stats simuladas de hoje (seção 8).
+ * flashRuleJson: { rule: 'own_moment_of_scorer', stat?: 'gols', min?: 1 }.
+ * Retorna os jogadores que cumprem a stat hoje e quais deles o usuário possui.
+ */
+async function evaluateFlash(db: Db, userId: string | undefined, rule: Prisma.JsonValue) {
+  const r = (rule ?? {}) as { stat?: 'gols' | 'assistencias' | 'defesas' | 'desarmes'; min?: number };
+  const stat = r.stat ?? 'gols';
+  const min = r.min ?? 1;
+  const players = await db.player.findMany({ select: { id: true, name: true } });
+  const box = simulateDay(new Date(), players.map((p) => p.id));
+  const nameById = new Map(players.map((p) => [p.id, p.name]));
+  const qualifying = box.filter((b) => b[stat] >= min).map((b) => b.playerId);
+  const qualifyingSet = new Set(qualifying);
+
+  let myQualifying: string[] = [];
+  if (userId) {
+    const owned = await db.moment.findMany({
+      where: { ownerId: userId, burned: false, template: { playerId: { in: qualifying } } },
+      select: { template: { select: { playerId: true } } },
+      distinct: ['templateId'],
+    });
+    myQualifying = [...new Set(owned.map((o) => o.template.playerId))];
+  }
+  return {
+    stat,
+    min,
+    scorersToday: qualifying.map((id) => nameById.get(id) ?? id),
+    myScorers: myQualifying.map((id) => nameById.get(id) ?? id),
+    eligible: myQualifying.length > 0,
+    qualifyingSet,
+  };
+}
+
+/** Desafios (STANDARD/CRAFTING/FLASH) com progresso do usuário (Challenge Hub, seção 11.9). */
 export async function listChallenges(db: PrismaClient, userId?: string) {
   const challenges = await db.challenge.findMany({
-    where: { type: { in: ['STANDARD', 'CRAFTING'] } },
     orderBy: { endsAt: 'asc' },
   });
   const now = new Date();
@@ -67,6 +103,13 @@ export async function getChallenge(db: PrismaClient, id: string, userId?: string
     ? await db.template.findUnique({ where: { id: c.rewardTemplateId }, include: { player: true } })
     : null;
 
+  // FLASH: avalia o critério contra as stats simuladas de hoje.
+  let flash: { stat: string; min: number; scorersToday: string[]; myScorers: string[]; eligible: boolean } | null = null;
+  if (c.type === 'FLASH') {
+    const f = await evaluateFlash(db, userId, c.flashRuleJson);
+    flash = { stat: f.stat, min: f.min, scorersToday: f.scorersToday, myScorers: f.myScorers, eligible: f.eligible };
+  }
+
   return {
     id: c.id,
     type: c.type,
@@ -79,6 +122,7 @@ export async function getChallenge(db: PrismaClient, id: string, userId?: string
     required: required.map((t) => ({ template: toTemplateDTO(t), eligible: eligibleByTemplate[t.id] ?? [] })),
     rewardTemplate: rewardTemplate ? toTemplateDTO(rewardTemplate) : null,
     hasPackReward: !!c.rewardPackId,
+    flash,
   };
 }
 
@@ -96,13 +140,21 @@ export async function submitChallenge(db: PrismaClient, userId: string, challeng
       const existing = await tx.challengeEntry.findFirst({ where: { challengeId, userId, completedAt: { not: null } } });
       if (existing) throw badRequest('Desafio já concluído');
 
-      const moments = await tx.moment.findMany({ where: { id: { in: momentIds }, ownerId: userId, burned: false } });
-      if (moments.length !== momentIds.length) throw badRequest('Momentos inválidos ou não são seus');
-      for (const m of moments) if (isMomentLocked(m)) throw badRequest('Momento travado não pode ser usado');
-      const provided = new Set(moments.map((m) => m.templateId));
-      for (const reqId of c.requiredTemplateIds) if (!provided.has(reqId)) throw badRequest('Faltam Lances exigidos');
+      let moments: { id: string; templateId: string }[] = [];
+      if (c.type === 'FLASH') {
+        // Critério ao vivo (stats simuladas de hoje) — sem submissão de Moments.
+        const f = await evaluateFlash(tx, userId, c.flashRuleJson);
+        if (!f.eligible) throw badRequest('Critério do desafio relâmpago não cumprido hoje');
+      } else {
+        const found = await tx.moment.findMany({ where: { id: { in: momentIds }, ownerId: userId, burned: false } });
+        if (found.length !== momentIds.length || momentIds.length === 0) throw badRequest('Momentos inválidos ou não são seus');
+        for (const m of found) if (isMomentLocked(m)) throw badRequest('Momento travado não pode ser usado');
+        const provided = new Set(found.map((m) => m.templateId));
+        for (const reqId of c.requiredTemplateIds) if (!provided.has(reqId)) throw badRequest('Faltam Lances exigidos');
+        moments = found;
+      }
 
-      if (c.burnOnComplete) {
+      if (c.type !== 'FLASH' && c.burnOnComplete) {
         for (const m of moments) {
           await tx.moment.update({ where: { id: m.id }, data: { burned: true, ownerId: null } });
           await tx.template.update({ where: { id: m.templateId }, data: { circulatingCount: { decrement: 1 } } });

@@ -87,6 +87,15 @@
 - [x] Web: `/vitrines`, `/vitrine/[id]` (editor), `/jogar/missoes`, `/fichas`; ação "Virar ficha" no Momento
 - [x] Testes: 18/18 de integração (vitrines CRUD + visibilidade, missão elegível/resgate/único, fichas)
 
+## Fase 8 — Rankings + Checklists + Flash + motor de simulação (aceite)
+- [x] **Motor de partidas simulado** (`lib/matchSim.ts`): boxscores determinísticos por (data, jogador)
+- [x] **Rankings**: sobe **travando** Lances (tempLock 7d + LeaderboardLock; pontos = Pontuação wefans)
+- [x] ✅ travar Moment pontua no ranking; **snapshot** define ranks, **premia o top 1** (pacote) e libera as travas
+- [x] **Checklists**: progresso por posse; bônus soma no **ranking do time** e no **Collector Score** (resgate único)
+- [x] **Desafios Relâmpago** (FLASH): critério contra stats simuladas de hoje (`flashRuleJson`); resgate único
+- [x] Web: `/jogar/rankings` (+detalhe com travar/snapshot admin), `/jogar/checklists`, FLASH no hub/detalhe
+- [x] Testes: 21/21 de integração (travar/pontos/duplo, checklist ×2 destinos, snapshot/prêmio/liberação, flash determinístico)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -110,13 +119,13 @@
 | 18 | Locking (1 ano) | Travar | 5 | ✅ |
 | 19 | Burn / Crafting Challenges | Queima / Desafios de Forja | 5 | ✅ |
 | 20 | Challenges + Builder | Desafios + Montador | 5 | ✅ |
-| 21 | Flash Challenges | Desafios Relâmpago | 8 | ⬜ |
+| 21 | Flash Challenges | Desafios Relâmpago | 8 | ✅ |
 | 22 | Quests / Showcase Challenges | Missões | 7 | ✅ |
 | 23 | Showcases | Vitrines | 7 | ✅ |
 | 24 | Top Shot Score (dinâmico) | Pontuação wefans | 4 | ✅ |
 | 25 | Collector Score | Score do Colecionador | 6 | ✅ |
-| 26 | Leaderboards Time/Jogador | Rankings | 8 | ⬜ |
-| 27 | Checklists | Checklists | 8 | ⬜ |
+| 26 | Leaderboards Time/Jogador | Rankings | 8 | ✅ |
+| 27 | Checklists | Checklists | 8 | ✅ |
 | 28 | Fast Break (fantasy) | Pelada | 9 | ⬜ |
 | 29 | Survivor pool | Mata-mata | 9 | ⬜ |
 | 30 | Carteira + depósito | idem (simulado) | 1 | ✅ |

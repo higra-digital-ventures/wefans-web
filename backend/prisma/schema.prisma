@@ -455,6 +455,28 @@ model Checklist {
   bonusPoints         Int
 }
 
+// Trava temporária de um Moment submetido a um leaderboard (regra 12).
+model LeaderboardLock {
+  id            String   @id @default(cuid())
+  leaderboardId String
+  momentId      String   @unique
+  userId        String
+  createdAt     DateTime @default(now())
+
+  @@index([leaderboardId])
+  @@index([userId])
+}
+
+model ChecklistClaim {
+  id          String   @id @default(cuid())
+  checklistId String
+  userId      String
+  claimedAt   DateTime @default(now())
+
+  @@unique([checklistId, userId])
+  @@index([userId])
+}
+
 // ----------------------------- fast break (pelada) -----------------------------
 
 model FastBreakRun {

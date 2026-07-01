@@ -20,7 +20,7 @@ function Card({ c }: { c: ChallengeSummary }) {
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="rounded-full bg-panel2 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-          {c.type === 'CRAFTING' ? 'Forja' : 'Padrão'}
+          {c.type === 'CRAFTING' ? 'Forja' : c.type === 'FLASH' ? '⚡ Relâmpago' : 'Padrão'}
         </span>
         {c.active && <span className="text-xs text-muted">{timeLeft(c.endsAt)}</span>}
       </div>
@@ -74,7 +74,15 @@ export default async function DesafiosPage() {
           <Link href="/jogar/missoes" className="text-accent3 hover:underline">
             Missões
           </Link>
-          <span className="text-muted/50" title="Em breve"> · Rankings · Pelada</span>
+          <span className="text-muted"> · </span>
+          <Link href="/jogar/rankings" className="text-accent3 hover:underline">
+            Rankings
+          </Link>
+          <span className="text-muted"> · </span>
+          <Link href="/jogar/checklists" className="text-accent3 hover:underline">
+            Checklists
+          </Link>
+          <span className="text-muted/50" title="Em breve"> · Pelada</span>
         </span>
       </div>
       <p className="mb-8 text-muted">Complete coleções e forje Lances para ganhar recompensas.</p>

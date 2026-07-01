@@ -153,6 +153,45 @@ export type ChallengeDetail = {
   required: { template: TemplateDTO; eligible: { id: string; serial: number }[] }[];
   rewardTemplate: TemplateDTO | null;
   hasPackReward: boolean;
+  flash: {
+    stat: string;
+    min: number;
+    scorersToday: string[];
+    myScorers: string[];
+    eligible: boolean;
+  } | null;
+};
+
+export type LeaderboardSummary = {
+  id: string;
+  kind: string;
+  refKey: string;
+  name: string;
+  snapshotAt: string | null;
+  rewards: unknown;
+  top: { username: string; points: number; rank: number | null }[];
+  myPoints: number | null;
+  myRank: number | null;
+};
+
+export type LeaderboardDetail = {
+  id: string;
+  kind: string;
+  refKey: string;
+  name: string;
+  snapshotAt: string | null;
+  rewards: unknown;
+  entries: { username: string; points: number; rank: number }[];
+  eligibleMoments: { id: string; serial: number; playerName: string; points: number }[];
+};
+
+export type ChecklistDTO = {
+  id: string;
+  name: string;
+  kind: string;
+  bonusPoints: number;
+  progress: { have: number; need: number } | null;
+  claimed: boolean;
 };
 
 export type DropMyEntry = {
