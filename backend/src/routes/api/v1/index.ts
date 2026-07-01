@@ -14,6 +14,8 @@ import { checkinRoutes } from './checkin';
 import { momentActionRoutes } from './moment';
 import { offerRoutes } from './offers';
 import { challengeRoutes } from './challenges';
+import { dropRoutes } from './drops';
+import { packMarketRoutes } from './pack-market';
 
 /**
  * Agregador das rotas da v1. Novas áreas (market, checkin…) são registradas aqui
@@ -35,4 +37,6 @@ export async function apiV1(app: FastifyInstance) {
   await app.register(momentActionRoutes);
   await app.register(offerRoutes);
   await app.register(challengeRoutes);
+  await app.register(dropRoutes);
+  await app.register(packMarketRoutes);
 }

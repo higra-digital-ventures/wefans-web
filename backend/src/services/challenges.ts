@@ -2,6 +2,7 @@ import { Prisma, type PrismaClient } from '@prisma/client';
 import { badRequest, notFound } from '../lib/errors';
 import { isMomentLocked } from '../lib/moment';
 import { toTemplateDTO } from '../lib/dto';
+import { recomputeUserScores } from '../lib/scores';
 import { withDbRetry } from '../lib/tx';
 
 /** Desafios STANDARD/CRAFTING com progresso do usuário (Challenge Hub, seção 11.9). */
@@ -130,8 +131,7 @@ export async function submitChallenge(db: PrismaClient, userId: string, challeng
       }
 
       await tx.challengeEntry.create({ data: { challengeId, userId, momentIds, completedAt: now } });
-      const agg = await tx.moment.aggregate({ _sum: { topShotScore: true }, where: { ownerId: userId, burned: false } });
-      await tx.user.update({ where: { id: userId }, data: { topShotScore: agg._sum.topShotScore ?? 0 } });
+      await recomputeUserScores(tx, userId);
       return { status: 'COMPLETED' as const, ...grant };
     }),
   );

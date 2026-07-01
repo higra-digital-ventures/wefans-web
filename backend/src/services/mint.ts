@@ -1,5 +1,6 @@
 import { Prisma, Tier } from '@prisma/client';
 import { conflict } from '../lib/errors';
+import { recomputeUserScores } from '../lib/scores';
 
 // Serviço de mint REUTILIZÁVEL (web, API e check-in usam o mesmo). Deve rodar dentro
 // de uma $transaction. A unicidade do serial é garantida por um UPDATE ... RETURNING
@@ -131,7 +132,7 @@ export async function mintPack(tx: Prisma.TransactionClient, userId: string, pac
   }
 
   if (scoreSum > 0) {
-    await tx.user.update({ where: { id: userId }, data: { topShotScore: { increment: scoreSum } } });
+    await recomputeUserScores(tx, userId);
   }
 
   return tx.moment.findMany({

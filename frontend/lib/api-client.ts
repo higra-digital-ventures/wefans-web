@@ -83,6 +83,18 @@ export const submitChallenge = (challengeId: string, momentIds: string[]) =>
     { momentIds },
   );
 
+export const joinDrop = (dropId: string) => request('POST', `/api/v1/drops/${dropId}/join`);
+export const startDrop = (dropId: string) => request('POST', `/api/v1/admin/drops/${dropId}/start`);
+export const buyDropPack = (dropId: string, packId: string) =>
+  request<{ inventoryId: string; viaRebound: boolean }>('POST', `/api/v1/drops/${dropId}/buy`, { packId });
+
+export const buyPackListing = (listingId: string) =>
+  request<{ packInventoryId: string }>('POST', `/api/v1/pack-market/${listingId}/buy`);
+export const listPack = (packInventoryId: string, priceCents: number) =>
+  request('POST', '/api/v1/pack-market/list', { packInventoryId, priceCents });
+export const cancelPackListing = (listingId: string) =>
+  request('DELETE', `/api/v1/pack-market/${listingId}`);
+
 export const submitCheckin = (body: {
   fixtureId: string;
   lat: number;

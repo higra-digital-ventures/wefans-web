@@ -92,6 +92,7 @@ model User {
   wishlist           Wishlist[]
   refreshTokens      RefreshToken[]
   walletTransactions WalletTransaction[]
+  packListings       PackListing[]
 
   @@index([favoriteTeamId])
 }
@@ -229,12 +230,29 @@ model PackInventory {
   opened   Boolean @default(false)
   createdAt DateTime @default(now())
 
-  pack             Pack      @relation(fields: [packId], references: [id])
-  owner            User      @relation(fields: [ownerId], references: [id])
+  pack             Pack         @relation(fields: [packId], references: [id])
+  owner            User         @relation(fields: [ownerId], references: [id])
   grantedByCheckIn CheckIn[] // check-in que concedeu este pacote (A2)
+  packListing      PackListing?
 
   @@index([packId])
   @@index([ownerId])
+}
+
+// Mercado de Pacotes (item 11): anúncio de um pacote lacrado revendível.
+model PackListing {
+  id              String        @id @default(cuid())
+  packInventoryId String        @unique
+  sellerId        String
+  priceCents      Int
+  status          ListingStatus @default(ACTIVE)
+  createdAt       DateTime      @default(now())
+
+  packInventory PackInventory @relation(fields: [packInventoryId], references: [id])
+  seller        User          @relation(fields: [sellerId], references: [id])
+
+  @@index([sellerId])
+  @@index([status])
 }
 
 model Drop {

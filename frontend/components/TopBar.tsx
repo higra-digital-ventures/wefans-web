@@ -5,6 +5,7 @@ import { brl } from '@/lib/format';
 // Top bar global (seção 11.2). Itens de fases futuras ficam esmaecidos ("Em breve").
 const NAV: { label: string; href?: string }[] = [
   { label: 'Explorar', href: '/explorar' },
+  { label: 'Drops', href: '/drops' },
   { label: 'Pacotes', href: '/pacotes' },
   { label: 'Mercado', href: '/mercado' },
   { label: 'Jogar', href: '/jogar/desafios' },

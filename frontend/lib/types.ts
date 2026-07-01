@@ -155,6 +155,49 @@ export type ChallengeDetail = {
   hasPackReward: boolean;
 };
 
+export type DropMyEntry = {
+  position: number | null;
+  windowStartsAt: string | null;
+  purchased: boolean;
+  canBuyNow: boolean;
+  canRebound: boolean;
+};
+
+export type DropSummary = {
+  id: string;
+  name: string;
+  status: string;
+  waitingRoomOpensAt: string;
+  startsAt: string;
+  endsAt: string;
+  requiredCollectorScore: number;
+  hasRebound: boolean;
+  packs: PackDTO[];
+};
+
+export type DropDetail = DropSummary & {
+  eligible: boolean;
+  collectorScore: number;
+  myEntry: DropMyEntry | null;
+};
+
+export type PackListingDTO = {
+  id: string;
+  priceCents: number;
+  seller: string;
+  packInventoryId: string;
+  createdAt: string;
+  pack: PackDTO;
+};
+
+export type MyPack = {
+  id: string;
+  pack: PackDTO;
+  listed: boolean;
+  listingId: string | null;
+  priceCents: number | null;
+};
+
 export type ActiveFixture = {
   id: string;
   homeTeam: string;

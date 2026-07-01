@@ -72,6 +72,14 @@
 - [x] Web: ações no Momento, painel de Ofertas, `/ofertas`, `/jogar/desafios` (hub + progresso) e Builder
 - [x] Testes: 22/22 de integração; `settleSale` compartilhado entre Buy Now e aceitar-oferta
 
+## Fase 6 — Drops com fila + Collector Score + Rebound + Mercado de Pacotes (aceite)
+- [x] **Score do Colecionador** (pontos por tier + bônus de desafio), recalculado a cada mudança de posse
+- [x] Drop: sala de espera → **fila aleatória** (admin inicia) → **janela de 20 min** por posição
+- [x] ✅ **requisito de Collector Score** para entrar na fila; **rebound** para quem perde a janela (se `hasRebound`)
+- [x] **Mercado de Pacotes**: listar/comprar/cancelar pacotes lacrados (`PackListing`, taxa 5%)
+- [x] Web: `/drops`, `/drop/[id]` (sala/fila/janela/rebound), `/mercado/pacotes`
+- [x] Testes: 20/20 de integração (gate de score, fila aleatória, janela, rebound, mercado de pacotes)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -81,11 +89,11 @@
 | 4 | Edições CC e LE | Circulante e Limitada | 2 | ✅ |
 | 5 | Numeração de série (#/N) | idem | 2 | ✅ |
 | 6 | Badges em Moments | Selos | 2 | ✅ |
-| 7 | Pack Drops (sala/fila/janela) | idem | 6 | ⬜ |
-| 8 | Rebound packs | Pacotes de repescagem | 6 | ⬜ |
-| 9 | Allowlist / Collector Score na fila | idem | 6 | ⬜ |
+| 7 | Pack Drops (sala/fila/janela) | idem | 6 | ✅ |
+| 8 | Rebound packs | Pacotes de repescagem | 6 | ✅ |
+| 9 | Allowlist / Collector Score na fila | idem | 6 | ✅ (via Collector Score) |
 | 10 | Abertura de pacote com revelação | idem | 2 | ✅ (revelação 2D; cubo 3D na Fase 11) |
-| 11 | Pack Marketplace (lacrados) | Mercado de Pacotes | 6 | ⬜ |
+| 11 | Pack Marketplace (lacrados) | Mercado de Pacotes | 6 | ✅ |
 | 12 | Marketplace de Moments (Buy Now) | idem | 4 | ✅ |
 | 13 | Taxa, floor, "À venda" | idem | 4 | ✅ |
 | 14 | Offers | Ofertas | 5 | ✅ |
@@ -99,7 +107,7 @@
 | 22 | Quests / Showcase Challenges | Missões | 7 | ⬜ |
 | 23 | Showcases | Vitrines | 7 | ⬜ |
 | 24 | Top Shot Score (dinâmico) | Pontuação wefans | 4 | ✅ |
-| 25 | Collector Score | Score do Colecionador | 6 | ⬜ |
+| 25 | Collector Score | Score do Colecionador | 6 | ✅ |
 | 26 | Leaderboards Time/Jogador | Rankings | 8 | ⬜ |
 | 27 | Checklists | Checklists | 8 | ⬜ |
 | 28 | Fast Break (fantasy) | Pelada | 9 | ⬜ |

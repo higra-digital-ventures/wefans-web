@@ -1,6 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 import { badRequest, notFound } from '../lib/errors';
 import { isMomentLocked } from '../lib/moment';
+import { recomputeUserScores } from '../lib/scores';
 import { withDbRetry } from '../lib/tx';
 
 const ONE_YEAR_MS = 365 * 24 * 3_600_000;
@@ -31,8 +32,7 @@ export async function burnMoment(db: PrismaClient, userId: string, momentId: str
       await tx.moment.update({ where: { id: momentId }, data: { burned: true, ownerId: null } });
       await tx.template.update({ where: { id: moment.templateId }, data: { circulatingCount: { decrement: 1 } } });
       await tx.transaction.create({ data: { type: 'BURN', momentId, sellerId: userId, amountCents: 0 } });
-      const agg = await tx.moment.aggregate({ _sum: { topShotScore: true }, where: { ownerId: userId, burned: false } });
-      await tx.user.update({ where: { id: userId }, data: { topShotScore: agg._sum.topShotScore ?? 0 } });
+      await recomputeUserScores(tx, userId);
       return { burned: true };
     }),
   );
@@ -52,10 +52,8 @@ export async function giftMoment(db: PrismaClient, userId: string, momentId: str
       await tx.listing.updateMany({ where: { momentId, status: 'ACTIVE' }, data: { status: 'CANCELLED' } });
       await tx.moment.update({ where: { id: momentId }, data: { ownerId: recipient.id } });
       await tx.transaction.create({ data: { type: 'GIFT', momentId, sellerId: userId, buyerId: recipient.id, amountCents: 0 } });
-      for (const uid of [userId, recipient.id]) {
-        const agg = await tx.moment.aggregate({ _sum: { topShotScore: true }, where: { ownerId: uid, burned: false } });
-        await tx.user.update({ where: { id: uid }, data: { topShotScore: agg._sum.topShotScore ?? 0 } });
-      }
+      await recomputeUserScores(tx, userId);
+      await recomputeUserScores(tx, recipient.id);
       return { gifted: true, to: recipient.username };
     }),
   );

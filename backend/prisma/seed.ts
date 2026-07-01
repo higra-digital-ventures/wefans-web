@@ -49,6 +49,8 @@ async function wipe() {
   await prisma.quest.deleteMany();
   await prisma.queueEntry.deleteMany();
   await prisma.fixture.deleteMany();
+  await prisma.checkinNonce.deleteMany();
+  await prisma.packListing.deleteMany();
   await prisma.packInventory.deleteMany();
   await prisma.moment.deleteMany();
   await prisma.pack.deleteMany();
@@ -252,11 +254,11 @@ async function main() {
     data: {
       name: 'Drop de Estreia — Temporada 1',
       waitingRoomOpensAt: hours(-2),
-      startsAt: hours(-1),
+      startsAt: hours(1), // sala de espera aberta; admin gera a fila ao iniciar
       endsAt: days(7),
-      requiredCollectorScore: 0,
+      requiredCollectorScore: 100, // exige Score do Colecionador (colecionador tem ~6700)
       hasRebound: true,
-      status: 'LIVE',
+      status: 'WAITING',
     },
   });
 
@@ -298,6 +300,30 @@ async function main() {
       totalSupply: 100000,
       sealed: false,
       ticketOnly: false,
+    },
+  });
+
+  // Drop Relâmpago (LIVE, rebound) — demonstra a compra por rebound (janela já passada).
+  const reboundDrop = await prisma.drop.create({
+    data: {
+      name: 'Drop Relâmpago',
+      waitingRoomOpensAt: hours(-3),
+      startsAt: hours(-2),
+      endsAt: days(3),
+      requiredCollectorScore: 0,
+      hasRebound: true,
+      status: 'LIVE',
+    },
+  });
+  const reboundPack = await prisma.pack.create({
+    data: {
+      name: 'Pacote Relâmpago',
+      dropId: reboundDrop.id,
+      priceCents: 2500,
+      momentCount: 3,
+      oddsJson: { COMUM: 0.55, TORCIDA: 0.25, RARO: 0.15, LENDARIO: 0.045, GALACTICO: 0.005 },
+      totalSupply: 2000,
+      sealed: true,
     },
   });
 
@@ -527,6 +553,16 @@ async function main() {
     });
     await prisma.template.update({ where: { id: sale.tpl.id }, data: { aspCents: amount } });
     s++;
+  }
+
+  // Fila do Drop Relâmpago com janela já passada → rebound liberado para o colecionador.
+  await prisma.queueEntry.create({
+    data: { dropId: reboundDrop.id, userId: collector.id, position: 3, windowStartsAt: hours(-1), purchased: false },
+  });
+  // Mercado de Pacotes: admin lista 2 pacotes lacrados.
+  for (let i = 0; i < 2; i++) {
+    const inv = await prisma.packInventory.create({ data: { packId: mainPack.id, ownerId: admin.id } });
+    await prisma.packListing.create({ data: { packInventoryId: inv.id, sellerId: admin.id, priceCents: 4500 + i * 500, status: 'ACTIVE' } });
   }
 
   console.log('[seed] pronto:');

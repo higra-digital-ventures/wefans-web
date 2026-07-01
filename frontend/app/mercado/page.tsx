@@ -26,9 +26,14 @@ export default async function MercadoPage({
     <main className="mx-auto max-w-6xl px-6 py-12">
       <div className="mb-1 flex items-center justify-between">
         <h1 className="font-display text-4xl uppercase text-ink">Mercado</h1>
-        <Link href="/mercado/atividade" className="text-sm text-accent3 hover:underline">
-          vendas ao vivo →
-        </Link>
+        <div className="flex gap-4 text-sm">
+          <Link href="/mercado/pacotes" className="text-accent3 hover:underline">
+            pacotes lacrados →
+          </Link>
+          <Link href="/mercado/atividade" className="text-accent3 hover:underline">
+            vendas ao vivo →
+          </Link>
+        </div>
       </div>
       <p className="mb-6 text-muted">{listings.length} Lances à venda</p>
 

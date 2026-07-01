@@ -17,6 +17,10 @@ import type {
   MyOffer,
   ChallengeSummary,
   ChallengeDetail,
+  DropSummary,
+  DropDetail,
+  PackListingDTO,
+  MyPack,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -136,6 +140,26 @@ export async function getChallengesServer(): Promise<ChallengeSummary[]> {
 export async function getChallengeServer(id: string): Promise<ChallengeDetail | null> {
   const data = await serverFetch<{ challenge: ChallengeDetail }>(`/api/v1/challenges/${id}`);
   return data?.challenge ?? null;
+}
+
+export async function getDropsServer(): Promise<DropSummary[]> {
+  const data = await serverFetch<{ drops: DropSummary[] }>('/api/v1/drops');
+  return data?.drops ?? [];
+}
+
+export async function getDropServer(id: string): Promise<DropDetail | null> {
+  const data = await serverFetch<{ drop: DropDetail }>(`/api/v1/drops/${id}`);
+  return data?.drop ?? null;
+}
+
+export async function getPackMarketServer(): Promise<PackListingDTO[]> {
+  const data = await serverFetch<{ listings: PackListingDTO[] }>('/api/v1/pack-market');
+  return data?.listings ?? [];
+}
+
+export async function getMyPacksServer(): Promise<MyPack[] | null> {
+  const data = await serverFetch<{ packs: MyPack[] }>('/api/v1/pack-market/mine');
+  return data ? data.packs : null;
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

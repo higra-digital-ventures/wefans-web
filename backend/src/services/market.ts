@@ -2,6 +2,7 @@ import { Prisma, type PrismaClient, type Tier } from '@prisma/client';
 import { badRequest, notFound } from '../lib/errors';
 import { toListingDTO, toTemplateDTO } from '../lib/dto';
 import { isMomentLocked } from '../lib/moment';
+import { recomputeUserScores } from '../lib/scores';
 import { withDbRetry } from '../lib/tx';
 
 const FEE_BPS = 500; // 5% taxa da plataforma
@@ -90,10 +91,8 @@ export async function settleSale(
   const asp = Math.round(recent.reduce((s, t) => s + t.amountCents, 0) / recent.length);
   await tx.template.update({ where: { id: moment.templateId }, data: { aspCents: asp } });
 
-  for (const uid of [buyerId, sellerId]) {
-    const agg = await tx.moment.aggregate({ _sum: { topShotScore: true }, where: { ownerId: uid, burned: false } });
-    await tx.user.update({ where: { id: uid }, data: { topShotScore: agg._sum.topShotScore ?? 0 } });
-  }
+  await recomputeUserScores(tx, buyerId);
+  await recomputeUserScores(tx, sellerId);
 
   return { momentId, priceCents: price, feeCents: fee, balanceCents: buyerBalance, flagged };
 }
