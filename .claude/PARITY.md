@@ -105,6 +105,16 @@
 - [x] Web: `/jogar/pelada` (runs, dias, standings) + `/jogar/pelada/dia/[id]` (escalação com fadiga/captain, board)
 - [x] Testes: 19/19 de integração (tamanho/distintos/captain, fadiga real, fechar/estável, survivor eliminação)
 
+## Fase 10 — Admin completo + métricas + jobs (aceite)
+- [x] **Cron runner** no backend: AGENDADO→PUBLICADO, expira ofertas, encerra drops, fecha rodadas da Pelada (+tick manual)
+- [x] **Parcerias** (seção 10.2/10.3): criar time+estádio; **Liberar parceria** (publica tudo em transação); **Pausar** (oculta sem apagar)
+- [x] **Ciclo de publicação** (10.1): publicar/agendar/encerrar/rascunho por conteúdo (template/team/series/set)
+- [x] Cadastro: players, templates (rascunho por padrão), fixtures (janela derivada do kickoff)
+- [x] **Mint de cortesia**; **métricas** (usuários, moments, vendas, volume, taxas, tx sinalizadas, fraude)
+- [x] **Log de auditoria** (`AuditLog`) em toda ação admin; fila de fraude com UI
+- [x] Web: `/admin` (painel), `/admin/parcerias`, `/admin/conteudo`, `/admin/jogos`, `/admin/fraude` (guard isAdmin)
+- [x] Testes: 17/17 de integração (guard, parceria libera/pausa/visibilidade, cron promove/expira, cortesia, auditoria)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -142,7 +152,7 @@
 | 32 | Provenance | Procedência | 3 | ✅ |
 | 33 | Perfil com score/stats | Perfil | 3 | ✅ |
 | 34 | Code of Conduct / anti-wash | Conduta / preço anômalo | 4 | ✅ (flag > 3× ASP) |
-| 35 | Painel admin | Admin | 10 | ⬜ |
+| 35 | Painel admin | Admin | 10 | ✅ |
 
 ## Conceitos novos das telas (seção 11.13)
 | Conceito | Status |

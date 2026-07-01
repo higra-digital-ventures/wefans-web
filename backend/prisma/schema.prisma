@@ -617,6 +617,19 @@ model CheckIn {
   @@index([status])
 }
 
+// Log de auditoria de ações administrativas (seção 10.4).
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  target    String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+}
+
 // ----------------------------- wishlist (seção 11.13) -----------------------------
 
 model Wishlist {

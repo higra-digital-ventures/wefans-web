@@ -47,6 +47,11 @@ export default async function TopBar() {
         </div>
 
         <div className="flex items-center gap-3">
+          {me?.isAdmin && (
+            <Link href="/admin" className="text-sm text-accent2 transition-colors hover:text-ink">
+              Admin
+            </Link>
+          )}
           {me ? (
             <Link
               href="/perfil"

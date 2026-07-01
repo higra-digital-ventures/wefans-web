@@ -89,3 +89,11 @@
 - Auth real (cookie web + JWT/refresh app) — **Fase 1**. Seed já grava `passwordHash` com bcrypt.
 - Lógica dos serviços `mint`/`market`/`checkin` — **Fases 2/4/CK** (na Fase 0 só a estrutura).
 - Geração de spec **OpenAPI** e cliente Dart — a partir da Fase 1.
+
+## Fase 10 — Admin
+- **2026-07-01 — [Fase 10] — Assistente de onboarding (10.3) simplificado.** Em vez do
+  wizard multi-etapas, o admin tem: criar time+estádio (um form), cadastro de conteúdo em
+  rascunho e o botão único **"Liberar parceria"** (publica time+conteúdo em transação) —
+  a mesma semântica, sem o passo-a-passo. Wizard completo fica como melhoria futura.
+- **2026-07-01 — [Fase 10] — Cron in-process** (`jobs/cron.ts`, setInterval 60s + tick na
+  subida + endpoint manual `/admin/cron/tick`). Sem broker/fila externa na v1 (seção 1).

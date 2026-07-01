@@ -42,7 +42,8 @@ async function serverFetch<T>(path: string): Promise<T | null> {
     headers: { cookie: cookieStore.toString() },
     cache: 'no-store',
   });
-  if (res.status === 401) return null;
+  // 401 = deslogado; 404 = recurso não existe (ex.: id órfão após re-seed) — ambos viram null.
+  if (res.status === 401 || res.status === 404) return null;
   if (!res.ok) throw new Error(`API ${path} respondeu ${res.status}`);
   return (await res.json()) as T;
 }
@@ -225,6 +226,15 @@ export async function getFastbreakDayServer(id: string): Promise<FastBreakDayDet
 export async function getFastbreakStandingsServer(runId: string): Promise<FastBreakStandings | null> {
   const data = await serverFetch<{ leaderboard: FastBreakStandings }>(`/api/v1/fastbreak/runs/${runId}/leaderboard`);
   return data?.leaderboard ?? null;
+}
+
+// Genérico para as telas de admin (todas exigem cookie de admin; 401/403 → null).
+export async function adminGet<T>(path: string): Promise<T | null> {
+  try {
+    return await serverFetch<T>(`/api/v1${path}`);
+  } catch {
+    return null;
+  }
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

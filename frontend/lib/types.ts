@@ -307,6 +307,69 @@ export type FastBreakStandings = {
   standings: { rank: number; username: string; wins: number; totalScore: number; days: number; eliminated: boolean }[];
 };
 
+// ----- admin (Fase 10) -----
+export type AdminMetrics = {
+  users: number;
+  moments: { total: number; burned: number };
+  market: { activeListings: number; sales: number; volumeCents: number; feesCents: number; flaggedTx: number };
+  checkins: Record<string, number>;
+  reviewPending: number;
+  templates: Record<string, number>;
+};
+
+export type AdminTeam = {
+  id: string;
+  name: string;
+  partnerStatus: string;
+  status: string;
+  publishAt: string | null;
+  stadium: { id: string; name: string; city: string } | null;
+  templateCount: number;
+};
+
+export type AdminTemplate = {
+  id: string;
+  title: string;
+  player: string;
+  team: string | null;
+  tier: string;
+  editionType: string;
+  editionSize: number | null;
+  mintedCount: number;
+  status: string;
+  publishAt: string | null;
+};
+
+export type AdminFixture = {
+  id: string;
+  home: string;
+  away: string;
+  stadium: string;
+  kickoffAt: string;
+  status: string;
+  checkins: number;
+};
+
+export type FraudCheckin = {
+  id: string;
+  username: string;
+  reason: string | null;
+  lat: number;
+  lng: number;
+  accuracyM: number;
+  createdAt: string;
+  fixture: { home: string; away: string; stadium: string };
+};
+
+export type AuditEntry = {
+  id: string;
+  by: string;
+  action: string;
+  target: string | null;
+  meta: unknown;
+  createdAt: string;
+};
+
 export type ActiveFixture = {
   id: string;
   homeTeam: string;

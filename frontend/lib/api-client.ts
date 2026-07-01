@@ -113,6 +113,10 @@ export const submitFastbreakLineup = (dayId: string, momentIds: string[], captai
 export const closeFastbreakDay = (dayId: string) =>
   request('POST', `/api/v1/admin/fastbreak/days/${dayId}/close`);
 
+// Genérico para ações de admin (Fase 10).
+export const adminPost = <T = unknown>(path: string, body?: unknown) =>
+  request<T>('POST', `/api/v1${path}`, body);
+
 export const joinDrop = (dropId: string) => request('POST', `/api/v1/drops/${dropId}/join`);
 export const startDrop = (dropId: string) => request('POST', `/api/v1/admin/drops/${dropId}/start`);
 export const buyDropPack = (dropId: string, packId: string) =>

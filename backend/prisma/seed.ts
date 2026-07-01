@@ -46,6 +46,7 @@ async function wipe() {
   await prisma.leaderboard.deleteMany();
   await prisma.checklistClaim.deleteMany();
   await prisma.questClaim.deleteMany();
+  await prisma.auditLog.deleteMany();
   await prisma.checklist.deleteMany();
   await prisma.challengeEntry.deleteMany();
   await prisma.challenge.deleteMany();

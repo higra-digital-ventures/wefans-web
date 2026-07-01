@@ -21,6 +21,7 @@ import { questRoutes } from './quests';
 import { ticketRoutes } from './tickets';
 import { leaderboardRoutes } from './leaderboards';
 import { fastbreakRoutes } from './fastbreak';
+import { adminRoutes } from './admin';
 
 /**
  * Agregador das rotas da v1. Novas áreas (market, checkin…) são registradas aqui
@@ -49,4 +50,5 @@ export async function apiV1(app: FastifyInstance) {
   await app.register(ticketRoutes);
   await app.register(leaderboardRoutes);
   await app.register(fastbreakRoutes);
+  await app.register(adminRoutes); // preHandler requireAdmin no plugin inteiro
 }
