@@ -171,3 +171,9 @@
 - [x] **Testes formalizados** (seção 9): `npm run test:integration` — 10 suítes (auth, mint
   concorrente, mercado, check-in, ofertas/locks/desafios, drops, vitrines/missões/fichas,
   rankings/flash, pelada, admin/cron) com re-seed entre elas
+
+## Fase 12 — Hardening (aceite)
+- [x] **Rate limit** global (300/min por usuário/IP) + duro em login/cadastro (10/min) e check-in (20/min); 429 `RATE_LIMITED`
+- [x] **Headers de segurança** (@fastify/helmet); logs estruturados (Fastify) + AuditLog admin
+- [x] **Revisão de transações monetárias**: fila de sinalizadas (>3× ASP) em `/admin/conduta` com resolver
+- [x] **Código de Conduta** público em `/conduta` + footer institucional (seção 11.2)

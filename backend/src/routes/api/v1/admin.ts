@@ -12,6 +12,8 @@ import {
   createTemplate,
   getMetrics,
   listAuditLog,
+  listFlaggedTransactions,
+  resolveFlaggedTransaction,
   listFixturesAdmin,
   listTeamsAdmin,
   listTemplatesAdmin,
@@ -121,6 +123,18 @@ export async function adminRoutes(app: FastifyInstance) {
       .parse(req.body);
     const res = await createFixtureAdmin(prisma, input);
     await audit(prisma, req.userId!, 'fixture.create', res.id);
+    return res;
+  });
+
+  // ----- conduta: revisão de transações monetárias (Fase 12) -----
+  app.get('/admin/transactions/flagged', async () => ({
+    transactions: await listFlaggedTransactions(prisma),
+  }));
+
+  app.post('/admin/transactions/:id/resolve', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const res = await resolveFlaggedTransaction(prisma, id);
+    await audit(prisma, req.userId!, 'conduct.resolve_tx', id);
     return res;
   });
 

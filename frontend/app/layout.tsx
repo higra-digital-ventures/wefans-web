@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { Anton, Outfit, Space_Mono } from 'next/font/google';
 import './globals.css';
 import TopBar from '@/components/TopBar';
+import SiteFooter from '@/components/SiteFooter';
 
 // Fontes da marca (seção 11.1): Anton (display) · Outfit (texto) · Space Mono (série).
 const anton = Anton({ weight: '400', subsets: ['latin'], variable: '--font-display' });
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <TopBar />
         </Suspense>
         {children}
+        <SiteFooter />
       </body>
     </html>
   );

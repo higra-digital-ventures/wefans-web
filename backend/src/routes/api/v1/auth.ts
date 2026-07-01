@@ -45,15 +45,18 @@ async function buildAuthResponse(reply: FastifyReply, user: User) {
   return { user: toUserDTO(user, favoriteTeam), ...tokens };
 }
 
+// Rate limit mais duro nas rotas de credencial (Fase 12 — anti brute-force).
+const strictLimit = { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } };
+
 export async function authRoutes(app: FastifyInstance) {
-  app.post('/auth/register', async (req, reply) => {
+  app.post('/auth/register', strictLimit, async (req, reply) => {
     const input = registerSchema.parse(req.body);
     const user = await registerUser(prisma, input);
     reply.status(201);
     return buildAuthResponse(reply, user);
   });
 
-  app.post('/auth/login', async (req, reply) => {
+  app.post('/auth/login', strictLimit, async (req, reply) => {
     const { email, password } = loginSchema.parse(req.body);
     const user = await authenticate(prisma, email, password);
     return buildAuthResponse(reply, user);

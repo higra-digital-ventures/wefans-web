@@ -249,6 +249,39 @@ export async function courtesyMint(db: PrismaClient, templateId: string, usernam
   );
 }
 
+// ------------------------------------------------------------------ conduta (Fase 12)
+
+/** Transações sinalizadas pelo anti-anômalo (preço > 3× ASP) aguardando revisão. */
+export async function listFlaggedTransactions(db: PrismaClient) {
+  const txs = await db.transaction.findMany({
+    where: { flagged: true },
+    include: {
+      moment: { include: { template: { select: { title: true, aspCents: true } } } },
+      buyer: { select: { username: true } },
+      seller: { select: { username: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+  return txs.map((t) => ({
+    id: t.id,
+    type: t.type,
+    amountCents: t.amountCents,
+    aspCents: t.moment.template.aspCents,
+    title: t.moment.template.title,
+    momentId: t.momentId,
+    buyer: t.buyer?.username ?? null,
+    seller: t.seller?.username ?? null,
+    createdAt: t.createdAt.toISOString(),
+  }));
+}
+
+export async function resolveFlaggedTransaction(db: PrismaClient, txId: string) {
+  const tx = await db.transaction.findUnique({ where: { id: txId } });
+  if (!tx || !tx.flagged) throw notFound('Transação sinalizada não encontrada');
+  await db.transaction.update({ where: { id: txId }, data: { flagged: false } });
+  return { resolved: true };
+}
+
 export async function listAuditLog(db: PrismaClient, limit = 50) {
   const logs = await db.auditLog.findMany({ orderBy: { createdAt: 'desc' }, take: Math.min(limit, 200) });
   const userIds = [...new Set(logs.map((l) => l.userId))];

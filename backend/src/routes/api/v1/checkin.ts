@@ -28,7 +28,7 @@ export async function checkinRoutes(app: FastifyInstance) {
     fixtures: await getActiveFixtures(prisma, req.userId!),
   }));
 
-  app.post('/checkin', { preHandler: requireAuth }, async (req) => {
+  app.post('/checkin', { preHandler: requireAuth, config: { rateLimit: { max: 20, timeWindow: '1 minute' } } }, async (req) => {
     const input = checkinSchema.parse(req.body);
     const result = await submitCheckin(prisma, req.userId!, input);
     // Logar tudo (A2.2 item 8): coords, accuracy, mock, resultado.
