@@ -65,9 +65,14 @@ export default function PerfilClient({
               <span className="ml-2 rounded bg-accent2/20 px-2 py-0.5 text-xs text-accent2">admin</span>
             )}
           </p>
-          <Link href={`/u/${me.username}`} className="text-sm text-accent3 hover:underline">
-            ver perfil público →
-          </Link>
+          <div className="flex gap-3 text-sm">
+            <Link href={`/u/${me.username}`} className="text-accent3 hover:underline">
+              ver perfil público →
+            </Link>
+            <Link href="/ofertas" className="text-accent3 hover:underline">
+              minhas ofertas →
+            </Link>
+          </div>
         </div>
         <button
           type="button"

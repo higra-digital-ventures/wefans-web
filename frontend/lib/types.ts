@@ -107,6 +107,54 @@ export type RecentSale = {
   template: TemplateDTO;
 };
 
+export type OfferForMoment = {
+  id: string;
+  priceCents: number;
+  buyer: string;
+  scope: string;
+  createdAt: string;
+  expiresAt: string | null;
+};
+
+export type MyOffer = {
+  id: string;
+  priceCents: number;
+  status: string;
+  scope: string;
+  momentId: string | null;
+  serial: number | null;
+  createdAt: string;
+  expiresAt: string | null;
+  template: TemplateDTO | null;
+};
+
+export type ChallengeSummary = {
+  id: string;
+  type: string;
+  name: string;
+  description: string;
+  startsAt: string;
+  endsAt: string;
+  active: boolean;
+  burnOnComplete: boolean;
+  completed: boolean;
+  progress: { have: number; need: number } | null;
+};
+
+export type ChallengeDetail = {
+  id: string;
+  type: string;
+  name: string;
+  description: string;
+  startsAt: string;
+  endsAt: string;
+  burnOnComplete: boolean;
+  completed: boolean;
+  required: { template: TemplateDTO; eligible: { id: string; serial: number }[] }[];
+  rewardTemplate: TemplateDTO | null;
+  hasPackReward: boolean;
+};
+
 export type ActiveFixture = {
   id: string;
   homeTeam: string;

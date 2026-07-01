@@ -65,6 +65,24 @@ export const fetchActivity = (limit = 20) =>
 
 export const getNonce = () => request<{ nonce: string; expiresAt: string }>('GET', '/api/v1/checkin/nonce');
 
+export const lockMoment = (id: string) => request('POST', `/api/v1/moments/${id}/lock`);
+export const burnMoment = (id: string) => request('POST', `/api/v1/moments/${id}/burn`);
+export const giftMoment = (id: string, toUsername: string) =>
+  request('POST', `/api/v1/moments/${id}/gift`, { toUsername });
+
+export const makeOffer = (body: { momentId?: string; templateId?: string; priceCents: number }) =>
+  request('POST', '/api/v1/offers', body);
+export const acceptOffer = (offerId: string, momentId?: string) =>
+  request('POST', `/api/v1/offers/${offerId}/accept`, momentId ? { momentId } : undefined);
+export const cancelOffer = (offerId: string) => request('DELETE', `/api/v1/offers/${offerId}`);
+
+export const submitChallenge = (challengeId: string, momentIds: string[]) =>
+  request<{ status: string; grantedPackInventoryId?: string; rewardMomentId?: string }>(
+    'POST',
+    `/api/v1/challenges/${challengeId}/submit`,
+    { momentIds },
+  );
+
 export const submitCheckin = (body: {
   fixtureId: string;
   lat: number;

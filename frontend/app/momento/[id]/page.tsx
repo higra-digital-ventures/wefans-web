@@ -1,10 +1,16 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getMe, getMomentServer, getTemplateMarketServer } from '@/lib/api-server';
+import {
+  getMe,
+  getMomentServer,
+  getMomentOffersServer,
+  getTemplateMarketServer,
+} from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import OwnershipStats from '@/components/OwnershipStats';
 import Provenance from '@/components/Provenance';
 import MomentActions from '@/components/MomentActions';
+import OffersPanel from '@/components/OffersPanel';
 import { TIER_META, editionLabel } from '@/lib/tiers';
 import { brl, dateTime } from '@/lib/format';
 
@@ -12,7 +18,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function MomentoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [m, me] = await Promise.all([getMomentServer(id), getMe()]);
+  const [m, me, offers] = await Promise.all([getMomentServer(id), getMe(), getMomentOffersServer(id)]);
   if (!m) notFound();
   const t = m.template;
   const tm = await getTemplateMarketServer(t.id);
@@ -20,6 +26,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
   const meta = TIER_META[t.tier];
   const burned = t.mintedCount - t.circulatingCount;
   const isOwner = !!me && me.username === m.ownerUsername;
+  const isLocked = m.locked && !!m.lockedUntil && new Date(m.lockedUntil) > new Date();
   const suggested = tm?.floorCents ?? tm?.aspCents ?? t.aspCents;
 
   const stat = (label: string, value: string) => (
@@ -63,6 +70,9 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               listing={m.listing ?? null}
               isOwner={isOwner}
               isAuthed={!!me}
+              isLocked={isLocked}
+              isBurned={m.burned}
+              lockedUntil={m.lockedUntil ?? null}
               suggestedPriceCents={suggested}
             />
           </div>
@@ -117,6 +127,8 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               listed={tm?.activeListings}
             />
           </div>
+
+          <OffersPanel momentId={m.id} isOwner={isOwner} isAuthed={!!me} offers={offers} />
 
           <Provenance items={m.provenance ?? []} />
         </div>

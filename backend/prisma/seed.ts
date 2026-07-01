@@ -341,31 +341,7 @@ async function main() {
     },
   });
 
-  // ---------------------------------------------------------------- Desafios + Missão
-  await prisma.challenge.create({
-    data: {
-      type: ChallengeType.STANDARD,
-      name: 'Colecione a Base',
-      description: 'Tenha (ou trave) os Lances base indicados para ganhar recompensa.',
-      startsAt: days(-1),
-      endsAt: days(30),
-      requiredTemplateIds: baseTemplates.slice(0, 2).map((t) => t.id),
-      rewardPackId: ticketPack.id,
-      burnOnComplete: false,
-    },
-  });
-  await prisma.challenge.create({
-    data: {
-      type: ChallengeType.CRAFTING,
-      name: 'Forja do Galáctico',
-      description: 'Submeta os Lances exigidos no Montador — a entrada é queimada em troca da recompensa.',
-      startsAt: days(-1),
-      endsAt: days(45),
-      requiredTemplateIds: templates.slice(0, 3).map((t) => t.id),
-      rewardTemplateId: templates.find((t) => t.tier === Tier.GALACTICO)?.id ?? null,
-      burnOnComplete: true,
-    },
-  });
+  // ---------------------------------------------------------------- Missão (desafios são criados após os Moments do colecionador)
   await prisma.quest.create({
     data: {
       name: 'Volta ao Mundo',
@@ -458,6 +434,32 @@ async function main() {
     collectorScore += COLLECTOR_POINTS[tpl.tier];
   }
   await prisma.user.update({ where: { id: collector.id }, data: { topShotScore, collectorScore } });
+
+  // ---------------------------------------------------------------- Desafios (Fase 5) — alinhados à coleção do colecionador
+  await prisma.challenge.create({
+    data: {
+      type: ChallengeType.STANDARD,
+      name: 'Colecione a Base',
+      description: 'Tenha os Lances indicados na coleção para ganhar um pacote de troca.',
+      startsAt: days(-1),
+      endsAt: days(30),
+      requiredTemplateIds: [seedTemplates[2].id, seedTemplates[3].id],
+      rewardPackId: ticketPack.id,
+      burnOnComplete: false,
+    },
+  });
+  await prisma.challenge.create({
+    data: {
+      type: ChallengeType.CRAFTING,
+      name: 'Forja do Galáctico',
+      description: 'Submeta (e queime) o Lance exigido no Montador em troca de um Lance Galáctico.',
+      startsAt: days(-1),
+      endsAt: days(45),
+      requiredTemplateIds: [seedTemplates[0].id],
+      rewardTemplateId: templates.find((t) => t.tier === Tier.GALACTICO)?.id ?? null,
+      burnOnComplete: true,
+    },
+  });
 
   // ---------------------------------------------------------------- Wishlist + Vitrine
   const ownedTemplateIds = new Set(seedTemplates.map((t) => t.id));

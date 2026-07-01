@@ -1,6 +1,7 @@
 import type {
   Listing,
   Moment,
+  Offer,
   Pack,
   PackInventory,
   Player,
@@ -148,6 +149,26 @@ export function toTransactionDTO(tx: TxWithActors) {
     buyer: tx.buyer?.username ?? null,
     seller: tx.seller?.username ?? null,
     createdAt: tx.createdAt.toISOString(),
+  };
+}
+
+export function toOfferDTO(
+  o: Offer & {
+    moment?: (Moment & { template: TemplateWithPlayer }) | null;
+    template?: TemplateWithPlayer | null;
+  },
+) {
+  const tpl = o.moment?.template ?? o.template ?? null;
+  return {
+    id: o.id,
+    priceCents: o.priceCents,
+    status: o.status,
+    scope: o.momentId ? 'serial' : 'edition',
+    momentId: o.momentId,
+    serial: o.moment?.serial ?? null,
+    createdAt: o.createdAt.toISOString(),
+    expiresAt: o.expiresAt ? o.expiresAt.toISOString() : null,
+    template: tpl ? toTemplateDTO(tpl) : null,
   };
 }
 

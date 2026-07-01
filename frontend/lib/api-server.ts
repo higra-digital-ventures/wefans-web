@@ -13,6 +13,10 @@ import type {
   TemplateMarket,
   ActiveFixture,
   CheckinHistoryItem,
+  OfferForMoment,
+  MyOffer,
+  ChallengeSummary,
+  ChallengeDetail,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -112,6 +116,26 @@ export async function getActiveFixturesServer(): Promise<ActiveFixture[] | null>
 export async function getCheckinHistoryServer(): Promise<CheckinHistoryItem[]> {
   const data = await serverFetch<{ checkins: CheckinHistoryItem[] }>('/api/v1/checkin/history');
   return data?.checkins ?? [];
+}
+
+export async function getMomentOffersServer(momentId: string): Promise<OfferForMoment[]> {
+  const data = await serverFetch<{ offers: OfferForMoment[] }>(`/api/v1/moments/${momentId}/offers`);
+  return data?.offers ?? [];
+}
+
+export async function getMyOffersServer(): Promise<MyOffer[] | null> {
+  const data = await serverFetch<{ offers: MyOffer[] }>('/api/v1/offers/mine');
+  return data ? data.offers : null;
+}
+
+export async function getChallengesServer(): Promise<ChallengeSummary[]> {
+  const data = await serverFetch<{ challenges: ChallengeSummary[] }>('/api/v1/challenges');
+  return data?.challenges ?? [];
+}
+
+export async function getChallengeServer(id: string): Promise<ChallengeDetail | null> {
+  const data = await serverFetch<{ challenge: ChallengeDetail }>(`/api/v1/challenges/${id}`);
+  return data?.challenge ?? null;
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

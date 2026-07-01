@@ -291,6 +291,7 @@ model Offer {
   priceCents Int
   status     String    @default("ACTIVE") // ACTIVE|ACCEPTED|CANCELLED|EXPIRED
   expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
 
   moment   Moment?   @relation(fields: [momentId], references: [id])
   template Template? @relation(fields: [templateId], references: [id])

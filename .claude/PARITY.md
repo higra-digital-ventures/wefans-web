@@ -62,6 +62,16 @@
 - [x] Web: `/checkin` (simulador do fluxo do app) — check-in no estádio → revelação do pacote
 - [x] Testes: 13/13 de integração (todas as rejeições + fluxo feliz + duplicado + histórico)
 
+## Fase 5 — Ofertas, Lock, Burn, Gift, Desafios + Builder (aceite)
+- [x] **Ofertas**: ofertar em Moment (serial) ou edição; dono aceita → executa como venda (taxa 5%); cancelar
+- [x] **Travar** (1 ano): bloqueia vender/queimar/presentear/forjar; cancela anúncio ativo
+- [x] **Queimar**: burned=true, dono=null, decrementa circulatingCount (mantém mintedCount), recalcula score
+- [x] **Presentear**: transfere sem pagamento, registra GIFT, recalcula scores dos dois
+- [x] **Desafios STANDARD** (possuir os Lances → recompensa) e **CRAFTING** (queima a entrada → recompensa)
+- [x] **Montador de Entrada** (Builder) com feedback de elegibilidade; conclusão única por usuário
+- [x] Web: ações no Momento, painel de Ofertas, `/ofertas`, `/jogar/desafios` (hub + progresso) e Builder
+- [x] Testes: 22/22 de integração; `settleSale` compartilhado entre Buy Now e aceitar-oferta
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -78,13 +88,13 @@
 | 11 | Pack Marketplace (lacrados) | Mercado de Pacotes | 6 | ⬜ |
 | 12 | Marketplace de Moments (Buy Now) | idem | 4 | ✅ |
 | 13 | Taxa, floor, "À venda" | idem | 4 | ✅ |
-| 14 | Offers | Ofertas | 5 | ⬜ |
+| 14 | Offers | Ofertas | 5 | ✅ |
 | 15 | ASP + Pricing Helper | Preço médio + ajudante | 4 | ✅ |
-| 16 | Gifting | Presentear | 5 | ⬜ |
+| 16 | Gifting | Presentear | 5 | ✅ |
 | 17 | Trade Tickets | Fichas de Troca | 7 | ⬜ |
-| 18 | Locking (1 ano) | Travar | 5 | ⬜ |
-| 19 | Burn / Crafting Challenges | Queima / Desafios de Forja | 5 | ⬜ |
-| 20 | Challenges + Builder | Desafios + Montador | 5 | ⬜ |
+| 18 | Locking (1 ano) | Travar | 5 | ✅ |
+| 19 | Burn / Crafting Challenges | Queima / Desafios de Forja | 5 | ✅ |
+| 20 | Challenges + Builder | Desafios + Montador | 5 | ✅ |
 | 21 | Flash Challenges | Desafios Relâmpago | 8 | ⬜ |
 | 22 | Quests / Showcase Challenges | Missões | 7 | ⬜ |
 | 23 | Showcases | Vitrines | 7 | ⬜ |
