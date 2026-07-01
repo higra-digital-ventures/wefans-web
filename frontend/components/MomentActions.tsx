@@ -9,6 +9,7 @@ import {
   createListing,
   giftMoment,
   lockMoment,
+  redeemMomentTicket,
 } from '@/lib/api-client';
 import { brl } from '@/lib/format';
 
@@ -117,6 +118,16 @@ export default function MomentActions({
               }}
             >
               🔥 Queimar
+            </button>
+            <button
+              className={ghost}
+              disabled={pending}
+              onClick={() => {
+                if (confirm('Virar ficha queima o Lance em troca de 1 Ficha de Troca. Continuar?'))
+                  run(() => redeemMomentTicket(momentId));
+              }}
+            >
+              🎫 Virar ficha
             </button>
           </div>
 

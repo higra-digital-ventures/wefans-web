@@ -21,6 +21,10 @@ import type {
   DropDetail,
   PackListingDTO,
   MyPack,
+  ShowcaseSummary,
+  ShowcaseDetail,
+  QuestDTO,
+  TicketPack,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -160,6 +164,31 @@ export async function getPackMarketServer(): Promise<PackListingDTO[]> {
 export async function getMyPacksServer(): Promise<MyPack[] | null> {
   const data = await serverFetch<{ packs: MyPack[] }>('/api/v1/pack-market/mine');
   return data ? data.packs : null;
+}
+
+export async function getPublicShowcasesServer(): Promise<ShowcaseSummary[]> {
+  const data = await serverFetch<{ showcases: ShowcaseSummary[] }>('/api/v1/showcases');
+  return data?.showcases ?? [];
+}
+
+export async function getMyShowcasesServer(): Promise<ShowcaseSummary[] | null> {
+  const data = await serverFetch<{ showcases: ShowcaseSummary[] }>('/api/v1/showcases/mine');
+  return data ? data.showcases : null;
+}
+
+export async function getShowcaseServer(id: string): Promise<ShowcaseDetail | null> {
+  const data = await serverFetch<{ showcase: ShowcaseDetail }>(`/api/v1/showcases/${id}`);
+  return data?.showcase ?? null;
+}
+
+export async function getQuestsServer(): Promise<QuestDTO[]> {
+  const data = await serverFetch<{ quests: QuestDTO[] }>('/api/v1/quests');
+  return data?.quests ?? [];
+}
+
+export async function getTicketPacksServer(): Promise<TicketPack[]> {
+  const data = await serverFetch<{ packs: TicketPack[] }>('/api/v1/tickets/packs');
+  return data?.packs ?? [];
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

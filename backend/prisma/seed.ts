@@ -430,6 +430,7 @@ async function main() {
     templates.find((t) => t.tier === Tier.RARO)!,
     templates.find((t) => t.tier === Tier.LENDARIO)!,
     templates.find((t) => t.tier === Tier.GALACTICO)!,
+    templates.find((t) => t.competition === 'Copa das Marés')!, // garante 3 competições p/ a Missão
   ];
   const ownedMoments = [];
   let topShotScore = 0;

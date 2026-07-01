@@ -198,6 +198,34 @@ export type MyPack = {
   priceCents: number | null;
 };
 
+export type ShowcaseSummary = {
+  id: string;
+  name: string;
+  description: string;
+  public: boolean;
+  ownerUsername: string | null;
+  itemCount: number;
+};
+
+export type ShowcaseDetail = ShowcaseSummary & {
+  items: { order: number; moment: MomentDTO }[];
+  isOwner: boolean;
+};
+
+export type QuestDTO = {
+  id: string;
+  name: string;
+  description: string;
+  startsAt: string;
+  endsAt: string;
+  active: boolean;
+  claimed: boolean;
+  eligible: boolean;
+  criteria: unknown;
+};
+
+export type TicketPack = PackDTO & { ticketCost: number };
+
 export type ActiveFixture = {
   id: string;
   homeTeam: string;

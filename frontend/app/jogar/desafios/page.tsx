@@ -70,8 +70,11 @@ export default async function DesafiosPage() {
     <main className="mx-auto max-w-5xl px-6 py-12">
       <div className="mb-1 flex flex-wrap items-baseline gap-4">
         <h1 className="font-display text-4xl uppercase text-ink">Desafios</h1>
-        <span className="text-sm text-muted/50" title="Em breve">
-          Rankings · Missões · Pelada
+        <span className="text-sm">
+          <Link href="/jogar/missoes" className="text-accent3 hover:underline">
+            Missões
+          </Link>
+          <span className="text-muted/50" title="Em breve"> · Rankings · Pelada</span>
         </span>
       </div>
       <p className="mb-8 text-muted">Complete coleções e forje Lances para ganhar recompensas.</p>

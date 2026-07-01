@@ -72,6 +72,9 @@ export default function PerfilClient({
             <Link href="/ofertas" className="text-accent3 hover:underline">
               minhas ofertas →
             </Link>
+            <Link href="/fichas" className="text-accent3 hover:underline">
+              fichas de troca →
+            </Link>
           </div>
         </div>
         <button

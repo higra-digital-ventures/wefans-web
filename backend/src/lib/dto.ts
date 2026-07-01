@@ -5,6 +5,8 @@ import type {
   Pack,
   PackInventory,
   Player,
+  Showcase,
+  ShowcaseItem,
   Team,
   Template,
   Transaction,
@@ -169,6 +171,22 @@ export function toOfferDTO(
     createdAt: o.createdAt.toISOString(),
     expiresAt: o.expiresAt ? o.expiresAt.toISOString() : null,
     template: tpl ? toTemplateDTO(tpl) : null,
+  };
+}
+
+type ShowcaseItemFull = ShowcaseItem & { moment: MomentWithTemplate };
+
+export function toShowcaseDTO(
+  s: Showcase & { items?: ShowcaseItemFull[]; owner?: { username: string } | null; _count?: { items: number } },
+) {
+  return {
+    id: s.id,
+    name: s.name,
+    description: s.description,
+    public: s.public,
+    ownerUsername: s.owner?.username ?? null,
+    itemCount: s._count?.items ?? s.items?.length ?? 0,
+    items: s.items ? s.items.map((i) => ({ order: i.order, moment: toMomentDTO(i.moment) })) : undefined,
   };
 }
 

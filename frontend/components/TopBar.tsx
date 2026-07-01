@@ -9,6 +9,7 @@ const NAV: { label: string; href?: string }[] = [
   { label: 'Pacotes', href: '/pacotes' },
   { label: 'Mercado', href: '/mercado' },
   { label: 'Jogar', href: '/jogar/desafios' },
+  { label: 'Vitrines', href: '/vitrines' },
   { label: 'Check-in', href: '/checkin' },
   { label: 'Coleção', href: '/colecao' },
 ];

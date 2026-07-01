@@ -410,6 +410,16 @@ model Quest {
   endsAt           DateTime
 }
 
+model QuestClaim {
+  id        String   @id @default(cuid())
+  questId   String
+  userId    String
+  claimedAt DateTime @default(now())
+
+  @@unique([questId, userId])
+  @@index([userId])
+}
+
 // ----------------------------- rankings / checklists -----------------------------
 
 model Leaderboard {

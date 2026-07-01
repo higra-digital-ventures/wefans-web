@@ -83,6 +83,24 @@ export const submitChallenge = (challengeId: string, momentIds: string[]) =>
     { momentIds },
   );
 
+export const createShowcase = (body: { name: string; description?: string; public?: boolean }) =>
+  request<{ showcase: { id: string } }>('POST', '/api/v1/showcases', body);
+export const updateShowcase = (id: string, body: { name?: string; description?: string; public?: boolean }) =>
+  request('PATCH', `/api/v1/showcases/${id}`, body);
+export const deleteShowcase = (id: string) => request('DELETE', `/api/v1/showcases/${id}`);
+export const addShowcaseItem = (id: string, momentId: string) =>
+  request('POST', `/api/v1/showcases/${id}/items`, { momentId });
+export const removeShowcaseItem = (id: string, momentId: string) =>
+  request('DELETE', `/api/v1/showcases/${id}/items/${momentId}`);
+
+export const claimQuest = (id: string) =>
+  request<{ status: string; rewardMomentId?: string }>('POST', `/api/v1/quests/${id}/claim`);
+
+export const redeemMomentTicket = (momentId: string) =>
+  request<{ tradeTickets: number }>('POST', `/api/v1/moments/${momentId}/redeem-ticket`);
+export const redeemTicketsForPack = (packId: string) =>
+  request<{ inventoryId: string; tradeTickets: number }>('POST', `/api/v1/tickets/packs/${packId}/redeem`);
+
 export const joinDrop = (dropId: string) => request('POST', `/api/v1/drops/${dropId}/join`);
 export const startDrop = (dropId: string) => request('POST', `/api/v1/admin/drops/${dropId}/start`);
 export const buyDropPack = (dropId: string, packId: string) =>

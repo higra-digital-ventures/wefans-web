@@ -80,6 +80,13 @@
 - [x] Web: `/drops`, `/drop/[id]` (sala/fila/janela/rebound), `/mercado/pacotes`
 - [x] Testes: 20/20 de integração (gate de score, fila aleatória, janela, rebound, mercado de pacotes)
 
+## Fase 7 — Vitrines, Missões, Fichas de Troca (aceite)
+- [x] **Vitrines** (Showcases): criar/editar/excluir, adicionar/remover Lances, público/privado, `/vitrine/[id]`
+- [x] **Missões** (Quests): critério (ex.: vitrine com 3 competições) → recompensa; resgate único (`QuestClaim`)
+- [x] **Fichas de Troca**: cada Lance vira 1 ficha (queima o Lance); trocar 3 fichas por pacote `ticketOnly`
+- [x] Web: `/vitrines`, `/vitrine/[id]` (editor), `/jogar/missoes`, `/fichas`; ação "Virar ficha" no Momento
+- [x] Testes: 18/18 de integração (vitrines CRUD + visibilidade, missão elegível/resgate/único, fichas)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -99,13 +106,13 @@
 | 14 | Offers | Ofertas | 5 | ✅ |
 | 15 | ASP + Pricing Helper | Preço médio + ajudante | 4 | ✅ |
 | 16 | Gifting | Presentear | 5 | ✅ |
-| 17 | Trade Tickets | Fichas de Troca | 7 | ⬜ |
+| 17 | Trade Tickets | Fichas de Troca | 7 | ✅ |
 | 18 | Locking (1 ano) | Travar | 5 | ✅ |
 | 19 | Burn / Crafting Challenges | Queima / Desafios de Forja | 5 | ✅ |
 | 20 | Challenges + Builder | Desafios + Montador | 5 | ✅ |
 | 21 | Flash Challenges | Desafios Relâmpago | 8 | ⬜ |
-| 22 | Quests / Showcase Challenges | Missões | 7 | ⬜ |
-| 23 | Showcases | Vitrines | 7 | ⬜ |
+| 22 | Quests / Showcase Challenges | Missões | 7 | ✅ |
+| 23 | Showcases | Vitrines | 7 | ✅ |
 | 24 | Top Shot Score (dinâmico) | Pontuação wefans | 4 | ✅ |
 | 25 | Collector Score | Score do Colecionador | 6 | ✅ |
 | 26 | Leaderboards Time/Jogador | Rankings | 8 | ⬜ |
