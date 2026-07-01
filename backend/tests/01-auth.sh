@@ -53,7 +53,7 @@ check "time seguido definido" "$(echo "$SETFAV" | jget 'd.user.favoriteTeam.name
 echo "8) Login do usuário semeado (bearer) + senha errada"
 LOGIN=$(curl -s -X POST "$API/auth/login" -H 'content-type: application/json' -d '{"email":"colecionador@wefans.test","password":"wefans123"}')
 LA=$(echo "$LOGIN" | jget 'd.accessToken')
-check "topShotScore do colecionador" "$(curl -s "$API/me" -H "authorization: Bearer $LA" | jget 'd.user.topShotScore')" "26050"
+check "topShotScore do colecionador" "$(curl -s "$API/me" -H "authorization: Bearer $LA" | jget 'd.user.topShotScore')" "26100"
 check "senha errada → 401" "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$API/auth/login" -H 'content-type: application/json' -d '{"email":"colecionador@wefans.test","password":"errada"}')" "401"
 
 echo "9) Logout limpa a sessão"

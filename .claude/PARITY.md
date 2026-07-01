@@ -148,7 +148,7 @@
 | 28 | Fast Break (fantasy) | Pelada | 9 | ✅ |
 | 29 | Survivor pool | Mata-mata | 9 | ✅ |
 | 30 | Carteira + depósito | idem (simulado) | 1 | ✅ |
-| 31 | Withdraw / redeem físico | Saque / resgate | 13 | ⬜ |
+| 31 | Withdraw / redeem físico | Saque / resgate | 13 | 🟨 (stub — OwnershipProvider pronto p/ plugar chain) |
 | 32 | Provenance | Procedência | 3 | ✅ |
 | 33 | Perfil com score/stats | Perfil | 3 | ✅ |
 | 34 | Code of Conduct / anti-wash | Conduta / preço anômalo | 4 | ✅ (flag > 3× ASP) |
@@ -177,3 +177,12 @@
 - [x] **Headers de segurança** (@fastify/helmet); logs estruturados (Fastify) + AuditLog admin
 - [x] **Revisão de transações monetárias**: fila de sinalizadas (>3× ASP) em `/admin/conduta` com resolver
 - [x] **Código de Conduta** público em `/conduta` + footer institucional (seção 11.2)
+
+## Fase 13 (opcional) — On-chain (entregue como abstração + stub)
+- [x] Interface **`OwnershipProvider`** (`onMint`/`onTransfer`/`onBurn`) + impl **`DbOwnership`** (v1 em banco)
+- [x] `POST /wallet/withdraw` → stub honesto (INDISPONIVEL até plugar Flow/L2); resgate físico idem
+- [ ] Integração real com blockchain (fora do escopo desta versão, por design do brief)
+
+---
+
+## 🏁 Status final: 33 ✅ + 1 🟨 (stub) de 35 itens · Fases 0→13 concluídas

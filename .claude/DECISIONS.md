@@ -96,3 +96,16 @@
   a mesma semântica, sem o passo-a-passo. Wizard completo fica como melhoria futura.
 - **2026-07-01 — [Fase 10] — Cron in-process** (`jobs/cron.ts`, setInterval 60s + tick na
   subida + endpoint manual `/admin/cron/tick`). Sem broker/fila externa na v1 (seção 1).
+
+## Fases 11–13 — Polimento, Hardening, On-chain
+- **2026-07-01 — [Fase 11] — 3D Moment em Three.js** (`components/Moment3D.tsx`): slab
+  2.4×3×1.0 com CanvasTexture por face e moldura de 12 barras emissivas; sem
+  post-processing (glow fake por cor, como pedia a seção 11.7). O protótipo
+  `wefans_3d_moment.html` não estava no repo — implementado da especificação.
+- **2026-07-01 — [Fase 12] — Rate limit de credencial relaxado fora de produção**
+  (10/min em prod, 100/min em dev) para a suíte de integração não flakear.
+- **2026-07-01 — [Fase 13] — On-chain entregue como abstração** (`services/ownership.ts`):
+  interface `OwnershipProvider` + `DbOwnership` (posse em banco) e `POST /wallet/withdraw`
+  como stub honesto. A integração real (Flow/L2, App Check etc.) fica para quando houver
+  decisão de chain — os serviços não precisarão mudar (mutações de posse já são atômicas
+  e centralizadas).

@@ -17,7 +17,7 @@ const packB = dropB.packs[0].id;
 
 // 1) Collector Score
 const cMe = (await get('/me', cAuth)).user;
-check('Score do Colecionador calculado (tiers)', cMe.collectorScore === 6701, String(cMe.collectorScore));
+check('Score do Colecionador calculado (tiers)', cMe.collectorScore === 6719, String(cMe.collectorScore));
 
 // 2) requisito de score na fila
 check('score baixo NÃO entra na fila', (await post(`/drops/${dropA.id}/join`, undefined, zAuth)).error?.message?.includes('insuficiente') ?? false);

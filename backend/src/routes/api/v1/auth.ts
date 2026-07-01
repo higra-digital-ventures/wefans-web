@@ -46,7 +46,10 @@ async function buildAuthResponse(reply: FastifyReply, user: User) {
 }
 
 // Rate limit mais duro nas rotas de credencial (Fase 12 — anti brute-force).
-const strictLimit = { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } };
+// Em dev/teste a folga é maior para não flakear a suíte de integração.
+const strictLimit = {
+  config: { rateLimit: { max: env.NODE_ENV === 'production' ? 10 : 100, timeWindow: '1 minute' } },
+};
 
 export async function authRoutes(app: FastifyInstance) {
   app.post('/auth/register', strictLimit, async (req, reply) => {
