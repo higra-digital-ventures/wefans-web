@@ -66,7 +66,15 @@ wefans/
   docker-compose.yml, dev.sh, package.json (workspaces)
 ```
 
-## Fases
-O build segue as fases da seção 12 do brief. **Fase 0 (fundação API-first)** está entregue:
-schema completo, seed, `/api/v1` (health + stats) e uma home no frontend que lê a API.
-Próxima: **Fase 1 — Auth (web+app) + Carteira**.
+## Status
+**Todas as fases do plano (0→13) estão entregues** — ver [`.claude/PARITY.md`](.claude/PARITY.md)
+(33✅ + 1 stub de 35 itens de paridade com o Top Shot): auth web+app, carteira, mint atômico,
+coleção/procedência, mercado (taxa/ASP/score dinâmico/anti-anômalo), **check-in por
+geolocalização**, ofertas/travar/queimar/presentear, desafios (padrão/forja/relâmpago),
+drops com fila+rebound, mercado de pacotes, vitrines, missões, fichas de troca, rankings,
+checklists, **Pelada (fantasy)** com fadiga/survivor, admin completo com parcerias e cron,
+**3D Moment (Three.js)**, hardening (rate limit/helmet/conduta) e a abstração
+`OwnershipProvider` para on-chain futuro.
+
+- Testes: `npm run test:integration` (10 suítes, 158 checks) com a API no ar.
+- Logins de teste: `admin@wefans.test` · `colecionador@wefans.test` (senha `wefans123`).
