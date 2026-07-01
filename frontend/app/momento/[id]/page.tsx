@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getMomentServer } from '@/lib/api-server';
+import { getMe, getMomentServer, getTemplateMarketServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import OwnershipStats from '@/components/OwnershipStats';
 import Provenance from '@/components/Provenance';
+import MomentActions from '@/components/MomentActions';
 import { TIER_META, editionLabel } from '@/lib/tiers';
 import { brl, dateTime } from '@/lib/format';
 
@@ -11,12 +12,16 @@ export const dynamic = 'force-dynamic';
 
 export default async function MomentoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const m = await getMomentServer(id);
+  const [m, me] = await Promise.all([getMomentServer(id), getMe()]);
   if (!m) notFound();
-
   const t = m.template;
+  const tm = await getTemplateMarketServer(t.id);
+
   const meta = TIER_META[t.tier];
   const burned = t.mintedCount - t.circulatingCount;
+  const isOwner = !!me && me.username === m.ownerUsername;
+  const suggested = tm?.floorCents ?? tm?.aspCents ?? t.aspCents;
+
   const stat = (label: string, value: string) => (
     <div>
       <div className="font-display text-xl text-ink">{value}</div>
@@ -50,34 +55,67 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           <p className="text-muted">
             {t.title} · {t.playType} · {new Date(t.matchDate).toLocaleDateString('pt-BR')}
           </p>
+          <div className="mt-3 font-mono text-2xl text-ink">{editionLabel(t, m.serial)}</div>
 
-          <div className="mt-4 font-mono text-2xl text-ink">{editionLabel(t, m.serial)}</div>
-          {(t.parallel !== 'BASE' || t.badges.length > 0) && (
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {t.parallel !== 'BASE' && (
-                <span className="rounded bg-panel2 px-2 py-0.5 text-xs text-ink">{t.parallel}</span>
+          <div className="mt-5">
+            <MomentActions
+              momentId={m.id}
+              listing={m.listing ?? null}
+              isOwner={isOwner}
+              isAuthed={!!me}
+              suggestedPriceCents={suggested}
+            />
+          </div>
+
+          {/* Mercado da edição + ajudante de preço */}
+          {tm && (
+            <div className="mt-4 grid grid-cols-3 gap-4 rounded-2xl border border-line bg-panel p-4 text-sm">
+              <div>
+                <div className="font-mono text-ink">{tm.floorCents != null ? brl(tm.floorCents) : '—'}</div>
+                <div className="text-xs text-muted">Menor preço</div>
+              </div>
+              <div>
+                <div className="font-mono text-ink">{brl(tm.aspCents)}</div>
+                <div className="text-xs text-muted">Preço médio</div>
+              </div>
+              <div>
+                <div className="font-mono text-ink">{tm.activeListings}</div>
+                <div className="text-xs text-muted">À venda</div>
+              </div>
+              {isOwner && tm.recentSales.length > 0 && (
+                <div className="col-span-3 border-t border-line pt-3">
+                  <div className="mb-1 text-xs uppercase tracking-widest text-muted">
+                    Ajudante de preço · vendas recentes
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {tm.recentSales.slice(0, 6).map((s, i) => (
+                      <span key={i} className="rounded bg-panel2 px-2 py-0.5 font-mono text-xs text-accent3">
+                        {brl(s.amountCents)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               )}
-              {t.badges.map((b) => (
-                <span key={b} className="rounded bg-panel2 px-2 py-0.5 text-xs text-muted">
-                  {b}
-                </span>
-              ))}
             </div>
           )}
 
           <div className="mt-6 grid grid-cols-2 gap-4">
             {stat('Pontuação wefans', m.topShotScore.toLocaleString('pt-BR'))}
             {stat('Adquirido por', brl(m.acquiredPriceCents))}
-            {stat('Preço médio (ASP)', brl(t.aspCents))}
             {stat('Dono', m.ownerUsername ? `@${m.ownerUsername}` : '—')}
+            {stat('Cunhado em', dateTime(m.mintedAt).split(',')[0])}
           </div>
-          <p className="mt-2 text-xs text-muted">Cunhado em {dateTime(m.mintedAt)}</p>
 
           <div className="mt-8">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted">
               Propriedade da edição
             </h2>
-            <OwnershipStats existing={t.mintedCount} circulating={t.circulatingCount} burned={burned} />
+            <OwnershipStats
+              existing={t.mintedCount}
+              circulating={t.circulatingCount}
+              burned={burned}
+              listed={tm?.activeListings}
+            />
           </div>
 
           <Provenance items={m.provenance ?? []} />

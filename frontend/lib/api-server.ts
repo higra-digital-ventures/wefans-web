@@ -8,6 +8,9 @@ import type {
   MomentDTO,
   ProfileStats,
   PublicProfile,
+  MarketListing,
+  RecentSale,
+  TemplateMarket,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -82,6 +85,20 @@ export async function getPublicProfileServer(username: string): Promise<PublicPr
 export async function getPublicCollectionServer(username: string): Promise<MomentDTO[]> {
   const data = await serverFetch<{ moments: MomentDTO[] }>(`/api/v1/users/${username}/collection`);
   return data?.moments ?? [];
+}
+
+export async function getMarketServer(query = ''): Promise<MarketListing[]> {
+  const data = await serverFetch<{ listings: MarketListing[] }>(`/api/v1/market${query}`);
+  return data?.listings ?? [];
+}
+
+export async function getActivityServer(limit = 20): Promise<RecentSale[]> {
+  const data = await serverFetch<{ sales: RecentSale[] }>(`/api/v1/market/activity?limit=${limit}`);
+  return data?.sales ?? [];
+}
+
+export async function getTemplateMarketServer(id: string): Promise<TemplateMarket | null> {
+  return serverFetch<TemplateMarket>(`/api/v1/market/template/${id}`);
 }
 
 // Retorna null se não autenticado (401); [] se logado e sem Moments.

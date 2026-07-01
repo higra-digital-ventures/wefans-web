@@ -47,3 +47,18 @@ export const addWishlist = (templateId: string) =>
 
 export const removeWishlist = (templateId: string) =>
   request('DELETE', `/api/v1/me/wishlist/${templateId}`);
+
+export const createListing = (momentId: string, priceCents: number) =>
+  request<{ listing: { id: string; priceCents: number } }>('POST', '/api/v1/listings', {
+    momentId,
+    priceCents,
+  });
+
+export const cancelListing = (listingId: string) =>
+  request('DELETE', `/api/v1/listings/${listingId}`);
+
+export const buyMoment = (listingId: string) =>
+  request<{ momentId: string; flagged: boolean }>('POST', `/api/v1/listings/${listingId}/buy`);
+
+export const fetchActivity = (limit = 20) =>
+  request<{ sales: import('./types').RecentSale[] }>('GET', `/api/v1/market/activity?limit=${limit}`);

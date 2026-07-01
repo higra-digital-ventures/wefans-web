@@ -32,7 +32,13 @@ export default async function ColecaoPage({
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {moments.map((m) => (
-            <LanceCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
+            <LanceCard
+              key={m.id}
+              template={m.template}
+              serial={m.serial}
+              listingPriceCents={m.listingPriceCents}
+              href={`/momento/${m.id}`}
+            />
           ))}
         </div>
       )}

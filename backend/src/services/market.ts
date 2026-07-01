@@ -1,0 +1,198 @@
+import { Prisma, type PrismaClient, type Tier } from '@prisma/client';
+import { badRequest, notFound } from '../lib/errors';
+import { toListingDTO, toTemplateDTO } from '../lib/dto';
+import { withDbRetry } from '../lib/tx';
+
+const FEE_BPS = 500; // 5% taxa da plataforma
+const ASP_WINDOW = 10; // média móvel sobre as últimas N vendas
+const TX_OPTS = { timeout: 15_000, maxWait: 10_000 } as const;
+
+// ---------------------------------------------------------------- listar / cancelar
+
+/** Cria (ou re-ativa) o anúncio de um Moment. Listing é único por Moment (schema). */
+export async function createListing(db: PrismaClient, userId: string, momentId: string, priceCents: number) {
+  if (!Number.isInteger(priceCents) || priceCents <= 0) throw badRequest('Preço inválido');
+  return db.$transaction(async (tx) => {
+    const moment = await tx.moment.findUnique({ where: { id: momentId } });
+    if (!moment || moment.ownerId !== userId) throw notFound('Momento não encontrado');
+    if (moment.burned) throw badRequest('Momento queimado não pode ser listado');
+    if (moment.locked) throw badRequest('Momento travado não pode ser listado');
+    const listing = await tx.listing.upsert({
+      where: { momentId },
+      create: { momentId, sellerId: userId, priceCents, status: 'ACTIVE' },
+      update: { sellerId: userId, priceCents, status: 'ACTIVE' },
+    });
+    return toListingDTO(listing);
+  });
+}
+
+export async function cancelListing(db: PrismaClient, userId: string, listingId: string) {
+  const listing = await db.listing.findUnique({ where: { id: listingId } });
+  if (!listing || listing.sellerId !== userId) throw notFound('Anúncio não encontrado');
+  if (listing.status !== 'ACTIVE') throw badRequest('Anúncio não está ativo');
+  await db.listing.update({ where: { id: listingId }, data: { status: 'CANCELLED' } });
+  return { ok: true };
+}
+
+// ---------------------------------------------------------------- comprar (Buy Now)
+
+/**
+ * Compra a preço fixo (regra 6): transfere dono, debita comprador, credita vendedor
+ * menos taxa 5%, registra Transaction(BUY), atualiza ASP (média móvel), recalcula a
+ * Pontuação wefans dos dois e sinaliza preço anômalo (> 3× ASP). Tudo atômico.
+ */
+export async function buyMoment(db: PrismaClient, buyerId: string, listingId: string) {
+  return withDbRetry(() =>
+    db.$transaction(async (tx) => {
+      const listing = await tx.listing.findUnique({
+        where: { id: listingId },
+        include: { moment: { include: { template: true } } },
+      });
+      if (!listing || listing.status !== 'ACTIVE') throw badRequest('Anúncio indisponível');
+      const moment = listing.moment;
+      if (moment.burned || moment.locked) throw badRequest('Momento indisponível');
+      if (listing.sellerId === buyerId) throw badRequest('Não é possível comprar o próprio anúncio');
+
+      const price = listing.priceCents;
+      const oldAsp = moment.template.aspCents;
+      const fee = Math.round((price * FEE_BPS) / 10_000);
+      const proceeds = price - fee;
+
+      // débito atômico do comprador (não deixa saldo negativo)
+      const rows = await tx.$queryRaw<Array<{ balanceCents: number }>>(Prisma.sql`
+        UPDATE "User" SET "balanceCents" = "balanceCents" - ${price}
+        WHERE "id" = ${buyerId} AND "balanceCents" >= ${price}
+        RETURNING "balanceCents"
+      `);
+      if (rows.length === 0) throw badRequest('Saldo insuficiente');
+      const buyerBalance = Number(rows[0].balanceCents);
+
+      const seller = await tx.user.update({
+        where: { id: listing.sellerId },
+        data: { balanceCents: { increment: proceeds } },
+      });
+
+      // Pontuação wefans dinâmica: max(preço pago, ASP anterior).
+      const newScore = Math.round((Math.max(price, oldAsp) / 100) * 10);
+      await tx.moment.update({
+        where: { id: moment.id },
+        data: { ownerId: buyerId, acquiredPriceCents: price, topShotScore: newScore },
+      });
+      await tx.listing.update({ where: { id: listing.id }, data: { status: 'SOLD' } });
+
+      const flagged = oldAsp > 0 && price > oldAsp * 3; // revisão anti-anômalo (Conduta)
+      await tx.transaction.create({
+        data: {
+          type: 'BUY',
+          momentId: moment.id,
+          buyerId,
+          sellerId: listing.sellerId,
+          amountCents: price,
+          feeCents: fee,
+          flagged,
+        },
+      });
+      await tx.walletTransaction.create({
+        data: { userId: buyerId, type: 'PURCHASE', amountCents: -price, balanceAfterCents: buyerBalance, memo: `Compra: ${moment.template.title}` },
+      });
+      await tx.walletTransaction.create({
+        data: { userId: listing.sellerId, type: 'SALE', amountCents: proceeds, balanceAfterCents: seller.balanceCents, memo: `Venda: ${moment.template.title} (taxa ${fee})` },
+      });
+
+      // ASP = média das últimas N vendas (BUY) da edição, já incluindo esta.
+      const recent = await tx.transaction.findMany({
+        where: { type: 'BUY', moment: { templateId: moment.templateId } },
+        orderBy: { createdAt: 'desc' },
+        take: ASP_WINDOW,
+        select: { amountCents: true },
+      });
+      const asp = Math.round(recent.reduce((s, t) => s + t.amountCents, 0) / recent.length);
+      await tx.template.update({ where: { id: moment.templateId }, data: { aspCents: asp } });
+
+      // Recalcula a Pontuação wefans dos dois (soma dos Moments possuídos).
+      for (const uid of [buyerId, listing.sellerId]) {
+        const agg = await tx.moment.aggregate({ _sum: { topShotScore: true }, where: { ownerId: uid, burned: false } });
+        await tx.user.update({ where: { id: uid }, data: { topShotScore: agg._sum.topShotScore ?? 0 } });
+      }
+
+      return { momentId: moment.id, priceCents: price, feeCents: fee, balanceCents: buyerBalance, flagged };
+    }, TX_OPTS),
+  );
+}
+
+// ---------------------------------------------------------------- listagens / feed
+
+export async function listMarket(
+  db: PrismaClient,
+  filters: { tier?: Tier },
+  sort: 'recent' | 'price_asc' | 'price_desc' = 'recent',
+) {
+  const listings = await db.listing.findMany({
+    where: { status: 'ACTIVE', ...(filters.tier ? { moment: { template: { tier: filters.tier } } } : {}) },
+    include: { moment: { include: { template: { include: { player: true } } } }, seller: { select: { username: true } } },
+    orderBy: sort === 'price_asc' ? { priceCents: 'asc' } : sort === 'price_desc' ? { priceCents: 'desc' } : { createdAt: 'desc' },
+    take: 120,
+  });
+  return listings.map((l) => ({
+    listingId: l.id,
+    priceCents: l.priceCents,
+    seller: l.seller.username,
+    createdAt: l.createdAt.toISOString(),
+    momentId: l.moment.id,
+    serial: l.moment.serial,
+    template: toTemplateDTO(l.moment.template),
+  }));
+}
+
+/** Feed de vendas ao vivo (seção 11.3). */
+export async function listRecentSales(db: PrismaClient, limit = 25) {
+  const txs = await db.transaction.findMany({
+    where: { type: { in: ['BUY', 'OFFER_ACCEPT'] } },
+    include: {
+      moment: { include: { template: { include: { player: true } } } },
+      buyer: { select: { username: true } },
+      seller: { select: { username: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: Math.min(limit, 50),
+  });
+  return txs.map((t) => ({
+    id: t.id,
+    priceCents: t.amountCents,
+    buyer: t.buyer?.username ?? null,
+    seller: t.seller?.username ?? null,
+    createdAt: t.createdAt.toISOString(),
+    momentId: t.moment.id,
+    serial: t.moment.serial,
+    flagged: t.flagged,
+    template: toTemplateDTO(t.moment.template),
+  }));
+}
+
+/** Floor, ASP, nº à venda e vendas recentes (Pricing Helper) de uma edição. */
+export async function getTemplateMarket(db: PrismaClient, templateId: string) {
+  const [template, floor, activeListings, recentSales] = await Promise.all([
+    db.template.findUnique({ where: { id: templateId }, select: { aspCents: true } }),
+    db.listing.findFirst({
+      where: { status: 'ACTIVE', moment: { templateId } },
+      orderBy: { priceCents: 'asc' },
+      include: { moment: { select: { id: true } } },
+    }),
+    db.listing.count({ where: { status: 'ACTIVE', moment: { templateId } } }),
+    db.transaction.findMany({
+      where: { type: 'BUY', moment: { templateId } },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      select: { amountCents: true, createdAt: true },
+    }),
+  ]);
+  if (!template) throw notFound('Lance não encontrado');
+  return {
+    aspCents: template.aspCents,
+    floorCents: floor?.priceCents ?? null,
+    floorListingId: floor?.id ?? null,
+    floorMomentId: floor?.moment.id ?? null,
+    activeListings,
+    recentSales: recentSales.map((s) => ({ amountCents: s.amountCents, createdAt: s.createdAt.toISOString() })),
+  };
+}

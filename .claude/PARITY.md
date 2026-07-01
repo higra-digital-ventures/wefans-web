@@ -42,6 +42,16 @@
 - [x] **Wishlist** (seção 11.13): toggle na página da edição + grade no perfil
 - [x] (Coleção com grid/filtros e detalhe do Momento já entregues na Fase 2)
 
+## Fase 4 — Mercado + Scores (aceite) — fecha o MVP econômico
+- [x] Buy Now (preço fixo), listar/deslistar (Listing único por Moment, re-ativável)
+- [x] ✅ compra ajusta saldos (comprador − preço, vendedor + preço − **taxa 5%**), ASP e score
+- [x] Floor price, Preço médio (ASP = média móvel das últimas vendas), indicador "À venda"
+- [x] **Pricing Helper** (vendas recentes ao listar); **Pontuação wefans dinâmica** (`max(preço, ASP)`)
+- [x] Revisão **anti-anômalo** (preço > 3× ASP marca a transação) — Conduta
+- [x] **Feed de vendas ao vivo** (polling) na home e em `/mercado/atividade`
+- [x] Web: `/mercado` (filtros/ordenação), `/mercado/atividade`, ações (comprar/vender/cancelar) no Momento
+- [x] Testes: 11/11 de integração (taxa, ASP, score dinâmico, anti-anômalo, própria-compra)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -56,10 +66,10 @@
 | 9 | Allowlist / Collector Score na fila | idem | 6 | ⬜ |
 | 10 | Abertura de pacote com revelação | idem | 2 | ✅ (revelação 2D; cubo 3D na Fase 11) |
 | 11 | Pack Marketplace (lacrados) | Mercado de Pacotes | 6 | ⬜ |
-| 12 | Marketplace de Moments (Buy Now) | idem | 4 | ⬜ |
-| 13 | Taxa, floor, "À venda" | idem | 4 | ⬜ |
+| 12 | Marketplace de Moments (Buy Now) | idem | 4 | ✅ |
+| 13 | Taxa, floor, "À venda" | idem | 4 | ✅ |
 | 14 | Offers | Ofertas | 5 | ⬜ |
-| 15 | ASP + Pricing Helper | Preço médio + ajudante | 4 | ⬜ |
+| 15 | ASP + Pricing Helper | Preço médio + ajudante | 4 | ✅ |
 | 16 | Gifting | Presentear | 5 | ⬜ |
 | 17 | Trade Tickets | Fichas de Troca | 7 | ⬜ |
 | 18 | Locking (1 ano) | Travar | 5 | ⬜ |
@@ -68,7 +78,7 @@
 | 21 | Flash Challenges | Desafios Relâmpago | 8 | ⬜ |
 | 22 | Quests / Showcase Challenges | Missões | 7 | ⬜ |
 | 23 | Showcases | Vitrines | 7 | ⬜ |
-| 24 | Top Shot Score (dinâmico) | Pontuação wefans | 4 | ⬜ |
+| 24 | Top Shot Score (dinâmico) | Pontuação wefans | 4 | ✅ |
 | 25 | Collector Score | Score do Colecionador | 6 | ⬜ |
 | 26 | Leaderboards Time/Jogador | Rankings | 8 | ⬜ |
 | 27 | Checklists | Checklists | 8 | ⬜ |
@@ -78,7 +88,7 @@
 | 31 | Withdraw / redeem físico | Saque / resgate | 13 | ⬜ |
 | 32 | Provenance | Procedência | 3 | ✅ |
 | 33 | Perfil com score/stats | Perfil | 3 | ✅ |
-| 34 | Code of Conduct / anti-wash | Conduta / preço anômalo | 4 | ⬜ |
+| 34 | Code of Conduct / anti-wash | Conduta / preço anômalo | 4 | ✅ (flag > 3× ASP) |
 | 35 | Painel admin | Admin | 10 | ⬜ |
 
 ## Conceitos novos das telas (seção 11.13)

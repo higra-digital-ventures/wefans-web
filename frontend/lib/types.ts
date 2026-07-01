@@ -81,6 +81,39 @@ export type MomentDTO = {
   template: TemplateDTO;
   ownerUsername?: string | null;
   provenance?: ProvenanceTx[];
+  listingPriceCents?: number | null;
+  listing?: { id: string; priceCents: number } | null;
+};
+
+export type MarketListing = {
+  listingId: string;
+  priceCents: number;
+  seller: string;
+  createdAt: string;
+  momentId: string;
+  serial: number;
+  template: TemplateDTO;
+};
+
+export type RecentSale = {
+  id: string;
+  priceCents: number;
+  buyer: string | null;
+  seller: string | null;
+  createdAt: string;
+  momentId: string;
+  serial: number;
+  flagged: boolean;
+  template: TemplateDTO;
+};
+
+export type TemplateMarket = {
+  aspCents: number;
+  floorCents: number | null;
+  floorListingId: string | null;
+  floorMomentId: string | null;
+  activeListings: number;
+  recentSales: { amountCents: number; createdAt: string }[];
 };
 
 export type ProfileStats = {

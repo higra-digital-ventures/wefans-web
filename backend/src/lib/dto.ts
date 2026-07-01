@@ -1,4 +1,5 @@
 import type {
+  Listing,
   Moment,
   Pack,
   PackInventory,
@@ -16,7 +17,7 @@ type TxWithActors = Transaction & {
 };
 
 type TemplateWithPlayer = Template & { player: Player };
-type MomentWithTemplate = Moment & { template: TemplateWithPlayer };
+type MomentWithTemplate = Moment & { template: TemplateWithPlayer; listing?: Listing | null };
 type PackInventoryWithPack = PackInventory & { pack: Pack };
 
 // Nunca exponha modelos Prisma crus (seção A1). DTOs versionados e estáveis.
@@ -99,7 +100,18 @@ export function toMomentDTO(m: MomentWithTemplate) {
     burned: m.burned,
     acquiredPriceCents: m.acquiredPriceCents,
     mintedAt: m.mintedAt.toISOString(),
+    listingPriceCents: m.listing && m.listing.status === 'ACTIVE' ? m.listing.priceCents : null,
     template: toTemplateDTO(m.template),
+  };
+}
+
+export function toListingDTO(l: Listing & { seller?: { username: string } | null }) {
+  return {
+    id: l.id,
+    priceCents: l.priceCents,
+    status: l.status,
+    sellerUsername: l.seller?.username ?? null,
+    createdAt: l.createdAt.toISOString(),
   };
 }
 

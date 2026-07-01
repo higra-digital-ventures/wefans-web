@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import TacticalBoard from './TacticalBoard';
 import { TIER_META, editionLabel, isFoil } from '@/lib/tiers';
+import { brl } from '@/lib/format';
 import type { TemplateDTO } from '@/lib/types';
 
 // Carta do Lance (anatomia da seção 11.5/11.12), reusada em catálogo, coleção,
@@ -10,12 +11,16 @@ export default function LanceCard({
   serial,
   href,
   live,
+  priceCents,
+  listingPriceCents,
   className = '',
 }: {
   template: TemplateDTO;
   serial?: number;
   href?: string;
   live?: boolean;
+  priceCents?: number; // preço de venda (mercado) — mostra pílula no rodapé
+  listingPriceCents?: number | null; // "À venda" (coleção)
   className?: string;
 }) {
   const meta = TIER_META[template.tier];
@@ -51,6 +56,11 @@ export default function LanceCard({
         <span className="absolute bottom-2 left-2.5 rounded bg-black/50 px-1.5 py-0.5 font-mono text-[10px] text-ink">
           {editionLabel(template, serial)}
         </span>
+        {listingPriceCents != null && (
+          <span className="absolute bottom-2 right-2.5 rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-300">
+            À venda
+          </span>
+        )}
       </div>
 
       <div className="p-3">
@@ -60,7 +70,13 @@ export default function LanceCard({
           <span className="truncate">{template.player.club}</span>
           <span className="ml-2 shrink-0 font-mono">{template.competition}</span>
         </div>
-        {template.badges.length > 0 && (
+        {priceCents != null && (
+          <div className="mt-2 flex items-baseline justify-between">
+            <span className="text-[10px] uppercase tracking-wide text-muted">Menor preço</span>
+            <span className="font-mono text-sm text-accent3">{brl(priceCents)}</span>
+          </div>
+        )}
+        {priceCents == null && template.badges.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
             {template.badges.map((b) => (
               <span key={b} className="rounded bg-panel2 px-1.5 py-0.5 text-[10px] text-muted">

@@ -6,7 +6,7 @@ import { brl } from '@/lib/format';
 const NAV: { label: string; href?: string }[] = [
   { label: 'Explorar', href: '/explorar' },
   { label: 'Pacotes', href: '/pacotes' },
-  { label: 'Mercado' },
+  { label: 'Mercado', href: '/mercado' },
   { label: 'Jogar' },
   { label: 'Coleção', href: '/colecao' },
 ];

@@ -58,9 +58,13 @@ export async function getTemplateDetail(db: PrismaClient, id: string) {
 export async function getMomentDetail(db: PrismaClient, id: string) {
   const moment = await db.moment.findUnique({
     where: { id },
-    include: { template: { include: { player: true } }, owner: { select: { username: true } } },
+    include: { template: { include: { player: true } }, owner: { select: { username: true } }, listing: true },
   });
   if (!moment) throw notFound('Momento não encontrado');
+  const activeListing =
+    moment.listing && moment.listing.status === 'ACTIVE'
+      ? { id: moment.listing.id, priceCents: moment.listing.priceCents }
+      : null;
   // Procedência: histórico de transações do Moment (MINT já gravado; BUY/SELL/GIFT na Fase 4/5).
   const txs = await db.transaction.findMany({
     where: { momentId: id },
@@ -71,6 +75,7 @@ export async function getMomentDetail(db: PrismaClient, id: string) {
     ...toMomentDTO(moment),
     ownerUsername: moment.owner?.username ?? null,
     provenance: txs.map(toTransactionDTO),
+    listing: activeListing,
   };
 }
 
@@ -81,7 +86,7 @@ export async function listCollection(db: PrismaClient, userId: string, filters: 
       burned: false,
       ...(filters.tier ? { template: { tier: filters.tier } } : {}),
     },
-    include: { template: { include: { player: true } } },
+    include: { template: { include: { player: true } }, listing: true },
     orderBy: { mintedAt: 'desc' },
   });
   return moments.map(toMomentDTO);

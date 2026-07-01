@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getTemplateServer, getWishlistServer } from '@/lib/api-server';
+import { getTemplateMarketServer, getTemplateServer, getWishlistServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import OwnershipStats from '@/components/OwnershipStats';
 import WishlistButton from '@/components/WishlistButton';
@@ -11,7 +11,11 @@ export const dynamic = 'force-dynamic';
 
 export default async function LancePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [t, wishlist] = await Promise.all([getTemplateServer(id), getWishlistServer()]);
+  const [t, wishlist, tm] = await Promise.all([
+    getTemplateServer(id),
+    getWishlistServer(),
+    getTemplateMarketServer(id),
+  ]);
   if (!t) notFound();
   const canWish = wishlist !== null;
   const wished = wishlist?.some((w) => w.id === t.id) ?? false;
@@ -57,11 +61,15 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
 
           <div className="mt-4 font-mono text-2xl text-ink">{editionLabel(t)}</div>
 
+          <div className="mt-6 grid grid-cols-3 gap-4 rounded-2xl border border-line bg-panel p-4">
+            {stat('Menor preço', tm?.floorCents != null ? brl(tm.floorCents) : '—')}
+            {stat('Preço médio', brl(tm?.aspCents ?? t.aspCents))}
+            {stat('À venda', String(tm?.activeListings ?? 0))}
+          </div>
+
           <div className="mt-6 grid grid-cols-2 gap-4">
-            {stat('Preço médio (ASP)', brl(t.aspCents))}
             {stat('Competição', t.competition)}
             {stat('Posição', t.player.position)}
-            {stat('Nacionalidade', t.player.nationality)}
           </div>
 
           <div className="mt-8">
@@ -77,12 +85,21 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link
-              href="/pacotes"
-              className="inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-white"
-            >
-              Conseguir nos pacotes
-            </Link>
+            {tm?.floorMomentId ? (
+              <Link
+                href={`/momento/${tm.floorMomentId}`}
+                className="inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-white"
+              >
+                Comprar · {brl(tm.floorCents ?? 0)}
+              </Link>
+            ) : (
+              <Link
+                href="/pacotes"
+                className="inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-white"
+              >
+                Conseguir nos pacotes
+              </Link>
+            )}
             <WishlistButton templateId={t.id} canWish={canWish} initialWished={wished} />
           </div>
         </div>

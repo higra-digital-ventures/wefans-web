@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { getHealth, getSystemStats, type Health, type SystemStats } from '@/lib/api';
+import { getActivityServer } from '@/lib/api-server';
+import ActivityFeed from '@/components/ActivityFeed';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +32,8 @@ export default async function Home() {
   } catch (e) {
     error = e instanceof Error ? e.message : 'Falha ao conectar na API';
   }
+
+  const activity = error ? [] : await getActivityServer(10).catch(() => []);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
@@ -115,10 +119,26 @@ export default async function Home() {
         </section>
       )}
 
+      {!error && activity.length > 0 && (
+        <section className="mt-10">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
+              Vendas ao vivo no Mercado
+            </h2>
+            <Link href="/mercado/atividade" className="text-sm text-accent3 hover:underline">
+              ver tudo →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-line bg-panel p-3">
+            <ActivityFeed initial={activity} limit={10} />
+          </div>
+        </section>
+      )}
+
       <footer className="mt-16 border-t border-line pt-6 text-xs text-muted">
         Conteúdo 100% fictício · sem marcas/imagens reais (ver{' '}
         <span className="font-mono">.claude/LEGAL.md</span>). Próxima fase:{' '}
-        <span className="text-ink">Mercado — Buy Now, listar/deslistar, taxa, ASP, Pontuação dinâmica</span>.
+        <span className="text-ink">Check-in por geolocalização (fecha o MVP)</span>.
       </footer>
     </main>
   );

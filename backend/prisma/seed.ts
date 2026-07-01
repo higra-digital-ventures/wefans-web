@@ -472,8 +472,65 @@ async function main() {
     await prisma.showcaseItem.create({ data: { showcaseId: showcase.id, momentId: ownedMoments[i].id, order: i } });
   }
 
+  // ---------------------------------------------------------------- Mercado semeado (Fase 4)
+  // O admin também coleciona, para haver contrapartes e movimento no mercado.
+  const adminSeedTemplates = [
+    templates.filter((t) => t.tier === Tier.COMUM)[2],
+    templates.filter((t) => t.tier === Tier.TORCIDA)[1],
+    templates.filter((t) => t.tier === Tier.RARO)[1],
+    templates.filter((t) => t.tier === Tier.LENDARIO)[1],
+  ].filter(Boolean);
+  const adminMoments: { moment: { id: string; templateId: string }; tpl: (typeof templates)[number] }[] = [];
+  let adminScore = 0;
+  let adminCollector = 0;
+  for (const tpl of adminSeedTemplates) {
+    const acquired = SEED_ACQUIRE_CENTS[tpl.tier];
+    const score = Math.round((acquired / 100) * 10);
+    const updated = await prisma.template.update({
+      where: { id: tpl.id },
+      data: { mintedCount: { increment: 1 }, circulatingCount: { increment: 1 } },
+    });
+    const moment = await prisma.moment.create({
+      data: { templateId: tpl.id, serial: updated.mintedCount, ownerId: admin.id, parallel: tpl.parallel, acquiredPriceCents: acquired, topShotScore: score, mintedAt: now },
+    });
+    await prisma.transaction.create({ data: { type: TxType.MINT, momentId: moment.id, buyerId: admin.id, amountCents: acquired } });
+    adminMoments.push({ moment, tpl });
+    adminScore += score;
+    adminCollector += COLLECTOR_POINTS[tpl.tier];
+  }
+  await prisma.user.update({ where: { id: admin.id }, data: { topShotScore: adminScore, collectorScore: adminCollector } });
+
+  const templateById = new Map(templates.map((t) => [t.id, t]));
+
+  // Anúncios ativos: 3 do colecionador + 2 do admin.
+  const toList = [
+    ...ownedMoments.slice(0, 3).map((m) => ({ momentId: m.id, templateId: m.templateId, sellerId: collector.id })),
+    ...adminMoments.slice(0, 2).map(({ moment }) => ({ momentId: moment.id, templateId: moment.templateId, sellerId: admin.id })),
+  ];
+  for (const l of toList) {
+    const asp = templateById.get(l.templateId)?.aspCents ?? 500;
+    await prisma.listing.create({ data: { momentId: l.momentId, sellerId: l.sellerId, priceCents: Math.max(200, asp * 2), status: 'ACTIVE' } });
+  }
+
+  // Vendas históricas (feed ao vivo + ASP): admin comprou do colecionador e vice-versa.
+  const salePairs = [
+    ...adminMoments.map(({ moment, tpl }) => ({ momentId: moment.id, tpl, buyerId: admin.id, sellerId: collector.id })),
+    { momentId: ownedMoments[3].id, tpl: templateById.get(ownedMoments[3].templateId)!, buyerId: collector.id, sellerId: admin.id },
+  ];
+  let s = 0;
+  for (const sale of salePairs) {
+    const amount = Math.round(SEED_ACQUIRE_CENTS[sale.tpl.tier] * 1.5);
+    await prisma.transaction.create({
+      data: { type: TxType.BUY, momentId: sale.momentId, buyerId: sale.buyerId, sellerId: sale.sellerId, amountCents: amount, feeCents: Math.round(amount * 0.05), createdAt: new Date(now.getTime() - s * 37 * 60_000) },
+    });
+    await prisma.template.update({ where: { id: sale.tpl.id }, data: { aspCents: amount } });
+    s++;
+  }
+
   console.log('[seed] pronto:');
   console.table({
+    listings: toList.length,
+    vendas: salePairs.length,
     series: 1,
     sets: sets.length,
     stadiums: stadiums.length,
