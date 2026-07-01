@@ -50,6 +50,15 @@ enum ListingStatus {
   CANCELLED
 }
 
+enum WalletTxType {
+  DEPOSIT
+  WITHDRAW
+  PURCHASE
+  SALE
+  REWARD
+  FEE
+}
+
 // ----------------------------- usuário -----------------------------
 
 model User {
@@ -81,6 +90,8 @@ model User {
   queueEntries       QueueEntry[]
   checkIns           CheckIn[]
   wishlist           Wishlist[]
+  refreshTokens      RefreshToken[]
+  walletTransactions WalletTransaction[]
 
   @@index([favoriteTeamId])
 }
@@ -566,4 +577,33 @@ model Wishlist {
   @@unique([userId, templateId])
   @@index([userId])
   @@index([templateId])
+}
+
+// ----------------------------- auth / carteira (Fase 1) -----------------------------
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique // sha256 do token opaco (rotativo)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model WalletTransaction {
+  id                String       @id @default(cuid())
+  userId            String
+  type              WalletTxType
+  amountCents       Int // positivo credita, negativo debita
+  balanceAfterCents Int // saldo após o lançamento
+  memo              String?
+  createdAt         DateTime     @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }

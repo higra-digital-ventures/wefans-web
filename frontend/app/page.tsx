@@ -103,7 +103,7 @@ export default async function Home() {
       <footer className="mt-16 border-t border-line pt-6 text-xs text-muted">
         Conteúdo 100% fictício · sem marcas/imagens reais (ver{' '}
         <span className="font-mono">.claude/LEGAL.md</span>). Próxima fase:{' '}
-        <span className="text-ink">Auth (web + app) + Carteira</span>.
+        <span className="text-ink">Catálogo + Pacotes + Mint + Lances</span>.
       </footer>
     </main>
   );

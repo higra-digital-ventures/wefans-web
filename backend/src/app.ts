@@ -31,8 +31,10 @@ export function buildApp(): FastifyInstance {
     }
     const status = (error as { statusCode?: number }).statusCode ?? 500;
     if (status >= 500) req.log.error(error);
+    const message =
+      status >= 500 ? 'Erro interno' : error instanceof Error ? error.message : 'Erro';
     return reply.status(status).send({
-      error: { code: status >= 500 ? 'INTERNAL' : 'ERROR', message: status >= 500 ? 'Erro interno' : error.message },
+      error: { code: status >= 500 ? 'INTERNAL' : 'ERROR', message },
     });
   });
 

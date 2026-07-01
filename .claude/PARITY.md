@@ -15,6 +15,15 @@
 - [x] frontend Next + TS + Tailwind com cliente de API lendo o healthcheck
 - [x] `npm run setup && npm run dev` sobe `:4000` e `:3000`; seed roda; frontend lê `/api/v1`
 
+## Fase 1 — Auth (web+app) + Carteira (aceite)
+- [x] Cadastro/login; **cookie httpOnly (web)** E **JWT access + refresh rotativo (app)**
+- [x] Resolvedor único `getAuthContext` (aceita cookie OU bearer) → `userId`
+- [x] Envelope de erro consistente; DTOs (sem expor modelos Prisma)
+- [x] Carteira: saldo + **depósito simulado** via adaptador `PaymentProvider`/`FakeWallet`
+- [x] Perfil base + **escolher time seguido** (`favoriteTeamId`, só times PUBLICADO)
+- [x] ✅ login web por **cookie** e por **token** funcionam (17/17 testes de integração)
+- [x] Web: página `/entrar` (login+cadastro) e `/perfil` (KPIs, depósito, time, histórico, sair)
+
 ## Tabela de paridade (seção 2)
 | # | Top Shot | wefans | Fase | Status |
 |---|----------|--------|------|--------|
@@ -47,10 +56,10 @@
 | 27 | Checklists | Checklists | 8 | ⬜ |
 | 28 | Fast Break (fantasy) | Pelada | 9 | ⬜ |
 | 29 | Survivor pool | Mata-mata | 9 | ⬜ |
-| 30 | Carteira + depósito | idem (simulado) | 1 | ⬜ |
+| 30 | Carteira + depósito | idem (simulado) | 1 | ✅ |
 | 31 | Withdraw / redeem físico | Saque / resgate | 13 | ⬜ |
 | 32 | Provenance | Procedência | 3 | ⬜ |
-| 33 | Perfil com score/stats | Perfil | 3 | ⬜ |
+| 33 | Perfil com score/stats | Perfil | 3 | 🟨 (base na Fase 1) |
 | 34 | Code of Conduct / anti-wash | Conduta / preço anômalo | 4 | ⬜ |
 | 35 | Painel admin | Admin | 10 | ⬜ |
 

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Suspense } from 'react';
 import './globals.css';
+import TopBar from '@/components/TopBar';
 
 export const metadata: Metadata = {
   title: 'wefans — Momentos de Futebol',
@@ -11,7 +13,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <Suspense fallback={<div className="h-14 border-b border-line" />}>
+          <TopBar />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }
