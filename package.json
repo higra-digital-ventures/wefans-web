@@ -1,0 +1,22 @@
+{
+  "name": "wefans",
+  "private": true,
+  "version": "0.1.0",
+  "description": "wefans — plataforma de momentos de futebol (paridade com NBA Top Shot)",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n back,front -c magenta,cyan \"npm -w backend run dev\" \"npm -w frontend run dev\"",
+    "db:up": "bash scripts/db-up.sh",
+    "db:migrate": "npm -w backend run prisma:deploy",
+    "db:migrate:dev": "npm -w backend run prisma:migrate",
+    "db:seed": "npm -w backend run seed",
+    "setup": "npm install && npm run db:up && npm run db:migrate && npm run db:seed",
+    "build": "npm -w backend run build && npm -w frontend run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,25 @@
+# deps
+node_modules/
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# backend build / prisma
+backend/dist/
+backend/prisma/*.db
+
+# next
+frontend/.next/
+frontend/out/
+frontend/next-env.d.ts
+
+# logs / os
+*.log
+npm-debug.log*
+.DS_Store
+
+# scratch
+*.tsbuildinfo

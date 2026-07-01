@@ -1,0 +1,24 @@
+# Postgres local para quem usa Docker.
+# NOTA: este projeto também roda contra um Postgres local (sem Docker) — ver DECISIONS.md.
+# scripts/db-up.sh e dev.sh detectam Docker e caem para o Postgres local se ausente.
+services:
+  postgres:
+    image: postgres:16
+    container_name: wefans-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wefans
+      POSTGRES_PASSWORD: wefans
+      POSTGRES_DB: wefans
+    ports:
+      - "5432:5432"
+    volumes:
+      - wefans_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wefans -d wefans"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wefans_pgdata:

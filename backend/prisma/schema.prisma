@@ -1,0 +1,569 @@
+// wefans — schema Prisma (seções 4 + A2.3 + 10.1 + 11.13 do brief).
+// Tudo monetário em centavos (Int). Relações inversas e índices completos.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // shadowDatabaseUrl omitido de propósito: o usuário do banco tem CREATEDB
+  // e o Prisma gerencia a shadow DB automaticamente (ver DECISIONS.md).
+}
+
+// ----------------------------- enums -----------------------------
+
+enum Tier {
+  COMUM
+  TORCIDA
+  RARO
+  LENDARIO
+  GALACTICO
+}
+
+enum EditionType {
+  CIRCULANTE
+  LIMITADA
+}
+
+enum ChallengeType {
+  STANDARD
+  FLASH
+  CRAFTING
+}
+
+enum TxType {
+  MINT
+  BUY
+  SELL
+  OFFER_ACCEPT
+  REWARD
+  BURN
+  GIFT
+  FASTBREAK_REWARD
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  CANCELLED
+}
+
+// ----------------------------- usuário -----------------------------
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  username       String   @unique
+  passwordHash   String
+  balanceCents   Int      @default(50000) // R$ 500 boas-vindas
+  topShotScore   Int      @default(0) // Pontuação wefans (soma dinâmica dos Moments)
+  collectorScore Int      @default(0) // recalculado por snapshot
+  tradeTickets   Int      @default(0)
+  isAdmin        Boolean  @default(false)
+  favoriteTeamId String? // time seguido (check-in, A2)
+  checkinStreak  Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  favoriteTeam       Team?              @relation("UserFavoriteTeam", fields: [favoriteTeamId], references: [id])
+  moments            Moment[]
+  packInventories    PackInventory[]
+  listings           Listing[]
+  offers             Offer[]
+  buyTransactions    Transaction[]      @relation("TxBuyer")
+  sellTransactions   Transaction[]      @relation("TxSeller")
+  showcases          Showcase[]
+  challengeEntries   ChallengeEntry[]
+  leaderboardEntries LeaderboardEntry[]
+  fastBreakLineups   FastBreakLineup[]
+  momentUsages       MomentUsage[]
+  queueEntries       QueueEntry[]
+  checkIns           CheckIn[]
+  wishlist           Wishlist[]
+
+  @@index([favoriteTeamId])
+}
+
+// ----------------------------- catálogo -----------------------------
+
+model Series {
+  id        String    @id @default(cuid())
+  name      String
+  season    String
+  startsAt  DateTime
+  endsAt    DateTime
+  status    String    @default("RASCUNHO") // RASCUNHO|AGENDADO|PUBLICADO|ENCERRADO
+  publishAt DateTime?
+
+  sets      Set[]
+  templates Template[]
+}
+
+model Set {
+  id          String    @id @default(cuid())
+  seriesId    String
+  name        String
+  description String
+  status      String    @default("RASCUNHO")
+  publishAt   DateTime?
+
+  series    Series     @relation(fields: [seriesId], references: [id])
+  templates Template[]
+
+  @@index([seriesId])
+}
+
+model Player {
+  id          String @id @default(cuid())
+  name        String
+  club        String
+  position    String
+  jersey      Int
+  nationality String
+
+  templates    Template[]
+  momentUsages MomentUsage[]
+}
+
+model Template {
+  id              String      @id @default(cuid())
+  playerId        String
+  seriesId        String
+  setId           String?
+  teamId          String? // vínculo de parceria (seção 10.2)
+  title           String
+  playType        String
+  competition     String
+  matchDate       DateTime
+  videoUrl        String?
+  trajectory      String? // path SVG da jogada
+  tier            Tier
+  editionType     EditionType
+  editionSize     Int? // null se CIRCULANTE (aberta)
+  mintedCount     Int         @default(0)
+  circulatingCount Int        @default(0) // mintados - queimados
+  badges          String[]    @default([])
+  parallel        String      @default("BASE") // variante visual (seção 11.13)
+  aspCents        Int         @default(0) // preço médio de venda
+  status          String      @default("RASCUNHO")
+  publishAt       DateTime?
+
+  player   Player     @relation(fields: [playerId], references: [id])
+  series   Series     @relation(fields: [seriesId], references: [id])
+  set      Set?       @relation(fields: [setId], references: [id])
+  team     Team?      @relation(fields: [teamId], references: [id])
+  moments  Moment[]
+  offers   Offer[]
+  wishlist Wishlist[]
+
+  @@index([playerId])
+  @@index([seriesId])
+  @@index([setId])
+  @@index([teamId])
+  @@index([tier])
+}
+
+model Moment {
+  id                 String    @id @default(cuid())
+  templateId         String
+  serial             Int
+  ownerId            String?
+  parallel           String    @default("BASE")
+  topShotScore       Int       @default(0)
+  locked             Boolean   @default(false)
+  lockedUntil        DateTime?
+  tempLockUntil      DateTime? // trava temporária de leaderboard
+  burned             Boolean   @default(false)
+  acquiredPriceCents Int       @default(0)
+  mintedAt           DateTime  @default(now())
+
+  template      Template       @relation(fields: [templateId], references: [id])
+  owner         User?          @relation(fields: [ownerId], references: [id])
+  listing       Listing?
+  offers        Offer[]
+  showcaseItems ShowcaseItem[]
+  transactions  Transaction[]
+
+  @@unique([templateId, serial])
+  @@index([ownerId])
+}
+
+// ----------------------------- pacotes / drops -----------------------------
+
+model Pack {
+  id            String   @id @default(cuid())
+  name          String
+  dropId        String?
+  priceCents    Int
+  momentCount   Int      @default(3)
+  oddsJson      Json // { COMUM:.6, TORCIDA:.2, RARO:.15, LENDARIO:.045, GALACTICO:.005 }
+  guaranteeTier Tier? // garante ao menos 1 deste tier ou acima
+  totalSupply   Int
+  soldCount     Int      @default(0)
+  sealed        Boolean  @default(false) // lacrado revendível no Mercado de Pacotes
+  ticketOnly    Boolean  @default(false) // trocável apenas por Fichas de Troca (regra 13)
+
+  drop          Drop?           @relation(fields: [dropId], references: [id])
+  inventories   PackInventory[]
+  rewardFixtures Fixture[] // fixtures que dão este pacote no check-in
+
+  @@index([dropId])
+}
+
+model PackInventory {
+  id       String  @id @default(cuid())
+  packId   String
+  ownerId  String
+  opened   Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  pack             Pack      @relation(fields: [packId], references: [id])
+  owner            User      @relation(fields: [ownerId], references: [id])
+  grantedByCheckIn CheckIn[] // check-in que concedeu este pacote (A2)
+
+  @@index([packId])
+  @@index([ownerId])
+}
+
+model Drop {
+  id                     String   @id @default(cuid())
+  name                   String
+  waitingRoomOpensAt     DateTime
+  startsAt               DateTime
+  endsAt                 DateTime
+  requiredCollectorScore Int      @default(0)
+  hasRebound             Boolean  @default(false)
+  status                 String   @default("SCHEDULED") // SCHEDULED|WAITING|LIVE|ENDED
+
+  packs        Pack[]
+  queueEntries QueueEntry[]
+}
+
+model QueueEntry {
+  id             String    @id @default(cuid())
+  dropId         String
+  userId         String
+  position       Int
+  windowStartsAt DateTime?
+  purchased      Boolean   @default(false)
+
+  drop Drop @relation(fields: [dropId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([dropId, userId])
+  @@index([dropId])
+}
+
+// ----------------------------- mercado -----------------------------
+
+model Listing {
+  id         String        @id @default(cuid())
+  momentId   String        @unique
+  sellerId   String
+  priceCents Int
+  status     ListingStatus @default(ACTIVE)
+  createdAt  DateTime      @default(now())
+
+  moment Moment @relation(fields: [momentId], references: [id])
+  seller User   @relation(fields: [sellerId], references: [id])
+
+  @@index([sellerId])
+  @@index([status])
+}
+
+model Offer {
+  id         String    @id @default(cuid())
+  momentId   String?
+  templateId String?
+  buyerId    String
+  priceCents Int
+  status     String    @default("ACTIVE") // ACTIVE|ACCEPTED|CANCELLED|EXPIRED
+  expiresAt  DateTime?
+
+  moment   Moment?   @relation(fields: [momentId], references: [id])
+  template Template? @relation(fields: [templateId], references: [id])
+  buyer    User      @relation(fields: [buyerId], references: [id])
+
+  @@index([momentId])
+  @@index([templateId])
+  @@index([buyerId])
+}
+
+model Transaction {
+  id         String   @id @default(cuid())
+  type       TxType
+  momentId   String
+  buyerId    String?
+  sellerId   String?
+  amountCents Int     @default(0)
+  feeCents   Int      @default(0)
+  flagged    Boolean  @default(false) // revisão anti-anômalo (preço > 3x ASP)
+  createdAt  DateTime @default(now())
+
+  moment Moment @relation(fields: [momentId], references: [id])
+  buyer  User?  @relation("TxBuyer", fields: [buyerId], references: [id])
+  seller User?  @relation("TxSeller", fields: [sellerId], references: [id])
+
+  @@index([momentId])
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+// ----------------------------- vitrines -----------------------------
+
+model Showcase {
+  id          String  @id @default(cuid())
+  ownerId     String
+  name        String
+  description String
+  public      Boolean @default(true)
+
+  owner User           @relation(fields: [ownerId], references: [id])
+  items ShowcaseItem[]
+
+  @@index([ownerId])
+}
+
+model ShowcaseItem {
+  id         String @id @default(cuid())
+  showcaseId String
+  momentId   String
+  order      Int
+
+  showcase Showcase @relation(fields: [showcaseId], references: [id])
+  moment   Moment   @relation(fields: [momentId], references: [id])
+
+  @@index([showcaseId])
+  @@index([momentId])
+}
+
+// ----------------------------- desafios / missões -----------------------------
+
+model Challenge {
+  id                  String        @id @default(cuid())
+  type                ChallengeType
+  name                String
+  description         String
+  startsAt            DateTime
+  endsAt              DateTime
+  rewardTemplateId    String?
+  rewardPackId        String?
+  requiredTemplateIds String[]      @default([]) // STANDARD/CRAFTING: o que coletar/forjar
+  burnOnComplete      Boolean       @default(false) // CRAFTING queima a entrada
+  flashRuleJson       Json? // FLASH: critério baseado em stats simuladas
+
+  entries ChallengeEntry[]
+}
+
+model ChallengeEntry {
+  id          String    @id @default(cuid())
+  challengeId String
+  userId      String
+  momentIds   String[]
+  completedAt DateTime?
+
+  challenge Challenge @relation(fields: [challengeId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([challengeId])
+  @@index([userId])
+}
+
+model Quest {
+  id               String   @id @default(cuid())
+  name             String
+  description      String
+  criteriaJson     Json
+  rewardTemplateId String?
+  startsAt         DateTime
+  endsAt           DateTime
+}
+
+// ----------------------------- rankings / checklists -----------------------------
+
+model Leaderboard {
+  id         String    @id @default(cuid())
+  kind       String // TEAM | PLAYER
+  refKey     String // clube ou playerId
+  name       String
+  snapshotAt DateTime?
+  rewardsJson Json?
+
+  entries LeaderboardEntry[]
+}
+
+model LeaderboardEntry {
+  id            String @id @default(cuid())
+  leaderboardId String
+  userId        String
+  points        Int    @default(0)
+  rank          Int?
+
+  leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
+
+  @@index([leaderboardId])
+  @@index([userId])
+}
+
+model Checklist {
+  id                  String   @id @default(cuid())
+  name                String
+  kind                String
+  requiredTemplateIds String[]
+  bonusPoints         Int
+}
+
+// ----------------------------- fast break (pelada) -----------------------------
+
+model FastBreakRun {
+  id         String   @id @default(cuid())
+  name       String
+  startsAt   DateTime
+  endsAt     DateTime
+  lineupSize Int      @default(5)
+  survivor   Boolean  @default(false)
+
+  days         FastBreakDay[]
+  momentUsages MomentUsage[]
+}
+
+model FastBreakDay {
+  id          String   @id @default(cuid())
+  runId       String
+  dayNumber   Int
+  gameDate    DateTime
+  statKey     String // gols, assistencias, defesas, desarmes...
+  targetScore Int
+
+  run     FastBreakRun      @relation(fields: [runId], references: [id])
+  lineups FastBreakLineup[]
+
+  @@index([runId])
+}
+
+model FastBreakLineup {
+  id              String   @id @default(cuid())
+  dayId           String
+  userId          String
+  captainMomentId String?
+  momentIds       String[] // Moments dos jogadores escalados
+  score           Int      @default(0)
+  won             Boolean  @default(false)
+  submittedAt     DateTime @default(now())
+
+  day  FastBreakDay @relation(fields: [dayId], references: [id])
+  user User         @relation(fields: [userId], references: [id])
+
+  @@index([dayId])
+  @@index([userId])
+}
+
+model MomentUsage {
+  id       String @id @default(cuid())
+  runId    String
+  userId   String
+  playerId String
+  used     Int    @default(0) // fadiga
+
+  run    FastBreakRun @relation(fields: [runId], references: [id])
+  user   User         @relation(fields: [userId], references: [id])
+  player Player       @relation(fields: [playerId], references: [id])
+
+  @@unique([runId, userId, playerId])
+  @@index([runId])
+}
+
+// ----------------------------- check-in / parcerias (A2) -----------------------------
+
+model Team {
+  id            String    @id @default(cuid())
+  name          String
+  homeStadiumId String?
+  partnerStatus String    @default("PROSPECT") // PROSPECT|ATIVO|PAUSADO|ENCERRADO
+  status        String    @default("RASCUNHO") // RASCUNHO|AGENDADO|PUBLICADO|ENCERRADO
+  publishAt     DateTime?
+
+  homeStadium  Stadium?   @relation(fields: [homeStadiumId], references: [id])
+  templates    Template[]
+  favoritedBy  User[]     @relation("UserFavoriteTeam")
+  homeFixtures Fixture[]  @relation("HomeFixtures")
+  awayFixtures Fixture[]  @relation("AwayFixtures")
+
+  @@index([homeStadiumId])
+}
+
+model Stadium {
+  id           String @id @default(cuid())
+  name         String
+  city         String
+  lat          Float
+  lng          Float
+  radiusMeters Int    @default(300)
+
+  teams    Team[]
+  fixtures Fixture[]
+}
+
+model Fixture {
+  id              String   @id @default(cuid())
+  homeTeamId      String
+  awayTeamId      String
+  stadiumId       String
+  kickoffAt       DateTime
+  status          String   @default("SCHEDULED") // SCHEDULED|LIVE|FINISHED
+  checkinOpensAt  DateTime
+  checkinClosesAt DateTime
+  rewardPackId    String // pacote concedido pelo check-in
+
+  homeTeam  Team      @relation("HomeFixtures", fields: [homeTeamId], references: [id])
+  awayTeam  Team      @relation("AwayFixtures", fields: [awayTeamId], references: [id])
+  stadium   Stadium   @relation(fields: [stadiumId], references: [id])
+  rewardPack Pack     @relation(fields: [rewardPackId], references: [id])
+  checkIns  CheckIn[]
+
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+  @@index([stadiumId])
+  @@index([rewardPackId])
+}
+
+model CheckIn {
+  id                     String   @id @default(cuid())
+  userId                 String
+  fixtureId              String
+  lat                    Float
+  lng                    Float
+  accuracyM              Float
+  isMock                 Boolean  @default(false)
+  attestationOk          Boolean  @default(false)
+  status                 String   @default("PENDING") // PENDING|VALID|REJECTED|REVIEW
+  rejectionReason        String?
+  grantedPackInventoryId String?
+  createdAt              DateTime @default(now())
+
+  user                 User           @relation(fields: [userId], references: [id])
+  fixture              Fixture        @relation(fields: [fixtureId], references: [id])
+  grantedPackInventory PackInventory? @relation(fields: [grantedPackInventoryId], references: [id])
+
+  @@unique([userId, fixtureId])
+  @@index([fixtureId])
+  @@index([status])
+}
+
+// ----------------------------- wishlist (seção 11.13) -----------------------------
+
+model Wishlist {
+  id         String   @id @default(cuid())
+  userId     String
+  templateId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  template Template @relation(fields: [templateId], references: [id])
+
+  @@unique([userId, templateId])
+  @@index([userId])
+  @@index([templateId])
+}
