@@ -1,145 +1,172 @@
 import Link from 'next/link';
-import { getHealth, getSystemStats, type Health, type SystemStats } from '@/lib/api';
-import { getActivityServer } from '@/lib/api-server';
+import {
+  getActivityServer,
+  getChallengesServer,
+  getDropsServer,
+  getPacksServer,
+} from '@/lib/api-server';
 import ActivityFeed from '@/components/ActivityFeed';
+import { TIER_META } from '@/lib/tiers';
+import { brl, dateTime } from '@/lib/format';
+import type { Tier } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
-const STAT_LABELS: Record<keyof SystemStats['stats'], string> = {
-  templates: 'Lances (templates)',
-  moments: 'Momentos cunhados',
-  packs: 'Pacotes',
-  drops: 'Drops',
-  players: 'Jogadores',
-  teams: 'Times',
-  stadiums: 'Estádios',
-  fixtures: 'Jogos',
-  challenges: 'Desafios',
-  sets: 'Coleções',
-  series: 'Temporadas',
-  users: 'Usuários',
-};
+// Título de seção em dois tons (padrão das telas do Top Shot: "Win Now. Trade-In To Win").
+function SectionTitle({ white, colored }: { white: string; colored: string }) {
+  return (
+    <h2 className="mb-4 font-display text-2xl uppercase tracking-tight">
+      <span className="text-ink">{white}</span> <span className="text-accent">{colored}</span>
+    </h2>
+  );
+}
 
 export default async function Home() {
-  let health: Health | null = null;
-  let stats: SystemStats['stats'] | null = null;
-  let error: string | null = null;
+  const [drops, packs, activity, challenges] = await Promise.all([
+    getDropsServer().catch(() => []),
+    getPacksServer().catch(() => []),
+    getActivityServer(8).catch(() => []),
+    getChallengesServer().catch(() => []),
+  ]);
 
-  try {
-    const [h, s] = await Promise.all([getHealth(), getSystemStats()]);
-    health = h;
-    stats = s.stats;
-  } catch (e) {
-    error = e instanceof Error ? e.message : 'Falha ao conectar na API';
-  }
-
-  const activity = error ? [] : await getActivityServer(10).catch(() => []);
+  const hero = drops.find((d) => d.status === 'LIVE') ?? drops.find((d) => d.status === 'WAITING') ?? drops[0];
+  const buyablePacks = packs.filter((p) => p.priceCents > 0).slice(0, 3);
+  const activeChallenges = challenges.filter((c) => c.active && !c.completed).slice(0, 3);
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-16">
-      {/* Hero */}
-      <header className="mb-12">
-        <span className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1 text-xs uppercase tracking-widest text-muted">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent3" /> Beta · Fase 0
-        </span>
-        <h1 className="mt-4 bg-sunset bg-clip-text font-display text-6xl font-black uppercase tracking-tight text-transparent sm:text-7xl">
-          wefans
-        </h1>
-        <p className="mt-3 max-w-xl text-lg text-muted">
-          Momentos de futebol colecionáveis. Fundação <span className="text-ink">API-first</span> no ar —
-          backend, banco e catálogo semeado conversando com a web.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="/pacotes"
-            className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90"
-          >
-            Abrir pacotes
-          </Link>
-          <Link
-            href="/explorar"
-            className="rounded-lg border border-line px-5 py-2.5 text-ink transition-colors hover:border-accent/40"
-          >
-            Explorar catálogo
-          </Link>
-        </div>
-      </header>
-
-      {/* Status da API */}
-      <section
-        className={`mb-8 flex items-center justify-between rounded-2xl border p-5 ${
-          error ? 'border-accent/40 bg-accent/5' : 'border-line bg-panel'
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <span
-            className={`h-3 w-3 rounded-full ${error ? 'bg-accent' : 'bg-emerald-400'}`}
-            style={{ boxShadow: error ? '0 0 12px #ff2e88' : '0 0 12px #34d399' }}
+    <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
+      {/* Hero do drop ativo (seção 11.3) */}
+      {hero && (
+        <section className="relative mb-10 overflow-hidden rounded-xl border border-line">
+          <div className="absolute inset-0 bg-sunset opacity-25" aria-hidden />
+          <div
+            className="absolute inset-0"
+            aria-hidden
+            style={{ background: 'radial-gradient(80% 120% at 20% 0%, transparent 30%, #0a0610 100%)' }}
           />
-          <div>
-            <p className="font-medium text-ink">
-              {error ? 'API indisponível' : `API ${health?.service} · ${health?.version}`}
+          <div className="relative px-6 py-10 sm:px-10 sm:py-14">
+            <div className="mb-2 flex items-center gap-2">
+              <span
+                className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                  hero.status === 'LIVE' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-panel2 text-muted'
+                }`}
+              >
+                {hero.status === 'LIVE' ? '● Drop ao vivo' : 'Sala de espera aberta'}
+              </span>
+              {hero.requiredCollectorScore > 0 && (
+                <span className="text-[11px] text-muted">Score mín. {hero.requiredCollectorScore}</span>
+              )}
+            </div>
+            <h1 className="max-w-2xl font-display text-4xl uppercase leading-[0.95] tracking-tight text-ink sm:text-6xl">
+              {hero.name}
+            </h1>
+            <p className="mt-3 max-w-lg text-sm text-muted">
+              {hero.packs.map((p) => p.name).join(' · ')} — fila aleatória, janela de compra de 20
+              minutos{hero.hasRebound ? ' e rebound para quem ficar de fora' : ''}. Termina em{' '}
+              {dateTime(hero.endsAt).split(',')[0]}.
             </p>
-            <p className="font-mono text-xs text-muted">
-              {error ? error : `ok · ${health ? new Date(health.time).toLocaleString('pt-BR') : ''}`}
-            </p>
-          </div>
-        </div>
-        <code className="hidden rounded-lg bg-panel2 px-3 py-1.5 font-mono text-xs text-muted sm:block">
-          GET /api/v1/health
-        </code>
-      </section>
-
-      {error ? (
-        <div className="rounded-2xl border border-line bg-panel p-6 text-muted">
-          <p className="mb-2 font-medium text-ink">O backend não respondeu.</p>
-          <p className="text-sm">
-            Rode <code className="rounded bg-panel2 px-1.5 py-0.5 font-mono text-accent3">npm run dev</code> na raiz
-            (ou <code className="rounded bg-panel2 px-1.5 py-0.5 font-mono text-accent3">./dev.sh</code>) para subir
-            a API em <span className="font-mono">:4000</span> e a web em <span className="font-mono">:3000</span>.
-          </p>
-        </div>
-      ) : (
-        <section>
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted">
-            Catálogo semeado (via <span className="font-mono lowercase text-accent3">/api/v1/system/stats</span>)
-          </h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {stats &&
-              (Object.keys(STAT_LABELS) as (keyof SystemStats['stats'])[]).map((key) => (
-                <div
-                  key={key}
-                  className="rounded-xl border border-line bg-panel p-4 transition-colors hover:border-accent/40"
-                >
-                  <div className="font-display text-3xl text-ink">{stats![key]}</div>
-                  <div className="mt-1 text-xs text-muted">{STAT_LABELS[key]}</div>
-                </div>
-              ))}
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Link
+                href={`/drop/${hero.id}`}
+                className="rounded bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
+              >
+                Entrar no drop
+              </Link>
+              <Link
+                href="/pacotes"
+                className="rounded bg-white px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-black transition-opacity hover:opacity-90"
+              >
+                Rip packs 24/7
+              </Link>
+            </div>
           </div>
         </section>
       )}
 
-      {!error && activity.length > 0 && (
-        <section className="mt-10">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-muted">
-              Vendas ao vivo no Mercado
-            </h2>
-            <Link href="/mercado/atividade" className="text-sm text-accent3 hover:underline">
-              ver tudo →
+      <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+        <div>
+          {/* Pacotes em destaque */}
+          <section className="mb-10">
+            <SectionTitle white="Abra agora." colored="Pacotes 24/7" />
+            <div className="grid gap-3 sm:grid-cols-3">
+              {buyablePacks.map((p) => {
+                const remaining = p.totalSupply - p.soldCount;
+                const pct = Math.round((p.soldCount / Math.max(1, p.totalSupply)) * 100);
+                return (
+                  <Link
+                    key={p.id}
+                    href={`/pacote/${p.id}`}
+                    className="group rounded-lg border border-line bg-[#0c0813] p-4 transition-colors hover:border-[#3a2b52]"
+                  >
+                    <div className="mb-3 flex h-24 items-center justify-center rounded bg-sunset/20">
+                      <div className="h-16 w-12 rounded-sm bg-sunset shadow-neon transition-transform group-hover:-translate-y-0.5" />
+                    </div>
+                    <div className="text-sm font-bold uppercase text-ink">{p.name}</div>
+                    <div className="mt-1 text-[11px] text-muted">
+                      {p.momentCount} Lances · {remaining.toLocaleString('pt-BR')} restantes
+                      {pct >= 50 && <span className="ml-1 text-amber-300">· {pct}% vendido</span>}
+                    </div>
+                    <div className="mt-2 text-[13px] font-bold text-accent3">{brl(p.priceCents)}</div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Desafios em destaque */}
+          {activeChallenges.length > 0 && (
+            <section>
+              <SectionTitle white="Ganhe prêmios." colored="Desafios" />
+              <div className="space-y-2">
+                {activeChallenges.map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/jogar/desafios/${c.id}`}
+                    className="flex items-center justify-between gap-3 rounded-lg border border-line bg-[#0c0813] px-4 py-3 transition-colors hover:border-[#3a2b52]"
+                  >
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-bold text-ink">
+                        {c.type === 'FLASH' && <span className="mr-1.5 text-accent2">⚡</span>}
+                        {c.name}
+                      </div>
+                      <div className="truncate text-[11px] text-muted">{c.description}</div>
+                    </div>
+                    {c.progress && (
+                      <span className="shrink-0 font-mono text-[11px] text-accent3">
+                        {c.progress.have}/{c.progress.need}
+                      </span>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* Feed de vendas ao vivo (componente assinatura, seção 11.3) */}
+        <section>
+          <div className="mb-4 flex items-baseline justify-between">
+            <SectionTitle white="Mercado." colored="Ao vivo" />
+            <Link href="/mercado/atividade" className="text-[11px] font-bold uppercase tracking-wide text-accent3 hover:underline">
+              Ver tudo
             </Link>
           </div>
-          <div className="rounded-2xl border border-line bg-panel p-3">
-            <ActivityFeed initial={activity} limit={10} />
+          <div className="rounded-lg border border-line bg-[#0c0813] p-2">
+            <ActivityFeed initial={activity} limit={8} />
+          </div>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {(Object.keys(TIER_META) as Tier[]).map((t) => (
+              <Link
+                key={t}
+                href={`/mercado?tier=${t}`}
+                className="rounded-full border border-line px-2.5 py-1 text-[10px] font-semibold text-muted transition-colors hover:text-ink"
+              >
+                {TIER_META[t].label}s
+              </Link>
+            ))}
           </div>
         </section>
-      )}
-
-      <footer className="mt-16 border-t border-line pt-6 text-xs text-muted">
-        Conteúdo 100% fictício · sem marcas/imagens reais (ver{' '}
-        <span className="font-mono">.claude/LEGAL.md</span>). <span className="text-ink">32/35 itens de paridade</span>{' '}
-        no ar. Próximo: Admin completo + jobs, depois polimento.
-      </footer>
+      </div>
     </main>
   );
 }

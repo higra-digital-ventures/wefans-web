@@ -13,11 +13,14 @@ const LABELS: Record<string, string> = {
 };
 
 // Procedência: linha do tempo de donos/transações (seção 11.5).
-export default function Provenance({ items }: { items: ProvenanceTx[] }) {
-  if (!items.length) return null;
+// `bare` = sem título/margem próprios (quando embutida num Panel colapsável).
+export default function Provenance({ items, bare = false }: { items: ProvenanceTx[]; bare?: boolean }) {
+  if (!items.length) return bare ? <p className="text-sm text-muted">Sem transações ainda.</p> : null;
   return (
-    <div className="mt-8">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted">Procedência</h2>
+    <div className={bare ? '' : 'mt-8'}>
+      {!bare && (
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted">Procedência</h2>
+      )}
       <ol className="relative ml-1 border-l border-line pl-5">
         {items.map((tx) => (
           <li key={tx.id} className="mb-4 last:mb-0">

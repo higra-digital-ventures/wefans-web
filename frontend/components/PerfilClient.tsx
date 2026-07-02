@@ -44,63 +44,106 @@ export default function PerfilClient({
     { label: 'Pontuação wefans', value: me.topShotScore.toLocaleString('pt-BR') },
     { label: 'Score do Colecionador', value: me.collectorScore.toLocaleString('pt-BR') },
     { label: 'Lances', value: momentCount.toLocaleString('pt-BR') },
-    { label: 'Fichas de Troca', value: me.tradeTickets },
-    { label: 'Saldo', value: brl(me.balanceCents) },
+  ];
+  const TABS = [
+    { label: 'Visão geral', href: '/perfil', active: true },
+    { label: 'Moments', href: '/colecao' },
+    { label: 'Pacotes', href: '/mercado/pacotes' },
+    { label: 'Ofertas', href: '/ofertas' },
+    { label: 'Fichas', href: '/fichas' },
+    { label: 'Vitrines', href: '/vitrines' },
+    { label: 'Check-in', href: '/checkin' },
   ];
 
-  const card = 'rounded-2xl border border-line bg-panel p-5';
+  const card = 'rounded-lg border border-line bg-[#0c0813] p-5';
   const field =
-    'rounded-lg border border-line bg-panel2 px-3 py-2 text-ink outline-none focus:border-accent/60';
+    'rounded border border-line bg-panel2 px-3 py-2 text-ink outline-none focus:border-accent/60';
   const btn =
-    'rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50';
+    'rounded bg-accent px-4 py-2 text-[12px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90 disabled:opacity-50';
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-display text-4xl uppercase text-ink">@{me.username}</h1>
-          <p className="text-sm text-muted">
-            {me.email} · membro desde {dateTime(me.createdAt).split(',')[0]}
-            {me.isAdmin && (
-              <span className="ml-2 rounded bg-accent2/20 px-2 py-0.5 text-xs text-accent2">admin</span>
-            )}
-          </p>
-          <div className="flex gap-3 text-sm">
-            <Link href={`/u/${me.username}`} className="text-accent3 hover:underline">
-              ver perfil público →
-            </Link>
-            <Link href="/ofertas" className="text-accent3 hover:underline">
-              minhas ofertas →
-            </Link>
-            <Link href="/fichas" className="text-accent3 hover:underline">
-              fichas de troca →
-            </Link>
+    <main className="mx-auto max-w-6xl px-4 py-8 lg:px-6">
+      {/* linha de identidade + widgets de KPI (print b) */}
+      <header className="mb-6 flex flex-wrap items-start justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-sunset font-display text-2xl uppercase text-white">
+            {me.username[0]}
+          </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="font-display text-3xl uppercase tracking-tight text-ink">@{me.username}</h1>
+              {me.isAdmin && (
+                <span className="rounded bg-accent2/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent2">
+                  admin
+                </span>
+              )}
+            </div>
+            <p className="text-[12px] text-muted">
+              {me.email} · entrou em {dateTime(me.createdAt).split(',')[0]}
+            </p>
+            <div className="mt-1 flex gap-3 text-[12px]">
+              <Link href={`/u/${me.username}`} className="text-accent3 hover:underline">
+                perfil público
+              </Link>
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => run(async () => { await logout(); router.push('/'); })}
+                className="text-muted transition-colors hover:text-ink"
+              >
+                sair
+              </button>
+            </div>
           </div>
         </div>
-        <button
-          type="button"
-          disabled={pending}
-          onClick={() => run(async () => { await logout(); router.push('/'); })}
-          className="rounded-lg border border-line px-4 py-2 text-sm text-muted transition-colors hover:border-accent/40 hover:text-ink"
-        >
-          Sair
-        </button>
+
+        <div className="flex gap-2">
+          {kpis.map((k) => (
+            <div key={k.label} className="min-w-[110px] rounded-lg border border-line bg-[#0c0813] px-4 py-3">
+              <div className="font-display text-xl text-ink">{k.value}</div>
+              <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">{k.label}</div>
+            </div>
+          ))}
+        </div>
       </header>
 
+      {/* sub-abas (print b) */}
+      <div className="scrollbar-none -mx-1 mb-8 flex gap-1 overflow-x-auto border-b border-line">
+        {TABS.map((t) => (
+          <Link
+            key={t.label}
+            href={t.href}
+            className={`relative whitespace-nowrap px-3 pb-2.5 pt-1 text-[12px] font-bold uppercase tracking-[0.08em] ${
+              t.active ? 'text-ink' : 'text-muted hover:text-ink'
+            }`}
+          >
+            {t.label}
+            {t.active && <span className="absolute inset-x-3 bottom-0 h-[3px] rounded-t bg-accent" />}
+          </Link>
+        ))}
+      </div>
+
       {error && (
-        <p className="mb-6 rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
+        <p className="mb-6 rounded border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
           {error}
         </p>
       )}
 
-      {/* KPIs */}
-      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {kpis.map((k) => (
-          <div key={k.label} className={card}>
-            <div className="font-display text-2xl text-ink">{k.value}</div>
-            <div className="mt-1 text-xs text-muted">{k.label}</div>
+      {/* carteira em destaque */}
+      <div className="mb-6 flex flex-wrap items-center gap-4 rounded-lg border border-line bg-[#0c0813] px-5 py-4">
+        <div>
+          <div className="font-display text-2xl text-ink">{brl(me.balanceCents)}</div>
+          <div className="text-[10px] uppercase tracking-wide text-muted">Saldo da carteira</div>
+        </div>
+        <div className="ml-auto flex items-center gap-3">
+          <div className="text-right">
+            <div className="font-display text-xl text-ink">{me.tradeTickets}</div>
+            <div className="text-[10px] uppercase tracking-wide text-muted">Fichas de Troca</div>
           </div>
-        ))}
+          <Link href="/fichas" className="rounded border border-line px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-muted hover:text-ink">
+            Trocar
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

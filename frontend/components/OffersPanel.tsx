@@ -11,11 +11,13 @@ export default function OffersPanel({
   isOwner,
   isAuthed,
   offers,
+  bare = false,
 }: {
   momentId: string;
   isOwner: boolean;
   isAuthed: boolean;
   offers: OfferForMoment[];
+  bare?: boolean; // sem card/título próprios (embutido num Panel)
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -38,8 +40,8 @@ export default function OffersPanel({
   };
 
   return (
-    <div className="mt-6 rounded-2xl border border-line bg-panel p-5">
-      <h2 className="mb-3 font-semibold text-ink">Ofertas</h2>
+    <div className={bare ? '' : 'mt-6 rounded-2xl border border-line bg-panel p-5'}>
+      {!bare && <h2 className="mb-3 font-semibold text-ink">Ofertas</h2>}
 
       {!isOwner && isAuthed && (
         <div className="mb-4 flex gap-2">

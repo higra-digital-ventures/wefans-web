@@ -109,3 +109,13 @@
   como stub honesto. A integração real (Flow/L2, App Check etc.) fica para quando houver
   decisão de chain — os serviços não precisarão mudar (mutações de posse já são atômicas
   e centralizadas).
+
+## Passe de design (pós-Fase 13) — telas de referência do usuário
+- **2026-07-01 — Design refeito na gramática exata dos prints do Top Shot** (seção 11.12),
+  mantendo a marca wefans: top bar com ícones+sublinha ativa e carteira/avatar; carta de
+  mercado com mídia em perspectiva 3D (face lateral falsa), marcador de wishlist e rodapé
+  Menor preço/Média; sub-abas em caps; página do Momento com breadcrumb em chips, painel
+  de compra (CTA cheio), painéis colapsáveis (DETALHES/HISTÓRICO/OFERTAS) e "Mais Lances";
+  home de produto (hero do drop + Rip Packs + feed ao vivo + títulos em dois tons);
+  drops com pill "% reservado" e faixa SOLD OUT; footer institucional completo; fundo
+  quase-preto com glow sutil (menos "cara de IA"); emojis removidos das ações principais.
