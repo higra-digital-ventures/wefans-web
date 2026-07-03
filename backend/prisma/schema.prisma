@@ -299,6 +299,7 @@ model Listing {
 
   @@index([sellerId])
   @@index([status])
+  @@index([status, createdAt]) // feed do Explorar (listagens recentes)
 }
 
 model Offer {
@@ -338,6 +339,7 @@ model Transaction {
   @@index([momentId])
   @@index([buyerId])
   @@index([sellerId])
+  @@index([type, createdAt]) // feed do Explorar (eventos recentes por tipo)
 }
 
 // ----------------------------- vitrines -----------------------------

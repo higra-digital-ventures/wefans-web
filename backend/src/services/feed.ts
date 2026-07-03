@@ -29,8 +29,18 @@ const TIER_RANK: Record<string, number> = {
   COMUM: 1,
 };
 
+// O feed é público e idêntico para todos: cache in-memory curto corta o custo
+// das agregações sem perder a sensação de tempo real (polling do front é de 15s).
+const FEED_TTL_MS = 12_000;
+const POPULAR_TTL_MS = 60_000;
+let feedCache: { take: number; ts: number; data: FeedEvent[] } | null = null;
+let popularCache: { ts: number; data: Awaited<ReturnType<typeof computePopular>> } | null = null;
+
 export async function getFeed(db: PrismaClient, limit = 30) {
   const take = Math.min(limit, 60);
+  if (feedCache && feedCache.take >= take && Date.now() - feedCache.ts < FEED_TTL_MS) {
+    return feedCache.data.slice(0, take);
+  }
   const momentInclude = {
     moment: { include: { template: { include: { player: true } } } },
     buyer: { select: { username: true } },
@@ -174,11 +184,20 @@ export async function getFeed(db: PrismaClient, limit = 30) {
   }
 
   events.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  return events.slice(0, take);
+  const data = events.slice(0, take);
+  feedCache = { take, ts: Date.now(), data };
+  return data;
 }
 
 /** "Mais populares (24h)": jogadores e coleções com mais negócios no período. */
 export async function getFeedPopular(db: PrismaClient) {
+  if (popularCache && Date.now() - popularCache.ts < POPULAR_TTL_MS) return popularCache.data;
+  const data = await computePopular(db);
+  popularCache = { ts: Date.now(), data };
+  return data;
+}
+
+async function computePopular(db: PrismaClient) {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const txs = await db.transaction.findMany({
     where: { createdAt: { gte: since }, type: { in: ['BUY', 'OFFER_ACCEPT', 'MINT'] } },
