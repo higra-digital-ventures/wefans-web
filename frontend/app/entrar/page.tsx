@@ -22,7 +22,9 @@ export default function EntrarPage() {
       try {
         if (mode === 'login') {
           await login(email, password);
-          router.push('/perfil');
+          // volta para onde o usuário estava (ex.: /momento/x) — preview sem login
+          const next = new URLSearchParams(window.location.search).get('next');
+          router.push(next && next.startsWith('/') ? next : '/perfil');
         } else {
           await register(email, username, password);
           router.push('/bem-vindo'); // tour de boas-vindas do novo colecionador

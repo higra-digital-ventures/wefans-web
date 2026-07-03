@@ -30,7 +30,7 @@ export default function BuyPackButton({
         router.refresh(); // atualiza o saldo na top bar (layout persistente)
       } catch (e) {
         const msg = e instanceof Error ? e.message : 'Erro';
-        if (/autenticad|401/i.test(msg)) router.push('/entrar');
+        if (/autenticad|401/i.test(msg)) router.push(`/entrar?next=${encodeURIComponent(window.location.pathname)}`);
         else {
           setError(msg);
           toast(msg, 'error');

@@ -26,7 +26,7 @@ export default function CreateShowcaseForm() {
               const r = await createShowcase({ name: name.trim() });
               router.push(`/vitrine/${r.showcase.id}`);
             } catch (e) {
-              if (e instanceof Error && /autenticad|401/i.test(e.message)) router.push('/entrar');
+              if (e instanceof Error && /autenticad|401/i.test(e.message)) router.push(`/entrar?next=${encodeURIComponent(window.location.pathname)}`);
             }
           })
         }

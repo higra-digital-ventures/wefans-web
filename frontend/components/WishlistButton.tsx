@@ -22,7 +22,7 @@ export default function WishlistButton({
   // otimista: o estado muda na hora; se a API falhar, reverte e avisa
   function toggle() {
     if (!canWish) {
-      router.push('/entrar');
+      router.push(`/entrar?next=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
     const next = !wished;

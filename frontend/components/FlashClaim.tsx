@@ -77,7 +77,7 @@ export default function FlashClaim({
               router.refresh();
             } catch (e) {
               const m = e instanceof Error ? e.message : 'Erro';
-              if (/autenticad|401/i.test(m)) router.push('/entrar');
+              if (/autenticad|401/i.test(m)) router.push(`/entrar?next=${encodeURIComponent(window.location.pathname)}`);
               else setError(m);
             }
           })
