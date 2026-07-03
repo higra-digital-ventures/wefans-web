@@ -26,6 +26,15 @@ export async function updateFavoriteTeam(db: PrismaClient, userId: string, teamI
   return toUserDTO(user, user.favoriteTeam);
 }
 
+export async function updateShowInFeed(db: PrismaClient, userId: string, showInFeed: boolean) {
+  const user = await db.user.update({
+    where: { id: userId },
+    data: { showInFeed },
+    include: { favoriteTeam: true },
+  });
+  return toUserDTO(user, user.favoriteTeam);
+}
+
 /** Times visíveis ao público (PUBLICADO) — usado no seletor de "time seguido". */
 export async function listPublishedTeams(db: PrismaClient | Prisma.TransactionClient) {
   const teams = await db.team.findMany({ where: { status: 'PUBLICADO' }, orderBy: { name: 'asc' } });

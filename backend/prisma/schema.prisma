@@ -70,6 +70,7 @@ model User {
   topShotScore   Int      @default(0) // Pontuação wefans (soma dinâmica dos Moments)
   collectorScore Int      @default(0) // recalculado por snapshot
   tradeTickets   Int      @default(0)
+  showInFeed     Boolean  @default(true) // opt-out do feed público do Explorar (privacidade)
   isAdmin        Boolean  @default(false)
   favoriteTeamId String? // time seguido (check-in, A2)
   checkinStreak  Int      @default(0)

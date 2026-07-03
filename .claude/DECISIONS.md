@@ -129,6 +129,12 @@
   leitura (`services/feed.ts`). Rail pessoal: checklists perto de completar + wishlist.
   O catálogo continua acessível em /mercado e /pacotes. **Camadas B/C** (reações,
   posts/comentários/follows) ficam para o roadmap — exigem moderação e LGPD.
+- **2026-07-03 — Iteração 2 do feed:** evento "colocou à venda" (Listing) com CTA,
+  destaque foil p/ pulls Lendário/Galáctico, @username → perfil público, abas de filtro,
+  aviso "N novos eventos" (polling 15s + refresh SSR), **cache in-memory** (12s feed /
+  60s populares — opt-out pode demorar até 12s p/ refletir), índices compostos
+  (`Transaction[type,createdAt]`, `Listing[status,createdAt]`) e **opt-out de
+  privacidade** (`User.showInFeed`, toggle no /perfil, PATCH /me) — primeiro passo LGPD.
 
 ## Tipografia (pós-v1)
 - **2026-07-03 — Fontes trocadas para as mesmas famílias abertas que o Top Shot usa.**

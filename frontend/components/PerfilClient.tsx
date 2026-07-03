@@ -3,7 +3,7 @@
 import { useState, useTransition, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { deposit, logout, patchFavoriteTeam } from '@/lib/api-client';
+import { deposit, logout, patchFavoriteTeam, patchShowInFeed } from '@/lib/api-client';
 import { brl, dateTime } from '@/lib/format';
 import type { TeamDTO, UserDTO, Wallet } from '@/lib/types';
 
@@ -215,6 +215,25 @@ export default function PerfilClient({
               Seguindo: <span className="text-accent3">{me.favoriteTeam.name}</span>
             </p>
           )}
+
+          {/* privacidade: opt-out do feed público do Explorar */}
+          <div className="mt-5 border-t border-line pt-4">
+            <label className="flex cursor-pointer items-center justify-between gap-3">
+              <span>
+                <span className="block text-sm font-semibold text-ink">Aparecer no feed público</span>
+                <span className="block text-xs text-muted">
+                  Suas compras, aberturas de pacote e conquistas aparecem no Explorar.
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={me.showInFeed}
+                disabled={pending}
+                onChange={(e) => run(() => patchShowInFeed(e.target.checked))}
+                className="h-4 w-4 accent-[#21d4e0]"
+              />
+            </label>
+          </div>
         </section>
       </div>
 

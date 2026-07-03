@@ -34,6 +34,7 @@ export function toUserDTO(user: User, favoriteTeam?: Team | null) {
     topShotScore: user.topShotScore,
     collectorScore: user.collectorScore,
     tradeTickets: user.tradeTickets,
+    showInFeed: user.showInFeed,
     isAdmin: user.isAdmin,
     favoriteTeam: favoriteTeam ? toTeamDTO(favoriteTeam) : null,
     createdAt: user.createdAt.toISOString(),

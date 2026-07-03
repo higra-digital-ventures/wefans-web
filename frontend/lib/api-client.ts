@@ -141,3 +141,6 @@ export const submitCheckin = (body: {
 
 export const fetchFeed = (limit = 20) =>
   request<{ events: { id: string }[] }>('GET', `/api/v1/feed?limit=${limit}`);
+
+export const patchShowInFeed = (showInFeed: boolean) =>
+  request('PATCH', '/api/v1/me', { showInFeed });

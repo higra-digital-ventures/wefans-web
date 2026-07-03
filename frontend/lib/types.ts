@@ -8,6 +8,7 @@ export type UserDTO = {
   topShotScore: number;
   collectorScore: number;
   tradeTickets: number;
+  showInFeed: boolean;
   isAdmin: boolean;
   favoriteTeam: TeamDTO | null;
   createdAt: string;

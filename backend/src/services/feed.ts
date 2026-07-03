@@ -183,8 +183,15 @@ export async function getFeed(db: PrismaClient, limit = 30) {
     });
   }
 
-  events.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  const data = events.slice(0, take);
+  // privacidade: quem desligou "aparecer no feed" sai do stream público
+  const hidden = await db.user.findMany({ where: { showInFeed: false }, select: { username: true } });
+  const hiddenSet = new Set(hidden.map((u) => u.username));
+  const visible = events.filter(
+    (e) => !(e.user && hiddenSet.has(e.user)) && !(e.targetUser && hiddenSet.has(e.targetUser)),
+  );
+
+  visible.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const data = visible.slice(0, take);
   feedCache = { take, ts: Date.now(), data };
   return data;
 }
