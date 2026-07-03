@@ -430,3 +430,23 @@ export type PackDTO = {
 };
 
 export type PackInventoryDTO = { id: string; opened: boolean; createdAt: string; pack: PackDTO };
+
+// ----- Feed do Explorar (rede de eventos, gramática do Explore do Top Shot) -----
+export type FeedEvent = {
+  id: string;
+  kind: 'SALE' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN';
+  user: string | null;
+  targetUser?: string | null;
+  createdAt: string;
+  priceCents?: number;
+  count?: number;
+  momentId?: string;
+  serial?: number;
+  template?: TemplateDTO;
+  label?: string;
+};
+
+export type FeedPopular = {
+  players: { name: string; count: number }[];
+  competitions: { name: string; count: number }[];
+};

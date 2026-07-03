@@ -31,6 +31,8 @@ import type {
   FastBreakRunDTO,
   FastBreakDayDetail,
   FastBreakStandings,
+  FeedEvent,
+  FeedPopular,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -241,4 +243,10 @@ export async function adminGet<T>(path: string): Promise<T | null> {
 export async function getCollectionServer(query = ''): Promise<MomentDTO[] | null> {
   const data = await serverFetch<{ moments: MomentDTO[] }>(`/api/v1/collection${query}`);
   return data ? data.moments : null;
+}
+
+export async function getFeedServer(
+  limit = 30,
+): Promise<{ events: FeedEvent[]; popular: FeedPopular } | null> {
+  return serverFetch<{ events: FeedEvent[]; popular: FeedPopular }>(`/api/v1/feed?limit=${limit}`);
 }

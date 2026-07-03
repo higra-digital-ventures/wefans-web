@@ -21,6 +21,7 @@ import { questRoutes } from './quests';
 import { ticketRoutes } from './tickets';
 import { leaderboardRoutes } from './leaderboards';
 import { fastbreakRoutes } from './fastbreak';
+import { feedRoutes } from './feed';
 import { adminRoutes } from './admin';
 
 /**
@@ -50,5 +51,6 @@ export async function apiV1(app: FastifyInstance) {
   await app.register(ticketRoutes);
   await app.register(leaderboardRoutes);
   await app.register(fastbreakRoutes);
+  await app.register(feedRoutes);
   await app.register(adminRoutes); // preHandler requireAdmin no plugin inteiro
 }
