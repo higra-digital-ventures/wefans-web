@@ -28,7 +28,7 @@ export default async function PerfilPage() {
   const card = ' border border-line bg-panel p-5';
 
   return (
-    <PerfilClient me={me} wallet={wallet} teams={teams} momentCount={stats?.momentCount ?? 0}>
+    <PerfilClient me={me} wallet={wallet} teams={teams} momentCount={stats?.momentCount ?? 0} percentile={stats?.percentile}>
       {stats && stats.momentCount > 0 && (
         <section className={`${card} mt-6`}>
           <h2 className="mb-3 font-semibold text-ink">Coleção por raridade</h2>

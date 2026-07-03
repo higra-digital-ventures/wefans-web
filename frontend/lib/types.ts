@@ -405,6 +405,7 @@ export type ProfileStats = {
   momentCount: number;
   tierCounts: Record<string, number>;
   openedPacks: { id: string; packName: string; createdAt: string }[];
+  percentile?: { score: number; collector: number };
 };
 
 export type PublicProfile = {

@@ -14,12 +14,14 @@ export default function PerfilClient({
   wallet,
   teams,
   momentCount,
+  percentile,
   children,
 }: {
   me: UserDTO;
   wallet: Wallet | null;
   teams: TeamDTO[];
   momentCount: number;
+  percentile?: { score: number; collector: number };
   children?: ReactNode;
 }) {
   const router = useRouter();
@@ -41,9 +43,17 @@ export default function PerfilClient({
   };
 
   const kpis = [
-    { label: 'Pontuação wefans', value: me.topShotScore.toLocaleString('pt-BR') },
-    { label: 'Score do Colecionador', value: me.collectorScore.toLocaleString('pt-BR') },
-    { label: 'Lances', value: momentCount.toLocaleString('pt-BR') },
+    {
+      label: 'Pontuação wefans',
+      value: me.topShotScore.toLocaleString('pt-BR'),
+      sub: percentile ? `top ${percentile.score}% dos colecionadores` : undefined,
+    },
+    {
+      label: 'Score do Colecionador',
+      value: me.collectorScore.toLocaleString('pt-BR'),
+      sub: percentile ? `top ${percentile.collector}%` : undefined,
+    },
+    { label: 'Lances', value: momentCount.toLocaleString('pt-BR'), sub: undefined },
   ];
   const TABS = [
     { label: 'Visão geral', href: '/perfil', active: true },
@@ -102,6 +112,7 @@ export default function PerfilClient({
             <div key={k.label} className="min-w-[110px]  border border-line bg-[#0e0e10] px-4 py-3">
               <div className="font-display text-xl text-ink">{k.value}</div>
               <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">{k.label}</div>
+              {k.sub && <div className="mt-0.5 text-[10px] font-semibold text-accent3">{k.sub}</div>}
             </div>
           ))}
         </div>
