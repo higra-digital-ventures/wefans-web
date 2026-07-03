@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Countdown from '@/components/Countdown';
 import { getDropsServer, getPacksServer } from '@/lib/api-server';
 import { TIER_META } from '@/lib/tiers';
 import { brl } from '@/lib/format';
@@ -107,6 +108,13 @@ export default async function DropsPage() {
                 }`}
               >
                 {STATUS_LABEL[hero.status]}
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent3">
+                {hero.status === 'LIVE' ? (
+                  <>termina em <Countdown until={hero.endsAt} /></>
+                ) : (
+                  <>começa em <Countdown until={hero.startsAt} endedLabel="a qualquer momento" /></>
+                )}
               </span>
               {hero.requiredCollectorScore > 0 && (
                 <span className="text-[11px] text-ink/80">Score do Colecionador mín. {hero.requiredCollectorScore}</span>

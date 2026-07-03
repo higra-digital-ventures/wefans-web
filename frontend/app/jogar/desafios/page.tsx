@@ -1,16 +1,9 @@
 import Link from 'next/link';
+import Countdown from '@/components/Countdown';
 import { getChallengesServer } from '@/lib/api-server';
 import type { ChallengeSummary } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
-
-function timeLeft(endsAt: string): string {
-  const ms = new Date(endsAt).getTime() - Date.now();
-  if (ms <= 0) return 'encerrado';
-  const d = Math.floor(ms / 86_400_000);
-  const h = Math.floor((ms % 86_400_000) / 3_600_000);
-  return d > 0 ? `${d}d ${h}h` : `${h}h`;
-}
 
 function Card({ c }: { c: ChallengeSummary }) {
   return (
@@ -22,7 +15,7 @@ function Card({ c }: { c: ChallengeSummary }) {
         <span className="rounded-full bg-panel2 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
           {c.type === 'CRAFTING' ? 'Forja' : c.type === 'FLASH' ? '⚡ Relâmpago' : 'Padrão'}
         </span>
-        {c.active && <span className="text-xs text-muted">{timeLeft(c.endsAt)}</span>}
+        {c.active && <Countdown until={c.endsAt} className="text-xs text-accent3" />}
       </div>
       <h3 className="font-display text-xl text-ink">{c.name}</h3>
       <p className="mb-3 line-clamp-2 text-sm text-muted">{c.description}</p>
