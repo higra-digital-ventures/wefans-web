@@ -11,11 +11,23 @@ export const dynamic = 'force-dynamic';
 export default async function ColecaoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tier?: string; all?: string }>;
+  searchParams: Promise<{ tier?: string; all?: string; q?: string; venda?: string }>;
 }) {
-  const { tier, all } = await searchParams;
-  const moments = await getCollectionServer(tier ? `?tier=${tier}` : '');
+  const { tier, all, q, venda } = await searchParams;
+  let moments = await getCollectionServer(tier ? `?tier=${tier}` : '');
   if (moments === null) redirect('/entrar');
+
+  // paridade com os filtros do mercado: busca por texto e "só à venda"
+  if (q) {
+    const needle = q.toLowerCase();
+    moments = moments.filter(
+      (m) =>
+        m.template.player.name.toLowerCase().includes(needle) ||
+        m.template.title.toLowerCase().includes(needle) ||
+        m.template.player.club.toLowerCase().includes(needle),
+    );
+  }
+  if (venda) moments = moments.filter((m) => m.listingPriceCents != null);
 
   // agrupa duplicatas por edição (padrão); representante = menor serial
   const groups = new Map<string, MomentDTO[]>();
@@ -56,6 +68,30 @@ export default async function ColecaoPage({
           </>
         )}
       </p>
+
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <form action="/colecao" className="relative min-w-[220px] flex-1">
+          {tier && <input type="hidden" name="tier" value={tier} />}
+          {venda && <input type="hidden" name="venda" value={venda} />}
+          <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 fill-neutral-400" aria-hidden>
+            <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
+          </svg>
+          <input
+            name="q"
+            defaultValue={q ?? ''}
+            placeholder="Busque na sua coleção"
+            className="h-10 w-full border border-white/25 bg-transparent pl-9 pr-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
+          />
+        </form>
+        <Link
+          href={`/colecao?${new URLSearchParams({ ...(tier ? { tier } : {}), ...(q ? { q } : {}), ...(venda ? {} : { venda: '1' }) })}`}
+          className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide ${
+            venda ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300' : 'border-white/40 text-white hover:bg-white/10'
+          }`}
+        >
+          À venda
+        </Link>
+      </div>
 
       <TierChips basePath="/colecao" active={tier} />
 
