@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { addWishlist, removeWishlist } from '@/lib/api-client';
+import { useToast } from '@/components/Toaster';
 
 export default function WishlistButton({
   templateId,
@@ -14,26 +15,26 @@ export default function WishlistButton({
   initialWished: boolean;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [wished, setWished] = useState(initialWished);
-  const [pending, start] = useTransition();
+  const [, start] = useTransition();
 
+  // otimista: o estado muda na hora; se a API falhar, reverte e avisa
   function toggle() {
     if (!canWish) {
       router.push('/entrar');
       return;
     }
+    const next = !wished;
+    setWished(next);
     start(async () => {
       try {
-        if (wished) {
-          await removeWishlist(templateId);
-          setWished(false);
-        } else {
-          await addWishlist(templateId);
-          setWished(true);
-        }
+        if (next) await addWishlist(templateId);
+        else await removeWishlist(templateId);
         router.refresh();
       } catch {
-        /* ignora — mantém estado atual */
+        setWished(!next);
+        toast('Não deu para atualizar a wishlist — tente de novo.', 'error');
       }
     });
   }
@@ -41,8 +42,7 @@ export default function WishlistButton({
   return (
     <button
       onClick={toggle}
-      disabled={pending}
-      className={`inline-flex items-center gap-2  border px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 ${
+      className={`inline-flex items-center gap-2 border px-4 py-2.5 text-sm font-semibold transition-colors ${
         wished ? 'border-accent text-accent' : 'border-line text-muted hover:text-ink'
       }`}
     >
