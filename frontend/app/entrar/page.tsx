@@ -20,9 +20,13 @@ export default function EntrarPage() {
     setError(null);
     startTransition(async () => {
       try {
-        if (mode === 'login') await login(email, password);
-        else await register(email, username, password);
-        router.push('/perfil');
+        if (mode === 'login') {
+          await login(email, password);
+          router.push('/perfil');
+        } else {
+          await register(email, username, password);
+          router.push('/bem-vindo'); // tour de boas-vindas do novo colecionador
+        }
         router.refresh();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Falha na autenticação');
