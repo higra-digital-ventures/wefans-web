@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getFeedServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
+import SubTabs from '@/components/SubTabs';
 import TacticalBoard from '@/components/TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
 import { brl } from '@/lib/format';
@@ -180,14 +181,29 @@ function PopularPanel({ title, rows }: { title: string; rows: { name: string; co
   );
 }
 
-export default async function ExplorarPage() {
+// abas de filtro do feed (como as tabs do Explore do Top Shot)
+const FEED_TABS: { key: string; label: string; kinds: FeedEvent['kind'][] | null }[] = [
+  { key: '', label: 'Tudo', kinds: null },
+  { key: 'vendas', label: 'Vendas', kinds: ['SALE', 'LIST', 'GIFT', 'BURN'] },
+  { key: 'pacotes', label: 'Pacotes', kinds: ['PACK_OPEN'] },
+  { key: 'jogo', label: 'Jogo', kinds: ['CHALLENGE', 'QUEST'] },
+  { key: 'checkins', label: 'Check-ins', kinds: ['CHECKIN'] },
+];
+
+export default async function ExplorarPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ f?: string }>;
+}) {
+  const { f } = await searchParams;
+  const tab = FEED_TABS.find((t) => t.key === (f ?? '')) ?? FEED_TABS[0];
   const [feed, me, wishlist, checklists] = await Promise.all([
-    getFeedServer(40),
+    getFeedServer(tab.kinds ? 60 : 40),
     getMe(),
     getWishlistServer().catch(() => null),
     getChecklistsServer().catch(() => []),
   ]);
-  const events = feed?.events ?? [];
+  const events = (feed?.events ?? []).filter((e) => !tab.kinds || tab.kinds.includes(e.kind));
   const nearDone = checklists
     .filter((c) => c.progress && !c.claimed && c.progress.have > 0)
     .sort((a, b) => a.progress!.need - a.progress!.have - (b.progress!.need - b.progress!.have))
@@ -278,6 +294,13 @@ export default async function ExplorarPage() {
 
         {/* feed central */}
         <div className="min-w-0 space-y-3">
+          <SubTabs
+            items={FEED_TABS.map((t) => ({
+              label: t.label,
+              href: t.key ? `/explorar?f=${t.key}` : '/explorar',
+              active: t.key === tab.key,
+            }))}
+          />
           {events.length === 0 && (
             <p className="border border-white/10 bg-[#0c0c0e] p-8 text-center text-sm text-neutral-400">
               Sem atividade ainda — abra um pacote ou compre no mercado.
