@@ -123,6 +123,9 @@ export default function NotificationsBell() {
           </span>
         )}
       </button>
+      <span className="sr-only" role="status" aria-live="polite">
+        {unread > 0 ? `${unread} notificações não lidas` : ''}
+      </span>
 
       {open && (
         <div className="absolute right-0 top-full z-50 mt-2 w-[92vw] max-w-[380px] border border-white/10 bg-[#0c0c0e] shadow-[0_20px_50px_rgba(0,0,0,.7)]">

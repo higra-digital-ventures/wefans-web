@@ -28,6 +28,8 @@ export default function FeedPoller({ latestId }: { latestId: string | null }) {
   if (fresh === 0) return null;
   return (
     <button
+      role="status"
+      aria-live="polite"
       onClick={() => router.refresh()}
       className="sticky top-16 z-10 w-full border border-accent3/50 bg-[#0c1416] py-2 text-[12px] font-bold uppercase tracking-[0.12em] text-accent3 transition-colors hover:bg-accent3/10"
     >

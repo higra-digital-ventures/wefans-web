@@ -36,8 +36,12 @@ export default function Countdown({
   }, [target]);
 
   return (
-    <span className={className} title={new Date(until).toLocaleString('pt-BR')}>
-      {left ?? endedLabel}
+    <span
+      className={className}
+      title={new Date(until).toLocaleString('pt-BR')}
+      aria-label={left ? `termina ${new Date(until).toLocaleString('pt-BR')}` : endedLabel}
+    >
+      <span aria-hidden>{left ?? endedLabel}</span>
     </span>
   );
 }
