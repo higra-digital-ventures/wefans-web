@@ -138,3 +138,6 @@ export const submitCheckin = (body: {
   attestationToken: string;
   nonce: string;
 }) => request<{ status: string; reason?: string; grantedPackInventoryId?: string }>('POST', '/api/v1/checkin', body);
+
+export const fetchFeed = (limit = 20) =>
+  request<{ events: { id: string }[] }>('GET', `/api/v1/feed?limit=${limit}`);

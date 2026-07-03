@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getFeedServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
 import SubTabs from '@/components/SubTabs';
+import FeedPoller from '@/components/FeedPoller';
 import TacticalBoard from '@/components/TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
 import { brl } from '@/lib/format';
@@ -301,6 +302,7 @@ export default async function ExplorarPage({
               active: t.key === tab.key,
             }))}
           />
+          <FeedPoller latestId={feed?.events[0]?.id ?? null} />
           {events.length === 0 && (
             <p className="border border-white/10 bg-[#0c0c0e] p-8 text-center text-sm text-neutral-400">
               Sem atividade ainda — abra um pacote ou compre no mercado.
