@@ -9,7 +9,7 @@ import { toTemplateDTO } from '../lib/dto';
 
 type FeedEvent = {
   id: string;
-  kind: 'SALE' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN';
+  kind: 'SALE' | 'LIST' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN';
   user: string | null;
   targetUser?: string | null;
   createdAt: string;
@@ -37,10 +37,19 @@ export async function getFeed(db: PrismaClient, limit = 30) {
     seller: { select: { username: true } },
   } as const;
 
-  const [trades, mints, entries, claims, checkins] = await Promise.all([
+  const [trades, listings, mints, entries, claims, checkins] = await Promise.all([
     db.transaction.findMany({
       where: { type: { in: ['BUY', 'OFFER_ACCEPT', 'GIFT', 'BURN'] } },
       include: momentInclude,
+      orderBy: { createdAt: 'desc' },
+      take,
+    }),
+    db.listing.findMany({
+      where: { status: 'ACTIVE' },
+      include: {
+        moment: { include: { template: { include: { player: true } } } },
+        seller: { select: { username: true } },
+      },
       orderBy: { createdAt: 'desc' },
       take,
     }),
@@ -81,6 +90,19 @@ export async function getFeed(db: PrismaClient, limit = 30) {
       momentId: t.momentId,
       serial: t.moment.serial,
       template: toTemplateDTO(t.moment.template),
+    });
+  }
+
+  for (const l of listings) {
+    events.push({
+      id: `l-${l.id}`,
+      kind: 'LIST',
+      user: l.seller.username,
+      createdAt: l.createdAt.toISOString(),
+      priceCents: l.priceCents,
+      momentId: l.momentId,
+      serial: l.moment.serial,
+      template: toTemplateDTO(l.moment.template),
     });
   }
 

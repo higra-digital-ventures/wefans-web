@@ -434,7 +434,7 @@ export type PackInventoryDTO = { id: string; opened: boolean; createdAt: string;
 // ----- Feed do Explorar (rede de eventos, gramática do Explore do Top Shot) -----
 export type FeedEvent = {
   id: string;
-  kind: 'SALE' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN';
+  kind: 'SALE' | 'LIST' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN';
   user: string | null;
   targetUser?: string | null;
   createdAt: string;

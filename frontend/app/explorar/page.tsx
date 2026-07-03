@@ -23,6 +23,7 @@ function timeAgo(iso: string) {
 
 const ACTION: Record<FeedEvent['kind'], string> = {
   SALE: 'comprou',
+  LIST: 'colocou à venda',
   PACK_OPEN: 'abriu um pacote e puxou',
   GIFT: 'recebeu de presente',
   BURN: 'queimou',
@@ -67,8 +68,13 @@ function Username({ user }: { user: string | null }) {
 
 function EventCard({ e }: { e: FeedEvent }) {
   const meta = e.template ? TIER_META[e.template.tier] : null;
+  // pull raro (Lendário/Galáctico) ganha moldura foil na cor do tier, como no Top Shot
+  const rarePull = e.kind === 'PACK_OPEN' && e.template && isFoil(e.template.tier);
   return (
-    <article className="border border-white/10 bg-[#0c0c0e]">
+    <article
+      className="border border-white/10 bg-[#0c0c0e]"
+      style={rarePull ? { borderColor: `${meta!.color}88`, boxShadow: `0 0 18px ${meta!.color}30` } : undefined}
+    >
       {/* cabeçalho: avatar + @user + ação + tempo */}
       <div className="flex items-center gap-2.5 px-4 py-3">
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sunset text-[11px] font-bold uppercase text-white">
@@ -80,7 +86,7 @@ function EventCard({ e }: { e: FeedEvent }) {
           {(e.kind === 'CHALLENGE' || e.kind === 'QUEST' || e.kind === 'CHECKIN') && (
             <span className="font-bold text-white">{e.label}</span>
           )}
-          {(e.kind === 'SALE' || e.kind === 'GIFT' || e.kind === 'BURN') && e.template && (
+          {(e.kind === 'SALE' || e.kind === 'LIST' || e.kind === 'GIFT' || e.kind === 'BURN') && e.template && (
             <span className="font-bold text-white">
               {e.template.player.name} #{e.serial}
             </span>
@@ -105,14 +111,29 @@ function EventCard({ e }: { e: FeedEvent }) {
               {e.template.player.name}
             </div>
             <div className="truncate text-[12px] text-neutral-400">{e.template.title}</div>
-            {e.kind === 'PACK_OPEN' && (
-              <div className="mt-1 text-[11px] text-neutral-500">melhor carta do pacote</div>
-            )}
+            {e.kind === 'PACK_OPEN' &&
+              (rarePull ? (
+                <div
+                  className="mt-1.5 inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white"
+                  style={{ background: `${meta!.color}33`, border: `1px solid ${meta!.color}88` }}
+                >
+                  Puxou um {meta!.label} 🔥
+                </div>
+              ) : (
+                <div className="mt-1 text-[11px] text-neutral-500">melhor carta do pacote</div>
+              ))}
           </div>
-          {e.kind === 'SALE' && (
+          {(e.kind === 'SALE' || e.kind === 'LIST') && (
             <div className="shrink-0 text-right">
-              <div className="text-[10px] uppercase tracking-wide text-neutral-500">por</div>
+              <div className="text-[10px] uppercase tracking-wide text-neutral-500">
+                {e.kind === 'LIST' ? 'pedindo' : 'por'}
+              </div>
               <div className="text-[20px] font-bold text-white">{brl(e.priceCents ?? 0)}</div>
+              {e.kind === 'LIST' && (
+                <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-accent3">
+                  comprar →
+                </div>
+              )}
             </div>
           )}
         </Link>
