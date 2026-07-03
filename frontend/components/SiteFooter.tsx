@@ -65,8 +65,8 @@ export default function SiteFooter() {
           <div className={HEAD}>Suporte</div>
           <div className={COL}>
             <Link href="/" className={LINK}>Status</Link>
-            <Link href="/conduta" className={LINK}>Ajuda</Link>
-            <Link href="/checkin" className={LINK}>Como funciona o check-in?</Link>
+            <Link href="/como-funciona" className={LINK}>Como funciona</Link>
+            <Link href="/como-funciona#checkin" className={LINK}>Como funciona o check-in?</Link>
             <Link href="/fichas" className={LINK}>Fichas de Troca</Link>
           </div>
         </div>

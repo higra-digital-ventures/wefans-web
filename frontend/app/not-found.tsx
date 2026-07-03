@@ -8,7 +8,8 @@ export default function NotFound() {
       <h1 className="mt-2 font-display text-3xl uppercase text-ink">Esse lance saiu de campo</h1>
       <p className="mt-2 max-w-md text-sm text-muted">
         A página que você procura não existe ou foi movida — pode ter sido vendida, queimada
-        ou nunca ter sido criada.
+        ou nunca ter sido criada. Se está perdido, o{' '}
+        <Link href="/como-funciona" className="text-accent3 underline">guia rápido</Link> ajuda.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
         <Link

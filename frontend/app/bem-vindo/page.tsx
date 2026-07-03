@@ -71,7 +71,8 @@ export default async function BemVindoPage() {
 
       <div className="mt-8 flex items-center justify-between border-t border-line pt-5">
         <p className="text-xs text-muted">
-          Dúvidas sobre termos? Passe o mouse nos rótulos dos cards — tudo tem explicação.
+          Dúvidas sobre termos? Veja o{' '}
+          <Link href="/como-funciona" className="text-accent3 underline">guia Como funciona</Link>.
         </p>
         <Link href="/pacotes" className="bg-accent px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90">
           Começar agora
