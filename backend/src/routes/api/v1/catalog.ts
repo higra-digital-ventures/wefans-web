@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '../../../db';
 import {
   getMomentDetail,
+  getTemplateCollectors,
   getTemplateDetail,
   listSeries,
   listSets,
@@ -34,6 +35,11 @@ export async function catalogRoutes(app: FastifyInstance) {
   app.get('/catalog/templates', async (req) => ({
     templates: await listTemplates(prisma, parseFilters(req.query)),
   }));
+
+  app.get('/catalog/templates/:id/collectors', async (req) => {
+    const { id } = z.object({ id: z.string() }).parse(req.params);
+    return getTemplateCollectors(prisma, id);
+  });
 
   app.get('/catalog/templates/:id', async (req) => {
     const { id } = z.object({ id: z.string() }).parse(req.params);

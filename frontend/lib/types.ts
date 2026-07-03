@@ -398,7 +398,7 @@ export type TemplateMarket = {
   floorMomentId: string | null;
   activeListings: number;
   lockedCount: number;
-  recentSales: { amountCents: number; createdAt: string }[];
+  recentSales: { amountCents: number; createdAt: string; buyer: string | null; serial: number }[];
 };
 
 export type ProfileStats = {
@@ -450,4 +450,9 @@ export type FeedEvent = {
 export type FeedPopular = {
   players: { name: string; count: number }[];
   competitions: { name: string; count: number }[];
+};
+
+export type TemplateCollectors = {
+  topCollectors: { username: string; count: number }[];
+  specialSerials: { serial: number; label: string; owner: string | null; burned: boolean; momentId: string }[];
 };

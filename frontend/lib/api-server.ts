@@ -33,6 +33,7 @@ import type {
   FastBreakStandings,
   FeedEvent,
   FeedPopular,
+  TemplateCollectors,
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
@@ -249,4 +250,8 @@ export async function getFeedServer(
   limit = 30,
 ): Promise<{ events: FeedEvent[]; popular: FeedPopular } | null> {
   return serverFetch<{ events: FeedEvent[]; popular: FeedPopular }>(`/api/v1/feed?limit=${limit}`);
+}
+
+export async function getTemplateCollectorsServer(id: string): Promise<TemplateCollectors | null> {
+  return serverFetch<TemplateCollectors>(`/api/v1/catalog/templates/${id}/collectors`);
 }

@@ -182,8 +182,13 @@ export async function getTemplateMarket(db: PrismaClient, templateId: string) {
     db.transaction.findMany({
       where: { type: 'BUY', moment: { templateId } },
       orderBy: { createdAt: 'desc' },
-      take: 10,
-      select: { amountCents: true, createdAt: true },
+      take: 12,
+      select: {
+        amountCents: true,
+        createdAt: true,
+        buyer: { select: { username: true } },
+        moment: { select: { serial: true } },
+      },
     }),
   ]);
   if (!template) throw notFound('Lance não encontrado');
@@ -194,6 +199,11 @@ export async function getTemplateMarket(db: PrismaClient, templateId: string) {
     floorMomentId: floor?.moment.id ?? null,
     activeListings,
     lockedCount,
-    recentSales: recentSales.map((s) => ({ amountCents: s.amountCents, createdAt: s.createdAt.toISOString() })),
+    recentSales: recentSales.map((s) => ({
+      amountCents: s.amountCents,
+      createdAt: s.createdAt.toISOString(),
+      buyer: s.buyer?.username ?? null,
+      serial: s.moment.serial,
+    })),
   };
 }

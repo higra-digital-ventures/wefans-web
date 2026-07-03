@@ -91,3 +91,48 @@ export async function listCollection(db: PrismaClient, userId: string, filters: 
   });
   return moments.map(toMomentDTO);
 }
+
+/** Top Collectors + Special Serials da edição (anatomia da Moment page do Top Shot). */
+export async function getTemplateCollectors(db: PrismaClient, templateId: string) {
+  const template = await db.template.findUnique({
+    where: { id: templateId },
+    include: { player: { select: { jersey: true } } },
+  });
+  if (!template) return { topCollectors: [], specialSerials: [] };
+
+  const grouped = await db.moment.groupBy({
+    by: ['ownerId'],
+    where: { templateId, burned: false, ownerId: { not: null } },
+    _count: { _all: true },
+    orderBy: { _count: { ownerId: 'desc' } },
+    take: 5,
+  });
+  const owners = await db.user.findMany({
+    where: { id: { in: grouped.map((g) => g.ownerId!) } },
+    select: { id: true, username: true },
+  });
+  const nameOf = new Map(owners.map((o) => [o.id, o.username]));
+  const topCollectors = grouped.map((g) => ({
+    username: nameOf.get(g.ownerId!) ?? '—',
+    count: g._count._all,
+  }));
+
+  // serials de prestígio: #1, a última da tiragem e o número da camisa (jersey match)
+  const wanted = new Map<number, string>([[1, 'Primeira cunhagem']]);
+  if (template.editionSize) wanted.set(template.editionSize, 'Última da tiragem');
+  wanted.set(template.player.jersey, 'Número da camisa');
+  const specials = await db.moment.findMany({
+    where: { templateId, serial: { in: [...wanted.keys()] } },
+    include: { owner: { select: { username: true } } },
+    orderBy: { serial: 'asc' },
+  });
+  const specialSerials = specials.map((m) => ({
+    serial: m.serial,
+    label: wanted.get(m.serial) ?? '',
+    owner: m.burned ? null : (m.owner?.username ?? null),
+    burned: m.burned,
+    momentId: m.id,
+  }));
+
+  return { topCollectors, specialSerials };
+}

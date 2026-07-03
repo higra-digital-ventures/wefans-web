@@ -5,11 +5,13 @@ export default function OwnershipGauge({
   listed,
   locked,
   burned,
+  legend = true,
 }: {
   existing: number;
   listed: number;
   locked: number;
   burned: number;
+  legend?: boolean; // false = só o arco (as barras ficam ao lado, como no print)
 }) {
   const unlisted = Math.max(0, existing - burned - listed - locked);
   const segments = [
@@ -57,6 +59,7 @@ export default function OwnershipGauge({
           </text>
         </svg>
       </div>
+      {legend && (
       <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-4">
         {segments.map((s) => (
           <div key={s.label} className="flex items-center gap-1.5 text-xs">
@@ -66,7 +69,8 @@ export default function OwnershipGauge({
           </div>
         ))}
       </div>
-      <p className="mt-1.5 text-[11px] text-muted">atualiza conforme o mercado</p>
+      )}
+      {legend && <p className="mt-1.5 text-[11px] text-muted">atualiza conforme o mercado</p>}
     </div>
   );
 }
