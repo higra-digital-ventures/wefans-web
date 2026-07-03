@@ -137,6 +137,17 @@ body {
   }
 }
 
+/* touch (sem hover): o lance "toca" sozinho, em loop mais lento — os cards
+   ficam vivos no mobile sem depender de mouse */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .wf-play-ball {
+    animation: wf-run 4s cubic-bezier(0.45, 0, 0.4, 1) infinite;
+  }
+  .wf-traj-draw {
+    animation: wf-draw 4s cubic-bezier(0.45, 0, 0.4, 1) infinite;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
