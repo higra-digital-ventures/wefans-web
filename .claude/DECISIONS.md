@@ -136,6 +136,18 @@
   (`Transaction[type,createdAt]`, `Listing[status,createdAt]`) e **opt-out de
   privacidade** (`User.showInFeed`, toggle no /perfil, PATCH /me) — primeiro passo LGPD.
 
+## Chat 1:1 e drawer do perfil (pós-v1)
+- **2026-07-03 — Chat de negociação entre colecionadores** (primeiro modelo social real,
+  além do escopo derivado do feed): tabela **`ChatMessage`** (from/to/body/readAt);
+  conversas derivadas por par de usuários, sem tabela de conversa. Rotas autenticadas
+  `GET/POST /me/chats[/:username]`; abrir a thread marca como lida. Front: `/chat` no
+  layout do Top Shot (rail de conversas + thread com polling 5s), botão "Mensagem" no
+  perfil público. **Pendências aceitas:** sem bloqueio/denúncia de usuário e sem push —
+  necessários antes de produção (ver Conduta/LGPD no roadmap).
+- **2026-07-03 — Drawer do perfil na top bar** (padrão Top Shot): avatar abre painel
+  lateral com carteira (+Depositar), Pontuação wefans, Mensagens (ponto de não-lidas),
+  ofertas, coleção, configurações, admin e Sair.
+
 ## Notificações (pós-v1)
 - **2026-07-03 — Notificações derivadas, sem tabela de eventos.** `GET /me/notifications`
   computa a lista dos registros existentes (vendas dos meus Lances, presentes, ofertas
