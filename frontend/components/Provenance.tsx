@@ -2,7 +2,7 @@ import { brl, dateTime } from '@/lib/format';
 import type { ProvenanceTx } from '@/lib/types';
 
 const LABELS: Record<string, string> = {
-  MINT: 'Cunhado',
+  MINT: 'Criado',
   BUY: 'Compra',
   SELL: 'Venda',
   OFFER_ACCEPT: 'Oferta aceita',

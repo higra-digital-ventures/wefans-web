@@ -185,7 +185,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               { label: 'Pontuação wefans', v: m.topShotScore.toLocaleString('pt-BR') },
               { label: 'Adquirido por', v: brl(m.acquiredPriceCents) },
               { label: 'Dono', v: m.ownerUsername ? `@${m.ownerUsername}` : '—' },
-              { label: 'Cunhado em', v: dateTime(m.mintedAt).split(',')[0] },
+              { label: 'Criado em', v: dateTime(m.mintedAt).split(',')[0] },
             ].map((s) => (
               <div key={s.label}>
                 <div className="font-semibold text-ink">
@@ -375,7 +375,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                   <span className="font-normal normal-case tracking-normal text-neutral-500">Dono</span>
                 </div>
                 {collectors.specialSerials.length === 0 ? (
-                  <p className="text-sm text-neutral-500">Nenhum serial especial cunhado ainda.</p>
+                  <p className="text-sm text-neutral-500">Nenhum serial especial criado ainda.</p>
                 ) : (
                   <ul className="divide-y divide-line/50">
                     {collectors.specialSerials.map((s) => (

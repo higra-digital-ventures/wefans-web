@@ -118,7 +118,7 @@ export async function getTemplateCollectors(db: PrismaClient, templateId: string
   }));
 
   // serials de prestígio: #1, a última da tiragem e o número da camisa (jersey match)
-  const wanted = new Map<number, string>([[1, 'Primeira cunhagem']]);
+  const wanted = new Map<number, string>([[1, 'Primeiro exemplar']]);
   if (template.editionSize) wanted.set(template.editionSize, 'Última da tiragem');
   wanted.set(template.player.jersey, 'Número da camisa');
   const specials = await db.moment.findMany({

@@ -87,7 +87,7 @@ export async function mintPack(tx: Prisma.TransactionClient, userId: string, pac
     where: { status: 'PUBLICADO' },
     select: { id: true, tier: true, parallel: true, aspCents: true },
   });
-  if (pool.length === 0) throw conflict('Nenhum Lance publicado para cunhar');
+  if (pool.length === 0) throw conflict('Nenhum Lance publicado para criar');
 
   const byTier = new Map<Tier, PoolTemplate[]>();
   for (const t of pool) {
@@ -110,7 +110,7 @@ export async function mintPack(tx: Prisma.TransactionClient, userId: string, pac
 
   for (const tier of tiers) {
     const slot = await mintSlot(tx, tier, byTier);
-    if (!slot) throw conflict('Catálogo esgotado para cunhar este Lance');
+    if (!slot) throw conflict('Catálogo esgotado para criar este Lance');
 
     const acquiredPriceCents = priceShare;
     const topShotScore = Math.round((acquiredPriceCents / 100) * 10);
