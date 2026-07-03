@@ -66,6 +66,19 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
   const topPurchases = [...(tm?.recentSales ?? [])].sort((a, b) => b.amountCents - a.amountCents).slice(0, 3);
   const recentPurchases = (tm?.recentSales ?? []).slice(0, 10);
 
+  // tendência: média das 3 vendas mais recentes vs as 3 anteriores
+  const sales = tm?.recentSales ?? [];
+  const avg = (xs: { amountCents: number }[]) =>
+    xs.length ? xs.reduce((n, x) => n + x.amountCents, 0) / xs.length : 0;
+  const trendNow = avg(sales.slice(0, 3));
+  const trendBefore = avg(sales.slice(3, 6));
+  const trend: 'up' | 'down' | null =
+    trendBefore > 0 && Math.abs(trendNow - trendBefore) / trendBefore >= 0.05
+      ? trendNow > trendBefore
+        ? 'up'
+        : 'down'
+      : null;
+
   const STATES = [
     { label: 'Não listados (com donos)', value: unlisted, color: '#f7f7f8' },
     { label: 'À venda (com donos)', value: listed, color: '#22c55e' },
@@ -152,6 +165,14 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               </div>
               <div className="text-right text-[11px] text-neutral-400">
                 {listed} à venda · Média: {tm ? brl(tm.aspCents) : '—'}
+                {trend && (
+                  <span
+                    className={`ml-1 font-bold ${trend === 'up' ? 'text-emerald-400' : 'text-red-400'}`}
+                    title={`Tendência: as últimas vendas estão ${trend === 'up' ? 'acima' : 'abaixo'} das anteriores`}
+                  >
+                    {trend === 'up' ? '↑' : '↓'}
+                  </span>
+                )}
               </div>
             </div>
             <MomentActions
