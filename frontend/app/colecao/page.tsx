@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getCollectionServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import TierChips from '@/components/TierChips';
+import { brl } from '@/lib/format';
 import type { MomentDTO } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -26,10 +27,20 @@ export default async function ColecaoPage({
   const grouped = [...groups.values()].map((g) => [...g].sort((a, b) => a.serial - b.serial));
   const showAll = all === '1' || grouped.every((g) => g.length === 1);
   const hasDupes = grouped.some((g) => g.length > 1);
+  // valor estimado = soma do preço médio (ASP) das edições que você possui
+  const estimatedCents = moments.reduce((sum, m) => sum + (m.template.aspCents || 0), 0);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <h1 className="mb-1 font-display text-4xl uppercase text-ink">Minha Coleção</h1>
+      <div className="mb-1 flex flex-wrap items-baseline justify-between gap-3">
+        <h1 className="font-display text-4xl uppercase text-ink">Minha Coleção</h1>
+        {estimatedCents > 0 && (
+          <div className="text-right" title="Soma do preço médio de venda (ASP) de cada Lance seu — estimativa, não cotação">
+            <div className="text-[10px] uppercase tracking-[0.15em] text-muted">Valor estimado ⓘ</div>
+            <div className="font-display text-2xl text-accent3">{brl(estimatedCents)}</div>
+          </div>
+        )}
+      </div>
       <p className="mb-6 text-muted">
         {moments.length} Lance{moments.length !== 1 ? 's' : ''} · {grouped.length} ediç
         {grouped.length !== 1 ? 'ões' : 'ão'}
