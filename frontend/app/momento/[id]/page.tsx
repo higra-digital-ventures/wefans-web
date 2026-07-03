@@ -15,7 +15,7 @@ import Provenance from '@/components/Provenance';
 import MomentActions from '@/components/MomentActions';
 import OffersPanel from '@/components/OffersPanel';
 import { TIER_META, editionLabel } from '@/lib/tiers';
-import { brl, dateTime } from '@/lib/format';
+import { brl, dateTime, timeAgo } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -296,7 +296,9 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                         </span>
                         <span className="font-mono text-neutral-300">#{s.serial}</span>
                       </td>
-                      <td className={`${TD} text-neutral-400`}>{dateTime(s.createdAt)}</td>
+                      <td className={`${TD} text-neutral-400`} title={dateTime(s.createdAt)}>
+                        {timeAgo(s.createdAt)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -320,7 +322,9 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                       <td className={`${TD} text-white`}>{s.buyer ? `@${s.buyer}` : '—'}</td>
                       <td className={`${TD} font-semibold text-ink`}>{brl(s.amountCents)}</td>
                       <td className={`${TD} font-mono text-neutral-300`}>#{s.serial}</td>
-                      <td className={`${TD} text-neutral-400`}>{dateTime(s.createdAt)}</td>
+                      <td className={`${TD} text-neutral-400`} title={dateTime(s.createdAt)}>
+                        {timeAgo(s.createdAt)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
