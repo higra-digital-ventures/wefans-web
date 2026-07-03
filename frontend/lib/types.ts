@@ -466,3 +466,19 @@ export type NotificationDTO = {
   href: string;
   createdAt: string;
 };
+
+// ----- Chat 1:1 (negociação) -----
+export type ChatSummary = {
+  username: string;
+  lastBody: string;
+  lastAt: string;
+  lastMine: boolean;
+  unread: number;
+};
+
+export type ChatMessageDTO = {
+  id: string;
+  mine: boolean;
+  body: string;
+  createdAt: string;
+};

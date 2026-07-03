@@ -155,3 +155,19 @@ export const markNotificationsSeen = () => request('POST', '/api/v1/me/notificat
 
 export const fetchTemplates = () =>
   request<{ templates: import('./types').TemplateDTO[] }>('GET', '/api/v1/catalog/templates');
+
+export const fetchChats = () =>
+  request<{ chats: import('./types').ChatSummary[]; totalUnread: number }>('GET', '/api/v1/me/chats');
+
+export const fetchThread = (username: string) =>
+  request<{ with: string; messages: import('./types').ChatMessageDTO[] }>(
+    'GET',
+    `/api/v1/me/chats/${encodeURIComponent(username)}`,
+  );
+
+export const sendChatMessage = (username: string, body: string) =>
+  request<{ message: import('./types').ChatMessageDTO }>(
+    'POST',
+    `/api/v1/me/chats/${encodeURIComponent(username)}`,
+    { body },
+  );
