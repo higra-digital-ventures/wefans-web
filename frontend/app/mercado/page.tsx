@@ -128,6 +128,14 @@ export default async function MercadoPage({
                       'para colecionar'
                     )}
                   </div>
+                  {c.progress && (
+                    <div className="mt-1.5 h-1 bg-white/10" aria-hidden>
+                      <div
+                        className="h-1 bg-accent3"
+                        style={{ width: `${Math.min(100, (c.progress.have / c.progress.need) * 100)}%` }}
+                      />
+                    </div>
+                  )}
                   <Link
                     href={`/jogar/desafios/${c.id}`}
                     className="mt-2.5 flex items-center justify-center gap-1.5  border border-white/20 bg-[#141416] py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/10"
