@@ -152,3 +152,6 @@ export const fetchNotifications = () =>
   );
 
 export const markNotificationsSeen = () => request('POST', '/api/v1/me/notifications/seen', {});
+
+export const fetchTemplates = () =>
+  request<{ templates: import('./types').TemplateDTO[] }>('GET', '/api/v1/catalog/templates');

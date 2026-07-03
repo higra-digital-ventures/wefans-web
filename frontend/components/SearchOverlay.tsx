@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { fetchTemplates } from '@/lib/api-client';
 import TacticalBoard from './TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
 import type { TemplateDTO } from '@/lib/types';
@@ -18,8 +19,17 @@ export default function SearchOverlay({
 }) {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
+  const [catalog, setCatalog] = useState<TemplateDTO[] | null>(null); // p/ autocomplete
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  // carrega o catálogo uma vez, na primeira abertura (autocomplete ao digitar)
+  useEffect(() => {
+    if (!open || catalog) return;
+    fetchTemplates()
+      .then((r) => setCatalog(r.templates))
+      .catch(() => setCatalog([]));
+  }, [open, catalog]);
 
   useEffect(() => {
     if (!open) return;
@@ -32,6 +42,19 @@ export default function SearchOverlay({
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  const matches = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    if (!needle || !catalog) return [];
+    return catalog
+      .filter(
+        (t) =>
+          t.player.name.toLowerCase().includes(needle) ||
+          t.player.club.toLowerCase().includes(needle) ||
+          t.title.toLowerCase().includes(needle),
+      )
+      .slice(0, 6);
+  }, [q, catalog]);
 
   const go = (query: string) => {
     setOpen(false);
@@ -95,7 +118,53 @@ export default function SearchOverlay({
               </button>
             </div>
 
+            {/* resultados ao digitar */}
+            {q.trim() && (
+              <div className="mx-auto max-w-4xl px-4 pb-6 pt-1 lg:px-6">
+                {matches.length === 0 ? (
+                  <p className="py-6 text-center text-[13px] text-neutral-500">
+                    Nada com “{q}” — Enter busca no mercado.
+                  </p>
+                ) : (
+                  <ul className="divide-y divide-white/[0.06]">
+                    {matches.map((t) => {
+                      const meta = TIER_META[t.tier];
+                      return (
+                        <li key={t.id}>
+                          <Link
+                            href={`/lance/${t.id}`}
+                            onClick={() => setOpen(false)}
+                            className="flex items-center gap-3 px-2 py-2.5 transition-colors hover:bg-white/5"
+                          >
+                            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: meta.color }} aria-hidden />
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-[13px] font-semibold text-white">
+                                {t.player.name} <span className="font-normal text-neutral-500">· {t.player.club}</span>
+                              </span>
+                              <span className="block truncate text-[11px] text-neutral-400">
+                                {meta.label} · {t.title}
+                              </span>
+                            </span>
+                            <span className="shrink-0 text-[11px] text-neutral-500">ver edição →</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                    <li>
+                      <button
+                        onClick={() => go(q.trim())}
+                        className="w-full px-2 py-2.5 text-left text-[12px] font-semibold text-accent3 hover:bg-white/5"
+                      >
+                        Buscar “{q.trim()}” no mercado →
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            )}
+
             {/* painel: categorias + moments populares */}
+            {!q.trim() && (
             <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-8 pt-2 md:flex-row lg:px-6">
               <div className="w-full shrink-0 md:w-[260px]">
                 <div className="mb-3 text-[13px] font-bold text-white">Categorias populares</div>
@@ -183,6 +252,7 @@ export default function SearchOverlay({
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       )}
