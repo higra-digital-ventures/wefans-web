@@ -10,7 +10,7 @@ import type { PrismaClient } from '@prisma/client';
 
 type Notification = {
   id: string;
-  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY';
+  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY' | 'WISHLIST';
   title: string;
   body: string;
   href: string;
@@ -29,7 +29,7 @@ export async function getNotifications(db: PrismaClient, userId: string) {
     moment: { include: { template: { include: { player: true } } } },
   } as const;
 
-  const [sales, gifts, offers, checkins, windows, lineups] = await Promise.all([
+  const [sales, gifts, offers, checkins, windows, lineups, wishlistHits] = await Promise.all([
     db.transaction.findMany({
       where: { type: { in: ['BUY', 'OFFER_ACCEPT'] }, sellerId: userId },
       include: { ...momentInclude, buyer: { select: { username: true } } },
@@ -64,6 +64,17 @@ export async function getNotifications(db: PrismaClient, userId: string) {
       include: { day: { include: { run: { select: { name: true } } } } },
       orderBy: { submittedAt: 'desc' },
       take: 5,
+    }),
+    // alerta de wishlist: anúncios ativos (de outros) em edições que eu marquei
+    db.listing.findMany({
+      where: {
+        status: 'ACTIVE',
+        sellerId: { not: userId },
+        moment: { template: { wishlist: { some: { userId } } } },
+      },
+      include: momentInclude,
+      orderBy: { createdAt: 'desc' },
+      take: 8,
     }),
   ]);
 
@@ -142,6 +153,19 @@ export async function getNotifications(db: PrismaClient, userId: string) {
       body: `${l.day.run.name} · Dia ${l.day.dayNumber}: seu score foi ${l.score} (alvo ${l.day.targetScore}) — ${l.won ? 'você venceu!' : 'não foi dessa vez.'}`,
       href: `/jogar/matchday/dia/${l.dayId}`,
       createdAt: (l.day.closedAt ?? l.submittedAt).toISOString(),
+    });
+  }
+
+  for (const l of wishlistHits) {
+    const t = l.moment.template;
+    const belowAvg = t.aspCents > 0 && l.priceCents < t.aspCents;
+    items.push({
+      id: `wl-${l.id}`,
+      kind: 'WISHLIST',
+      title: belowAvg ? 'Item da wishlist abaixo da média' : 'Item da sua wishlist à venda',
+      body: `${t.player.name} #${l.moment.serial} listado por ${money(l.priceCents)}${t.aspCents > 0 ? ` (média ${money(t.aspCents)})` : ''}.`,
+      href: `/momento/${l.momentId}`,
+      createdAt: l.createdAt.toISOString(),
     });
   }
 

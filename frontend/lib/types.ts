@@ -459,7 +459,7 @@ export type TemplateCollectors = {
 
 export type NotificationDTO = {
   id: string;
-  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY';
+  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY' | 'WISHLIST';
   title: string;
   body: string;
   href: string;

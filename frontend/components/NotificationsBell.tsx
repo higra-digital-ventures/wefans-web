@@ -29,6 +29,10 @@ const KIND_META: Record<NotificationDTO['kind'], { color: string; d: string }> =
     color: '#ff9e2c',
     d: 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm4.2 13.2-5.2-3V7h2v4.1l4.2 2.4Z',
   },
+  WISHLIST: {
+    color: '#f59e0b',
+    d: 'M6 2h12a1 1 0 0 1 1 1v19l-7-4.2L5 22V3a1 1 0 0 1 1-1Zm6 3-1.4 2.9-3.1.4 2.3 2.2-.6 3.1L12 12l2.8 1.6-.6-3.1 2.3-2.2-3.1-.4L12 5Z',
+  },
   MATCHDAY: {
     color: '#f7f7f8',
     d: 'M18 4V2H6v2H2v3a5 5 0 0 0 5 5h.4A6 6 0 0 0 11 14.9V18H7v4h10v-4h-4v-3.1a6 6 0 0 0 3.6-2.9H17a5 5 0 0 0 5-5V4ZM4 7V6h2v4a3 3 0 0 1-2-3Zm16 0a3 3 0 0 1-2 3V6h2Z',
