@@ -3,14 +3,14 @@ import { getFastbreakRunsServer, getFastbreakStandingsServer } from '@/lib/api-s
 
 export const dynamic = 'force-dynamic';
 
-export default async function PeladaPage() {
+export default async function MatchdayPage() {
   const runs = await getFastbreakRunsServer();
   const standings = await Promise.all(runs.map((r) => getFastbreakStandingsServer(r.id)));
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <div className="mb-1 flex flex-wrap items-baseline gap-4">
-        <h1 className="font-display text-4xl uppercase text-ink">Pelada</h1>
+        <h1 className="font-display text-4xl uppercase text-ink">Matchday</h1>
         <Link href="/jogar/desafios" className="text-sm text-accent3 hover:underline">
           desafios →
         </Link>
@@ -24,7 +24,7 @@ export default async function PeladaPage() {
       ) : (
         <div className="space-y-8">
           {runs.map((r, idx) => (
-            <section key={r.id} className="rounded-2xl border border-line bg-panel p-5">
+            <section key={r.id} className="border border-line bg-panel p-5">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <h2 className="font-display text-2xl text-ink">{r.name}</h2>
@@ -40,8 +40,8 @@ export default async function PeladaPage() {
                 {r.days.map((d) => (
                   <Link
                     key={d.id}
-                    href={`/jogar/pelada/dia/${d.id}`}
-                    className={`rounded-xl border p-3 text-center transition-colors hover:border-accent/50 ${
+                    href={`/jogar/matchday/dia/${d.id}`}
+                    className={` border p-3 text-center transition-colors hover:border-accent/50 ${
                       d.closed ? 'border-line opacity-60' : 'border-accent3/40'
                     }`}
                   >

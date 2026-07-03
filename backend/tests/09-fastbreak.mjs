@@ -13,7 +13,7 @@ const aAuth = { authorization: `Bearer ${(await post('/auth/login', { email: 'ad
 const runs = (await get('/fastbreak', cAuth)).runs;
 const main = runs.find((r) => !r.survivor);
 const surv = runs.find((r) => r.survivor);
-check('2 runs (Pelada 7 dias + Mata-mata)', !!main && !!surv && main.days.length === 7 && surv.days.length === 2);
+check('2 runs (Matchday 7 dias + Mata-mata)', !!main && !!surv && main.days.length === 7 && surv.days.length === 2);
 
 // ---------------- dia 1: escalar ----------------
 const day1 = main.days[0];

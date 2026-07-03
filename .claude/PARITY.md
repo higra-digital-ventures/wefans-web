@@ -96,17 +96,17 @@
 - [x] Web: `/jogar/rankings` (+detalhe com travar/snapshot admin), `/jogar/checklists`, FLASH no hub/detalhe
 - [x] Testes: 21/21 de integração (travar/pontos/duplo, checklist ×2 destinos, snapshot/prêmio/liberação, flash determinístico)
 
-## Fase 9 — Pelada (Fast Break) (aceite)
+## Fase 9 — Matchday (Fast Break) (aceite)
 - [x] Runs com dias (statKey + alvo do dia); escalar **5 Lances de jogadores distintos**; **captain 2×**
 - [x] **Fadiga por ASP**: usos por jogador no run conforme valor do Moment; consumo no submit; recusa quando esgota
 - [x] **Fechar o dia** (admin): score via stats simuladas (determinístico) vs alvo → won; idempotente
 - [x] Leaderboards **diário** (board do dia) e **do run** (vitórias, desempate por score total)
 - [x] **Marcos**: 3ª vitória no run concede pacote (`rewardPackId`); **survivor**: derrota elimina
-- [x] Web: `/jogar/pelada` (runs, dias, standings) + `/jogar/pelada/dia/[id]` (escalação com fadiga/captain, board)
+- [x] Web: `/jogar/matchday` (runs, dias, standings) + `/jogar/matchday/dia/[id]` (escalação com fadiga/captain, board)
 - [x] Testes: 19/19 de integração (tamanho/distintos/captain, fadiga real, fechar/estável, survivor eliminação)
 
 ## Fase 10 — Admin completo + métricas + jobs (aceite)
-- [x] **Cron runner** no backend: AGENDADO→PUBLICADO, expira ofertas, encerra drops, fecha rodadas da Pelada (+tick manual)
+- [x] **Cron runner** no backend: AGENDADO→PUBLICADO, expira ofertas, encerra drops, fecha rodadas do Matchday (+tick manual)
 - [x] **Parcerias** (seção 10.2/10.3): criar time+estádio; **Liberar parceria** (publica tudo em transação); **Pausar** (oculta sem apagar)
 - [x] **Ciclo de publicação** (10.1): publicar/agendar/encerrar/rascunho por conteúdo (template/team/series/set)
 - [x] Cadastro: players, templates (rascunho por padrão), fixtures (janela derivada do kickoff)
@@ -145,7 +145,7 @@
 | 25 | Collector Score | Score do Colecionador | 6 | ✅ |
 | 26 | Leaderboards Time/Jogador | Rankings | 8 | ✅ |
 | 27 | Checklists | Checklists | 8 | ✅ |
-| 28 | Fast Break (fantasy) | Pelada | 9 | ✅ |
+| 28 | Fast Break (fantasy) | Matchday | 9 | ✅ |
 | 29 | Survivor pool | Mata-mata | 9 | ✅ |
 | 30 | Carteira + depósito | idem (simulado) | 1 | ✅ |
 | 31 | Withdraw / redeem físico | Saque / resgate | 13 | 🟨 (stub — OwnershipProvider pronto p/ plugar chain) |
@@ -170,7 +170,7 @@
 - [x] Menu mobile (hamburger) na top bar; skeletons de carregamento nas grades
 - [x] **Testes formalizados** (seção 9): `npm run test:integration` — 10 suítes (auth, mint
   concorrente, mercado, check-in, ofertas/locks/desafios, drops, vitrines/missões/fichas,
-  rankings/flash, pelada, admin/cron) com re-seed entre elas
+  rankings/flash, matchday, admin/cron) com re-seed entre elas
 
 ## Fase 12 — Hardening (aceite)
 - [x] **Rate limit** global (300/min por usuário/IP) + duro em login/cadastro (10/min) e check-in (20/min); 429 `RATE_LIMITED`

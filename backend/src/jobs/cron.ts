@@ -2,7 +2,7 @@ import type { PrismaClient } from '@prisma/client';
 import { closeDay } from '../services/fastbreak';
 
 // Runner de cron no backend (seções 1 e 10.1): promove conteúdo agendado, expira
-// ofertas, encerra drops vencidos e fecha rodadas passadas da Pelada.
+// ofertas, encerra drops vencidos e fecha rodadas passadas do Matchday.
 const INTERVAL_MS = 60_000;
 
 export async function cronTick(db: PrismaClient, log: (msg: string, meta?: unknown) => void = () => {}) {
@@ -25,7 +25,7 @@ export async function cronTick(db: PrismaClient, log: (msg: string, meta?: unkno
   const ended = await db.drop.updateMany({ where: { status: { in: ['SCHEDULED', 'WAITING', 'LIVE'] }, endsAt: { lt: now } }, data: { status: 'ENDED' } });
   if (ended.count > 0) log(`cron: ${ended.count} drop(s) encerrado(s)`);
 
-  // 4) fecha rodadas da Pelada com gameDate anterior a hoje (UTC)
+  // 4) fecha rodadas do Matchday com gameDate anterior a hoje (UTC)
   const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   const staleDays = await db.fastBreakDay.findMany({ where: { closedAt: null, gameDate: { lt: startOfToday } }, select: { id: true } });
   for (const d of staleDays) {

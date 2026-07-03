@@ -1,6 +1,6 @@
 // Motor de partidas simulado (seção 8): boxscores fictícios por jogador,
 // determinísticos por data (seed = dia + playerId). Fonte de verdade para
-// Desafios Relâmpago (Fase 8) e Fast Break/Pelada (Fase 9).
+// Desafios Relâmpago (Fase 8) e Fast Break/Matchday (Fase 9).
 
 export interface BoxScore {
   playerId: string;

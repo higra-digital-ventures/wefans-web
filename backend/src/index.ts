@@ -10,7 +10,7 @@ app
   .listen({ port: env.PORT, host: '0.0.0.0' })
   .then((addr) => {
     app.log.info(`wefans API ouvindo em ${addr}`);
-    // jobs agendados (promoção AGENDADO→PUBLICADO, ofertas, drops, rodadas da Pelada)
+    // jobs agendados (promoção AGENDADO→PUBLICADO, ofertas, drops, rodadas do Matchday)
     startCron(prisma, (msg, meta) => app.log.info(meta ?? {}, msg));
   })
   .catch((err) => {

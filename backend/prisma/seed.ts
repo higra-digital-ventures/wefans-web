@@ -402,10 +402,10 @@ async function main() {
   });
   // (checklist é criado após os Moments do colecionador, alinhado à coleção dele)
 
-  // ---------------------------------------------------------------- Fast Break (Pelada, 7 dias)
+  // ---------------------------------------------------------------- Fast Break (Matchday, 7 dias)
   const run = await prisma.fastBreakRun.create({
     data: {
-      name: 'Pelada Temporada 1 — Semana 1',
+      name: 'Matchday Temporada 1 — Semana 1',
       startsAt: days(-1),
       endsAt: days(6),
       lineupSize: 5,

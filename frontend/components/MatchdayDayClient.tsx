@@ -13,7 +13,7 @@ const STAT_LABEL: Record<string, string> = {
   nota: 'nota',
 };
 
-export default function PeladaDayClient({
+export default function MatchdayDayClient({
   day,
   isAdmin,
   isAuthed,
@@ -62,7 +62,7 @@ export default function PeladaDayClient({
   const adminClose = isAdmin && !day.closed && (
     <div className="border-t border-line pt-3">
       <button
-        className="rounded-lg border border-line px-4 py-2 text-sm text-muted hover:text-ink disabled:opacity-50"
+        className="border border-line px-4 py-2 text-sm text-muted hover:text-ink disabled:opacity-50"
         disabled={pending}
         onClick={() => {
           if (confirm('Fechar a rodada calcula os resultados. Continuar?')) run(() => closeFastbreakDay(day.id));
@@ -75,7 +75,7 @@ export default function PeladaDayClient({
 
   if (day.my?.submitted) {
     return (
-      <div className="space-y-3 rounded-2xl border border-line bg-panel p-5">
+      <div className="space-y-3  border border-line bg-panel p-5">
         {day.closed ? (
           <p className={day.my.won ? 'text-emerald-300' : 'text-muted'}>
             {day.my.won ? '🏆 Você venceu a rodada!' : 'Não foi dessa vez.'} Seu score:{' '}
@@ -91,7 +91,7 @@ export default function PeladaDayClient({
 
   if (day.eliminated) {
     return (
-      <div className="rounded-2xl border border-line bg-panel p-5 text-sm text-accent">
+      <div className="border border-line bg-panel p-5 text-sm text-accent">
         ☠️ Você foi eliminado deste mata-mata.
         {adminClose}
       </div>
@@ -100,14 +100,14 @@ export default function PeladaDayClient({
 
   if (day.closed) {
     return (
-      <div className="rounded-2xl border border-line bg-panel p-5 text-sm text-muted">
+      <div className="border border-line bg-panel p-5 text-sm text-muted">
         Rodada fechada — você não escalou.
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 rounded-2xl border border-line bg-panel p-5">
+    <div className="space-y-4  border border-line bg-panel p-5">
       <div>
         <h2 className="font-semibold text-ink">
           Escale {day.lineupSize} jogadores <span className="text-muted">({chosen.length}/{day.lineupSize})</span>
@@ -117,7 +117,7 @@ export default function PeladaDayClient({
         </p>
       </div>
 
-      {error && <p className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
+      {error && <p className="border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
 
       {!isAuthed ? (
         <p className="text-sm text-muted">Entre para escalar.</p>
@@ -130,7 +130,7 @@ export default function PeladaDayClient({
             return (
               <div
                 key={g.playerId}
-                className={`flex items-center justify-between gap-2 rounded-xl border px-3 py-2 transition-colors ${
+                className={`flex items-center justify-between gap-2  border px-3 py-2 transition-colors ${
                   exhausted
                     ? 'border-line opacity-40'
                     : isSel
@@ -177,7 +177,7 @@ export default function PeladaDayClient({
             ),
           )
         }
-        className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {pending ? 'Enviando…' : full ? 'Confirmar escalação' : `Selecione ${day.lineupSize - chosen.length} jogador(es)`}
       </button>

@@ -10,6 +10,7 @@ app (Flutter, futuro) são clientes finos da mesma API `/api/v1`.
 - Especificação completa: [`.claude/wefans_claude_code_brief.md`](.claude/wefans_claude_code_brief.md)
 - Decisões de implementação: [`.claude/DECISIONS.md`](.claude/DECISIONS.md)
 - Progresso de paridade: [`.claude/PARITY.md`](.claude/PARITY.md)
+- Próximas fases (v2): [`.claude/ROADMAP.md`](.claude/ROADMAP.md)
 
 ## Stack
 - **backend/** — Node + TypeScript + Fastify + Prisma (PostgreSQL) + Zod · porta **4000**
@@ -72,7 +73,7 @@ wefans/
 coleção/procedência, mercado (taxa/ASP/score dinâmico/anti-anômalo), **check-in por
 geolocalização**, ofertas/travar/queimar/presentear, desafios (padrão/forja/relâmpago),
 drops com fila+rebound, mercado de pacotes, vitrines, missões, fichas de troca, rankings,
-checklists, **Pelada (fantasy)** com fadiga/survivor, admin completo com parcerias e cron,
+checklists, **Matchday (fantasy)** com fadiga/survivor, admin completo com parcerias e cron,
 **3D Moment (Three.js)**, hardening (rate limit/helmet/conduta) e a abstração
 `OwnershipProvider` para on-chain futuro.
 
