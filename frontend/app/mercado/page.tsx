@@ -10,7 +10,9 @@ const SORTS = [
   { v: 'recent', label: 'RECENTES' },
   { v: 'price_asc', label: 'MENOR PREÇO' },
   { v: 'price_desc', label: 'MAIOR PREÇO' },
+  { v: 'serial_asc', label: 'MENOR SERIAL' }, // low serial = prestígio (ordenado no front)
 ];
+const API_SORTS = new Set(['recent', 'price_asc', 'price_desc']);
 
 // chips rápidos no padrão do Top Shot (Ultimates · Legendaries · Rares · Debut…)
 const BADGE_CHIPS = [
@@ -31,12 +33,15 @@ const EARN_ART = [
 export default async function MercadoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tier?: string; sort?: string; q?: string; badge?: string; vis?: string }>;
+  searchParams: Promise<{
+    tier?: string; sort?: string; q?: string; badge?: string; vis?: string;
+    pmin?: string; pmax?: string; deal?: string;
+  }>;
 }) {
-  const { tier, sort, q, badge, vis } = await searchParams;
+  const { tier, sort, q, badge, vis, pmin, pmax, deal } = await searchParams;
   const qs = new URLSearchParams();
   if (tier) qs.set('tier', tier);
-  if (sort) qs.set('sort', sort);
+  if (sort && API_SORTS.has(sort)) qs.set('sort', sort);
   const [allListings, challenges] = await Promise.all([
     getMarketServer(qs.toString() ? `?${qs}` : ''),
     getChallengesServer().catch(() => []),
@@ -55,15 +60,22 @@ export default async function MercadoPage({
   if (badgeChip) {
     listings = listings.filter((l) => l.template.badges.includes(badgeChip.match));
   }
+  // faixa de preço (em reais) e "Achados" (abaixo do preço médio da edição)
+  const min = pmin ? Number(pmin) * 100 : null;
+  const max = pmax ? Number(pmax) * 100 : null;
+  if (min != null && !Number.isNaN(min)) listings = listings.filter((l) => l.priceCents >= min);
+  if (max != null && !Number.isNaN(max)) listings = listings.filter((l) => l.priceCents <= max);
+  if (deal) listings = listings.filter((l) => l.template.aspCents > 0 && l.priceCents < l.template.aspCents);
+  if (sort === 'serial_asc') listings = [...listings].sort((a, b) => a.serial - b.serial);
 
   const activeChallenges = challenges.filter((c) => c.active).slice(0, 12);
   const dense = vis === 'compact';
-  const hasFilter = !!(tier || badge || q);
+  const hasFilter = !!(tier || badge || q || pmin || pmax || deal);
 
   // monta hrefs preservando os demais parâmetros
   const href = (patch: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
-    const merged = { tier, sort, q, badge, vis, ...patch };
+    const merged = { tier, sort, q, badge, vis, pmin, pmax, deal, ...patch };
     for (const [k, v] of Object.entries(merged)) if (v) p.set(k, v);
     return `/mercado${p.toString() ? `?${p}` : ''}`;
   };
@@ -164,6 +176,9 @@ export default async function MercadoPage({
           {sort && <input type="hidden" name="sort" value={sort} />}
           {badge && <input type="hidden" name="badge" value={badge} />}
           {vis && <input type="hidden" name="vis" value={vis} />}
+          {pmin && <input type="hidden" name="pmin" value={pmin} />}
+          {pmax && <input type="hidden" name="pmax" value={pmax} />}
+          {deal && <input type="hidden" name="deal" value={deal} />}
           <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 fill-neutral-400" aria-hidden>
             <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
           </svg>
@@ -208,6 +223,13 @@ export default async function MercadoPage({
           }`}
         >
           Clear
+        </Link>
+        <Link
+          href={href({ deal: deal ? undefined : '1' })}
+          className={`${CHIP} ${deal ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300' : 'border-white/40 text-white hover:bg-white/10'}`}
+          title="Anúncios abaixo do preço médio da edição"
+        >
+          Achados
         </Link>
         {TIER_ORDER.slice(0, 3).map((t) => (
           <Link
