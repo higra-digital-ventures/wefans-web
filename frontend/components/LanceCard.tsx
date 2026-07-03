@@ -5,7 +5,7 @@ import { brl } from '@/lib/format';
 import type { TemplateDTO } from '@/lib/types';
 
 // Carta de mercado copiada da anatomia do Top Shot (print de referência): card preto,
-// slab 3D na mídia, linha "Tier /N (LE)", NOME em caps, descrição, Queimados/Tiragem,
+// slab 3D na mídia, linha "Tier /N (LE)", NOME em caps, descrição, Destruídos/Em circulação,
 // set, e rodapé em duas linhas — Menor preço (branco, bold) e Média (cinza).
 export default function LanceCard({
   template,
@@ -132,9 +132,10 @@ export default function LanceCard({
           {template.title}
         </div>
 
+        {/* como o "Burned · Supply" do Top Shot: destruídos e o que restou circulando */}
         <div className="mt-2.5 truncate text-[11px] font-semibold text-neutral-200">
-          Queimados: {burnedCount.toLocaleString('pt-BR')} · Tiragem:{' '}
-          {template.mintedCount.toLocaleString('pt-BR')}
+          Destruídos: {burnedCount.toLocaleString('pt-BR')} · Em circulação:{' '}
+          {template.circulatingCount.toLocaleString('pt-BR')}
         </div>
         <div className="mt-0.5 truncate text-[11px] text-neutral-500">
           {template.playType} · {template.competition} (Temporada 2025-26)

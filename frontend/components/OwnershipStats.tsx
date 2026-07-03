@@ -16,7 +16,7 @@ export default function OwnershipStats({
     { label: 'Existentes', value: existing, color: '#f6eef3' },
     { label: 'Circulantes', value: circulating, color: '#21d4e0' },
     ...(listed !== undefined ? [{ label: 'À venda', value: listed, color: '#ff2e88' }] : []),
-    { label: 'Queimados', value: burned, color: '#9a8aa6' },
+    { label: 'Destruídos', value: burned, color: '#9a8aa6' },
   ];
 
   return (

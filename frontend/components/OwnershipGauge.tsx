@@ -1,5 +1,5 @@
 // Medidor semicircular de propriedade (seção 11.5) — distribuição dos exemplares
-// da edição em um arco: Não listados · À venda · Travados · Queimados.
+// da edição em um arco: Não listados · À venda · Travados · Destruídos.
 export default function OwnershipGauge({
   existing,
   listed,
@@ -16,7 +16,7 @@ export default function OwnershipGauge({
     { label: 'Não listados', value: unlisted, color: '#21d4e0' },
     { label: 'À venda', value: listed, color: '#ff2e88' },
     { label: 'Travados', value: locked, color: '#ff9e2c' },
-    { label: 'Queimados', value: burned, color: '#9a8aa6' },
+    { label: 'Destruídos', value: burned, color: '#9a8aa6' },
   ];
   const total = Math.max(1, existing);
 
