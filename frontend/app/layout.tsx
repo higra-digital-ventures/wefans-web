@@ -6,6 +6,7 @@ import './globals.css';
 import TopBar from '@/components/TopBar';
 import SiteFooter from '@/components/SiteFooter';
 import Toaster from '@/components/Toaster';
+import BottomNav from '@/components/BottomNav';
 
 // Fontes: as mesmas famílias abertas (OFL/Google Fonts) que o Top Shot usa —
 // Sofia Sans Extra Condensed (display) · Roboto Flex (texto) · Roboto Mono (série).
@@ -23,13 +24,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={`${sofia.variable} ${robotoFlex.variable} ${robotoMono.variable}`}>
-      <body>
+      <body className="pb-14 lg:pb-0">
         <Toaster>
           <Suspense fallback={<div className="h-14 border-b border-line" />}>
             <TopBar />
           </Suspense>
           {children}
           <SiteFooter />
+          <BottomNav />
         </Toaster>
       </body>
     </html>
