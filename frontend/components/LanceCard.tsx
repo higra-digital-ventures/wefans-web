@@ -100,11 +100,21 @@ export default function LanceCard({
         {/* Tier /N (LE) — como "Common /4000 (LE)" */}
         <div className="flex items-center gap-1.5 text-[12px]">
           <span className="font-bold text-white">{meta.label}</span>
-          <span className="font-semibold text-neutral-400">
+          <span
+            className="font-semibold text-neutral-400"
+            title={
+              limited
+                ? `Edição limitada: só ${template.editionSize?.toLocaleString('pt-BR')} exemplares existirão`
+                : 'Edição circulante: novos exemplares ainda podem ser criados'
+            }
+          >
             {limited ? supply : `CC · ${supply}`}
           </span>
           {limited && (
-            <span className="rounded-full border border-white/30 px-1.5 py-px text-[9px] font-bold leading-tight text-neutral-300">
+            <span
+              className="rounded-full border border-white/30 px-1.5 py-px text-[9px] font-bold leading-tight text-neutral-300"
+              title="Limited Edition — tiragem fixa, nunca aumenta"
+            >
               LE
             </span>
           )}
@@ -133,7 +143,10 @@ export default function LanceCard({
         </div>
 
         {/* como o "Burned · Supply" do Top Shot: destruídos e o que restou circulando */}
-        <div className="mt-2.5 truncate text-[11px] font-semibold text-neutral-200">
+        <div
+          className="mt-2.5 truncate text-[11px] font-semibold text-neutral-200"
+          title="Destruídos: exemplares queimados para sempre (forja/fichas). Em circulação: exemplares que ainda existem."
+        >
           Destruídos: {burnedCount.toLocaleString('pt-BR')} · Em circulação:{' '}
           {template.circulatingCount.toLocaleString('pt-BR')}
         </div>
@@ -144,13 +157,17 @@ export default function LanceCard({
         {/* rodapé em duas linhas, como no print: Lowest Ask / Avg Sale */}
         <div className="mt-3.5 space-y-1 border-t border-white/10 pt-2.5">
           <div className="flex items-baseline justify-between">
-            <span className="text-[12px] text-neutral-300">Menor preço</span>
+            <span className="text-[12px] text-neutral-300" title="O anúncio mais barato desta edição à venda agora">
+              Menor preço
+            </span>
             <span className="text-[15px] font-bold text-white">
               {priceCents != null ? brl(priceCents) : '—'}
             </span>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-[12px] text-neutral-500">Média ⓘ</span>
+            <span className="text-[12px] text-neutral-500" title="Preço médio das últimas vendas desta edição">
+              Média ⓘ
+            </span>
             <span className="text-[12px] font-semibold text-neutral-400">
               {template.aspCents > 0 ? brl(template.aspCents) : '—'}
             </span>
