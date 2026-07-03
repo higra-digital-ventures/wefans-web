@@ -146,7 +146,7 @@ function drawStats(ctx: CanvasRenderingContext2D, d: Moment3DData) {
 function drawBack(ctx: CanvasRenderingContext2D, d: Moment3DData) {
   const w = 480;
   const h = 600;
-  ctx.fillStyle = '#0a0610';
+  ctx.fillStyle = '#050505';
   ctx.fillRect(0, 0, w, h);
   const grad = ctx.createLinearGradient(0, h, w, 0);
   grad.addColorStop(0, '#ff2e88');

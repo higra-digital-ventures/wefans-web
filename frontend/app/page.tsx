@@ -37,17 +37,17 @@ export default async function Home() {
     <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
       {/* Hero do drop ativo (seção 11.3) */}
       {hero && (
-        <section className="relative mb-10 overflow-hidden rounded-xl border border-line">
+        <section className="relative mb-10 overflow-hidden  border border-line">
           <div className="absolute inset-0 bg-sunset opacity-25" aria-hidden />
           <div
             className="absolute inset-0"
             aria-hidden
-            style={{ background: 'radial-gradient(80% 120% at 20% 0%, transparent 30%, #0a0610 100%)' }}
+            style={{ background: 'radial-gradient(80% 120% at 20% 0%, transparent 30%, #050505 100%)' }}
           />
           <div className="relative px-6 py-10 sm:px-10 sm:py-14">
             <div className="mb-2 flex items-center gap-2">
               <span
-                className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                className={` px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                   hero.status === 'LIVE' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-panel2 text-muted'
                 }`}
               >
@@ -68,13 +68,13 @@ export default async function Home() {
             <div className="mt-6 flex flex-wrap gap-2">
               <Link
                 href={`/drop/${hero.id}`}
-                className="rounded bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
+                className="bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
               >
                 Entrar no drop
               </Link>
               <Link
                 href="/pacotes"
-                className="rounded bg-white px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-black transition-opacity hover:opacity-90"
+                className="bg-white px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-black transition-opacity hover:opacity-90"
               >
                 Rip packs 24/7
               </Link>
@@ -96,10 +96,10 @@ export default async function Home() {
                   <Link
                     key={p.id}
                     href={`/pacote/${p.id}`}
-                    className="group rounded-lg border border-line bg-[#0c0813] p-4 transition-colors hover:border-[#3a2b52]"
+                    className="group  border border-line bg-[#0e0e10] p-4 transition-colors hover:border-[#3a2b52]"
                   >
-                    <div className="mb-3 flex h-24 items-center justify-center rounded bg-sunset/20">
-                      <div className="h-16 w-12 rounded-sm bg-sunset shadow-neon transition-transform group-hover:-translate-y-0.5" />
+                    <div className="mb-3 flex h-24 items-center justify-center  bg-sunset/20">
+                      <div className="h-16 w-12  bg-sunset shadow-neon transition-transform group-hover:-translate-y-0.5" />
                     </div>
                     <div className="text-sm font-bold uppercase text-ink">{p.name}</div>
                     <div className="mt-1 text-[11px] text-muted">
@@ -122,7 +122,7 @@ export default async function Home() {
                   <Link
                     key={c.id}
                     href={`/jogar/desafios/${c.id}`}
-                    className="flex items-center justify-between gap-3 rounded-lg border border-line bg-[#0c0813] px-4 py-3 transition-colors hover:border-[#3a2b52]"
+                    className="flex items-center justify-between gap-3  border border-line bg-[#0e0e10] px-4 py-3 transition-colors hover:border-[#3a2b52]"
                   >
                     <div className="min-w-0">
                       <div className="truncate text-sm font-bold text-ink">
@@ -151,7 +151,7 @@ export default async function Home() {
               Ver tudo
             </Link>
           </div>
-          <div className="rounded-lg border border-line bg-[#0c0813] p-2">
+          <div className="border border-line bg-[#0e0e10] p-2">
             <ActivityFeed initial={activity} limit={8} />
           </div>
           <div className="mt-3 flex flex-wrap gap-1.5">

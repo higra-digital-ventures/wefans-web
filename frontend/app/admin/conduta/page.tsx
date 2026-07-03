@@ -29,13 +29,13 @@ export default async function AdminConduta() {
       </p>
 
       {txs.length === 0 ? (
-        <div className="rounded-2xl border border-line bg-panel p-8 text-center text-muted">
+        <div className="border border-line bg-panel p-8 text-center text-muted">
           ✓ Nenhuma transação aguardando revisão.
         </div>
       ) : (
         <div className="space-y-3">
           {txs.map((t) => (
-            <div key={t.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-accent/30 bg-panel p-4">
+            <div key={t.id} className="flex flex-wrap items-center justify-between gap-3  border border-accent/30 bg-panel p-4">
               <div>
                 <div className="text-ink">
                   <Link href={`/momento/${t.momentId}`} className="hover:text-accent">

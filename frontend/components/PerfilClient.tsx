@@ -55,11 +55,11 @@ export default function PerfilClient({
     { label: 'Check-in', href: '/checkin' },
   ];
 
-  const card = 'rounded-lg border border-line bg-[#0c0813] p-5';
+  const card = ' border border-line bg-[#0e0e10] p-5';
   const field =
-    'rounded border border-line bg-panel2 px-3 py-2 text-ink outline-none focus:border-accent/60';
+    ' border border-line bg-panel2 px-3 py-2 text-ink outline-none focus:border-accent/60';
   const btn =
-    'rounded bg-accent px-4 py-2 text-[12px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90 disabled:opacity-50';
+    ' bg-accent px-4 py-2 text-[12px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90 disabled:opacity-50';
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 lg:px-6">
@@ -73,7 +73,7 @@ export default function PerfilClient({
             <div className="flex items-center gap-2">
               <h1 className="font-display text-3xl uppercase tracking-tight text-ink">@{me.username}</h1>
               {me.isAdmin && (
-                <span className="rounded bg-accent2/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent2">
+                <span className="bg-accent2/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent2">
                   admin
                 </span>
               )}
@@ -99,7 +99,7 @@ export default function PerfilClient({
 
         <div className="flex gap-2">
           {kpis.map((k) => (
-            <div key={k.label} className="min-w-[110px] rounded-lg border border-line bg-[#0c0813] px-4 py-3">
+            <div key={k.label} className="min-w-[110px]  border border-line bg-[#0e0e10] px-4 py-3">
               <div className="font-display text-xl text-ink">{k.value}</div>
               <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">{k.label}</div>
             </div>
@@ -118,19 +118,19 @@ export default function PerfilClient({
             }`}
           >
             {t.label}
-            {t.active && <span className="absolute inset-x-3 bottom-0 h-[3px] rounded-t bg-accent" />}
+            {t.active && <span className="absolute inset-x-3 bottom-0 h-[3px]  bg-accent" />}
           </Link>
         ))}
       </div>
 
       {error && (
-        <p className="mb-6 rounded border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
+        <p className="mb-6  border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
           {error}
         </p>
       )}
 
       {/* carteira em destaque */}
-      <div className="mb-6 flex flex-wrap items-center gap-4 rounded-lg border border-line bg-[#0c0813] px-5 py-4">
+      <div className="mb-6 flex flex-wrap items-center gap-4  border border-line bg-[#0e0e10] px-5 py-4">
         <div>
           <div className="font-display text-2xl text-ink">{brl(me.balanceCents)}</div>
           <div className="text-[10px] uppercase tracking-wide text-muted">Saldo da carteira</div>
@@ -140,7 +140,7 @@ export default function PerfilClient({
             <div className="font-display text-xl text-ink">{me.tradeTickets}</div>
             <div className="text-[10px] uppercase tracking-wide text-muted">Fichas de Troca</div>
           </div>
-          <Link href="/fichas" className="rounded border border-line px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-muted hover:text-ink">
+          <Link href="/fichas" className="border border-line px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-muted hover:text-ink">
             Trocar
           </Link>
         </div>
@@ -152,7 +152,7 @@ export default function PerfilClient({
           <h2 className="mb-1 font-semibold text-ink">Carteira</h2>
           <p className="mb-4 text-sm text-muted">Depósito simulado em BRL (carteira de teste).</p>
           <div className="mb-3 flex gap-2">
-            <div className="flex items-center rounded-lg border border-line bg-panel2 px-3">
+            <div className="flex items-center  border border-line bg-panel2 px-3">
               <span className="text-muted">R$</span>
               <input
                 type="number"
@@ -178,7 +178,7 @@ export default function PerfilClient({
                 type="button"
                 disabled={pending}
                 onClick={() => run(() => deposit(c))}
-                className="rounded-lg border border-line px-3 py-1 text-xs text-muted transition-colors hover:border-accent3/50 hover:text-ink"
+                className="border border-line px-3 py-1 text-xs text-muted transition-colors hover:border-accent3/50 hover:text-ink"
               >
                 +{brl(c)}
               </button>

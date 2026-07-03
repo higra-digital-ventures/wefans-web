@@ -21,7 +21,7 @@ function OddsChips({ pack }: { pack: PackDTO }) {
         return (
           <span
             key={tier}
-            className="rounded-sm px-1.5 py-px text-[9px] font-semibold"
+            className="px-1.5 py-px text-[9px] font-semibold"
             style={{ background: `${meta.color}1f`, color: meta.color }}
           >
             {meta.label} {(p * 100).toFixed(p * 100 < 1 ? 1 : 0)}%
@@ -39,7 +39,7 @@ function DropPackCard({ drop, pack }: { drop: DropSummary; pack: PackDTO }) {
   const reservedPct = Math.round((pack.soldCount / Math.max(1, pack.totalSupply)) * 100);
 
   return (
-    <div className="relative overflow-hidden rounded-lg border border-line bg-black/50 p-4 backdrop-blur-sm">
+    <div className="relative overflow-hidden  border border-line bg-black/50 p-4 backdrop-blur-sm">
       {reservedPct >= 40 && !soldOut && (
         <span className="absolute right-3 top-3 rounded-full bg-accent2/25 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-accent2">
           {reservedPct}% reservado
@@ -51,7 +51,7 @@ function DropPackCard({ drop, pack }: { drop: DropSummary; pack: PackDTO }) {
         </span>
       )}
       <div className="mb-2 flex items-center gap-3">
-        <div className="h-14 w-10 shrink-0 rounded-sm bg-sunset shadow-neon" aria-hidden />
+        <div className="h-14 w-10 shrink-0  bg-sunset shadow-neon" aria-hidden />
         <div className="min-w-0">
           <div className="truncate text-sm font-bold uppercase text-ink">{pack.name}</div>
           <div className="text-[10px] text-muted">
@@ -65,14 +65,14 @@ function DropPackCard({ drop, pack }: { drop: DropSummary; pack: PackDTO }) {
         {soldOut ? (
           <Link
             href="/mercado/pacotes"
-            className="block rounded bg-white py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-black"
+            className="block  bg-white py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-black"
           >
             Ver no mercado
           </Link>
         ) : (
           <Link
             href={`/drop/${drop.id}`}
-            className="block rounded bg-accent py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-white transition-opacity hover:opacity-90"
+            className="block  bg-accent py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-white transition-opacity hover:opacity-90"
           >
             {drop.status === 'LIVE' ? `Comprar · ${brl(pack.priceCents)}` : `Entrar na fila · ${brl(pack.priceCents)}`}
           </Link>
@@ -92,17 +92,17 @@ export default async function DropsPage() {
     <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
       {/* hero do drop (print f) */}
       {hero && (
-        <section className="relative mb-10 overflow-hidden rounded-xl border border-line">
+        <section className="relative mb-10 overflow-hidden  border border-line">
           <div className="absolute inset-0 bg-sunset opacity-30" aria-hidden />
           <div
             className="absolute inset-0"
             aria-hidden
-            style={{ background: 'radial-gradient(90% 130% at 50% -20%, transparent 20%, #08050c 95%)' }}
+            style={{ background: 'radial-gradient(90% 130% at 50% -20%, transparent 20%, #050505 95%)' }}
           />
           <div className="relative p-6 sm:p-8">
             <div className="mb-1 flex items-center gap-2">
               <span
-                className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                className={` px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                   hero.status === 'LIVE' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-black/40 text-ink'
                 }`}
               >
@@ -136,11 +136,11 @@ export default async function DropsPage() {
               <Link
                 key={d.id}
                 href={`/drop/${d.id}`}
-                className="rounded-lg border border-line bg-[#0c0813] p-4 transition-colors hover:border-[#3a2b52]"
+                className="border border-line bg-[#0e0e10] p-4 transition-colors hover:border-[#3a2b52]"
               >
                 <div className="mb-1.5 flex items-center justify-between">
                   <span
-                    className={`rounded px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
+                    className={` px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
                       d.status === 'LIVE' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-panel2 text-muted'
                     }`}
                   >
@@ -171,7 +171,7 @@ export default async function DropsPage() {
           <h2 className="mb-4 font-display text-2xl uppercase tracking-tight">
             <span className="text-ink">Rip Packs.</span> <span className="text-accent3">24/7</span>
           </h2>
-          <div className="rounded-lg border border-line bg-[#0c0813] p-5">
+          <div className="border border-line bg-[#0e0e10] p-5">
             <p className="mb-4 text-sm text-muted">
               A experiência always-on do wefans — abra pacotes a qualquer hora, sem fila.
             </p>
@@ -180,9 +180,9 @@ export default async function DropsPage() {
                 <Link
                   key={p.id}
                   href={`/pacote/${p.id}`}
-                  className="group flex items-center gap-3 rounded border border-line bg-black/40 p-3 transition-colors hover:border-[#3a2b52]"
+                  className="group flex items-center gap-3  border border-line bg-black/40 p-3 transition-colors hover:border-[#3a2b52]"
                 >
-                  <div className="h-12 w-9 shrink-0 rounded-sm bg-sunset transition-transform group-hover:-translate-y-0.5" aria-hidden />
+                  <div className="h-12 w-9 shrink-0  bg-sunset transition-transform group-hover:-translate-y-0.5" aria-hidden />
                   <div className="min-w-0">
                     <div className="truncate text-[13px] font-bold uppercase text-ink">{p.name}</div>
                     <div className="text-[11px] font-semibold text-accent3">{brl(p.priceCents)}</div>

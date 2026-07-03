@@ -2,14 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tokens de marca wefans — paleta "Miami underground" (seção 11.1). */
+/* Tokens — chrome neutro preto (passe de design Top Shot); os acentos neon da
+   marca ficam restritos ao conteúdo (cartas, tiers, CTAs). */
 :root {
-  --bg: #0a0610;
-  --panel: #15101c;
-  --panel2: #1c1426;
-  --ink: #f6eef3;
-  --muted: #9a8aa6;
-  --line: rgba(255, 255, 255, 0.07);
+  --bg: #050505;
+  --panel: #101012;
+  --panel2: #17171a;
+  --ink: #f7f7f8;
+  --muted: #a3a3a3; /* cinza neutro (sem tom roxo), contraste AA sobre preto */
+  --line: rgba(255, 255, 255, 0.08);
   --accent: #ff2e88; /* rosa-choque, assinatura */
   --accent2: #9d4edd; /* violeta neon */
   --accent3: #21d4e0; /* ciano neon */
@@ -32,15 +33,16 @@ html:not([class*='__variable']) {
 }
 
 body {
-  background-color: #070409; /* quase preto, como as telas de referência */
+  background-color: #050505; /* preto, como as telas de referência do Top Shot */
   color: var(--ink);
   font-family: var(--font-text);
   min-height: 100vh;
-  /* glow de neon bem sutil no topo — ambiente, não decoração */
-  background-image:
-    radial-gradient(70vw 40vw at 15% -12%, rgba(255, 46, 136, 0.06), transparent 60%),
-    radial-gradient(60vw 35vw at 90% -8%, rgba(157, 78, 221, 0.05), transparent 60%);
-  background-attachment: fixed;
+}
+
+/* A Anton (fonte anterior) era single-weight e naturalmente pesada; a Sofia Sans
+   Extra Condensed é variável e nasce em 400 — o display usa 800 para manter o impacto. */
+.font-display {
+  font-weight: 800;
 }
 
 /* esconde a scrollbar das fileiras de abas (mantém o scroll) */
@@ -65,6 +67,74 @@ body {
 }
 .wf-reveal {
   animation: wf-reveal 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* ===== Hover do card de mercado (gramática do Top Shot): glitch de transição
+   e o lance "tocando" — bola percorre a trajetória com rastro neon em loop. ===== */
+@media (prefers-reduced-motion: no-preference) {
+  /* scanlines/glitch: roda uma vez a cada entrada do hover e some */
+  .wf-glitch {
+    opacity: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.09) 0 1px,
+      transparent 1px 3px
+    );
+    mix-blend-mode: screen;
+  }
+  .group:hover .wf-glitch {
+    animation: wf-glitch 0.45s steps(6, end) forwards;
+  }
+  @keyframes wf-glitch {
+    0% {
+      opacity: 0.9;
+      transform: translateX(-3px) scaleY(1.05);
+    }
+    25% {
+      opacity: 0.5;
+      transform: translateX(3px);
+    }
+    50% {
+      opacity: 0.75;
+      transform: translateX(-2px) scaleY(0.97);
+    }
+    75% {
+      opacity: 0.35;
+      transform: translateX(1px);
+    }
+    100% {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
+  /* trajetória redesenha atrás da bola (rastro) — sincronizada pelo pathLength=1 */
+  .group:hover .wf-traj-draw {
+    animation: wf-draw 1.9s cubic-bezier(0.45, 0, 0.4, 1) infinite;
+    filter: drop-shadow(0 0 3px var(--traj-color, currentColor));
+  }
+  @keyframes wf-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* bola percorre a trajetória (offset-path, como pedia a seção 11.1 do brief) */
+  .group:hover .wf-play-ball {
+    animation: wf-run 1.9s cubic-bezier(0.45, 0, 0.4, 1) infinite;
+    filter: drop-shadow(0 0 2px #fff);
+  }
+  @keyframes wf-run {
+    from {
+      offset-distance: 0%;
+    }
+    to {
+      offset-distance: 100%;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -9,7 +9,7 @@ export default function PackCard({ pack }: { pack: PackDTO }) {
   const soldOut = remaining <= 0;
 
   return (
-    <div className="rounded-2xl border border-line bg-panel p-5">
+    <div className="border border-line bg-panel p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <Link href={`/pacote/${pack.id}`} className="font-display text-xl text-ink hover:text-accent">
@@ -28,7 +28,7 @@ export default function PackCard({ pack }: { pack: PackDTO }) {
           return (
             <span
               key={tier}
-              className="rounded px-1.5 py-0.5 text-[10px] font-medium"
+              className="px-1.5 py-0.5 text-[10px] font-medium"
               style={{ background: `${meta.color}22`, color: meta.color }}
             >
               {meta.label} {(p * 100).toFixed(p * 100 < 1 ? 1 : 0)}%
@@ -48,7 +48,7 @@ export default function PackCard({ pack }: { pack: PackDTO }) {
         <BuyPackButton packId={pack.id} priceCents={pack.priceCents} soldOut={soldOut} />
         <Link
           href={`/pacote/${pack.id}`}
-          className="rounded-lg border border-line px-3 py-2 text-sm text-muted transition-colors hover:border-accent/40 hover:text-ink"
+          className="border border-line px-3 py-2 text-sm text-muted transition-colors hover:border-accent/40 hover:text-ink"
         >
           Ver Lances
         </Link>

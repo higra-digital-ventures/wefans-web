@@ -9,7 +9,7 @@ const LABELS: Record<string, string> = {
   REWARD: 'Recompensa',
   BURN: 'Queimado',
   GIFT: 'Presente',
-  FASTBREAK_REWARD: 'Prêmio da Pelada',
+  FASTBREAK_REWARD: 'Prêmio do Matchday',
 };
 
 // Procedência: linha do tempo de donos/transações (seção 11.5).

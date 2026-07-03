@@ -21,7 +21,7 @@ export const dynamic = 'force-dynamic';
 // Painel colapsável no padrão do print (DETAILS / SALES HISTORY / TOP OFFERS).
 function Panel({ title, children, open = true }: { title: string; children: React.ReactNode; open?: boolean }) {
   return (
-    <details open={open} className="group rounded-lg border border-line bg-[#0c0813]">
+    <details open={open} className="group  border border-line bg-[#0e0e10]">
       <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 [&::-webkit-details-marker]:hidden">
         <span className="font-display text-lg uppercase tracking-wide text-ink">{title}</span>
         <svg viewBox="0 0 24 24" className="h-4 w-4 fill-muted transition-transform group-open:rotate-180" aria-hidden>
@@ -55,7 +55,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
       {/* breadcrumb em chips (print d) */}
       <div className="mb-5 flex flex-wrap items-center gap-1.5">
         {['Temporada 25/26', t.player.club, t.player.name].map((crumb) => (
-          <span key={crumb} className="rounded bg-panel2 px-2.5 py-1 text-[11px] font-semibold text-muted">
+          <span key={crumb} className="bg-panel2 px-2.5 py-1 text-[11px] font-semibold text-muted">
             {crumb}
           </span>
         ))}
@@ -100,10 +100,10 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           {(t.parallel !== 'BASE' || t.badges.length > 0) && (
             <div className="mt-2 flex flex-wrap gap-1.5">
               {t.parallel !== 'BASE' && (
-                <span className="rounded bg-panel2 px-2 py-0.5 text-[10px] font-bold uppercase text-ink">{t.parallel}</span>
+                <span className="bg-panel2 px-2 py-0.5 text-[10px] font-bold uppercase text-ink">{t.parallel}</span>
               )}
               {t.badges.map((b) => (
-                <span key={b} className="rounded bg-panel2 px-2 py-0.5 text-[10px] uppercase text-muted">
+                <span key={b} className="bg-panel2 px-2 py-0.5 text-[10px] uppercase text-muted">
                   {b}
                 </span>
               ))}
@@ -124,7 +124,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           </div>
 
           {tm && (
-            <div className="mt-3 grid grid-cols-3 divide-x divide-line rounded-lg border border-line bg-[#0c0813] py-3 text-center">
+            <div className="mt-3 grid grid-cols-3 divide-x divide-line  border border-line bg-[#0e0e10] py-3 text-center">
               {[
                 { label: 'Menor preço', v: tm.floorCents != null ? brl(tm.floorCents) : '—' },
                 { label: 'Preço médio', v: brl(tm.aspCents) },
@@ -142,7 +142,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {tm.recentSales.slice(0, 6).map((s, i) => (
-                      <span key={i} className="rounded bg-panel2 px-2 py-0.5 font-mono text-[11px] text-accent3">
+                      <span key={i} className="bg-panel2 px-2 py-0.5 font-mono text-[11px] text-accent3">
                         {brl(s.amountCents)}
                       </span>
                     ))}

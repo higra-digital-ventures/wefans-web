@@ -7,17 +7,17 @@ export default function SubTabs({
   items: { label: string; href: string; active?: boolean }[];
 }) {
   return (
-    <div className="scrollbar-none -mx-1 mb-6 flex gap-1 overflow-x-auto border-b border-line">
+    <div className="scrollbar-none -mx-1 mb-6 flex gap-3 overflow-x-auto">
       {items.map((t) => (
         <Link
           key={t.label}
           href={t.href}
-          className={`relative whitespace-nowrap px-3 pb-2.5 pt-1 text-[12px] font-bold uppercase tracking-[0.08em] transition-colors ${
-            t.active ? 'text-ink' : 'text-muted hover:text-ink'
+          className={`relative whitespace-nowrap px-3 pb-3 pt-1 text-[13px] font-semibold uppercase tracking-[0.12em] transition-colors ${
+            t.active ? 'text-white' : 'text-neutral-400 hover:text-white'
           }`}
         >
           {t.label}
-          {t.active && <span className="absolute inset-x-3 bottom-0 h-[3px] rounded-t bg-accent" />}
+          {t.active && <span className="absolute inset-x-3 bottom-1.5 h-[2px] bg-white" />}
         </Link>
       ))}
     </div>

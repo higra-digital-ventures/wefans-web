@@ -20,7 +20,7 @@ export default function CancelOfferButton({ offerId }: { offerId: string }) {
           }
         })
       }
-      className="rounded-lg border border-line px-3 py-1 text-xs text-muted transition-colors hover:text-ink disabled:opacity-50"
+      className="border border-line px-3 py-1 text-xs text-muted transition-colors hover:text-ink disabled:opacity-50"
     >
       Cancelar
     </button>

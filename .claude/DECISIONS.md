@@ -35,6 +35,16 @@
   fontes da marca via `next/font/google` (Anton/Outfit/Space Mono) injetando as mesmas
   variáveis CSS (`--font-display/text/mono`) — troca sem refatorar, como planejado.
 
+## Ambiente de desenvolvimento atual (Windows)
+- **2026-07-02 — [pós-v1] — Dev migrado para Windows 11 com PostgreSQL 18 local (serviço
+  `postgresql-x64-18`, porta 5432), sem Docker.** Substitui o setup macOS/Homebrew
+  registrado abaixo. Autenticação por senha (scram-sha-256) com o usuário `postgres` —
+  a `DATABASE_URL` mora em `backend/.env` (não commitado); `SHADOW_DATABASE_URL` aponta
+  para `wefans_shadow` (no Windows o `pg_hba` não tem trust auth). Os scripts bash
+  (`dev.sh`, `scripts/db-up.sh`) exigem o bin do Postgres no PATH:
+  `export PATH="/c/Program Files/PostgreSQL/18/bin:$PATH"`. O serviço sobe com o SO,
+  então `npm run dev` funciona direto no dia a dia.
+
 ## Pendências de referência
 - **2026-07-01 — Protótipos HTML ausentes.** `wefans.html` e `wefans_3d_moment.html`
   (citados nas seções 11.1 e 11.7) **não estão no repositório**. O design será
@@ -109,6 +119,36 @@
   como stub honesto. A integração real (Flow/L2, App Check etc.) fica para quando houver
   decisão de chain — os serviços não precisarão mudar (mutações de posse já são atômicas
   e centralizadas).
+
+## Explorar como feed social (pós-v1)
+- **2026-07-03 — /explorar deixou de ser catálogo e virou o feed de eventos** (gramática do
+  "Explore" do Top Shot). **Camada A apenas**: `GET /api/v1/feed` agrega o que a economia
+  já registra — vendas (BUY/OFFER_ACCEPT), aberturas de pacote (MINTs agrupados por
+  usuário em janelas de 90s), presentes, queimas, desafios (`ChallengeEntry`), missões
+  (`QuestClaim`) e **check-ins válidos** — mais "populares 24h". Zero modelo novo, só
+  leitura (`services/feed.ts`). Rail pessoal: checklists perto de completar + wishlist.
+  O catálogo continua acessível em /mercado e /pacotes. **Camadas B/C** (reações,
+  posts/comentários/follows) ficam para o roadmap — exigem moderação e LGPD.
+
+## Tipografia (pós-v1)
+- **2026-07-03 — Fontes trocadas para as mesmas famílias abertas que o Top Shot usa.**
+  Anton/Outfit/Space Mono → **Sofia Sans Extra Condensed** (display, peso 800 via
+  `.font-display`) · **Roboto Flex** (texto) · **Roboto Mono** (série/preços).
+  **Licenciamento:** as três são Google Fonts (OFL) de terceiros — usar as mesmas famílias
+  **não** viola o LEGAL.md (que proíbe copiar ativos proprietários da NBA/Dapper). A única
+  fonte proprietária do Top Shot ("Owners"/wide, da Mass-Driver) **não** foi usada; se um
+  dia quisermos o efeito "wide", alternativas abertas: Archivo ou Anybody (eixo de largura).
+  Troca feita só no `layout.tsx` (mesmas variáveis `--font-display/text/mono`), como
+  planejado na Fase 11.
+
+## Renomeações de produto
+- **2026-07-03 — "Pelada" → "Matchday".** O modo fantasy diário (Fast Break) passou a se
+  chamar **Matchday** (termo em inglês, escolhido pelo dono do produto; "dia de jogo" casa
+  com a mecânica de escalação por rodada). Rota `/jogar/pelada` → `/jogar/matchday` com
+  redirect permanente no `next.config.mjs`; componente `PeladaDayClient` →
+  `MatchdayDayClient`; textos de UI, seed (nome do run), comentários e docs atualizados.
+  Nomes técnicos internos (`fastbreak` em rotas de API, serviços, schema e testes)
+  **mantidos** — são o termo do brief e não aparecem para o usuário.
 
 ## Passe de design (pós-Fase 13) — telas de referência do usuário
 - **2026-07-01 — Design refeito na gramática exata dos prints do Top Shot** (seção 11.12),

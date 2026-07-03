@@ -20,7 +20,7 @@ export default async function CheckinPage() {
       <p className="mb-4 text-muted">
         Prova de presença: no estádio do seu time, em dia de jogo, ganhe um pacote.
       </p>
-      <div className="mb-6 rounded-xl border border-line bg-panel2 px-4 py-3 text-xs text-muted">
+      <div className="mb-6  border border-line bg-panel2 px-4 py-3 text-xs text-muted">
         No app (Flutter) isto usa o GPS real e a atestação de dispositivo (Play Integrity /
         App Attest). Aqui na web é um <span className="text-ink">simulador</span>: “no estádio”
         envia as coordenadas do estádio; “longe” envia coordenadas fora do raio. A validação
@@ -28,9 +28,9 @@ export default async function CheckinPage() {
       </div>
 
       {!me.favoriteTeam ? (
-        <div className="rounded-2xl border border-line bg-panel p-6 text-center">
+        <div className="border border-line bg-panel p-6 text-center">
           <p className="mb-3 text-muted">Escolha um time seguido para participar do check-in.</p>
-          <Link href="/perfil" className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href="/perfil" className="bg-accent px-5 py-2.5 font-semibold text-white">
             Escolher time no perfil
           </Link>
         </div>
@@ -50,7 +50,7 @@ export default async function CheckinPage() {
       {history.length > 0 && (
         <section className="mt-10">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted">Histórico</h2>
-          <ul className="divide-y divide-line rounded-2xl border border-line bg-panel">
+          <ul className="divide-y divide-line  border border-line bg-panel">
             {history.map((h) => (
               <li key={h.id} className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm">
                 <div className="min-w-0">

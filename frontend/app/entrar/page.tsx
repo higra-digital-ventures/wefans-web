@@ -37,7 +37,7 @@ export default function EntrarPage() {
         setMode(m);
         setError(null);
       }}
-      className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-colors ${
+      className={`flex-1  py-2 text-sm font-semibold transition-colors ${
         mode === m ? 'bg-panel2 text-ink' : 'text-muted hover:text-ink'
       }`}
     >
@@ -46,7 +46,7 @@ export default function EntrarPage() {
   );
 
   const field =
-    'w-full rounded-lg border border-line bg-panel2 px-3 py-2.5 text-ink outline-none placeholder:text-muted/60 focus:border-accent/60';
+    'w-full  border border-line bg-panel2 px-3 py-2.5 text-ink outline-none placeholder:text-muted/60 focus:border-accent/60';
 
   return (
     <main className="mx-auto max-w-md px-6 py-16">
@@ -55,7 +55,7 @@ export default function EntrarPage() {
       </h1>
       <p className="mb-8 text-muted">Sua carteira de Lances começa aqui.</p>
 
-      <div className="mb-6 flex gap-1 rounded-xl border border-line bg-panel p-1">
+      <div className="mb-6 flex gap-1  border border-line bg-panel p-1">
         {tab('login', 'Entrar')}
         {tab('register', 'Cadastrar')}
       </div>
@@ -106,7 +106,7 @@ export default function EntrarPage() {
         </div>
 
         {error && (
-          <p className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
+          <p className="border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
             {error}
           </p>
         )}
@@ -114,7 +114,7 @@ export default function EntrarPage() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-lg bg-accent py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="w-full  bg-accent py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {pending ? 'Processando…' : mode === 'login' ? 'Entrar' : 'Criar conta'}
         </button>

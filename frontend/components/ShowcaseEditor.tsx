@@ -34,12 +34,12 @@ export default function ShowcaseEditor({
     });
   };
 
-  const field = 'rounded-lg border border-line bg-panel2 px-3 py-2 text-ink outline-none';
+  const field = ' border border-line bg-panel2 px-3 py-2 text-ink outline-none';
 
   return (
-    <div className="space-y-4 rounded-2xl border border-line bg-panel p-5">
+    <div className="space-y-4  border border-line bg-panel p-5">
       <h2 className="font-semibold text-ink">Editar vitrine</h2>
-      {error && <p className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
+      {error && <p className="border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
 
       <div className="flex flex-wrap items-center gap-2">
         <input value={name} onChange={(e) => setName(e.target.value)} className={`${field} flex-1`} />
@@ -47,7 +47,7 @@ export default function ShowcaseEditor({
           <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} /> pública
         </label>
         <button
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className="bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
           disabled={pending}
           onClick={() => run(() => updateShowcase(showcase.id, { name, public: isPublic }))}
         >
@@ -67,7 +67,7 @@ export default function ShowcaseEditor({
             ))}
           </select>
           <button
-            className="rounded-lg border border-line px-4 py-2 text-sm text-muted hover:text-ink disabled:opacity-50"
+            className="border border-line px-4 py-2 text-sm text-muted hover:text-ink disabled:opacity-50"
             disabled={!addId || pending}
             onClick={() => run(() => addShowcaseItem(showcase.id, addId).then(() => setAddId('')))}
           >

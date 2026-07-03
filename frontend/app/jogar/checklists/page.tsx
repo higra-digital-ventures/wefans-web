@@ -24,7 +24,7 @@ export default async function ChecklistsPage() {
           {checklists.map((c) => {
             const complete = !!c.progress && c.progress.have >= c.progress.need;
             return (
-              <div key={c.id} className="rounded-2xl border border-line bg-panel p-5">
+              <div key={c.id} className="border border-line bg-panel p-5">
                 <div className="mb-2 flex items-center justify-between gap-4">
                   <div>
                     <h3 className="font-display text-xl text-ink">{c.name}</h3>

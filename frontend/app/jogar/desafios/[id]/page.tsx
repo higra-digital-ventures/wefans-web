@@ -40,7 +40,7 @@ export default async function ChallengeDetailPage({ params }: { params: Promise<
         ) : challenge.hasPackReward ? (
           <div>
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-widest text-muted">Recompensa</h2>
-            <div className="rounded-2xl border border-line bg-panel p-6 text-center text-muted">
+            <div className="border border-line bg-panel p-6 text-center text-muted">
               🎁 Um pacote exclusivo
             </div>
           </div>

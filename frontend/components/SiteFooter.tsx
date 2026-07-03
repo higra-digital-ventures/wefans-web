@@ -18,12 +18,13 @@ function Social({ label, path }: { label: string; path: string }) {
 }
 
 const COL = 'space-y-2.5 text-[13px]';
-const LINK = 'block text-muted transition-colors hover:text-ink';
+// Links brancos como no footer do Top Shot (contraste com o fundo quase-preto)
+const LINK = 'block text-ink/90 transition-colors hover:text-ink hover:underline';
 const HEAD = 'mb-3 text-[13px] font-semibold text-ink';
 
 export default function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-line bg-[#08050c]">
+    <footer className="mt-20 border-t border-line bg-[#050505]">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <div className={HEAD}>Entre na comunidade</div>
@@ -41,7 +42,7 @@ export default function SiteFooter() {
             {['Google Play', 'App Store'].map((store) => (
               <span
                 key={store}
-                className="flex items-center gap-2 rounded-md border border-line bg-black px-3 py-1.5"
+                className="flex items-center gap-2  border border-line bg-black px-3 py-1.5"
                 title="App em breve"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4 fill-ink" aria-hidden>
@@ -85,7 +86,7 @@ export default function SiteFooter() {
             <Link href="/conduta" className={LINK}>Termos</Link>
             <Link href="/conduta" className={LINK}>Privacidade</Link>
             <Link href="/conduta" className={LINK}>Código de Conduta</Link>
-            <Link href="/jogar/pelada" className={LINK}>Regras da Pelada</Link>
+            <Link href="/jogar/matchday" className={LINK}>Regras do Matchday</Link>
           </div>
         </div>
       </div>

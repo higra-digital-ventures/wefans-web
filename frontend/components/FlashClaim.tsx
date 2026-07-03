@@ -22,10 +22,10 @@ export default function FlashClaim({
 
   if (challenge.completed || granted) {
     return (
-      <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-6">
+      <div className="border border-emerald-500/40 bg-emerald-500/10 p-6">
         <p className="mb-3 font-semibold text-emerald-300">Desafio relâmpago concluído! ⚡</p>
         {granted && (
-          <Link href={`/abrir/${granted}`} className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href={`/abrir/${granted}`} className="bg-accent px-5 py-2.5 font-semibold text-white">
             Abrir pacote de recompensa
           </Link>
         )}
@@ -34,7 +34,7 @@ export default function FlashClaim({
   }
 
   return (
-    <div className="rounded-2xl border border-line bg-panel p-5">
+    <div className="border border-line bg-panel p-5">
       <h2 className="mb-1 font-semibold text-ink">⚡ Critério de hoje</h2>
       <p className="mb-4 text-sm text-muted">
         Tenha o Lance de um jogador com {flash.min}+ {flash.stat} hoje (stats simuladas).
@@ -64,7 +64,7 @@ export default function FlashClaim({
         )}
       </div>
 
-      {error && <p className="mb-3 rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
+      {error && <p className="mb-3  border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
 
       <button
         disabled={pending || !isAuthed || !flash.eligible}
@@ -82,7 +82,7 @@ export default function FlashClaim({
             }
           })
         }
-        className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white disabled:opacity-50"
+        className="bg-accent px-5 py-2.5 font-semibold text-white disabled:opacity-50"
       >
         {pending ? 'Resgatando…' : !isAuthed ? 'Entre para participar' : flash.eligible ? 'Resgatar recompensa' : 'Nenhum Lance seu cumpre hoje'}
       </button>

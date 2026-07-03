@@ -25,7 +25,7 @@ export default async function PerfilPage() {
     getWishlistServer(),
   ]);
   const wl = wishlist ?? [];
-  const card = 'rounded-2xl border border-line bg-panel p-5';
+  const card = ' border border-line bg-panel p-5';
 
   return (
     <PerfilClient me={me} wallet={wallet} teams={teams} momentCount={stats?.momentCount ?? 0}>

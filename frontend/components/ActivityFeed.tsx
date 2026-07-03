@@ -36,10 +36,10 @@ export default function ActivityFeed({ initial, limit = 20 }: { initial: RecentS
         <li key={s.id}>
           <Link
             href={`/momento/${s.momentId}`}
-            className="flex items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-panel2/60"
+            className="flex items-center gap-3  px-2 py-2.5 transition-colors hover:bg-panel2/60"
           >
             <span
-              className="h-9 w-9 shrink-0 rounded"
+              className="h-9 w-9 shrink-0"
               style={{ background: `${TIER_META[s.template.tier].color}33`, boxShadow: `inset 0 0 0 1px ${TIER_META[s.template.tier].color}55` }}
             />
             <div className="min-w-0 flex-1">

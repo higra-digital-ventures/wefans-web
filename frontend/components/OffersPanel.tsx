@@ -40,12 +40,12 @@ export default function OffersPanel({
   };
 
   return (
-    <div className={bare ? '' : 'mt-6 rounded-2xl border border-line bg-panel p-5'}>
+    <div className={bare ? '' : 'mt-6  border border-line bg-panel p-5'}>
       {!bare && <h2 className="mb-3 font-semibold text-ink">Ofertas</h2>}
 
       {!isOwner && isAuthed && (
         <div className="mb-4 flex gap-2">
-          <div className="flex items-center rounded-lg border border-line bg-panel2 px-3">
+          <div className="flex items-center  border border-line bg-panel2 px-3">
             <span className="text-muted">R$</span>
             <input
               type="number"
@@ -57,7 +57,7 @@ export default function OffersPanel({
             />
           </div>
           <button
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            className="bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
             disabled={pending || !price}
             onClick={() => run(() => makeOffer({ momentId, priceCents: Math.round(Number(price) * 100) }))}
           >
@@ -81,7 +81,7 @@ export default function OffersPanel({
               </div>
               {isOwner && (
                 <button
-                  className="rounded bg-accent px-3 py-1 text-xs font-semibold text-white disabled:opacity-50"
+                  className="bg-accent px-3 py-1 text-xs font-semibold text-white disabled:opacity-50"
                   disabled={pending}
                   onClick={() => run(() => acceptOffer(o.id, momentId))}
                 >

@@ -22,7 +22,7 @@ export default async function MissoesPage() {
       ) : (
         <div className="space-y-4">
           {quests.map((q) => (
-            <div key={q.id} className="flex items-center justify-between gap-4 rounded-2xl border border-line bg-panel p-5">
+            <div key={q.id} className="flex items-center justify-between gap-4  border border-line bg-panel p-5">
               <div>
                 <h3 className="font-display text-xl text-ink">{q.name}</h3>
                 <p className="text-sm text-muted">{q.description}</p>

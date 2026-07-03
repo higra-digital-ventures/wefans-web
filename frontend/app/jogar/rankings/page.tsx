@@ -26,7 +26,7 @@ export default async function RankingsPage() {
             <Link
               key={b.id}
               href={`/jogar/rankings/${b.id}`}
-              className="block rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-accent/40"
+              className="block  border border-line bg-panel p-5 transition-colors hover:border-accent/40"
             >
               <div className="mb-2 flex items-center justify-between">
                 <span className="rounded-full bg-panel2 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">

@@ -7,12 +7,14 @@ export default function TacticalBoard({
   color,
   foil,
   live,
+  hoverPlay,
 }: {
   trajectory: string | null;
   jersey: number;
   color: string;
   foil?: boolean;
   live?: boolean;
+  hoverPlay?: boolean; // "toca" o lance no hover do card (.group) — glitch + bola + rastro
 }) {
   const path = trajectory ?? 'M12,100 Q50,30 88,64';
   const start = path.match(/M\s*([\d.]+)[ ,]+([\d.]+)/);
@@ -58,21 +60,37 @@ export default function TacticalBoard({
         {jersey}
       </text>
 
-      {/* trajetória */}
+      {/* trajetória — com pathLength=1 o dasharray normaliza e o redesenho do hover
+          fica em sincronia com a bola (mesma duração/curva) */}
       <path
         d={path}
+        pathLength={1}
         fill="none"
         stroke={color}
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeOpacity="0.92"
-        style={foil ? { filter: `drop-shadow(0 0 2.5px ${color})` } : undefined}
+        className={hoverPlay ? 'wf-traj-draw' : undefined}
+        style={{
+          ...(foil ? { filter: `drop-shadow(0 0 2.5px ${color})` } : undefined),
+          ...(hoverPlay ? { strokeDasharray: 1, ['--traj-color' as string]: color } : undefined),
+        }}
       />
 
-      {/* bola: anima ao longo da trajetória quando live; senão fica no início */}
-      <circle r="2.4" fill="#ffffff" cx={bx} cy={by}>
-        {live && <animateMotion dur="4s" repeatCount="indefinite" path={path} />}
-      </circle>
+      {/* bola: no feed ao vivo anima sempre (SMIL); com hoverPlay percorre a
+          trajetória via offset-path enquanto o card estiver em hover */}
+      {hoverPlay && !live ? (
+        <circle
+          r="2.4"
+          fill="#ffffff"
+          className="wf-play-ball"
+          style={{ offsetPath: `path("${path}")`, offsetRotate: '0deg' }}
+        />
+      ) : (
+        <circle r="2.4" fill="#ffffff" cx={bx} cy={by}>
+          {live && <animateMotion dur="4s" repeatCount="indefinite" path={path} />}
+        </circle>
+      )}
     </svg>
   );
 }

@@ -38,7 +38,7 @@ export default function ChecklistClaimButton({
             }
           })
         }
-        className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
       >
         {pending ? 'Resgatando…' : complete ? 'Resgatar bônus' : 'Incompleto'}
       </button>

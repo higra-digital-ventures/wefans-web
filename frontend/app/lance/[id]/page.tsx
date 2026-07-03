@@ -61,7 +61,7 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
 
           <div className="mt-4 font-mono text-2xl text-ink">{editionLabel(t)}</div>
 
-          <div className="mt-6 grid grid-cols-3 gap-4 rounded-2xl border border-line bg-panel p-4">
+          <div className="mt-6 grid grid-cols-3 gap-4  border border-line bg-panel p-4">
             {stat('Menor preço', tm?.floorCents != null ? brl(tm.floorCents) : '—')}
             {stat('Preço médio', brl(tm?.aspCents ?? t.aspCents))}
             {stat('À venda', String(tm?.activeListings ?? 0))}
@@ -88,14 +88,14 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
             {tm?.floorMomentId ? (
               <Link
                 href={`/momento/${tm.floorMomentId}`}
-                className="inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-white"
+                className="inline-block  bg-accent px-5 py-2.5 font-semibold text-white"
               >
                 Comprar · {brl(tm.floorCents ?? 0)}
               </Link>
             ) : (
               <Link
                 href="/pacotes"
-                className="inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-white"
+                className="inline-block  bg-accent px-5 py-2.5 font-semibold text-white"
               >
                 Conseguir nos pacotes
               </Link>

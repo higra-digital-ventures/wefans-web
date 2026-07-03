@@ -26,7 +26,7 @@ export default async function RankingDetailPage({ params }: { params: Promise<{ 
       </p>
 
       <div className="grid gap-8 md:grid-cols-[1fr_minmax(0,340px)]">
-        <div className="rounded-2xl border border-line bg-panel">
+        <div className="border border-line bg-panel">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-line text-left text-xs uppercase tracking-widest text-muted">

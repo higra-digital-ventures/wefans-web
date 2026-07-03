@@ -16,7 +16,7 @@ export default async function OfertasPage() {
       {offers.length === 0 ? (
         <p className="text-muted">Você não tem ofertas ativas. Faça uma na página de um Lance.</p>
       ) : (
-        <ul className="divide-y divide-line rounded-2xl border border-line bg-panel">
+        <ul className="divide-y divide-line  border border-line bg-panel">
           {offers.map((o) => (
             <li key={o.id} className="flex items-center justify-between gap-3 px-4 py-3">
               <div className="min-w-0">

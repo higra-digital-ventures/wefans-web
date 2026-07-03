@@ -38,10 +38,10 @@ export default function OpenPackClient({ inventoryId }: { inventoryId: string })
           ))}
         </div>
         <div className="mt-8 flex gap-3">
-          <Link href="/colecao" className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href="/colecao" className="bg-accent px-5 py-2.5 font-semibold text-white">
             Ver coleção
           </Link>
-          <Link href="/pacotes" className="rounded-lg border border-line px-5 py-2.5 text-muted hover:text-ink">
+          <Link href="/pacotes" className="border border-line px-5 py-2.5 text-muted hover:text-ink">
             Abrir outro
           </Link>
         </div>
@@ -51,13 +51,13 @@ export default function OpenPackClient({ inventoryId }: { inventoryId: string })
 
   return (
     <div className="flex flex-col items-center py-10 text-center">
-      <div className="mb-6 h-52 w-40 rounded-2xl bg-sunset shadow-neon" />
+      <div className="mb-6 h-52 w-40  bg-sunset shadow-neon" />
       <h1 className="mb-2 font-display text-4xl uppercase text-ink">Pacote lacrado</h1>
       <p className="mb-6 max-w-sm text-muted">
         Rasgue para revelar seus Lances. O que sair é seu — numerado e colecionável.
       </p>
       {error && (
-        <div className="mb-4 max-w-sm rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
+        <div className="mb-4 max-w-sm  border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
           {error}
           <div className="mt-2">
             <Link href="/colecao" className="underline">
@@ -69,7 +69,7 @@ export default function OpenPackClient({ inventoryId }: { inventoryId: string })
       <button
         onClick={open}
         disabled={pending}
-        className="rounded-lg bg-accent px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="bg-accent px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {pending ? 'Abrindo…' : 'Rasgar o pacote'}
       </button>

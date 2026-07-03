@@ -1,15 +1,17 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Suspense } from 'react';
-import { Anton, Outfit, Space_Mono } from 'next/font/google';
+import { Sofia_Sans_Extra_Condensed, Roboto_Flex, Roboto_Mono } from 'next/font/google';
 import './globals.css';
 import TopBar from '@/components/TopBar';
 import SiteFooter from '@/components/SiteFooter';
 
-// Fontes da marca (seção 11.1): Anton (display) · Outfit (texto) · Space Mono (série).
-const anton = Anton({ weight: '400', subsets: ['latin'], variable: '--font-display' });
-const outfit = Outfit({ subsets: ['latin'], variable: '--font-text' });
-const spaceMono = Space_Mono({ weight: ['400', '700'], subsets: ['latin'], variable: '--font-mono' });
+// Fontes: as mesmas famílias abertas (OFL/Google Fonts) que o Top Shot usa —
+// Sofia Sans Extra Condensed (display) · Roboto Flex (texto) · Roboto Mono (série).
+// A "Owners" (wide, proprietária) não é usada. Ver DECISIONS.md.
+const sofia = Sofia_Sans_Extra_Condensed({ subsets: ['latin'], variable: '--font-display' });
+const robotoFlex = Roboto_Flex({ subsets: ['latin'], variable: '--font-text' });
+const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
   title: 'wefans — Momentos de Futebol',
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${anton.variable} ${outfit.variable} ${spaceMono.variable}`}>
+    <html lang="pt-BR" className={`${sofia.variable} ${robotoFlex.variable} ${robotoMono.variable}`}>
       <body>
         <Suspense fallback={<div className="h-14 border-b border-line" />}>
           <TopBar />

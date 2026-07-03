@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 function Card({ s }: { s: ShowcaseSummary }) {
   return (
-    <Link href={`/vitrine/${s.id}`} className="block rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-accent/40">
+    <Link href={`/vitrine/${s.id}`} className="block  border border-line bg-panel p-5 transition-colors hover:border-accent/40">
       <h3 className="font-display text-xl text-ink">{s.name}</h3>
       <p className="text-sm text-muted">
         {s.itemCount} Lances{s.ownerUsername ? ` · @${s.ownerUsername}` : ''}

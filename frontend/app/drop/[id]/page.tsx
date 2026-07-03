@@ -30,7 +30,7 @@ export default async function DropPage({ params }: { params: Promise<{ id: strin
 
         <div className="space-y-4">
           {drop.packs.map((p) => (
-            <div key={p.id} className="rounded-2xl border border-line bg-panel p-4">
+            <div key={p.id} className="border border-line bg-panel p-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="font-semibold text-ink">{p.name}</span>
                 <span className="font-mono text-sm text-accent3">{brl(p.priceCents)}</span>
@@ -42,7 +42,7 @@ export default async function DropPage({ params }: { params: Promise<{ id: strin
                 {Object.entries(p.oddsJson).map(([tier, prob]) => {
                   const meta = TIER_META[tier as Tier];
                   return (
-                    <span key={tier} className="rounded px-1.5 py-0.5 text-[10px]" style={{ background: `${meta.color}22`, color: meta.color }}>
+                    <span key={tier} className="px-1.5 py-0.5 text-[10px]" style={{ background: `${meta.color}22`, color: meta.color }}>
                       {meta.label} {(prob * 100).toFixed(prob * 100 < 1 ? 1 : 0)}%
                     </span>
                   );

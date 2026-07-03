@@ -39,15 +39,15 @@ export default function ChallengeBuilder({
 
   if (challenge.completed || result) {
     return (
-      <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-6">
+      <div className="border border-emerald-500/40 bg-emerald-500/10 p-6">
         <p className="mb-3 font-semibold text-emerald-300">Desafio concluído! 🎉</p>
         {result?.grantedPackInventoryId && (
-          <Link href={`/abrir/${result.grantedPackInventoryId}`} className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href={`/abrir/${result.grantedPackInventoryId}`} className="bg-accent px-5 py-2.5 font-semibold text-white">
             Abrir pacote de recompensa
           </Link>
         )}
         {result?.rewardMomentId && (
-          <Link href={`/momento/${result.rewardMomentId}`} className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href={`/momento/${result.rewardMomentId}`} className="bg-accent px-5 py-2.5 font-semibold text-white">
             Ver Lance de recompensa
           </Link>
         )}
@@ -57,7 +57,7 @@ export default function ChallengeBuilder({
   }
 
   return (
-    <div className="rounded-2xl border border-line bg-panel p-5">
+    <div className="border border-line bg-panel p-5">
       <h2 className="mb-1 font-semibold text-ink">Montador de Entrada</h2>
       <p className="mb-4 text-sm text-muted">
         Selecione um Lance seu para cada exigência.
@@ -80,7 +80,7 @@ export default function ChallengeBuilder({
                   <button
                     key={m.id}
                     onClick={() => setSelected((s) => ({ ...s, [r.template.id]: m.id }))}
-                    className={`rounded-lg border px-3 py-1 text-sm transition-colors ${
+                    className={` border px-3 py-1 text-sm transition-colors ${
                       selected[r.template.id] === m.id
                         ? 'border-accent text-accent'
                         : 'border-line text-muted hover:text-ink'
@@ -100,7 +100,7 @@ export default function ChallengeBuilder({
       <button
         disabled={!allCovered || pending || !isAuthed}
         onClick={submit}
-        className="mt-5 rounded-lg bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="mt-5  bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {pending ? 'Enviando…' : !isAuthed ? 'Entre para participar' : allCovered ? 'Completar desafio' : 'Selecione todos os Lances'}
       </button>

@@ -24,10 +24,10 @@ export default function AdminAction({
 
   const cls =
     variant === 'primary'
-      ? 'rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white'
+      ? ' bg-accent px-3 py-1.5 text-xs font-semibold text-white'
       : variant === 'danger'
-        ? 'rounded-lg border border-accent/50 px-3 py-1.5 text-xs text-accent'
-        : 'rounded-lg border border-line px-3 py-1.5 text-xs text-muted hover:text-ink';
+        ? ' border border-accent/50 px-3 py-1.5 text-xs text-accent'
+        : ' border border-line px-3 py-1.5 text-xs text-muted hover:text-ink';
 
   return (
     <span className="inline-flex flex-col">

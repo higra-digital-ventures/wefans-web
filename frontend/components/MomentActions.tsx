@@ -55,24 +55,24 @@ export default function MomentActions({
   };
 
   const cta =
-    'w-full rounded bg-accent py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-white transition-opacity hover:opacity-90 disabled:opacity-50';
+    'w-full  bg-accent py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-white transition-opacity hover:opacity-90 disabled:opacity-50';
   const ctaWhite =
-    'w-full rounded bg-white py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-black transition-opacity hover:opacity-90 disabled:opacity-50';
+    'w-full  bg-white py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-black transition-opacity hover:opacity-90 disabled:opacity-50';
   const ghost =
-    'rounded border border-line px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-muted transition-colors hover:border-[#3a2b52] hover:text-ink disabled:opacity-50';
+    ' border border-line px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-muted transition-colors hover:border-[#3a2b52] hover:text-ink disabled:opacity-50';
 
   if (isBurned) {
     return (
-      <div className="rounded-lg border border-line bg-[#0c0813] p-4 text-sm text-muted">
+      <div className="border border-line bg-[#0e0e10] p-4 text-sm text-muted">
         Este Lance foi queimado — fora de circulação.
       </div>
     );
   }
 
   return (
-    <div className="space-y-3 rounded-lg border border-line bg-[#0c0813] p-4">
+    <div className="space-y-3  border border-line bg-[#0e0e10] p-4">
       {error && (
-        <p className="rounded border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">{error}</p>
+        <p className="border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">{error}</p>
       )}
 
       {listing ? (
@@ -101,7 +101,7 @@ export default function MomentActions({
       ) : isOwner ? (
         <>
           <div className="flex gap-2">
-            <div className="flex flex-1 items-center rounded border border-line bg-panel2 px-3">
+            <div className="flex flex-1 items-center  border border-line bg-panel2 px-3">
               <span className="text-sm text-muted">R$</span>
               <input
                 type="number"
@@ -113,7 +113,7 @@ export default function MomentActions({
               />
             </div>
             <button
-              className="rounded bg-accent px-6 text-[13px] font-bold uppercase tracking-wide text-white disabled:opacity-50"
+              className="bg-accent px-6 text-[13px] font-bold uppercase tracking-wide text-white disabled:opacity-50"
               disabled={pending}
               onClick={() => run(() => createListing(momentId, Math.round(Number(price) * 100)))}
             >
@@ -151,7 +151,7 @@ export default function MomentActions({
               value={giftTo}
               onChange={(e) => setGiftTo(e.target.value)}
               placeholder="usuário para presentear"
-              className="min-w-0 flex-1 rounded border border-line bg-panel2 px-3 py-2 text-sm text-ink outline-none placeholder:text-muted/60"
+              className="min-w-0 flex-1  border border-line bg-panel2 px-3 py-2 text-sm text-ink outline-none placeholder:text-muted/60"
             />
             <button className={ghost} disabled={pending || !giftTo} onClick={() => run(() => giftMoment(momentId, giftTo))}>
               Presentear

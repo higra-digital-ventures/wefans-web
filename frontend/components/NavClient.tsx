@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import MobileNav from './MobileNav';
+import SearchOverlay from './SearchOverlay';
 import { brl } from '@/lib/format';
+import type { TemplateDTO } from '@/lib/types';
 
 // Top bar no padrão do Top Shot: nav central com ícone+texto e sublinhado no ativo,
 // busca/sino/carteira/avatar à direita (seção 11.12a).
@@ -44,8 +46,12 @@ const MOBILE_ITEMS = [
 
 export default function NavClient({
   me,
+  searchPopular,
+  searchCategories,
 }: {
   me: { username: string; balanceCents: number; isAdmin: boolean } | null;
+  searchPopular: TemplateDTO[];
+  searchCategories: { label: string; q: string }[];
 }) {
   const pathname = usePathname();
   const isActive = (href: string) =>
@@ -56,7 +62,7 @@ export default function NavClient({
         : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-[#0a0610]/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-[#050505]/95 backdrop-blur">
       <div className="flex h-14 w-full items-center justify-between gap-3 px-4 lg:px-6">
         <div className="flex items-center gap-3">
           <MobileNav items={MOBILE_ITEMS} />
@@ -82,11 +88,11 @@ export default function NavClient({
                 <Icon d={n.icon} />
                 {n.label}
                 {'badge' in n && n.badge && (
-                  <span className="rounded bg-accent2 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white">
+                  <span className="bg-accent2 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white">
                     {n.badge}
                   </span>
                 )}
-                {active && <span className="absolute inset-x-2 bottom-0 h-[3px] rounded-t bg-accent" />}
+                {active && <span className="absolute inset-x-2 bottom-0 h-[3px]  bg-accent" />}
               </Link>
             );
           })}
@@ -96,18 +102,12 @@ export default function NavClient({
           {me?.isAdmin && (
             <Link
               href="/admin"
-              className="mr-1 hidden rounded border border-accent2/40 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-accent2 sm:block"
+              className="mr-1 hidden  border border-accent2/40 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-accent2 sm:block"
             >
               Admin
             </Link>
           )}
-          <Link
-            href="/explorar"
-            aria-label="Buscar"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-panel2 hover:text-ink"
-          >
-            <Icon d={I.search} />
-          </Link>
+          <SearchOverlay popular={searchPopular} categories={searchCategories} />
           <span
             aria-hidden
             className="hidden h-9 w-9 items-center justify-center rounded-full text-muted sm:flex"
@@ -134,7 +134,7 @@ export default function NavClient({
           ) : (
             <Link
               href="/entrar"
-              className="rounded bg-accent px-4 py-1.5 text-[13px] font-bold uppercase tracking-wide text-white"
+              className="bg-accent px-4 py-1.5 text-[13px] font-bold uppercase tracking-wide text-white"
             >
               Entrar
             </Link>

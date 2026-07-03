@@ -22,7 +22,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <header className="mb-10 rounded-2xl border border-line bg-panel p-6">
+      <header className="mb-10  border border-line bg-panel p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="font-display text-4xl uppercase text-ink">{pack.name}</h1>
@@ -36,7 +36,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
                 return (
                   <span
                     key={tier}
-                    className="rounded px-2 py-0.5 text-xs font-medium"
+                    className="px-2 py-0.5 text-xs font-medium"
                     style={{ background: `${meta.color}22`, color: meta.color }}
                   >
                     {meta.label} {(p * 100).toFixed(p * 100 < 1 ? 1 : 0)}%

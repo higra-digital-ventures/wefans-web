@@ -24,7 +24,7 @@ export default async function AdminConteudo() {
         Nada nasce visível.
       </p>
 
-      <div className="overflow-x-auto rounded-2xl border border-line bg-panel">
+      <div className="overflow-x-auto  border border-line bg-panel">
         <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-line text-left text-xs uppercase tracking-widest text-muted">

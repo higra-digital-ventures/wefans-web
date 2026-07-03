@@ -27,7 +27,7 @@ export default async function PublicProfilePage({
         <h1 className="font-display text-4xl uppercase text-ink">
           @{profile.username}
           {profile.isAdmin && (
-            <span className="ml-2 rounded bg-accent2/20 px-2 py-0.5 align-middle text-xs text-accent2">
+            <span className="ml-2  bg-accent2/20 px-2 py-0.5 align-middle text-xs text-accent2">
               admin
             </span>
           )}
@@ -40,7 +40,7 @@ export default async function PublicProfilePage({
 
       <div className="mb-10 grid max-w-lg grid-cols-3 gap-3">
         {kpis.map((k) => (
-          <div key={k.label} className="rounded-2xl border border-line bg-panel p-4">
+          <div key={k.label} className="border border-line bg-panel p-4">
             <div className="font-display text-2xl text-ink">{k.value}</div>
             <div className="mt-1 text-xs text-muted">{k.label}</div>
           </div>

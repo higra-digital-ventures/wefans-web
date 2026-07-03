@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
-      <div className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-accent2/30 bg-accent2/5 px-4 py-3">
+      <div className="mb-6 flex flex-wrap items-center gap-4  border border-accent2/30 bg-accent2/5 px-4 py-3">
         <span className="font-display text-lg uppercase text-accent2">Admin</span>
         <nav className="flex flex-wrap gap-4 text-sm">
           {NAV.map((n) => (

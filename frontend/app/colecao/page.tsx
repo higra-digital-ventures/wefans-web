@@ -23,9 +23,9 @@ export default async function ColecaoPage({
       <TierChips basePath="/colecao" active={tier} />
 
       {moments.length === 0 ? (
-        <div className="rounded-2xl border border-line bg-panel p-8 text-center">
+        <div className="border border-line bg-panel p-8 text-center">
           <p className="mb-4 text-muted">Você ainda não tem Lances{tier ? ' deste tier' : ''}.</p>
-          <Link href="/pacotes" className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href="/pacotes" className="bg-accent px-5 py-2.5 font-semibold text-white">
             Abrir um pacote
           </Link>
         </div>

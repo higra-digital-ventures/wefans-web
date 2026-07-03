@@ -15,10 +15,10 @@ export default function CreateShowcaseForm() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Nome da nova vitrine"
-        className="flex-1 rounded-lg border border-line bg-panel2 px-3 py-2 text-ink outline-none placeholder:text-muted/60"
+        className="flex-1  border border-line bg-panel2 px-3 py-2 text-ink outline-none placeholder:text-muted/60"
       />
       <button
-        className="rounded-lg bg-accent px-4 py-2 font-semibold text-white disabled:opacity-50"
+        className="bg-accent px-4 py-2 font-semibold text-white disabled:opacity-50"
         disabled={!name.trim() || pending}
         onClick={() =>
           start(async () => {

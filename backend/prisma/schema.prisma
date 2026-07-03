@@ -477,7 +477,7 @@ model ChecklistClaim {
   @@index([userId])
 }
 
-// ----------------------------- fast break (pelada) -----------------------------
+// ----------------------------- fast break (matchday) -----------------------------
 
 model FastBreakRun {
   id           String  @id @default(cuid())

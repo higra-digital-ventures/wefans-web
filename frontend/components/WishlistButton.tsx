@@ -42,7 +42,7 @@ export default function WishlistButton({
     <button
       onClick={toggle}
       disabled={pending}
-      className={`inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 ${
+      className={`inline-flex items-center gap-2  border px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 ${
         wished ? 'border-accent text-accent' : 'border-line text-muted hover:text-ink'
       }`}
     >
