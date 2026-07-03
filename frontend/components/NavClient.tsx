@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import MobileNav from './MobileNav';
 import SearchOverlay from './SearchOverlay';
+import NotificationsBell from './NotificationsBell';
 import { brl } from '@/lib/format';
 import type { TemplateDTO } from '@/lib/types';
 
@@ -108,13 +109,7 @@ export default function NavClient({
             </Link>
           )}
           <SearchOverlay popular={searchPopular} categories={searchCategories} />
-          <span
-            aria-hidden
-            className="hidden h-9 w-9 items-center justify-center rounded-full text-muted sm:flex"
-            title="Notificações (em breve)"
-          >
-            <Icon d={I.bell} />
-          </span>
+          {me && <NotificationsBell />}
           {me ? (
             <>
               <Link

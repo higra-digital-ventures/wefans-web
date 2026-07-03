@@ -71,6 +71,7 @@ model User {
   collectorScore Int      @default(0) // recalculado por snapshot
   tradeTickets   Int      @default(0)
   showInFeed     Boolean  @default(true) // opt-out do feed público do Explorar (privacidade)
+  notificationsSeenAt DateTime @default(now()) // marca d'água de leitura das notificações
   isAdmin        Boolean  @default(false)
   favoriteTeamId String? // time seguido (check-in, A2)
   checkinStreak  Int      @default(0)

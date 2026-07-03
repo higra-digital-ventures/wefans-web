@@ -456,3 +456,12 @@ export type TemplateCollectors = {
   topCollectors: { username: string; count: number }[];
   specialSerials: { serial: number; label: string; owner: string | null; burned: boolean; momentId: string }[];
 };
+
+export type NotificationDTO = {
+  id: string;
+  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY';
+  title: string;
+  body: string;
+  href: string;
+  createdAt: string;
+};

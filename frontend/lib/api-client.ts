@@ -144,3 +144,11 @@ export const fetchFeed = (limit = 20) =>
 
 export const patchShowInFeed = (showInFeed: boolean) =>
   request('PATCH', '/api/v1/me', { showInFeed });
+
+export const fetchNotifications = () =>
+  request<{ notifications: import('./types').NotificationDTO[]; unreadCount: number }>(
+    'GET',
+    '/api/v1/me/notifications',
+  );
+
+export const markNotificationsSeen = () => request('POST', '/api/v1/me/notifications/seen', {});

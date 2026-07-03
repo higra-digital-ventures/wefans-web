@@ -4,6 +4,7 @@ import { prisma } from '../../../db';
 import { requireAuth } from '../../../lib/auth-context';
 import { getMe, getMyStats, updateFavoriteTeam, updateShowInFeed } from '../../../services/profile';
 import { addWishlist, listWishlist, removeWishlist } from '../../../services/wishlist';
+import { getNotifications, markNotificationsSeen } from '../../../services/notifications';
 
 const updateMeSchema = z
   .object({
@@ -29,6 +30,14 @@ export async function meRoutes(app: FastifyInstance) {
   });
 
   app.get('/me/stats', { preHandler: requireAuth }, async (req) => getMyStats(prisma, req.userId!));
+
+  app.get('/me/notifications', { preHandler: requireAuth }, async (req) =>
+    getNotifications(prisma, req.userId!),
+  );
+
+  app.post('/me/notifications/seen', { preHandler: requireAuth }, async (req) =>
+    markNotificationsSeen(prisma, req.userId!),
+  );
 
   app.get('/me/wishlist', { preHandler: requireAuth }, async (req) => ({
     templates: await listWishlist(prisma, req.userId!),

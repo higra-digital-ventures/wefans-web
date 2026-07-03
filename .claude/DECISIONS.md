@@ -136,6 +136,16 @@
   (`Transaction[type,createdAt]`, `Listing[status,createdAt]`) e **opt-out de
   privacidade** (`User.showInFeed`, toggle no /perfil, PATCH /me) — primeiro passo LGPD.
 
+## Notificações (pós-v1)
+- **2026-07-03 — Notificações derivadas, sem tabela de eventos.** `GET /me/notifications`
+  computa a lista dos registros existentes (vendas dos meus Lances, presentes, ofertas
+  ativas recebidas, check-ins resolvidos, janela de drop aberta, rodadas do Matchday) —
+  mesma filosofia do feed. **Estado de leitura = marca d'água** `User.notificationsSeenAt`
+  (uma coluna; abrir o sino marca tudo como lido via `POST /me/notifications/seen`).
+  Sino (`NotificationsBell`) com badge de não-lidas, polling de 45s e dropdown escuro.
+  Limitação aceita: sem leitura por item e sem push — quando houver app (Fase M),
+  avaliar tabela `Notification` + push notifications de verdade.
+
 ## Tipografia (pós-v1)
 - **2026-07-03 — Fontes trocadas para as mesmas famílias abertas que o Top Shot usa.**
   Anton/Outfit/Space Mono → **Sofia Sans Extra Condensed** (display, peso 800 via
