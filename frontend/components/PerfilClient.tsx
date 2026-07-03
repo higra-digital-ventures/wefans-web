@@ -150,7 +150,10 @@ export default function PerfilClient({
         {/* Depósito */}
         <section className={card}>
           <h2 className="mb-1 font-semibold text-ink">Carteira</h2>
-          <p className="mb-4 text-sm text-muted">Depósito simulado em BRL (carteira de teste).</p>
+          <p className="mb-3 border border-accent3/30 bg-accent3/5 px-3 py-2 text-[12px] leading-snug text-accent3">
+            Moeda de teste — o saldo é fictício, para experimentar o produto. Nenhum dinheiro
+            real é movimentado; deposite à vontade.
+          </p>
           <div className="mb-3 flex gap-2">
             <div className="flex items-center  border border-line bg-panel2 px-3">
               <span className="text-muted">R$</span>

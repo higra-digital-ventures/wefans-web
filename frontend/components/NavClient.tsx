@@ -114,6 +114,7 @@ export default function NavClient({
             <>
               <Link
                 href="/perfil"
+                title="Saldo de teste — nenhum dinheiro real é movimentado"
                 className="hidden rounded-full border border-line bg-panel px-3 py-1.5 font-mono text-xs text-accent3 sm:block"
               >
                 {brl(me.balanceCents)}
