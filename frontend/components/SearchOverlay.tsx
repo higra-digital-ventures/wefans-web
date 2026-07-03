@@ -23,6 +23,19 @@ export default function SearchOverlay({
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  // atalho global "/" abre a busca (ignora quando o foco já está num campo)
+  useEffect(() => {
+    const onSlash = (e: KeyboardEvent) => {
+      if (e.key !== '/' || open) return;
+      const el = document.activeElement as HTMLElement | null;
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
+      e.preventDefault();
+      setOpen(true);
+    };
+    document.addEventListener('keydown', onSlash);
+    return () => document.removeEventListener('keydown', onSlash);
+  }, [open]);
+
   // carrega o catálogo uma vez, na primeira abertura (autocomplete ao digitar)
   useEffect(() => {
     if (!open || catalog) return;
@@ -64,7 +77,8 @@ export default function SearchOverlay({
   return (
     <>
       <button
-        aria-label="Buscar"
+        aria-label="Buscar (atalho: /)"
+        title="Buscar (atalho: /)"
         onClick={() => setOpen(true)}
         className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-panel2 hover:text-ink"
       >
