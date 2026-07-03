@@ -49,9 +49,19 @@ function MomentThumb({ e }: { e: FeedEvent }) {
           jersey={e.template.player.jersey}
           color={meta.color}
           foil={isFoil(e.template.tier)}
+          hoverPlay
         />
       </div>
     </div>
+  );
+}
+
+function Username({ user }: { user: string | null }) {
+  if (!user) return <span className="font-bold text-white">@anônimo</span>;
+  return (
+    <Link href={`/u/${user}`} className="font-bold text-white hover:underline">
+      @{user}
+    </Link>
   );
 }
 
@@ -65,7 +75,7 @@ function EventCard({ e }: { e: FeedEvent }) {
           {(e.user ?? '?')[0]}
         </span>
         <p className="min-w-0 flex-1 truncate text-[13px] text-neutral-300">
-          <span className="font-bold text-white">@{e.user ?? 'anônimo'}</span> {ACTION[e.kind]}{' '}
+          <Username user={e.user} /> {ACTION[e.kind]}{' '}
           {e.kind === 'PACK_OPEN' && <span className="font-bold text-white">{e.count} Lances</span>}
           {(e.kind === 'CHALLENGE' || e.kind === 'QUEST' || e.kind === 'CHECKIN') && (
             <span className="font-bold text-white">{e.label}</span>
@@ -83,7 +93,7 @@ function EventCard({ e }: { e: FeedEvent }) {
       {e.template ? (
         <Link
           href={e.momentId ? `/momento/${e.momentId}` : `/lance/${e.template.id}`}
-          className="flex items-center gap-4 border-t border-white/10 bg-[#08080a] px-4 py-4 transition-colors hover:bg-white/5"
+          className="group flex items-center gap-4 border-t border-white/10 bg-[#08080a] px-4 py-4 transition-colors hover:bg-white/5"
         >
           <MomentThumb e={e} />
           <div className="min-w-0 flex-1">
