@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { getDropServer, getMe } from '@/lib/api-server';
 import DropClient from '@/components/DropClient';
 import { TIER_META } from '@/lib/tiers';
@@ -15,6 +16,7 @@ export default async function DropPage({ params }: { params: Promise<{ id: strin
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
+      <Breadcrumbs items={[{ label: 'Drops', href: '/drops' }, { label: drop.name }]} />
       <Link href="/drops" className="text-sm text-muted hover:text-ink">
         ← Drops
       </Link>

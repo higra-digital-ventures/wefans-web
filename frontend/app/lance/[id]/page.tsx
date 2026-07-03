@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { getTemplateMarketServer, getTemplateServer, getWishlistServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import OwnershipStats from '@/components/OwnershipStats';
@@ -36,6 +37,7 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
+      <Breadcrumbs items={[{ label: 'Mercado', href: '/mercado' }, { label: t.player.club, href: `/mercado?q=${encodeURIComponent(t.player.club)}` }, { label: t.player.name }]} />
       <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted">
         <span>Temporada 1</span>
         <span>·</span>

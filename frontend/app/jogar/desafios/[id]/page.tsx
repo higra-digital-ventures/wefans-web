@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { getChallengeServer, getMe } from '@/lib/api-server';
 import ChallengeBuilder from '@/components/ChallengeBuilder';
 import FlashClaim from '@/components/FlashClaim';
@@ -14,6 +15,7 @@ export default async function ChallengeDetailPage({ params }: { params: Promise<
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
+      <Breadcrumbs items={[{ label: 'Jogar', href: '/jogar/desafios' }, { label: 'Desafios', href: '/jogar/desafios' }, { label: challenge.name }]} />
       <Link href="/jogar/desafios" className="text-sm text-muted hover:text-ink">
         ← Desafios
       </Link>

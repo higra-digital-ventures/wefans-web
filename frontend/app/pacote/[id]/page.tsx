@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { getPackDetailServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import BuyPackButton from '@/components/BuyPackButton';
@@ -22,6 +23,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
+      <Breadcrumbs items={[{ label: 'Pacotes', href: '/pacotes' }, { label: pack.name }]} />
       <header className="mb-10  border border-line bg-panel p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
