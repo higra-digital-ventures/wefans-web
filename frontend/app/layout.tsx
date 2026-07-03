@@ -5,6 +5,7 @@ import { Sofia_Sans_Extra_Condensed, Roboto_Flex, Roboto_Mono } from 'next/font/
 import './globals.css';
 import TopBar from '@/components/TopBar';
 import SiteFooter from '@/components/SiteFooter';
+import Toaster from '@/components/Toaster';
 
 // Fontes: as mesmas famílias abertas (OFL/Google Fonts) que o Top Shot usa —
 // Sofia Sans Extra Condensed (display) · Roboto Flex (texto) · Roboto Mono (série).
@@ -23,11 +24,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={`${sofia.variable} ${robotoFlex.variable} ${robotoMono.variable}`}>
       <body>
-        <Suspense fallback={<div className="h-14 border-b border-line" />}>
-          <TopBar />
-        </Suspense>
-        {children}
-        <SiteFooter />
+        <Toaster>
+          <Suspense fallback={<div className="h-14 border-b border-line" />}>
+            <TopBar />
+          </Suspense>
+          {children}
+          <SiteFooter />
+        </Toaster>
       </body>
     </html>
   );

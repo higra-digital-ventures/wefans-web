@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { buyPack } from '@/lib/api-client';
 import { brl } from '@/lib/format';
+import { useToast } from '@/components/Toaster';
 
 export default function BuyPackButton({
   packId,
@@ -15,6 +16,7 @@ export default function BuyPackButton({
   soldOut?: boolean;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -23,12 +25,16 @@ export default function BuyPackButton({
     start(async () => {
       try {
         const r = await buyPack(packId);
+        toast('Pacote comprado! Hora de abrir…', 'success');
         router.push(`/abrir/${r.inventoryId}`);
         router.refresh(); // atualiza o saldo na top bar (layout persistente)
       } catch (e) {
         const msg = e instanceof Error ? e.message : 'Erro';
         if (/autenticad|401/i.test(msg)) router.push('/entrar');
-        else setError(msg);
+        else {
+          setError(msg);
+          toast(msg, 'error');
+        }
       }
     });
   }
