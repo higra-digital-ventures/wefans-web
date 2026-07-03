@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   buyMoment,
@@ -12,6 +13,7 @@ import {
   redeemMomentTicket,
 } from '@/lib/api-client';
 import { brl } from '@/lib/format';
+import { useToast } from '@/components/Toaster';
 
 // Painel de compra/ações no padrão do Top Shot (seção 11.12d): CTA cheio em caps,
 // ações secundárias em botões retangulares discretos.
@@ -24,6 +26,7 @@ export default function MomentActions({
   isBurned,
   lockedUntil,
   suggestedPriceCents,
+  balanceCents = null,
 }: {
   momentId: string;
   listing: { id: string; priceCents: number } | null;
@@ -33,9 +36,12 @@ export default function MomentActions({
   isBurned: boolean;
   lockedUntil: string | null;
   suggestedPriceCents: number;
+  balanceCents?: number | null; // saldo do usuário p/ resumo de compra (null = deslogado)
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [pending, start] = useTransition();
+  const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [price, setPrice] = useState(String(Math.max(1, Math.round(suggestedPriceCents / 100) || 1)));
   const [giftTo, setGiftTo] = useState('');
@@ -87,9 +93,52 @@ export default function MomentActions({
             <button className={ctaWhite} disabled={pending} onClick={() => run(() => cancelListing(listing.id))}>
               {pending ? '…' : 'Cancelar venda'}
             </button>
+          ) : balanceCents != null && balanceCents < listing.priceCents ? (
+            <div>
+              <button className={cta} disabled title="Seu saldo não cobre este preço">
+                Saldo insuficiente
+              </button>
+              <p className="mt-2 text-center text-xs text-muted">
+                Saldo: {brl(balanceCents)} ·{' '}
+                <Link href="/perfil" className="text-accent3 underline underline-offset-2">
+                  depositar na carteira
+                </Link>
+              </p>
+            </div>
+          ) : confirming ? (
+            <div className="border border-line bg-panel2 p-3">
+              <p className="text-sm text-ink">Confirmar compra por {brl(listing.priceCents)}?</p>
+              {balanceCents != null && (
+                <p className="mt-0.5 text-xs text-muted">
+                  Saldo após a compra: {brl(balanceCents - listing.priceCents)}
+                </p>
+              )}
+              <div className="mt-3 flex gap-2">
+                <button
+                  className={cta}
+                  disabled={pending}
+                  onClick={() =>
+                    run(async () => {
+                      await buyMoment(listing.id);
+                      setConfirming(false);
+                      toast('É seu! O Lance já está na sua coleção.', 'success');
+                    })
+                  }
+                >
+                  {pending ? 'Comprando…' : 'Confirmar compra'}
+                </button>
+                <button
+                  className="border border-line px-4 text-[12px] font-bold uppercase text-muted hover:text-ink"
+                  disabled={pending}
+                  onClick={() => setConfirming(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
           ) : (
-            <button className={cta} disabled={pending} onClick={() => run(() => buyMoment(listing.id))}>
-              {pending ? 'Comprando…' : 'Selecionar e comprar'}
+            <button className={cta} disabled={pending} onClick={() => setConfirming(true)}>
+              Selecionar e comprar
             </button>
           )}
         </>
