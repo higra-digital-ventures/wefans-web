@@ -23,7 +23,7 @@ export default async function TopBar() {
 
   return (
     <NavClient
-      me={me ? { username: me.username, balanceCents: me.balanceCents, isAdmin: me.isAdmin } : null}
+      me={me ? { username: me.username, balanceCents: me.balanceCents, topShotScore: me.topShotScore, isAdmin: me.isAdmin } : null}
       searchPopular={popular}
       searchCategories={categories}
     />

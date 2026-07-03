@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import MobileNav from './MobileNav';
 import SearchOverlay from './SearchOverlay';
 import NotificationsBell from './NotificationsBell';
+import ProfileDrawer from './ProfileDrawer';
 import { brl } from '@/lib/format';
 import type { TemplateDTO } from '@/lib/types';
 
@@ -50,7 +51,7 @@ export default function NavClient({
   searchPopular,
   searchCategories,
 }: {
-  me: { username: string; balanceCents: number; isAdmin: boolean } | null;
+  me: { username: string; balanceCents: number; topShotScore: number; isAdmin: boolean } | null;
   searchPopular: TemplateDTO[];
   searchCategories: { label: string; q: string }[];
 }) {
@@ -117,13 +118,7 @@ export default function NavClient({
               >
                 {brl(me.balanceCents)}
               </Link>
-              <Link
-                href="/perfil"
-                aria-label={`Perfil de ${me.username}`}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-sunset text-sm font-bold uppercase text-white"
-              >
-                {me.username[0]}
-              </Link>
+              <ProfileDrawer me={me} />
             </>
           ) : (
             <Link
