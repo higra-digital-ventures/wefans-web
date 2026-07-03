@@ -27,6 +27,7 @@ export default function MomentActions({
   lockedUntil,
   suggestedPriceCents,
   balanceCents = null,
+  aspCents = 0,
 }: {
   momentId: string;
   listing: { id: string; priceCents: number } | null;
@@ -37,6 +38,7 @@ export default function MomentActions({
   lockedUntil: string | null;
   suggestedPriceCents: number;
   balanceCents?: number | null; // saldo do usuário p/ resumo de compra (null = deslogado)
+  aspCents?: number; // preço médio da edição (p/ aviso de preço anômalo)
 }) {
   const router = useRouter();
   const toast = useToast();
@@ -109,6 +111,12 @@ export default function MomentActions({
           ) : confirming ? (
             <div className="border border-line bg-panel2 p-3">
               <p className="text-sm text-ink">Confirmar compra por {brl(listing.priceCents)}?</p>
+              {aspCents > 0 && listing.priceCents > 3 * aspCents && (
+                <p className="mt-1.5 border border-amber-400/40 bg-amber-400/10 px-2 py-1.5 text-xs text-amber-200">
+                  Atenção: preço {Math.round(listing.priceCents / aspCents)}× acima da média da
+                  edição ({brl(aspCents)}). Compras muito acima da média são sinalizadas para revisão.
+                </p>
+              )}
               {balanceCents != null && (
                 <p className="mt-0.5 text-xs text-muted">
                   Saldo após a compra: {brl(balanceCents - listing.priceCents)}

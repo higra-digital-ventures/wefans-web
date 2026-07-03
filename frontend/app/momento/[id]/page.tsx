@@ -164,6 +164,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               lockedUntil={m.lockedUntil ?? null}
               suggestedPriceCents={suggested}
               balanceCents={me?.balanceCents ?? null}
+              aspCents={tm?.aspCents ?? t.aspCents}
             />
             {isOwner && tm && tm.recentSales.length > 0 && (
               <div className="mt-3 border-t border-line pt-3">
