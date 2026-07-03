@@ -73,7 +73,15 @@ export default function ChallengeBuilder({
               {r.template.player.name} <span className="text-muted">· {r.template.title}</span>
             </div>
             {r.eligible.length === 0 ? (
-              <p className="text-xs text-accent">Você não possui este Lance.</p>
+              <p className="text-xs text-accent">
+                Você não possui este Lance —{' '}
+                <Link
+                  href={`/mercado?q=${encodeURIComponent(r.template.player.name)}`}
+                  className="text-accent3 underline underline-offset-2 hover:text-ink"
+                >
+                  procurar no mercado →
+                </Link>
+              </p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {r.eligible.map((m) => (
