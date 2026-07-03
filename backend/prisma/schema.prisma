@@ -95,6 +95,8 @@ model User {
   refreshTokens      RefreshToken[]
   walletTransactions WalletTransaction[]
   packListings       PackListing[]
+  sentMessages       ChatMessage[]       @relation("MsgFrom")
+  receivedMessages   ChatMessage[]       @relation("MsgTo")
 
   @@index([favoriteTeamId])
 }
@@ -689,4 +691,21 @@ model CheckinNonce {
   createdAt DateTime  @default(now())
 
   @@index([userId])
+}
+
+// ----------------------------- chat entre usuários (negociação) -----------------------------
+
+model ChatMessage {
+  id        String    @id @default(cuid())
+  fromId    String
+  toId      String
+  body      String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  from User @relation("MsgFrom", fields: [fromId], references: [id])
+  to   User @relation("MsgTo", fields: [toId], references: [id])
+
+  @@index([fromId, toId, createdAt])
+  @@index([toId, readAt])
 }
