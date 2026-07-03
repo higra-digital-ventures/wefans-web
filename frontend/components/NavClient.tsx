@@ -34,7 +34,7 @@ const NAV = [
   { label: 'Explorar', href: '/explorar', icon: I.explore },
   { label: 'Drops', href: '/drops', icon: I.drops },
   { label: 'Mercado', href: '/mercado', icon: I.market },
-  { label: 'Jogar', href: '/jogar/desafios', icon: I.play, badge: 'PELADA' },
+  { label: 'Jogar', href: '/jogar/desafios', icon: I.play, badge: 'MATCHDAY' },
   { label: 'Check-in', href: '/checkin', icon: I.checkin },
   { label: 'Coleção', href: '/colecao', icon: I.collection },
 ];
