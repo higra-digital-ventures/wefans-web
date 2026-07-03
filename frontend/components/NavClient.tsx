@@ -34,7 +34,7 @@ const NAV = [
   { label: 'Explorar', href: '/explorar', icon: I.explore },
   { label: 'Drops', href: '/drops', icon: I.drops },
   { label: 'Mercado', href: '/mercado', icon: I.market },
-  { label: 'Jogar', href: '/jogar/desafios', icon: I.play, badge: 'MATCHDAY' },
+  { label: 'Jogar', href: '/jogar', icon: I.play, badge: 'MATCHDAY' },
   { label: 'Check-in', href: '/checkin', icon: I.checkin },
   { label: 'Coleção', href: '/colecao', icon: I.collection },
 ];
@@ -58,9 +58,7 @@ export default function NavClient({
   const isActive = (href: string) =>
     href === '/mercado'
       ? pathname.startsWith('/mercado') || pathname.startsWith('/momento') || pathname.startsWith('/lance')
-      : href === '/jogar/desafios'
-        ? pathname.startsWith('/jogar')
-        : pathname.startsWith(href);
+      : pathname.startsWith(href);
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[#050505]/95 backdrop-blur">
