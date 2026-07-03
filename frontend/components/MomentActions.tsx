@@ -42,6 +42,7 @@ export default function MomentActions({
   const toast = useToast();
   const [pending, start] = useTransition();
   const [confirming, setConfirming] = useState(false);
+  const [armed, setArmed] = useState<null | 'lock' | 'burn' | 'ticket'>(null); // ação destrutiva aguardando confirmação
   const [error, setError] = useState<string | null>(null);
   const [price, setPrice] = useState(String(Math.max(1, Math.round(suggestedPriceCents / 100) || 1)));
   const [giftTo, setGiftTo] = useState('');
@@ -171,29 +172,60 @@ export default function MomentActions({
           </div>
 
           <div className="flex flex-wrap gap-1.5 border-t border-line pt-3">
-            <button className={ghost} disabled={pending} onClick={() => run(() => lockMoment(momentId))}>
+            <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'lock' ? null : 'lock')}>
               Travar · 1 ano
             </button>
-            <button
-              className={ghost}
-              disabled={pending}
-              onClick={() => {
-                if (confirm('Queimar é permanente. Continuar?')) run(() => burnMoment(momentId));
-              }}
-            >
+            <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'burn' ? null : 'burn')}>
               Queimar
             </button>
-            <button
-              className={ghost}
-              disabled={pending}
-              onClick={() => {
-                if (confirm('Virar ficha queima o Lance em troca de 1 Ficha de Troca. Continuar?'))
-                  run(() => redeemMomentTicket(momentId));
-              }}
-            >
+            <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'ticket' ? null : 'ticket')}>
               Virar ficha
             </button>
           </div>
+
+          {/* confirmação inline com a consequência escrita (nada de confirm() do navegador) */}
+          {armed && (
+            <div className="border border-amber-400/40 bg-amber-400/5 p-3">
+              <p className="text-xs leading-relaxed text-amber-200">
+                {armed === 'lock' &&
+                  'Travar por 1 ano: este Lance não poderá ser vendido, queimado, presenteado nem usado em forja até lá. Ele continua seu e segue pontuando.'}
+                {armed === 'burn' &&
+                  'Queimar destrói este exemplar para sempre e reduz a circulação da edição. Não há como desfazer — e você não recebe nada em troca (para ganhar ficha, use "Virar ficha").'}
+                {armed === 'ticket' &&
+                  'Virar ficha queima este Lance em troca de 1 Ficha de Troca. Fichas compram pacotes exclusivos na página Fichas.'}
+              </p>
+              <div className="mt-2.5 flex gap-2">
+                <button
+                  className="bg-amber-400 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wide text-black disabled:opacity-50"
+                  disabled={pending}
+                  onClick={() =>
+                    run(async () => {
+                      if (armed === 'lock') {
+                        await lockMoment(momentId);
+                        toast('Lance travado por 1 ano.', 'success');
+                      } else if (armed === 'burn') {
+                        await burnMoment(momentId);
+                        toast('Exemplar queimado — fora de circulação.', 'info');
+                      } else {
+                        await redeemMomentTicket(momentId);
+                        toast('Você ganhou 1 Ficha de Troca.', 'success');
+                      }
+                      setArmed(null);
+                    })
+                  }
+                >
+                  {pending ? '…' : armed === 'lock' ? 'Confirmar trava' : armed === 'burn' ? 'Confirmar queima' : 'Confirmar troca'}
+                </button>
+                <button
+                  className="border border-line px-4 text-[11px] font-bold uppercase text-muted hover:text-ink"
+                  disabled={pending}
+                  onClick={() => setArmed(null)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="flex gap-1.5">
             <input
