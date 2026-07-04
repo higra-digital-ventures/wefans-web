@@ -98,7 +98,7 @@ export default function LanceCard({
 
       <div className="px-4 pb-4 pt-4">
         {/* Tier /N (LE) — como "Common /4000 (LE)" */}
-        <div className="flex items-center gap-1.5 text-[12px]">
+        <div className="flex flex-wrap items-center gap-1.5 text-[12px]">
           <span className="font-bold text-white">{meta.label}</span>
           <span
             className="font-semibold text-neutral-400"
