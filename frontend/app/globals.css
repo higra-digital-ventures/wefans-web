@@ -137,6 +137,21 @@ body {
   }
 }
 
+/* drawer lateral desliza da direita */
+@media (prefers-reduced-motion: no-preference) {
+  .wf-drawer {
+    animation: wf-drawer 0.22s ease-out both;
+  }
+  @keyframes wf-drawer {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+}
+
 /* touch (sem hover): o lance "toca" sozinho, em loop mais lento — os cards
    ficam vivos no mobile sem depender de mouse */
 @media (hover: none) and (prefers-reduced-motion: no-preference) {

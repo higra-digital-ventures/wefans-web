@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { fetchTemplates } from '@/lib/api-client';
@@ -19,6 +20,8 @@ export default function SearchOverlay({
 }) {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const [catalog, setCatalog] = useState<TemplateDTO[] | null>(null); // p/ autocomplete
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -87,7 +90,9 @@ export default function SearchOverlay({
         </svg>
       </button>
 
-      {open && (
+      {open &&
+        mounted &&
+        createPortal(
         <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Busca">
           {/* backdrop escurece o resto da página */}
           <div
@@ -268,7 +273,8 @@ export default function SearchOverlay({
             </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );

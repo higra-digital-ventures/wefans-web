@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { fetchChats, logout } from '@/lib/api-client';
@@ -16,6 +17,8 @@ export default function ProfileDrawer({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [unreadChats, setUnreadChats] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (!open) return;
@@ -71,10 +74,12 @@ export default function ProfileDrawer({
         {me.username[0]}
       </button>
 
-      {open && (
+      {open &&
+        mounted &&
+        createPortal(
         <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menu do perfil">
           <div className="absolute inset-0 bg-black/70" onClick={() => setOpen(false)} aria-hidden />
-          <aside className="absolute inset-y-0 right-0 flex w-[86vw] max-w-[340px] flex-col border-l border-white/10 bg-[#0a0a0b] shadow-[-20px_0_60px_rgba(0,0,0,.7)]">
+          <aside className="wf-drawer absolute inset-y-0 right-0 flex w-[86vw] max-w-[340px] flex-col border-l border-white/10 bg-[#0a0a0b] shadow-[-20px_0_60px_rgba(0,0,0,.7)]">
             {/* cabeçalho: avatar + username + ver perfil + fechar */}
             <div className="flex items-start gap-3 px-5 pb-4 pt-5">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sunset text-lg font-bold uppercase text-white">
@@ -162,7 +167,8 @@ export default function ProfileDrawer({
               Sair
             </button>
           </aside>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
