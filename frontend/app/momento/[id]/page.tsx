@@ -8,7 +8,7 @@ import {
   getTemplateCollectorsServer,
   getTemplatesServer,
 } from '@/lib/api-server';
-import Moment3D from '@/components/Moment3D';
+import Moment3D from '@/components/Moment3DLazy';
 import LanceCard from '@/components/LanceCard';
 import OwnershipGauge from '@/components/OwnershipGauge';
 import Provenance from '@/components/Provenance';

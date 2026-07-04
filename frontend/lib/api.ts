@@ -1,5 +1,6 @@
 // Cliente fino da API. Nenhuma regra de negócio aqui (seção A1) — só busca/serializa.
-const API_BASE = process.env.API_BASE_URL ?? 'http://localhost:4000';
+// 127.0.0.1 (e não localhost): no Windows o Node tenta ::1 primeiro e paga ~200ms de fallback por chamada
+const API_BASE = process.env.API_BASE_URL ?? 'http://127.0.0.1:4000';
 
 export async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { cache: 'no-store' });

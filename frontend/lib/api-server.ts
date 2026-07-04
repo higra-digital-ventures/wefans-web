@@ -37,7 +37,7 @@ import type {
 } from './types';
 
 // Fetch no servidor (server components). Encaminha o cookie httpOnly de sessão à API.
-const API_BASE = process.env.API_BASE_URL ?? 'http://localhost:4000';
+const API_BASE = process.env.API_BASE_URL ?? 'http://127.0.0.1:4000';
 
 async function serverFetch<T>(path: string): Promise<T | null> {
   const cookieStore = await cookies();
