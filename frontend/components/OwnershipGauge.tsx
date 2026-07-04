@@ -18,7 +18,7 @@ export default function OwnershipGauge({
     { label: 'Não listados', value: unlisted, color: '#21d4e0' },
     { label: 'À venda', value: listed, color: '#ff2e88' },
     { label: 'Travados', value: locked, color: '#ff9e2c' },
-    { label: 'Destruídos', value: burned, color: '#9a8aa6' },
+    { label: 'Burned', value: burned, color: '#9a8aa6' },
   ];
   const total = Math.max(1, existing);
 

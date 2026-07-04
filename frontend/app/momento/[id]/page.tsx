@@ -83,7 +83,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
     { label: 'Não listados (com donos)', value: unlisted, color: '#f7f7f8' },
     { label: 'À venda (com donos)', value: listed, color: '#22c55e' },
     { label: 'Travados (com donos)', value: locked, color: '#9d4edd' },
-    { label: 'Destruídos', value: burned, color: '#ff2e88' },
+    { label: 'Burned', value: burned, color: '#ff2e88' },
   ];
 
   return (

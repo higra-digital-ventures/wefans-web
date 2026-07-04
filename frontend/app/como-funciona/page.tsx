@@ -44,8 +44,8 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
         <strong>LE (Edição Limitada)</strong>: a tiragem é fixa — "/45" significa que só 45
         exemplares existirão, nunca mais. <strong>CC (Circulante)</strong>: novos exemplares ainda
         podem ser criados em pacotes; o número mostrado é quantos circulam hoje.{' '}
-        <strong>Destruídos</strong> são exemplares queimados para sempre;{' '}
-        <strong>Em circulação</strong> é o que restou.
+        <strong>Burned</strong> são exemplares queimados para sempre;{' '}
+        <strong>Supply</strong> é o que restou em circulação.
       </>
     ),
   },
