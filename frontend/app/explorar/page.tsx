@@ -211,8 +211,8 @@ export default async function ExplorarPage({
     .slice(0, 3);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 lg:px-6">
-      <div className="grid justify-center gap-8 lg:grid-cols-[280px_minmax(0,680px)]">
+    <main className="w-full px-4 py-8 lg:px-8">
+      <div className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
         {/* rail pessoal (como o do Explore do Top Shot) */}
         <aside className="space-y-5 lg:sticky lg:top-20 lg:self-start">
           <section className="border border-white/10 bg-[#0c0c0e] p-4">
