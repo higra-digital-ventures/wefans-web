@@ -37,7 +37,7 @@ let feedCache: { take: number; ts: number; data: FeedEvent[] } | null = null;
 let popularCache: { ts: number; data: Awaited<ReturnType<typeof computePopular>> } | null = null;
 
 export async function getFeed(db: PrismaClient, limit = 30) {
-  const take = Math.min(limit, 60);
+  const take = Math.min(limit, 120);
   if (feedCache && feedCache.take >= take && Date.now() - feedCache.ts < FEED_TTL_MS) {
     return feedCache.data.slice(0, take);
   }
@@ -103,16 +103,33 @@ export async function getFeed(db: PrismaClient, limit = 30) {
     });
   }
 
+  // listagens do mesmo vendedor em janelas de 90s = um evento só ("colocou 3 à venda");
+  // a carta exibida é a de tier mais alto (desempate: mais cara) e o preço é o "a partir de"
+  const listGroups = new Map<string, typeof listings>();
   for (const l of listings) {
+    const bucket = Math.floor(l.createdAt.getTime() / 90_000);
+    const key = `${l.sellerId}-${bucket}`;
+    const g = listGroups.get(key);
+    if (g) g.push(l);
+    else listGroups.set(key, [l]);
+  }
+  for (const group of listGroups.values()) {
+    const best = [...group].sort(
+      (a, b) =>
+        (TIER_RANK[b.moment.template.tier] ?? 0) - (TIER_RANK[a.moment.template.tier] ?? 0) ||
+        b.priceCents - a.priceCents,
+    )[0];
+    const minPrice = Math.min(...group.map((l) => l.priceCents));
     events.push({
-      id: `l-${l.id}`,
+      id: `l-${best.id}`,
       kind: 'LIST',
-      user: l.seller.username,
-      createdAt: l.createdAt.toISOString(),
-      priceCents: l.priceCents,
-      momentId: l.momentId,
-      serial: l.moment.serial,
-      template: toTemplateDTO(l.moment.template),
+      user: best.seller.username,
+      createdAt: best.createdAt.toISOString(),
+      priceCents: minPrice,
+      count: group.length,
+      momentId: best.momentId,
+      serial: best.moment.serial,
+      template: toTemplateDTO(best.moment.template),
     });
   }
 
