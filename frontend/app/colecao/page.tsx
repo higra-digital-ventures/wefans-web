@@ -43,7 +43,7 @@ export default async function ColecaoPage({
   const estimatedCents = moments.reduce((sum, m) => sum + (m.template.aspCents || 0), 0);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
+    <main className="w-full px-4 py-8 lg:px-8">
       <div className="mb-1 flex flex-wrap items-baseline justify-between gap-3">
         <h1 className="font-display text-4xl uppercase text-ink">Minha Coleção</h1>
         {estimatedCents > 0 && (
@@ -103,7 +103,7 @@ export default async function ColecaoPage({
           </Link>
         </div>
       ) : showAll ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]">
           {moments.map((m) => (
             <LanceCard
               key={m.id}
@@ -115,7 +115,7 @@ export default async function ColecaoPage({
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]">
           {grouped.map((g) => {
             const m = g[0];
             return (
