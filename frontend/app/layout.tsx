@@ -7,6 +7,7 @@ import TopBar from '@/components/TopBar';
 import SiteFooter from '@/components/SiteFooter';
 import Toaster from '@/components/Toaster';
 import BottomNav from '@/components/BottomNav';
+import NextTopLoader from 'nextjs-toploader';
 
 // Fontes: as mesmas famílias abertas (OFL/Google Fonts) que o Top Shot usa —
 // Sofia Sans Extra Condensed (display) · Roboto Flex (texto) · Roboto Mono (série).
@@ -25,6 +26,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={`${sofia.variable} ${robotoFlex.variable} ${robotoMono.variable}`}>
       <body className="pb-14 lg:pb-0" suppressHydrationWarning>
+        {/* barra de progresso no topo durante as navegações (padrão Top Shot) */}
+        <NextTopLoader color="#21d4e0" height={3} showSpinner={false} shadow="0 0 8px #21d4e0" />
         <Toaster>
           <Suspense fallback={<div className="h-[72px] border-b border-line" />}>
             <TopBar />
