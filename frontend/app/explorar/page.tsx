@@ -38,7 +38,7 @@ function MomentThumb({ e }: { e: FeedEvent }) {
   if (!e.template) return null;
   const meta = TIER_META[e.template.tier];
   return (
-    <div className="w-[92px] shrink-0" style={{ perspective: '400px' }}>
+    <div className="w-[120px] shrink-0" style={{ perspective: '450px' }}>
       <div
         className="aspect-[4/5] overflow-hidden border"
         style={{
@@ -57,6 +57,12 @@ function MomentThumb({ e }: { e: FeedEvent }) {
       </div>
     </div>
   );
+}
+
+function avatarBg(user: string | null) {
+  let h = 0;
+  for (const c of user ?? '?') h = (h * 31 + c.charCodeAt(0)) % 360;
+  return `linear-gradient(135deg, hsl(${h} 75% 46%), hsl(${(h + 45) % 360} 75% 34%))`;
 }
 
 function Username({ user }: { user: string | null }) {
@@ -79,22 +85,29 @@ function EventCard({ e }: { e: FeedEvent }) {
     >
       {/* cabeçalho: avatar + @user + ação + tempo */}
       <div className="flex items-center gap-2.5 px-4 py-3">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sunset text-[11px] font-bold uppercase text-white">
+        <span
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold uppercase text-white"
+          style={{ background: avatarBg(e.user) }}
+        >
           {(e.user ?? '?')[0]}
         </span>
         <p className="min-w-0 flex-1 truncate text-[13px] text-neutral-300">
           <Username user={e.user} /> {ACTION[e.kind]}{' '}
           {e.kind === 'PACK_OPEN' && <span className="font-bold text-white">{e.count} Lances</span>}
+          {e.kind === 'LIST' && (e.count ?? 1) > 1 && (
+            <span className="font-bold text-white">{e.count} Lances</span>
+          )}
           {(e.kind === 'CHALLENGE' || e.kind === 'QUEST' || e.kind === 'CHECKIN') && (
             <span className="font-bold text-white">{e.label}</span>
           )}
-          {(e.kind === 'SALE' || e.kind === 'LIST' || e.kind === 'GIFT' || e.kind === 'BURN') && e.template && (
-            <span className="font-bold text-white">
-              {e.template.player.name} #{e.serial}
-            </span>
-          )}
+          {(e.kind === 'SALE' || e.kind === 'GIFT' || e.kind === 'BURN' || (e.kind === 'LIST' && (e.count ?? 1) === 1)) &&
+            e.template && (
+              <span className="font-bold text-white">
+                {e.template.player.name} #{e.serial}
+              </span>
+            )}
+          <span className="text-neutral-500"> · {timeAgo(e.createdAt)}</span>
         </p>
-        <span className="shrink-0 text-[11px] text-neutral-500">{timeAgo(e.createdAt)}</span>
       </div>
 
       {/* corpo por tipo de evento */}
@@ -113,6 +126,11 @@ function EventCard({ e }: { e: FeedEvent }) {
               {e.template.player.name}
             </div>
             <div className="truncate text-[12px] text-neutral-400">{e.template.title}</div>
+            {e.kind === 'LIST' && (e.count ?? 1) > 1 && (
+              <div className="mt-1 text-[11px] text-neutral-500">
+                e mais {(e.count ?? 1) - 1} anúncio{(e.count ?? 1) > 2 ? 's' : ''} deste vendedor
+              </div>
+            )}
             {e.kind === 'PACK_OPEN' &&
               (rarePull ? (
                 <div
@@ -127,13 +145,15 @@ function EventCard({ e }: { e: FeedEvent }) {
           </div>
           {(e.kind === 'SALE' || e.kind === 'LIST') && (
             <div className="shrink-0 text-right">
-              <div className="text-[10px] uppercase tracking-wide text-neutral-500">
-                {e.kind === 'LIST' ? 'pedindo' : 'por'}
+              <div
+                className={`text-[10px] font-bold uppercase tracking-wide ${e.kind === 'LIST' ? 'text-accent3' : 'text-emerald-400'}`}
+              >
+                {e.kind === 'LIST' ? ((e.count ?? 1) > 1 ? 'a partir de' : 'pedindo') : 'vendido por'}
               </div>
-              <div className="text-[20px] font-bold text-white">{brl(e.priceCents ?? 0)}</div>
+              <div className="text-[20px] font-bold tabular-nums text-white">{brl(e.priceCents ?? 0)}</div>
               {e.kind === 'LIST' && (
-                <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-accent3">
-                  comprar →
+                <div className="mt-1.5 inline-block border border-accent3/60 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-accent3 transition-colors group-hover:bg-accent3 group-hover:text-black">
+                  Comprar
                 </div>
               )}
             </div>
