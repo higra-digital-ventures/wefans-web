@@ -145,7 +145,7 @@ export default function LanceCard({
         {/* como o "Burned · Supply" do Top Shot: destruídos e o que restou circulando */}
         <div
           className="mt-2.5 truncate text-[11px] font-semibold text-neutral-200"
-          title="Destruídos: exemplares queimados para sempre (forja/fichas). Em circulação: exemplares que ainda existem."
+          title="Destruídos: exemplares queimados para sempre (bate-troca/fichas). Em circulação: exemplares que ainda existem."
         >
           Destruídos: {burnedCount.toLocaleString('pt-BR')} · Em circulação:{' '}
           {template.circulatingCount.toLocaleString('pt-BR')}

@@ -80,7 +80,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
       <>
         <strong>Travar</strong>: prende o Lance por 1 ano (não vende, não presenteia) — é como se
         pontua nos Rankings. <strong>Queimar</strong>: destrói o exemplar para sempre e reduz a
-        circulação da edição (base dos Desafios de Forja). <strong>Virar ficha</strong>: queima o
+        circulação da edição (base dos desafios de bate-troca). <strong>Virar ficha</strong>: queima o
         Lance em troca de 1 <Link href="/fichas" className="text-accent3 underline">Ficha de Troca</Link>,
         que compra pacotes exclusivos.
       </>
@@ -104,7 +104,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     body: (
       <>
         Seus Lances são peças de jogo: <strong>Desafios</strong> pedem coleções específicas (ou
-        forja) por recompensas; <strong>Rankings</strong> pontuam Lances travados;{' '}
+        bate-troca) por recompensas; <strong>Rankings</strong> pontuam Lances travados;{' '}
         <strong>Checklists</strong> premiam coleções completas; e o <strong>Matchday</strong> é o
         fantasy diário — escale 5 jogadores, bata o alvo do dia e sobreviva ao mata-mata. Veja o{' '}
         <Link href="/jogar" className="text-accent3 underline">hub Jogar</Link>.

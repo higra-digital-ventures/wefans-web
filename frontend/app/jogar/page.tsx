@@ -28,7 +28,7 @@ export default async function JogarPage() {
       href: '/jogar/desafios',
       name: 'Desafios',
       color: '#ff2e88',
-      description: 'Colecione os Lances pedidos (ou forje, queimando a entrada) e ganhe recompensas.',
+      description: 'Feche o álbum com os Lances pedidos — ou bata figurinha (troca que queima a carta) — e leve prêmios.',
       stat: activeChallenges > 0 ? `${activeChallenges} ativo${activeChallenges > 1 ? 's' : ''} agora` : 'nenhum ativo',
       d: 'M18 4V2H6v2H2v3a5 5 0 0 0 5 5h.4A6 6 0 0 0 11 14.9V18H7v4h10v-4h-4v-3.1a6 6 0 0 0 3.6-2.9H17a5 5 0 0 0 5-5V4Z',
     },

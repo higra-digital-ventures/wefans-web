@@ -13,7 +13,7 @@ function Card({ c }: { c: ChallengeSummary }) {
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="rounded-full bg-panel2 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-          {c.type === 'CRAFTING' ? 'Forja' : c.type === 'FLASH' ? '⚡ Relâmpago' : 'Padrão'}
+          {c.type === 'CRAFTING' ? 'Bate-troca' : c.type === 'FLASH' ? '⚡ Relâmpago' : 'Álbum'}
         </span>
         {c.active && <Countdown until={c.endsAt} className="text-xs text-accent3" />}
       </div>
@@ -81,7 +81,7 @@ export default async function DesafiosPage() {
           </Link>
         </span>
       </div>
-      <p className="mb-8 text-muted">Complete coleções e forje Lances para ganhar recompensas.</p>
+      <p className="mb-8 text-muted">Feche o álbum ou bata figurinha para levar os prêmios.</p>
 
       <Section title="Ativos" list={active} />
       <Section title="Concluídos" list={completed} />

@@ -196,7 +196,7 @@ export default function MomentActions({
             <div className="border border-amber-400/40 bg-amber-400/5 p-3">
               <p className="text-xs leading-relaxed text-amber-200">
                 {armed === 'lock' &&
-                  'Travar por 1 ano: este Lance não poderá ser vendido, queimado, presenteado nem usado em forja até lá. Ele continua seu e segue pontuando.'}
+                  'Travar por 1 ano: este Lance não poderá ser vendido, queimado, presenteado nem usado em troca até lá. Ele continua seu e segue pontuando.'}
                 {armed === 'burn' &&
                   'Queimar destrói este exemplar para sempre e reduz a circulação da edição. Não há como desfazer — e você não recebe nada em troca (para ganhar ficha, use "Virar ficha").'}
                 {armed === 'ticket' &&

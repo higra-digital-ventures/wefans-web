@@ -498,8 +498,8 @@ async function main() {
   await prisma.challenge.create({
     data: {
       type: ChallengeType.STANDARD,
-      name: 'Colecione a Base',
-      description: 'Tenha os Lances indicados na coleção para ganhar um pacote de troca.',
+      name: 'Feche o Álbum da Base',
+      description: 'Junte no seu álbum os Lances pedidos da coleção Base e leve um pacote de troca.',
       startsAt: days(-1),
       endsAt: days(30),
       requiredTemplateIds: [seedTemplates[2].id, seedTemplates[3].id],
@@ -510,8 +510,8 @@ async function main() {
   await prisma.challenge.create({
     data: {
       type: ChallengeType.CRAFTING,
-      name: 'Forja do Galáctico',
-      description: 'Submeta (e queime) o Lance exigido no Montador em troca de um Lance Galáctico.',
+      name: 'Bate-Troca do Galáctico',
+      description: 'Dê o Lance pedido na troca (ele é queimado) e leve um Galáctico pra casa — figurinha rara não se acha, se troca.',
       startsAt: days(-1),
       endsAt: days(45),
       requiredTemplateIds: [seedTemplates[0].id],
@@ -524,7 +524,7 @@ async function main() {
     data: {
       type: ChallengeType.FLASH,
       name: 'Artilheiro do Dia',
-      description: 'Tenha o Lance de um jogador que marcar gol hoje (stats simuladas) e resgate um pacote.',
+      description: 'Tenha no elenco o Lance de quem balançar a rede hoje e resgate um pacote.',
       startsAt: days(-1),
       endsAt: days(30),
       rewardPackId: checkinPack.id,

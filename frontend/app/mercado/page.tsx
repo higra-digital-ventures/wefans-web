@@ -102,7 +102,7 @@ export default async function MercadoPage({
       {activeChallenges.length > 0 && (
         <section className="mb-6">
           <div className="mb-2.5 flex items-baseline justify-between">
-            <h2 className="text-[15px] font-bold text-white">Colecione e Ganhe ⌃</h2>
+            <h2 className="text-[15px] font-bold text-white">Complete o álbum ⌃</h2>
             <Link
               href="/jogar/desafios"
               className="text-[11px] text-neutral-300 underline underline-offset-2 hover:text-white"
@@ -132,12 +132,12 @@ export default async function MercadoPage({
                         <span className="font-bold text-white">
                           {c.progress.have}/{c.progress.need}
                         </span>{' '}
-                        para coletar
+                        no álbum
                       </>
                     ) : c.burnOnComplete ? (
-                      'forje para ganhar'
+                      'bata figurinha e ganhe'
                     ) : (
-                      'para colecionar'
+                      'valendo hoje'
                     )}
                   </div>
                   {c.progress && (
@@ -155,7 +155,7 @@ export default async function MercadoPage({
                     <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
                       <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 2h3l.6 3H22l-2.4 8.5a2 2 0 0 1-1.9 1.5H8.1a2 2 0 0 1-2-1.6L4.2 4H3V2Zm4 5 1.2 6h10l1.7-6H7Z" />
                     </svg>
-                    {c.completed ? 'Concluído' : c.burnOnComplete ? 'Forjar' : 'Coletar'}
+                    {c.completed ? 'Fechado!' : c.burnOnComplete ? 'Trocar' : 'Completar'}
                   </Link>
                 </div>
               </div>
