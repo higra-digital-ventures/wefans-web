@@ -25,7 +25,7 @@ const I = {
 
 function Icon({ d }: { d: React.ReactNode }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-[22px] w-[22px] fill-current" aria-hidden>
       {d}
     </svg>
   );
@@ -63,11 +63,11 @@ export default function NavClient({
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[#050505]/95 backdrop-blur">
-      <div className="flex h-14 w-full items-center justify-between gap-3 px-4 lg:px-6">
+      <div className="flex h-[72px] w-full items-center justify-between gap-3 px-4 lg:px-6">
         <div className="flex items-center gap-3">
           <MobileNav items={MOBILE_ITEMS} />
           <Link href="/" className="flex items-baseline gap-1.5">
-            <span className="bg-sunset bg-clip-text font-display text-[22px] uppercase leading-none tracking-tight text-transparent">
+            <span className="bg-sunset bg-clip-text font-display text-[26px] uppercase leading-none tracking-tight text-transparent">
               wefans
             </span>
             <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted">beta</span>
@@ -81,7 +81,7 @@ export default function NavClient({
               <Link
                 key={n.href}
                 href={n.href}
-                className={`relative flex items-center gap-2 px-3 text-[13px] font-semibold transition-colors ${
+                className={`relative flex items-center gap-2 px-4 text-[15px] font-semibold transition-colors ${
                   active ? 'text-ink' : 'text-muted hover:text-ink'
                 }`}
               >

@@ -83,9 +83,9 @@ export default function SearchOverlay({
         aria-label="Buscar (atalho: /)"
         title="Buscar (atalho: /)"
         onClick={() => setOpen(true)}
-        className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-panel2 hover:text-ink"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-panel2 hover:text-ink"
       >
-        <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current" aria-hidden>
+        <svg viewBox="0 0 24 24" className="h-[22px] w-[22px] fill-current" aria-hidden>
           <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
         </svg>
       </button>

@@ -110,11 +110,11 @@ export default function NotificationsBell() {
       <button
         aria-label={unread > 0 ? `Notificações (${unread} novas)` : 'Notificações'}
         onClick={toggle}
-        className={`relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-panel2 ${
+        className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-panel2 ${
           open ? 'bg-panel2 text-ink' : 'text-muted hover:text-ink'
         }`}
       >
-        <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current" aria-hidden>
+        <svg viewBox="0 0 24 24" className="h-[22px] w-[22px] fill-current" aria-hidden>
           <path d="M12 2a6 6 0 0 0-6 6v3.6L4 15v2h16v-2l-2-3.4V8a6 6 0 0 0-6-6Zm-2 17a2 2 0 0 0 4 0h-4Z" />
         </svg>
         {unread > 0 && (

@@ -69,7 +69,7 @@ export default function ProfileDrawer({
       <button
         aria-label={`Abrir menu do perfil de ${me.username}`}
         onClick={() => setOpen(true)}
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-sunset text-sm font-bold uppercase text-white transition-transform hover:scale-105"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-sunset text-[15px] font-bold uppercase text-white transition-transform hover:scale-105"
       >
         {me.username[0]}
       </button>
