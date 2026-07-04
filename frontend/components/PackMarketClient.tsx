@@ -55,7 +55,7 @@ export default function PackMarketClient({
                   {l.pack.momentCount} Lances · vendedor @{l.seller}
                 </div>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="font-mono text-accent3">{brl(l.priceCents)}</span>
+                  <span className="tabular-nums text-accent3">{brl(l.priceCents)}</span>
                   <button className={primary} disabled={pending} onClick={() => run(() => buyPackListing(l.id))}>
                     Comprar
                   </button>
@@ -83,7 +83,7 @@ export default function PackMarketClient({
                     </Link>
                     {p.listed ? (
                       <>
-                        <span className="font-mono text-sm text-accent3">{brl(p.priceCents ?? 0)}</span>
+                        <span className="tabular-nums text-sm text-accent3">{brl(p.priceCents ?? 0)}</span>
                         <button className={ghost} disabled={pending} onClick={() => run(() => cancelPackListing(p.listingId!))}>
                           Cancelar
                         </button>

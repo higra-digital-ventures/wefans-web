@@ -41,7 +41,7 @@ export default async function AdminConduta() {
                   <Link href={`/momento/${t.momentId}`} className="hover:text-accent">
                     {t.title}
                   </Link>{' '}
-                  <span className="font-mono text-accent">{brl(t.amountCents)}</span>
+                  <span className="tabular-nums text-accent">{brl(t.amountCents)}</span>
                   <span className="text-muted"> (ASP {brl(t.aspCents)})</span>
                 </div>
                 <div className="text-xs text-muted">

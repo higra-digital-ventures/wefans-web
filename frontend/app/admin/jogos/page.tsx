@@ -33,9 +33,9 @@ export default async function AdminJogos() {
                   {f.home} <span className="text-muted">x</span> {f.away}
                 </td>
                 <td className="px-4 py-2.5 text-muted">{f.stadium}</td>
-                <td className="px-4 py-2.5 font-mono text-xs text-muted">{dateTime(f.kickoffAt)}</td>
+                <td className="px-4 py-2.5 tabular-nums text-xs text-muted">{dateTime(f.kickoffAt)}</td>
                 <td className="px-4 py-2.5 text-muted">{f.status}</td>
-                <td className="px-4 py-2.5 text-right font-mono text-accent3">{f.checkins}</td>
+                <td className="px-4 py-2.5 text-right tabular-nums text-accent3">{f.checkins}</td>
               </tr>
             ))}
           </tbody>

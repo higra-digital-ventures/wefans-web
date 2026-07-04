@@ -60,7 +60,7 @@ export default async function AdminDashboard() {
                     <span className="text-accent2">{l.action}</span>
                     {l.target && <span className="text-muted"> · {l.target.slice(0, 30)}</span>}
                   </span>
-                  <span className="shrink-0 font-mono text-xs text-muted">
+                  <span className="shrink-0 tabular-nums text-xs text-muted">
                     @{l.by} · {dateTime(l.createdAt)}
                   </span>
                 </li>

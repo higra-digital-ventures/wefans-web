@@ -78,7 +78,7 @@ export default async function PerfilPage() {
             {stats.openedPacks.map((p) => (
               <li key={p.id} className="flex items-center justify-between py-2 text-sm">
                 <span className="text-ink">{p.packName}</span>
-                <span className="font-mono text-xs text-muted">{dateTime(p.createdAt)}</span>
+                <span className="tabular-nums text-xs text-muted">{dateTime(p.createdAt)}</span>
               </li>
             ))}
           </ul>

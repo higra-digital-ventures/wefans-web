@@ -14,7 +14,7 @@ import NextTopLoader from 'nextjs-toploader';
 // A "Owners" (wide, proprietária) não é usada. Ver DECISIONS.md.
 const sofia = Sofia_Sans_Extra_Condensed({ subsets: ['latin'], variable: '--font-display' });
 const robotoFlex = Roboto_Flex({ subsets: ['latin'], variable: '--font-text' });
-const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-mono' });
+const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--tabular-nums' });
 
 export const metadata: Metadata = {
   title: 'wefans — Momentos de Futebol',

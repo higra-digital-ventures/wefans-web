@@ -73,7 +73,7 @@ export default function OffersPanel({
           {offers.map((o) => (
             <li key={o.id} className="flex items-center justify-between gap-2 py-2 text-sm">
               <div>
-                <span className="font-mono text-accent3">{brl(o.priceCents)}</span>
+                <span className="tabular-nums text-accent3">{brl(o.priceCents)}</span>
                 <span className="text-muted">
                   {' '}
                   · @{o.buyer} · {o.scope === 'serial' ? 'neste serial' : 'na edição'}

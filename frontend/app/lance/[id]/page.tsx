@@ -61,7 +61,7 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
             {t.title} · {t.playType} · {new Date(t.matchDate).toLocaleDateString('pt-BR')}
           </p>
 
-          <div className="mt-4 font-mono text-2xl text-ink">{editionLabel(t)}</div>
+          <div className="mt-4 tabular-nums text-2xl text-ink">{editionLabel(t)}</div>
 
           <div className="mt-6 grid grid-cols-3 gap-4  border border-line bg-panel p-4">
             {stat('Menor preço', tm?.floorCents != null ? brl(tm.floorCents) : '—')}

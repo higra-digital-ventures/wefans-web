@@ -47,7 +47,7 @@ export default async function AdminConteudo() {
                 <td className="px-4 py-2">
                   <span style={{ color: TIER_META[t.tier as Tier]?.color }}>{t.tier}</span>
                 </td>
-                <td className="px-4 py-2 font-mono text-xs text-muted">
+                <td className="px-4 py-2 tabular-nums text-xs text-muted">
                   {t.editionType === 'LIMITADA' ? `${t.mintedCount}/${t.editionSize}` : `CC · ${t.mintedCount}`}
                 </td>
                 <td className={`px-4 py-2 ${STATUS_COLOR[t.status] ?? 'text-muted'}`}>{t.status}</td>

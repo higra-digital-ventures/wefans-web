@@ -132,7 +132,7 @@ export default async function Home() {
                       <div className="truncate text-[11px] text-muted">{c.description}</div>
                     </div>
                     {c.progress && (
-                      <span className="shrink-0 font-mono text-[11px] text-accent3">
+                      <span className="shrink-0 tabular-nums text-[11px] text-accent3">
                         {c.progress.have}/{c.progress.need}
                       </span>
                     )}

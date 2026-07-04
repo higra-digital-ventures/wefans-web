@@ -120,7 +120,7 @@ export default function ProfileDrawer({
               </div>
               <div className="flex items-baseline justify-between border-t border-white/10 px-5 py-3.5">
                 <span className="text-[13px] text-neutral-300">Pontuação wefans</span>
-                <span className="font-mono text-[14px] font-bold text-white">
+                <span className="tabular-nums text-[14px] font-bold text-white">
                   {me.topShotScore.toLocaleString('pt-BR')}
                 </span>
               </div>

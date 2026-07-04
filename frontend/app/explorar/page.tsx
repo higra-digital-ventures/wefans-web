@@ -174,7 +174,7 @@ function PopularPanel({ title, rows }: { title: string; rows: { name: string; co
             >
               {i + 1}. {r.name}
             </Link>
-            <span className="shrink-0 font-mono text-[11px] text-neutral-500">{r.count} negócios</span>
+            <span className="shrink-0 tabular-nums text-[11px] text-neutral-500">{r.count} negócios</span>
           </li>
         ))}
       </ol>
@@ -238,7 +238,7 @@ export default async function ExplorarPage({
                   <Link key={c.id} href="/jogar/checklists" className="block">
                     <div className="mb-1 flex items-baseline justify-between text-[12px]">
                       <span className="truncate font-semibold text-neutral-200">{c.name}</span>
-                      <span className="shrink-0 font-mono text-[10px] text-neutral-500">
+                      <span className="shrink-0 tabular-nums text-[10px] text-neutral-500">
                         {c.progress!.have}/{c.progress!.need}
                       </span>
                     </div>
@@ -283,7 +283,7 @@ export default async function ExplorarPage({
                       </span>
                       <span className="block truncate text-[10px] text-neutral-500">{t.title}</span>
                     </span>
-                    <span className="shrink-0 font-mono text-[11px] text-accent3">
+                    <span className="shrink-0 tabular-nums text-[11px] text-accent3">
                       {t.aspCents > 0 ? brl(t.aspCents) : '—'}
                     </span>
                   </Link>

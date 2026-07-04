@@ -53,7 +53,7 @@ export default function ActivityFeed({ initial, limit = 20 }: { initial: RecentS
               </div>
             </div>
             <div className="shrink-0 text-right">
-              <div className="font-mono text-sm text-accent3">{brl(s.priceCents)}</div>
+              <div className="tabular-nums text-sm text-accent3">{brl(s.priceCents)}</div>
               <div className="text-[10px] text-muted">{dateTime(s.createdAt).split(' ')[1] ?? ''}</div>
             </div>
           </Link>

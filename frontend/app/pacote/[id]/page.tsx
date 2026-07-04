@@ -48,7 +48,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
             </div>
           </div>
           <div className="text-right">
-            <div className="mb-2 font-mono text-2xl text-accent3">{brl(pack.priceCents)}</div>
+            <div className="mb-2 tabular-nums text-2xl text-accent3">{brl(pack.priceCents)}</div>
             <BuyPackButton packId={pack.id} priceCents={pack.priceCents} soldOut={remaining <= 0} />
           </div>
         </div>

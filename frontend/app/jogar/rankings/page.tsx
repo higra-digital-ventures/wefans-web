@@ -45,7 +45,7 @@ export default async function RankingsPage() {
                     <span className="text-muted">
                       #{e.rank ?? i + 1} @{e.username}
                     </span>
-                    <span className="font-mono text-accent3">{e.points.toLocaleString('pt-BR')}</span>
+                    <span className="tabular-nums text-accent3">{e.points.toLocaleString('pt-BR')}</span>
                   </li>
                 ))}
                 {b.top.length === 0 && <li className="text-muted">Sem participantes ainda.</li>}

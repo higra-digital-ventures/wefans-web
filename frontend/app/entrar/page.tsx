@@ -127,8 +127,8 @@ export default function EntrarPage() {
       </form>
 
       <p className="mt-6 text-center text-xs text-muted">
-        Contas de teste: <span className="font-mono">colecionador@wefans.test</span> ·{' '}
-        <span className="font-mono">wefans123</span>
+        Contas de teste: <span className="tabular-nums">colecionador@wefans.test</span> ·{' '}
+        <span className="tabular-nums">wefans123</span>
       </p>
     </main>
   );

@@ -29,7 +29,7 @@ export default async function OfertasPage() {
                 <div className="truncate text-xs text-muted">{o.template?.title}</div>
               </div>
               <div className="flex shrink-0 items-center gap-3">
-                <span className="font-mono text-accent3">{brl(o.priceCents)}</span>
+                <span className="tabular-nums text-accent3">{brl(o.priceCents)}</span>
                 <CancelOfferButton offerId={o.id} />
               </div>
             </li>

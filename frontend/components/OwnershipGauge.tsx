@@ -65,7 +65,7 @@ export default function OwnershipGauge({
           <div key={s.label} className="flex items-center gap-1.5 text-xs">
             <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: s.color }} />
             <span className="text-muted">{s.label}</span>
-            <span className="ml-auto font-mono text-ink">{s.value.toLocaleString('pt-BR')}</span>
+            <span className="ml-auto tabular-nums text-ink">{s.value.toLocaleString('pt-BR')}</span>
           </div>
         ))}
       </div>

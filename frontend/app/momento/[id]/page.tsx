@@ -194,7 +194,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {tm.recentSales.slice(0, 6).map((s, i) => (
-                    <span key={i} className="bg-panel2 px-2 py-0.5 font-mono text-[11px] text-accent3">
+                    <span key={i} className="bg-panel2 px-2 py-0.5 tabular-nums text-[11px] text-accent3">
                       {brl(s.amountCents)}
                     </span>
                   ))}
@@ -391,7 +391,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                       <Link href={`/u/${c.username}`} className="text-[13px] font-semibold text-white hover:underline">
                         @{c.username}
                       </Link>
-                      <span className="ml-auto font-mono text-[12px] text-neutral-300">{c.count}</span>
+                      <span className="ml-auto tabular-nums text-[12px] text-neutral-300">{c.count}</span>
                     </li>
                   ))}
                 </ol>
@@ -409,7 +409,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                       <li key={s.serial} className="flex items-center gap-3 py-2.5">
                         <Link
                           href={`/momento/${s.momentId}`}
-                          className="bg-panel2 px-2 py-0.5 font-mono text-[12px] font-bold text-accent3 hover:text-white"
+                          className="bg-panel2 px-2 py-0.5 tabular-nums text-[12px] font-bold text-accent3 hover:text-white"
                         >
                           #{s.serial}
                         </Link>

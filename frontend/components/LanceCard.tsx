@@ -73,13 +73,13 @@ export default function LanceCard({
             {!live && (
               <span
                 aria-hidden
-                className="absolute left-1.5 top-1.5  bg-black/50 px-1 py-0.5 font-mono text-[8px] text-white/80 transition-opacity duration-150 group-hover:opacity-0"
+                className="absolute left-1.5 top-1.5  bg-black/50 px-1 py-0.5 tabular-nums text-[8px] text-white/80 transition-opacity duration-150 group-hover:opacity-0"
               >
                 ▶
               </span>
             )}
             {serial !== undefined && (
-              <span className="absolute bottom-1.5 left-1.5  bg-black/60 px-1 py-0.5 font-mono text-[9px] text-white">
+              <span className="absolute bottom-1.5 left-1.5  bg-black/60 px-1 py-0.5 tabular-nums text-[9px] text-white">
                 #{serial}
               </span>
             )}

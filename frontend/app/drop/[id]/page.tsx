@@ -35,7 +35,7 @@ export default async function DropPage({ params }: { params: Promise<{ id: strin
             <div key={p.id} className="border border-line bg-panel p-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="font-semibold text-ink">{p.name}</span>
-                <span className="font-mono text-sm text-accent3">{brl(p.priceCents)}</span>
+                <span className="tabular-nums text-sm text-accent3">{brl(p.priceCents)}</span>
               </div>
               <p className="mb-2 text-xs text-muted">
                 {p.momentCount} Lances · {(p.totalSupply - p.soldCount).toLocaleString('pt-BR')} restantes

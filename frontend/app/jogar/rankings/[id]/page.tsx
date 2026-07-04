@@ -51,7 +51,7 @@ export default async function RankingDetailPage({ params }: { params: Promise<{ 
                         @{e.username}
                       </Link>
                     </td>
-                    <td className="px-4 py-2.5 text-right font-mono text-accent3">
+                    <td className="px-4 py-2.5 text-right tabular-nums text-accent3">
                       {e.points.toLocaleString('pt-BR')}
                     </td>
                   </tr>

@@ -267,7 +267,7 @@ export default function PerfilClient({
                     {tx.amountCents >= 0 ? '+' : ''}
                     {brl(tx.amountCents)}
                   </span>
-                  <span className="font-mono text-xs text-muted">{brl(tx.balanceAfterCents)}</span>
+                  <span className="tabular-nums text-xs text-muted">{brl(tx.balanceAfterCents)}</span>
                 </div>
               </li>
             ))}

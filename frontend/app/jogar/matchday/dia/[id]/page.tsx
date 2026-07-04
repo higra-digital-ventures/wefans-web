@@ -44,7 +44,7 @@ export default async function MatchdayDayPage({ params }: { params: Promise<{ id
                     #{b.rank} @{b.username}
                     {b.won === true && ' 🏆'}
                   </span>
-                  <span className="font-mono text-accent3">{b.score ?? '—'}</span>
+                  <span className="tabular-nums text-accent3">{b.score ?? '—'}</span>
                 </li>
               ))}
             </ul>

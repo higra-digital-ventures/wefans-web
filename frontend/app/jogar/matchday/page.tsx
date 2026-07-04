@@ -68,7 +68,7 @@ export default async function MatchdayPage() {
                           #{s.rank} @{s.username}
                           {s.eliminated && ' ☠️'}
                         </span>
-                        <span className="font-mono text-accent3">
+                        <span className="tabular-nums text-accent3">
                           {s.wins}V · {s.totalScore} pts
                         </span>
                       </li>
