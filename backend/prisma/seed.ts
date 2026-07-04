@@ -256,7 +256,7 @@ async function main() {
   // ---------------------------------------------------------------- Drop + Pacotes
   const drop = await prisma.drop.create({
     data: {
-      name: 'Drop de Estreia — Temporada 1',
+      name: 'Kickoff Drop — Temporada 1',
       waitingRoomOpensAt: hours(-2),
       startsAt: hours(1), // sala de espera aberta; admin gera a fila ao iniciar
       endsAt: days(7),
@@ -268,7 +268,7 @@ async function main() {
 
   const mainPack = await prisma.pack.create({
     data: {
-      name: 'Pacote Estreia',
+      name: 'Rookie Pack',
       dropId: drop.id,
       priceCents: 4000, // R$ 40
       momentCount: 3,
@@ -283,7 +283,7 @@ async function main() {
 
   const ticketPack = await prisma.pack.create({
     data: {
-      name: 'Pacote de Troca — Lendário',
+      name: 'Pack das Fichas — Lendário',
       priceCents: 0,
       momentCount: 3,
       oddsJson: { RARO: 0.7, LENDARIO: 0.25, GALACTICO: 0.05 },
@@ -296,7 +296,7 @@ async function main() {
 
   const checkinPack = await prisma.pack.create({
     data: {
-      name: 'Pacote Prova de Presença',
+      name: 'Pack Prova de Presença',
       priceCents: 0,
       momentCount: 3,
       oddsJson: { COMUM: 0.7, TORCIDA: 0.2, RARO: 0.09, LENDARIO: 0.01 },
@@ -310,7 +310,7 @@ async function main() {
   // Drop Relâmpago (LIVE, rebound) — demonstra a compra por rebound (janela já passada).
   const reboundDrop = await prisma.drop.create({
     data: {
-      name: 'Drop Relâmpago',
+      name: 'Flash Drop',
       waitingRoomOpensAt: hours(-3),
       startsAt: hours(-2),
       endsAt: days(3),
@@ -321,7 +321,7 @@ async function main() {
   });
   const reboundPack = await prisma.pack.create({
     data: {
-      name: 'Pacote Relâmpago',
+      name: 'Flash Pack',
       dropId: reboundDrop.id,
       priceCents: 2500,
       momentCount: 3,
