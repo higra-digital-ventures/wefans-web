@@ -212,9 +212,26 @@ export default async function ExplorarPage({
 
   return (
     <main className="w-full px-4 py-8 lg:px-8">
-      <div className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
+      <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
         {/* rail pessoal (como o do Explore do Top Shot) */}
-        <aside className="space-y-5 lg:sticky lg:top-20 lg:self-start">
+        <aside className="space-y-5 lg:sticky lg:top-[88px] lg:self-start">
+          {me && (
+            <section className="border border-white/10 bg-[#0c0c0e] p-4">
+              <div className="mb-3 text-[13px] font-bold text-white">Seus números</div>
+              <div className="space-y-2 text-[12px]">
+                {[
+                  { label: 'Saldo', v: brl(me.balanceCents), href: '/perfil' },
+                  { label: 'Pontuação wefans', v: me.topShotScore.toLocaleString('pt-BR'), href: '/perfil' },
+                  { label: 'Fichas de Troca', v: String(me.tradeTickets), href: '/fichas' },
+                ].map((r) => (
+                  <Link key={r.label} href={r.href} className="flex items-baseline justify-between hover:text-white">
+                    <span className="text-neutral-400">{r.label}</span>
+                    <span className="font-semibold tabular-nums text-accent3">{r.v}</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
           <section className="border border-white/10 bg-[#0c0c0e] p-4">
             <div className="mb-3 text-[13px] font-bold text-white">Perto de completar</div>
             {!me ? (
@@ -295,42 +312,42 @@ export default async function ExplorarPage({
 
         {/* feed central */}
         <div className="min-w-0 space-y-3">
-          <SubTabs
-            items={FEED_TABS.map((t) => ({
-              label: t.label,
-              href: t.key ? `/explorar?f=${t.key}` : '/explorar',
-              active: t.key === tab.key,
-            }))}
-          />
-          <FeedPoller latestId={feed?.events[0]?.id ?? null} />
+          <div className="sticky top-[72px] z-20 -mx-1 bg-[#050505] px-1 pt-1">
+            <SubTabs
+              items={FEED_TABS.map((t) => ({
+                label: t.label,
+                href: t.key ? `/explorar?f=${t.key}` : '/explorar',
+                active: t.key === tab.key,
+              }))}
+            />
+            <FeedPoller latestId={feed?.events[0]?.id ?? null} />
+          </div>
           {events.length === 0 && (
             <p className="border border-white/10 bg-[#0c0c0e] p-8 text-center text-sm text-neutral-400">
               Sem atividade ainda — abra um pacote ou compre no mercado.
             </p>
           )}
-          {events.map((e, i) => (
-            <div key={e.id} className="space-y-3">
-              <EventCard e={e} />
-              {i === 4 && <PopularPanel title="Jogadores mais populares" rows={feed?.popular.players ?? []} />}
-              {i === 9 && (
-                <Link
-                  href="/jogar/desafios"
-                  className="block bg-sunset px-5 py-4 text-center transition-opacity hover:opacity-90"
-                >
-                  <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/80">
-                    Colecione e ganhe
-                  </div>
-                  <div className="font-display text-[20px] uppercase text-white">
-                    Complete um desafio e ganhe um pacote exclusivo
-                  </div>
-                </Link>
-              )}
-              {i === 14 && (
-                <PopularPanel title="Coleções mais populares" rows={feed?.popular.competitions ?? []} />
-              )}
-            </div>
+          {events.map((e) => (
+            <EventCard key={e.id} e={e} />
           ))}
         </div>
+
+        {/* rail direito: populares 24h + banner (como o Explore do Top Shot) */}
+        <aside className="hidden space-y-5 lg:sticky lg:top-[88px] lg:block lg:self-start">
+          <PopularPanel title="Jogadores mais populares" rows={feed?.popular.players ?? []} />
+          <Link
+            href="/jogar/desafios"
+            className="block bg-sunset px-5 py-5 text-center transition-opacity hover:opacity-90"
+          >
+            <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/80">
+              Complete o álbum
+            </div>
+            <div className="mt-1 font-display text-[19px] uppercase leading-tight text-white">
+              Feche um desafio e leve um pack exclusivo
+            </div>
+          </Link>
+          <PopularPanel title="Coleções mais populares" rows={feed?.popular.competitions ?? []} />
+        </aside>
       </div>
     </main>
   );
