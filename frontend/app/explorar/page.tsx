@@ -214,12 +214,15 @@ const FEED_TABS: { key: string; label: string; kinds: FeedEvent['kind'][] | null
 export default async function ExplorarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ f?: string }>;
+  searchParams: Promise<{ f?: string; n?: string }>;
 }) {
-  const { f } = await searchParams;
+  const { f, n } = await searchParams;
   const tab = FEED_TABS.find((t) => t.key === (f ?? '')) ?? FEED_TABS[0];
+  // paginação simples: ?n= aumenta a janela do feed (teto 120 no backend)
+  const size = Math.min(120, Math.max(40, Number(n) || 40));
+  const fetchSize = tab.kinds ? Math.min(120, size + 40) : size;
   const [feed, me, wishlist, checklists] = await Promise.all([
-    getFeedServer(tab.kinds ? 60 : 40),
+    getFeedServer(fetchSize),
     getMe(),
     getWishlistServer().catch(() => null),
     getChecklistsServer().catch(() => []),
@@ -350,6 +353,15 @@ export default async function ExplorarPage({
           {events.map((e) => (
             <EventCard key={e.id} e={e} />
           ))}
+          {(feed?.events.length ?? 0) >= fetchSize && size < 120 && (
+            <Link
+              href={`/explorar?${new URLSearchParams({ ...(f ? { f } : {}), n: String(size + 40) })}`}
+              scroll={false}
+              className="block border border-white/15 py-2.5 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              Carregar mais
+            </Link>
+          )}
         </div>
 
         {/* rail direito: populares 24h + banner (como o Explore do Top Shot) */}
