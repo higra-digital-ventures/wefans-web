@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="pt-BR" className={`${sofia.variable} ${robotoFlex.variable} ${robotoMono.variable}`}>
       <body className="pb-14 lg:pb-0" suppressHydrationWarning>
         <Toaster>
-          <Suspense fallback={<div className="h-14 border-b border-line" />}>
+          <Suspense fallback={<div className="h-[72px] border-b border-line" />}>
             <TopBar />
           </Suspense>
           {children}
