@@ -13,6 +13,7 @@ export default function ChatClient({ initialWith }: { initialWith?: string }) {
   const [chats, setChats] = useState<ChatSummary[] | null>(null);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
   const [active, setActive] = useState<string | null>(initialWith ?? null);
   const [messages, setMessages] = useState<ChatMessageDTO[]>([]);
   const [draft, setDraft] = useState('');
@@ -80,18 +81,35 @@ export default function ChatClient({ initialWith }: { initialWith?: string }) {
     .filter((c) => (search ? c.username.toLowerCase().includes(search.toLowerCase()) : true));
 
   return (
-    <div className="grid min-h-[70vh] grid-cols-1 md:grid-cols-[280px_1fr]">
-      {/* rail esquerdo: CHAT + busca + filtro + conversas */}
-      <aside className="border-r border-white/10 pr-4">
+    <div className="grid h-full grid-cols-1 md:grid-cols-[400px_1fr]">
+      {/* rail esquerdo: CHAT + busca (atrás do botão) + filtro + conversas */}
+      <aside className="flex h-full flex-col overflow-y-auto border-r border-white/10 p-5">
         <div className="flex items-center justify-between">
-          <h1 className="text-[26px] font-extrabold uppercase tracking-[0.01em] text-white">Chat</h1>
+          <h1 className="text-[28px] font-extrabold uppercase tracking-[0.01em] text-white">Chat</h1>
+          <button
+            aria-label={searchOpen ? 'Fechar busca' : 'Buscar conversa'}
+            onClick={() => {
+              setSearchOpen((v) => !v);
+              if (searchOpen) setSearch('');
+            }}
+            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
+              searchOpen ? 'bg-white/15 text-white' : 'bg-[#17171a] text-neutral-300 hover:text-white'
+            }`}
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
+              <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
+            </svg>
+          </button>
         </div>
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar conversa"
-          className="mt-3 h-9 w-full border border-white/25 bg-transparent px-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
-        />
+        {searchOpen && (
+          <input
+            autoFocus
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar conversa"
+            className="mt-3 h-9 w-full border border-white/25 bg-transparent px-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
+          />
+        )}
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value as 'all' | 'unread')}
@@ -144,13 +162,29 @@ export default function ChatClient({ initialWith }: { initialWith?: string }) {
       </aside>
 
       {/* painel da conversa */}
-      <section className="flex flex-col pl-0 md:pl-6">
+      <section className="flex h-full min-h-0 flex-col p-5">
         {!active ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center">
-            <div className="mb-3 grid grid-cols-3 gap-1.5" aria-hidden>
-              {['#21d4e0', '#9d4edd', '#ff2e88', '#ff9e2c', '#22c55e', '#f7f7f8'].map((c, i) => (
-                <span key={i} className="h-3.5 w-3.5 rounded-full" style={{ background: c, opacity: 0.85 }} />
-              ))}
+            <div className="mb-4 flex flex-col items-center gap-1.5" aria-hidden>
+              <div className="flex gap-6">
+                {['#21d4e0', '#9d4edd'].map((c) => (
+                  <span key={c} className="h-4 w-4 rounded-full" style={{ background: c, opacity: 0.9 }} />
+                ))}
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="h-4 w-4 rounded-full" style={{ background: '#3b82f6', opacity: 0.9 }} />
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 fill-white">
+                    <path d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2Z" />
+                  </svg>
+                </span>
+                <span className="h-4 w-4 rounded-full" style={{ background: '#ff2e88', opacity: 0.9 }} />
+              </div>
+              <div className="flex gap-6">
+                {['#ff9e2c', '#22c55e'].map((c) => (
+                  <span key={c} className="h-4 w-4 rounded-full" style={{ background: c, opacity: 0.9 }} />
+                ))}
+              </div>
             </div>
             <h2 className="font-display text-2xl uppercase text-white">Dê o primeiro passo</h2>
             <p className="mt-1 max-w-xs text-[13px] text-neutral-400">
@@ -172,7 +206,7 @@ export default function ChatClient({ initialWith }: { initialWith?: string }) {
               </span>
             </header>
 
-            <div className="flex-1 space-y-2 overflow-y-auto py-4" style={{ maxHeight: '52vh' }}>
+            <div className="min-h-0 flex-1 space-y-2 overflow-y-auto py-4">
               {messages.length === 0 && (
                 <p className="py-8 text-center text-[12px] text-neutral-500">
                   Sem mensagens ainda — puxe o assunto.

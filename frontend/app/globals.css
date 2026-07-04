@@ -137,6 +137,11 @@ body {
   }
 }
 
+/* página de chat é fullscreen (app-like): esconde o footer institucional */
+main.wf-chat ~ footer {
+  display: none;
+}
+
 /* drawer lateral desliza da direita */
 @media (prefers-reduced-motion: no-preference) {
   .wf-drawer {

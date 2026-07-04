@@ -15,7 +15,7 @@ export default async function ChatPage({
   if (!me) redirect(`/entrar?next=${encodeURIComponent('/chat')}`);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 lg:px-6">
+    <main className="wf-chat h-[calc(100dvh-3.5rem)] overflow-hidden">
       <ChatClient initialWith={u} />
     </main>
   );
