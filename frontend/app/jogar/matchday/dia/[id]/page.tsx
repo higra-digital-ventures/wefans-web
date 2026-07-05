@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/components/Breadcrumbs';
 import Icon from '@/components/Icon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -22,6 +23,13 @@ export default async function MatchdayDayPage({ params }: { params: Promise<{ id
       <Link href="/jogar/matchday" className="text-sm text-muted hover:text-ink">
         ← Matchday
       </Link>
+      <Breadcrumbs
+        items={[
+          { label: 'Jogar', href: '/jogar' },
+          { label: 'Matchday', href: '/jogar/matchday' },
+          { label: 'Rodada' },
+        ]}
+      />
       <h1 className="mt-2 font-display text-4xl uppercase text-ink">
         {day.runName} · Dia {day.dayNumber}
       </h1>

@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import { getCollectionServer, getShowcaseServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
@@ -13,6 +14,12 @@ export default async function VitrinePage({ params }: { params: Promise<{ id: st
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
+      <Breadcrumbs
+        items={[
+          { label: 'Vitrines', href: '/vitrines' },
+          { label: showcase.name },
+        ]}
+      />
       <h1 className="font-display text-4xl uppercase text-ink">{showcase.name}</h1>
       <p className="mb-6 text-muted">
         {showcase.description}

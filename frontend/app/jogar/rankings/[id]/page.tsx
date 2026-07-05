@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getLeaderboardServer, getMe } from '@/lib/api-server';
@@ -15,6 +16,13 @@ export default async function RankingDetailPage({ params }: { params: Promise<{ 
       <Link href="/jogar/rankings" className="text-sm text-muted hover:text-ink">
         ← Rankings
       </Link>
+      <Breadcrumbs
+        items={[
+          { label: 'Jogar', href: '/jogar' },
+          { label: 'Rankings', href: '/jogar/rankings' },
+          { label: board.name },
+        ]}
+      />
       <h1 className="mt-2 font-display text-4xl uppercase text-ink">{board.name}</h1>
       <p className="mb-6 text-muted">
         {board.kind === 'TEAM' ? 'Ranking de time' : 'Ranking de jogador'} · prêmio do topo:{' '}
