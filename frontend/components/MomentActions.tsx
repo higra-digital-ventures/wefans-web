@@ -8,6 +8,7 @@ import {
   burnMoment,
   cancelListing,
   createListing,
+  deposit,
   giftMoment,
   lockMoment,
   redeemMomentTicket,
@@ -99,17 +100,42 @@ export default function MomentActions({
               {pending ? '…' : 'Cancelar venda'}
             </button>
           ) : balanceCents != null && balanceCents < listing.priceCents ? (
-            <div>
-              <button className={cta} disabled title="Seu saldo não cobre este preço">
-                Saldo insuficiente
-              </button>
-              <p className="mt-2 text-center text-xs text-muted">
-                Saldo: {brl(balanceCents)} ·{' '}
-                <Link href="/perfil" className="text-accent3 underline underline-offset-2">
-                  depositar na carteira
-                </Link>
-              </p>
-            </div>
+            (() => {
+              // depósito inline: resolve o saldo aqui mesmo, sem perder o contexto da compra
+              const missing = listing.priceCents - balanceCents;
+              const topUp = Math.max(1000, Math.ceil(missing / 1000) * 1000);
+              return (
+                <div>
+                  <button className={cta} disabled title="Seu saldo não cobre este preço">
+                    Saldo insuficiente
+                  </button>
+                  <div className="mt-2 border border-line bg-panel2 p-3">
+                    <p className="text-xs text-muted">
+                      Saldo: {brl(balanceCents)} · faltam{' '}
+                      <span className="font-bold text-white">{brl(missing)}</span>
+                    </p>
+                    <button
+                      className="mt-2 w-full border border-accent3/50 bg-accent3/10 py-2 text-[12px] font-bold uppercase tracking-wide text-accent3 transition-colors hover:bg-accent3/20 disabled:opacity-50"
+                      disabled={pending}
+                      onClick={() =>
+                        run(async () => {
+                          await deposit(topUp);
+                          toast(`${brl(topUp)} depositados na carteira.`, 'success');
+                        })
+                      }
+                    >
+                      {pending ? 'Depositando…' : `Depositar ${brl(topUp)} agora`}
+                    </button>
+                    <p className="mt-1.5 text-center text-[10px] text-neutral-500">
+                      moeda de teste — nenhum dinheiro real ·{' '}
+                      <Link href="/perfil" className="underline underline-offset-2">
+                        carteira
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+              );
+            })()
           ) : confirming ? (
             <div className="border border-line bg-panel2 p-3">
               <p className="text-sm text-ink">Confirmar compra por {brl(listing.priceCents)}?</p>
@@ -180,6 +206,17 @@ export default function MomentActions({
               Listar
             </button>
           </div>
+
+          {suggestedPriceCents > 0 && (
+            <button
+              type="button"
+              className="text-[11px] text-neutral-400 transition-colors hover:text-white"
+              title="Preço médio das últimas vendas desta edição"
+              onClick={() => setPrice(String(Math.max(1, Math.round(suggestedPriceCents / 100))))}
+            >
+              sugerido: <span className="font-bold text-accent3">{brl(suggestedPriceCents)}</span> · usar
+            </button>
+          )}
 
           <div className="border-t border-line pt-3">
             <button
