@@ -2,6 +2,12 @@ export function brl(cents: number): string {
   return (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
+/** Números grandes abreviados ("5,4 mil") — usar com o exato no title/tooltip. */
+export function compact(n: number): string {
+  if (n < 10_000) return n.toLocaleString('pt-BR');
+  return new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
+}
+
 export function dateTime(iso: string): string {
   return new Date(iso).toLocaleString('pt-BR');
 }

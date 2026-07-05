@@ -18,7 +18,7 @@ import MomentActions from '@/components/MomentActions';
 import OffersPanel from '@/components/OffersPanel';
 import ShareButton from '@/components/ShareButton';
 import { TIER_META, editionLabel } from '@/lib/tiers';
-import { brl, dateTime, timeAgo } from '@/lib/format';
+import { brl, compact, dateTime, timeAgo } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -311,8 +311,11 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                   <div key={s.label} className="flex items-stretch gap-2.5 bg-[#121214] px-3 py-2.5">
                     <span className="w-[3px] shrink-0" style={{ background: s.color }} aria-hidden />
                     <span>
-                      <span className="block text-[15px] font-bold leading-tight text-white">
-                        {s.value.toLocaleString('pt-BR')}
+                      <span
+                        className="block text-[15px] font-bold leading-tight text-white"
+                        title={s.value.toLocaleString('pt-BR')}
+                      >
+                        {compact(s.value)}
                       </span>
                       <span className="block text-[9px] font-semibold uppercase tracking-[0.12em] text-neutral-500">
                         {s.label === 'Burned' ? <Term id="acoes">Burned</Term> : s.label}

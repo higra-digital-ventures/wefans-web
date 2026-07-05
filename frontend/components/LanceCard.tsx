@@ -4,7 +4,7 @@ import CardWishlist from './CardWishlist';
 import QuickBuy from './QuickBuy';
 import TacticalBoard from './TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
-import { brl } from '@/lib/format';
+import { brl, compact } from '@/lib/format';
 import type { TemplateDTO } from '@/lib/types';
 
 // Carta de mercado copiada da anatomia do Top Shot (print de referência): card preto,
@@ -40,7 +40,7 @@ export default function LanceCard({
   const limited = template.editionType === 'LIMITADA';
   const supply = limited
     ? `/${template.editionSize?.toLocaleString('pt-BR')}`
-    : template.circulatingCount.toLocaleString('pt-BR');
+    : compact(template.circulatingCount);
 
   const inner = (
     <div
@@ -171,7 +171,7 @@ export default function LanceCard({
           className="mt-2.5 truncate text-[11px] text-neutral-500"
           title="Burned: exemplares queimados para sempre (bate-troca/fichas). Supply: exemplares que ainda existem."
         >
-          Burned: {burnedCount.toLocaleString('pt-BR')} · Supply:{' '}
+          Burned: {compact(burnedCount)} · Supply:{' '}
           {template.circulatingCount.toLocaleString('pt-BR')}
         </div>
         <div className="mt-0.5 truncate text-[11px] text-neutral-500">
