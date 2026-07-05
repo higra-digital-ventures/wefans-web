@@ -545,6 +545,22 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           </div>
         </section>
       )}
+
+      {/* CTA sticky no mobile: o preço e o caminho de compra nunca somem no scroll */}
+      {m.listing && !isOwner && !m.burned && (
+        <div className="fixed inset-x-0 bottom-14 z-30 flex items-center justify-between gap-3 border-t border-white/15 bg-[#0a0a0b]/95 px-4 py-2.5 backdrop-blur lg:hidden">
+          <div>
+            <div className="text-[9px] uppercase tracking-[0.15em] text-neutral-500">Menor preço</div>
+            <div className="font-display text-xl leading-none text-white">{brl(m.listing.priceCents)}</div>
+          </div>
+          <a
+            href="#vender"
+            className="bg-accent px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.08em] text-white"
+          >
+            Comprar
+          </a>
+        </div>
+      )}
     </main>
   );
 }
