@@ -39,17 +39,30 @@ export default async function ChecklistsPage() {
                 </div>
                 {c.progress && (
                   <div>
-                    <div className="mb-1 flex justify-between text-xs text-muted">
-                      <span>Progresso</span>
+                    <div className="mb-2 flex justify-between text-xs text-muted">
+                      <span>Álbum</span>
                       <span>
-                        {c.progress.have}/{c.progress.need}
+                        {c.progress.have}/{c.progress.need} figurinhas
                       </span>
                     </div>
-                    <div className="h-1.5 rounded-full bg-panel2">
-                      <div
-                        className="h-1.5 rounded-full bg-accent3"
-                        style={{ width: `${(c.progress.have / Math.max(1, c.progress.need)) * 100}%` }}
-                      />
+                    {/* slots do álbum: preenchidos vs vazios, como caderno de figurinha */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {Array.from({ length: c.progress.need }).map((_, i) => {
+                        const filled = i < c.progress!.have;
+                        return (
+                          <span
+                            key={i}
+                            className={`flex h-12 w-9 items-center justify-center border text-[10px] font-bold ${
+                              filled
+                                ? 'border-accent3/60 bg-accent3/15 text-accent3'
+                                : 'border-dashed border-white/20 text-neutral-600'
+                            }`}
+                            title={filled ? 'no álbum' : 'faltando'}
+                          >
+                            {filled ? '✓' : i + 1}
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

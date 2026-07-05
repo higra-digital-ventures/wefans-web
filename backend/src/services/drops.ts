@@ -35,6 +35,7 @@ export async function listDrops(db: PrismaClient) {
 export async function getDrop(db: PrismaClient, dropId: string, userId?: string) {
   const drop = await db.drop.findUnique({ where: { id: dropId }, include: { packs: true } });
   if (!drop) throw notFound('Drop não encontrado');
+  const queueCount = await db.queueEntry.count({ where: { dropId } });
 
   let myEntry: unknown = null;
   let collectorScore = 0;
@@ -61,6 +62,7 @@ export async function getDrop(db: PrismaClient, dropId: string, userId?: string)
     packs: drop.packs.map(toPackDTO),
     eligible: collectorScore >= drop.requiredCollectorScore,
     collectorScore,
+    queueCount,
     myEntry,
   };
 }

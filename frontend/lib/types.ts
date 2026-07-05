@@ -218,6 +218,7 @@ export type DropSummary = {
 export type DropDetail = DropSummary & {
   eligible: boolean;
   collectorScore: number;
+  queueCount: number;
   myEntry: DropMyEntry | null;
 };
 

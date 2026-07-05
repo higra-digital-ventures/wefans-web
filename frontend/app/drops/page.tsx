@@ -7,6 +7,7 @@ import {
   getPacksServer,
   getPackDetailServer,
   getFastbreakRunsServer,
+  getActiveFixturesServer,
   getMe,
 } from '@/lib/api-server';
 import { TIER_META, TIER_ORDER, isFoil } from '@/lib/tiers';
@@ -174,11 +175,12 @@ function DropCard({ d, myScore }: { d: DropSummary; myScore: number | null }) {
 }
 
 export default async function DropsPage() {
-  const [drops, packs, me, runs] = await Promise.all([
+  const [drops, packs, me, runs, fixtures] = await Promise.all([
     getDropsServer(),
     getPacksServer(),
     getMe(),
     getFastbreakRunsServer().catch(() => []),
+    getActiveFixturesServer().catch(() => null),
   ]);
   const hero = drops.find((d) => d.status === 'LIVE') ?? drops.find((d) => d.status === 'WAITING');
   const [heroDetail, heroPack] = await Promise.all([
@@ -204,6 +206,25 @@ export default async function DropsPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
+      {/* placar do dia: jogo do seu time com check-in aberto (mini scoreboard) */}
+      {fixtures && fixtures.length > 0 && (
+        <Link
+          href="/checkin"
+          className="mb-4 flex flex-wrap items-center gap-3 border border-emerald-400/30 bg-emerald-400/5 px-4 py-2.5 transition-colors hover:bg-emerald-400/10"
+        >
+          <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-300">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" /> hoje tem jogo
+          </span>
+          <span className="text-[13px] font-bold text-white">
+            {fixtures[0].homeTeam} x {fixtures[0].awayTeam}
+          </span>
+          <span className="text-[11px] text-neutral-400">{fixtures[0].stadium}</span>
+          <span className="ml-auto text-[11px] font-bold uppercase tracking-wide text-emerald-300">
+            check-in aberto — ganhe um pack →
+          </span>
+        </Link>
+      )}
+
       {/* hero do drop (print f) */}
       {hero && (
         <section className="relative mb-10 overflow-hidden border border-line">
@@ -232,6 +253,11 @@ export default async function DropsPage() {
                   </span>
                 )}
                 <ScoreGate required={hero.requiredCollectorScore} mine={myScore} />
+                {heroDetail && heroDetail.queueCount > 0 && (
+                  <span className="text-[11px] text-neutral-300">
+                    · {heroDetail.queueCount} colecionador{heroDetail.queueCount > 1 ? 'es' : ''} na fila
+                  </span>
+                )}
               </div>
               <h1 className="font-display text-4xl uppercase leading-[0.95] tracking-tight text-ink sm:text-5xl">
                 {hero.name}

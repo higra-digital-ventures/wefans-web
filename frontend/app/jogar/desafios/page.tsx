@@ -17,6 +17,24 @@ function Card({ c }: { c: ChallengeSummary }) {
         </span>
         {c.active && <Countdown until={c.endsAt} className="text-xs text-accent3" />}
       </div>
+      {c.active && (
+        <div className="mb-2 h-0.5 bg-panel2" aria-hidden title="tempo do desafio decorrido">
+          <div
+            className="h-0.5 bg-accent3/60"
+            style={{
+              width: `${Math.min(
+                100,
+                Math.max(
+                  2,
+                  ((Date.now() - new Date(c.startsAt).getTime()) /
+                    Math.max(1, new Date(c.endsAt).getTime() - new Date(c.startsAt).getTime())) *
+                    100,
+                ),
+              )}%`,
+            }}
+          />
+        </div>
+      )}
       <h3 className="font-display text-xl text-ink">{c.name}</h3>
       <p className="mb-3 line-clamp-2 text-sm text-muted">{c.description}</p>
       {c.completed ? (

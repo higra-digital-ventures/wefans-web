@@ -5,6 +5,12 @@ import MatchdayDayClient from '@/components/MatchdayDayClient';
 
 export const dynamic = 'force-dynamic';
 
+function hue(name: string) {
+  let h = 0;
+  for (const c of name) h = (h * 31 + c.charCodeAt(0)) % 360;
+  return h;
+}
+
 export default async function MatchdayDayPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [day, me] = await Promise.all([getFastbreakDayServer(id), getMe()]);
@@ -39,9 +45,25 @@ export default async function MatchdayDayPage({ params }: { params: Promise<{ id
           ) : (
             <ul className="divide-y divide-line/50">
               {day.board.map((b) => (
-                <li key={b.username} className="flex items-center justify-between px-4 py-2.5 text-sm">
-                  <span className="text-ink">
-                    #{b.rank} @{b.username}
+                <li
+                  key={b.username}
+                  className={`flex items-center justify-between px-4 py-2.5 text-sm ${
+                    me && b.username === me.username ? 'bg-accent3/10' : ''
+                  }`}
+                >
+                  <span className="flex items-center gap-2 text-ink">
+                    <span className="w-6 tabular-nums text-[11px] text-neutral-500">#{b.rank}</span>
+                    <span
+                      className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold uppercase text-white"
+                      style={{ background: `hsl(${hue(b.username)} 70% 42%)` }}
+                      aria-hidden
+                    >
+                      {b.username[0]}
+                    </span>
+                    @{b.username}
+                    {me && b.username === me.username && (
+                      <span className="text-[9px] font-bold uppercase text-accent3">você</span>
+                    )}
                     {b.won === true && ' 🏆'}
                   </span>
                   <span className="tabular-nums text-accent3">{b.score ?? '—'}</span>
