@@ -298,7 +298,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               <OwnershipGauge existing={t.mintedCount} listed={listed} locked={locked} burned={burned} legend={false} />
               <p className="-mt-1 text-center text-[11px] text-neutral-400">
                 <Link href={`/lance/${t.id}`} className="underline underline-offset-2 hover:text-white">
-                  Ver todos os Moments da edição
+                  Ver todos os Lances da edição
                 </Link>
               </p>
             </div>
@@ -455,7 +455,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               <div>
                 <div className="mb-2 flex items-baseline justify-between text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400">
                   <span>Mais exemplares</span>
-                  <span className="font-normal normal-case tracking-normal text-neutral-500">#Moments</span>
+                  <span className="font-normal normal-case tracking-normal text-neutral-500">#Lances</span>
                 </div>
                 <ol className="divide-y divide-line/50">
                   {collectors.topCollectors.map((c, i) => (

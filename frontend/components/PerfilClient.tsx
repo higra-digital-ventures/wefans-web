@@ -59,7 +59,7 @@ export default function PerfilClient({
   ];
   const TABS = [
     { label: 'Visão geral', href: '/perfil', active: true },
-    { label: 'Moments', href: '/colecao' },
+    { label: 'Lances', href: '/colecao' },
     { label: 'Pacotes', href: '/mercado/pacotes' },
     { label: 'Ofertas', href: '/ofertas' },
     { label: 'Fichas', href: '/fichas' },

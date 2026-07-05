@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
 
   const cards = [
     { label: 'Usuários', value: String(metrics.users) },
-    { label: 'Moments (queimados)', value: `${metrics.moments.total} (${metrics.moments.burned})` },
+    { label: 'Lances (queimados)', value: `${metrics.moments.total} (${metrics.moments.burned})` },
     { label: 'Anúncios ativos', value: String(metrics.market.activeListings) },
     { label: 'Vendas', value: String(metrics.market.sales) },
     { label: 'Volume', value: brl(metrics.market.volumeCents) },
