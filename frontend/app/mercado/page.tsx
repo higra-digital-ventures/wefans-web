@@ -408,6 +408,7 @@ export default async function MercadoPage({
                   template={l.template}
                   serial={l.serial}
                   priceCents={l.priceCents}
+                  quickBuyListingId={me && l.seller !== me.username ? l.listingId : undefined}
                   href={`/momento/${l.momentId}`}
                   wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
                 />

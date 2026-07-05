@@ -1,6 +1,7 @@
 import Icon from './Icon';
 import Link from 'next/link';
 import CardWishlist from './CardWishlist';
+import QuickBuy from './QuickBuy';
 import TacticalBoard from './TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
 import { brl } from '@/lib/format';
@@ -17,6 +18,7 @@ export default function LanceCard({
   priceCents,
   listingPriceCents,
   paidCents,
+  quickBuyListingId,
   className = '',
   wishlist,
 }: {
@@ -27,6 +29,7 @@ export default function LanceCard({
   priceCents?: number; // Menor preço (mercado)
   listingPriceCents?: number | null; // badge "À venda" (coleção)
   paidCents?: number; // contexto de dono: rodapé vira "Média · Pago" com cor de lucro
+  quickBuyListingId?: string; // compra rápida no hover, sem sair da grade (logado)
   className?: string;
   /** estado da wishlist do usuário (undefined = marcador decorativo) */
   wishlist?: { wished: boolean; canWish: boolean };
@@ -97,11 +100,13 @@ export default function LanceCard({
                 À venda · {brl(listingPriceCents)}
               </span>
             )}
-            {priceCents != null && (
+            {priceCents != null && quickBuyListingId ? (
+              <QuickBuy listingId={quickBuyListingId} priceCents={priceCents} />
+            ) : priceCents != null ? (
               <span className="absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                 Ver e comprar · {brl(priceCents)}
               </span>
-            )}
+            ) : null}
             {priceCents == null && paidCents != null && (
               <span className="absolute inset-x-2 bottom-2 translate-y-2 bg-white py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-black opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                 Ver · Vender
