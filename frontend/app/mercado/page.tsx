@@ -207,24 +207,11 @@ export default async function MercadoPage({
           {q && <input type="hidden" name="q" value={q} />}
           {badge && <input type="hidden" name="badge" value={badge} />}
           {vis && <input type="hidden" name="vis" value={vis} />}
-          <select
-            name="sort"
-            defaultValue={sort ?? 'recent'}
-            className="border border-white/60 bg-black px-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white outline-none focus:border-white"
-          >
-            {SORTS.map((s) => (
-              <option key={s.v} value={s.v}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-          <button className="flex items-center gap-2  border border-white/60 px-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white hover:bg-white/10">
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
-              <path d="M3 6h10v2H3V6Zm0 5h7v2H3v-2Zm0 5h4v2H3v-2Zm14-9v9.2l-2.6-2.6L13 15l5 5 5-5-1.4-1.4-2.6 2.6V7h-2Z" />
-            </svg>
-            Desc
+          <button className="flex items-center gap-2 border border-white/60 px-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white hover:bg-white/10">
+            OK
           </button>
         </form>
+        <SortDropdown options={SORTS} current={sort ?? 'recent'} />
       </div>
 
       {/* CLEAR + chips delineados + floor gap/densidade (segunda linha do print) */}
