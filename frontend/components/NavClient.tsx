@@ -6,7 +6,7 @@ import MobileNav from './MobileNav';
 import SearchOverlay from './SearchOverlay';
 import NotificationsBell from './NotificationsBell';
 import ProfileDrawer from './ProfileDrawer';
-import { brl } from '@/lib/format';
+import CountUp from './CountUp';
 import type { TemplateDTO } from '@/lib/types';
 
 // Top bar no padrão do Top Shot: nav central com ícone+texto e sublinhado no ativo,
@@ -128,7 +128,7 @@ export default function NavClient({
                 title="Saldo de teste — nenhum dinheiro real é movimentado"
                 className="hidden rounded-full border border-line bg-panel px-3 py-1.5 tabular-nums text-xs text-accent3 sm:block"
               >
-                {brl(me.balanceCents)}
+                <CountUp value={me.balanceCents} money />
               </Link>
               <ProfileDrawer me={me} />
             </>

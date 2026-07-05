@@ -267,7 +267,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                   </div>
                 ))}
               </div>
-              <p className="mt-2 text-right text-[10px] text-neutral-600">atualiza conforme o mercado</p>
+              <p className="mt-2 text-right text-[10px] text-neutral-600">atualiza a cada 2 min · conforme o mercado</p>
             </div>
           </div>
         </Panel>

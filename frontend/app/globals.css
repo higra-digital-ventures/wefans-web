@@ -169,6 +169,23 @@ body {
   }
 }
 
+/* fade-in de conteúdo a cada navegação */
+@media (prefers-reduced-motion: no-preference) {
+  .wf-page {
+    animation: wf-page 0.22s ease-out both;
+  }
+  @keyframes wf-page {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
 /* página de chat é fullscreen (app-like): esconde o footer institucional */
 main.wf-chat ~ footer {
   display: none;

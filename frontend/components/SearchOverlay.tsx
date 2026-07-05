@@ -72,7 +72,26 @@ export default function SearchOverlay({
       .slice(0, 6);
   }, [q, catalog]);
 
+  const [recents, setRecents] = useState<string[]>([]);
+  useEffect(() => {
+    if (!open) return;
+    try {
+      setRecents(JSON.parse(localStorage.getItem('wf-recent-searches') ?? '[]'));
+    } catch {
+      setRecents([]);
+    }
+  }, [open]);
+
   const go = (query: string) => {
+    if (query) {
+      const next = [query, ...recents.filter((r) => r !== query)].slice(0, 6);
+      setRecents(next);
+      try {
+        localStorage.setItem('wf-recent-searches', JSON.stringify(next));
+      } catch {
+        /* storage cheio/bloqueado */
+      }
+    }
     setOpen(false);
     router.push(`/mercado${query ? `?q=${encodeURIComponent(query)}` : ''}`);
   };
@@ -186,6 +205,22 @@ export default function SearchOverlay({
             {!q.trim() && (
             <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-8 pt-2 md:flex-row lg:px-6">
               <div className="w-full shrink-0 md:w-[260px]">
+                {recents.length > 0 && (
+                  <div className="mb-5">
+                    <div className="mb-2 text-[13px] font-bold text-white">Buscas recentes</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {recents.map((r) => (
+                        <button
+                          key={r}
+                          onClick={() => go(r)}
+                          className="border border-white/15 px-2.5 py-1 text-[11px] text-neutral-300 hover:bg-white/10 hover:text-white"
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="mb-3 text-[13px] font-bold text-white">Categorias populares</div>
                 <div className="space-y-2">
                   {categories.map((c) => (
