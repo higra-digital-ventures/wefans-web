@@ -6,6 +6,7 @@ import CountUp from '@/components/CountUp';
 import LanceCard from '@/components/LanceCard';
 import EmptyState from '@/components/EmptyState';
 import SortDropdown from '@/components/SortDropdown';
+import Term from '@/components/Term';
 import { TIER_META, TIER_ORDER } from '@/lib/tiers';
 import { brl } from '@/lib/format';
 import type { MomentDTO } from '@/lib/types';
@@ -72,7 +73,9 @@ export default async function ColecaoPage({
         <h1 className="font-display text-4xl uppercase text-ink">Minha Coleção</h1>
         {estimatedCents > 0 && (
           <div className="text-right" title="Soma do preço médio de venda (ASP) de cada Lance seu — estimativa, não cotação">
-            <div className="text-[10px] uppercase tracking-[0.15em] text-muted">Valor estimado ⓘ</div>
+            <div className="text-[10px] uppercase tracking-[0.15em] text-muted">
+              <Term id="precos">Valor estimado</Term> ⓘ
+            </div>
             <div className="font-display text-2xl text-accent3">
               <CountUp value={estimatedCents} money />
             </div>

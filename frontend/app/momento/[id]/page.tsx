@@ -1,4 +1,5 @@
 import Icon from '@/components/Icon';
+import Term from '@/components/Term';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -311,7 +312,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                         {s.value.toLocaleString('pt-BR')}
                       </span>
                       <span className="block text-[9px] font-semibold uppercase tracking-[0.12em] text-neutral-500">
-                        {s.label}
+                        {s.label === 'Burned' ? <Term id="acoes">Burned</Term> : s.label}
                       </span>
                     </span>
                   </div>
