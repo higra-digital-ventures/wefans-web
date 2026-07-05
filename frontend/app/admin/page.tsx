@@ -39,7 +39,7 @@ export default async function AdminDashboard() {
 
       <div className="mb-8 flex flex-wrap items-center gap-3  border border-line bg-panel p-4">
         <span className="text-sm text-muted">Operações:</span>
-        <AdminAction path="/admin/cron/tick" label="⚙️ Rodar cron agora" />
+        <AdminAction path="/admin/cron/tick" label="Rodar cron agora" />
         {metrics.reviewPending > 0 && (
           <Link href="/admin/fraude" className="border border-amber-500/40 px-3 py-1.5 text-xs text-amber-300">
             {metrics.reviewPending} check-in(s) em revisão →

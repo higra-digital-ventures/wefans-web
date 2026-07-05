@@ -85,7 +85,7 @@ export default function DropClient({
           {isAdmin && (
             <div>
               <button className={ghost} disabled={pending} onClick={() => run(() => startDrop(drop.id))}>
-                ⚙️ Iniciar drop (gerar fila aleatória)
+                Iniciar drop (gerar fila aleatória)
               </button>
             </div>
           )}

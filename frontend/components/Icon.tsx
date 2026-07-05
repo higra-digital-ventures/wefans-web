@@ -269,6 +269,14 @@ const OUTLINE: Record<string, ReactNode> = {
     </>
   ),
   zap: <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />,
+  skull: (
+    <>
+      <path d="M12 2a8 8 0 0 0-8 8c0 2.7 1.4 5 3.5 6.4V19a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2v-2.6A7.9 7.9 0 0 0 20 10a8 8 0 0 0-8-8Z" />
+      <circle cx="9" cy="10.5" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="10.5" r="1.2" fill="currentColor" stroke="none" />
+      <path d="M12 14.5v1.5" />
+    </>
+  ),
   target: (
     <>
       <circle cx="12" cy="12" r="10" />

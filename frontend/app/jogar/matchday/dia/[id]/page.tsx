@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getFastbreakDayServer, getMe } from '@/lib/api-server';
@@ -29,7 +30,7 @@ export default async function MatchdayDayPage({ params }: { params: Promise<{ id
         <span className="text-accent3">
           {day.targetScore} {day.statKey}
         </span>
-        {day.survivor && ' · ☠️ mata-mata'}
+        {day.survivor && <> · <Icon name="skull" size={13} className="inline align-[-2px]" /> mata-mata</>}
         {day.closed && ' · rodada fechada'}
       </p>
 
@@ -64,7 +65,7 @@ export default async function MatchdayDayPage({ params }: { params: Promise<{ id
                     {me && b.username === me.username && (
                       <span className="text-[9px] font-bold uppercase text-accent3">você</span>
                     )}
-                    {b.won === true && ' 🏆'}
+                    {b.won === true && <Icon name="trophy" size={12} className="ml-1 inline align-[-2px] text-amber-300" />}
                   </span>
                   <span className="tabular-nums text-accent3">{b.score ?? '—'}</span>
                 </li>

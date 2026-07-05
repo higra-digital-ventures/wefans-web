@@ -89,7 +89,7 @@ export default function RankingClient({
                 run(() => snapshotLeaderboard(board.id));
             }}
           >
-            ⚙️ Snapshot (encerrar e premiar)
+            Snapshot (encerrar e premiar)
           </button>
         </div>
       )}

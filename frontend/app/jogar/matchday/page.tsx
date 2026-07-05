@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import Link from 'next/link';
 import { getFastbreakRunsServer, getFastbreakStandingsServer } from '@/lib/api-server';
 
@@ -29,7 +30,7 @@ export default async function MatchdayPage() {
                 <div>
                   <h2 className="font-display text-2xl text-ink">{r.name}</h2>
                   <p className="text-xs text-muted">
-                    {r.survivor ? '☠️ mata-mata (quem perde está fora)' : `escalação de ${r.lineupSize}`}
+                    {r.survivor ? <><Icon name="skull" size={13} className="inline align-[-2px]" /> mata-mata (quem perde está fora)</> : `escalação de ${r.lineupSize}`}
                     {r.myWins > 0 && ` · suas vitórias: ${r.myWins}`}
                     {r.eliminated && ' · você foi eliminado'}
                   </p>
@@ -66,7 +67,7 @@ export default async function MatchdayPage() {
                       <li key={s.username} className="flex justify-between">
                         <span className="text-muted">
                           #{s.rank} @{s.username}
-                          {s.eliminated && ' ☠️'}
+                          {s.eliminated && <Icon name="skull" size={12} className="ml-1 inline align-[-2px] text-neutral-500" />}
                         </span>
                         <span className="tabular-nums text-accent3">
                           {s.wins}V · {s.totalScore} pts

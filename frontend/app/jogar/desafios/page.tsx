@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import Link from 'next/link';
 import Countdown from '@/components/Countdown';
 import { getChallengesServer } from '@/lib/api-server';
@@ -13,7 +14,7 @@ function Card({ c }: { c: ChallengeSummary }) {
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="rounded-full bg-panel2 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-          {c.type === 'CRAFTING' ? 'Bate-troca' : c.type === 'FLASH' ? '⚡ Relâmpago' : 'Álbum'}
+          {c.type === 'CRAFTING' ? 'Bate-troca' : c.type === 'FLASH' ? <><Icon name="zap" size={12} className="inline align-[-1px]" /> Relâmpago</> : 'Álbum'}
         </span>
         {c.active && <Countdown until={c.endsAt} className="text-xs text-accent3" />}
       </div>

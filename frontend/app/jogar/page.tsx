@@ -57,7 +57,7 @@ export default async function JogarPage() {
     ? {
         kicker: 'Rodada aberta — você ainda não escalou',
         title: `${pendingDay.runName} · Dia ${pendingDay.dayNumber}`,
-        detail: `alvo ${pendingDay.targetScore} ${pendingDay.statKey}${pendingDay.survivor ? ' · ☠️ mata-mata' : ''}`,
+        detail: `alvo ${pendingDay.targetScore} ${pendingDay.statKey}${pendingDay.survivor ? ' · mata-mata' : ''}`,
         deadline: dayDeadline(pendingDay.gameDate),
         cta: 'Escalar agora',
         href: `/jogar/matchday/dia/${pendingDay.id}`,

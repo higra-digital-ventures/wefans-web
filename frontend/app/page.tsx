@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import Link from 'next/link';
 import {
   getActivityServer,
@@ -245,7 +246,7 @@ export default async function Home() {
                   >
                     <div className="min-w-0">
                       <div className="truncate text-sm font-bold text-ink">
-                        {c.type === 'FLASH' && <span className="mr-1.5 text-accent2">⚡</span>}
+                        {c.type === 'FLASH' && <Icon name="zap" size={14} className="mr-1.5 inline align-[-2px] text-accent2" />}
                         {c.name}
                       </div>
                       <div className="truncate text-[11px] text-muted">{c.description}</div>

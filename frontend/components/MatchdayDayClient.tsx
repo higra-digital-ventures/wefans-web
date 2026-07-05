@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from './Icon';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { closeFastbreakDay, submitFastbreakLineup } from '@/lib/api-client';
@@ -68,7 +69,7 @@ export default function MatchdayDayClient({
           if (confirm('Fechar a rodada calcula os resultados. Continuar?')) run(() => closeFastbreakDay(day.id));
         }}
       >
-        ⚙️ Fechar rodada (calcular resultados)
+        Fechar rodada (calcular resultados)
       </button>
     </div>
   );
@@ -78,7 +79,7 @@ export default function MatchdayDayClient({
       <div className="space-y-3  border border-line bg-panel p-5">
         {day.closed ? (
           <p className={day.my.won ? 'text-emerald-300' : 'text-muted'}>
-            {day.my.won ? '🏆 Você venceu a rodada!' : 'Não foi dessa vez.'} Seu score:{' '}
+            {day.my.won ? <><Icon name="trophy" size={14} className="inline align-[-2px] text-amber-300" /> Você venceu a rodada!</> : 'Não foi dessa vez.'} Seu score:{' '}
             <span className="font-display text-xl text-ink">{day.my.score}</span> (alvo {day.targetScore})
           </p>
         ) : (
@@ -92,7 +93,7 @@ export default function MatchdayDayClient({
   if (day.eliminated) {
     return (
       <div className="border border-line bg-panel p-5 text-sm text-accent">
-        ☠️ Você foi eliminado deste mata-mata.
+        <Icon name="skull" size={14} className="inline align-[-2px]" /> Você foi eliminado deste mata-mata.
         {adminClose}
       </div>
     );
@@ -113,7 +114,7 @@ export default function MatchdayDayClient({
           Escale {day.lineupSize} jogadores <span className="text-muted">({chosen.length}/{day.lineupSize})</span>
         </h2>
         <p className="text-xs text-muted">
-          Alvo: {day.targetScore} {STAT_LABEL[day.statKey] ?? day.statKey} · toque no ⭐ para definir o captain (2×)
+          Alvo: {day.targetScore} {STAT_LABEL[day.statKey] ?? day.statKey} · toque na estrela para definir o captain (2×)
         </p>
       </div>
 
@@ -155,9 +156,9 @@ export default function MatchdayDayClient({
                     title="Captain (2×)"
                     disabled={pending}
                     onClick={() => setCaptainPlayer(isCap ? null : g.playerId)}
-                    className={`text-lg ${isCap ? '' : 'opacity-30'}`}
+                    className={isCap ? 'text-amber-300' : 'text-neutral-500 opacity-40 hover:opacity-100'}
                   >
-                    ⭐
+                    <Icon name="star" filled={isCap} size={18} />
                   </button>
                 )}
               </div>

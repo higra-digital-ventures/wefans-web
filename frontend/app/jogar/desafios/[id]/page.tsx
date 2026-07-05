@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -22,7 +23,7 @@ export default async function ChallengeDetailPage({ params }: { params: Promise<
       <div className="mt-2 flex items-center gap-3">
         <h1 className="font-display text-4xl uppercase text-ink">{challenge.name}</h1>
         <span className="rounded-full bg-panel2 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-          {challenge.type === 'CRAFTING' ? 'Bate-troca' : challenge.type === 'FLASH' ? '⚡ Relâmpago' : 'Álbum'}
+          {challenge.type === 'CRAFTING' ? 'Bate-troca' : challenge.type === 'FLASH' ? <><Icon name="zap" size={12} className="inline align-[-1px]" /> Relâmpago</> : 'Álbum'}
         </span>
       </div>
       <p className="mb-6 text-muted">{challenge.description}</p>
@@ -43,7 +44,7 @@ export default async function ChallengeDetailPage({ params }: { params: Promise<
           <div>
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-widest text-muted">Recompensa</h2>
             <div className="border border-line bg-panel p-6 text-center text-muted">
-              🎁 Um pacote exclusivo
+              <Icon name="gift" size={14} className="inline align-[-2px] text-accent" /> Um pacote exclusivo
             </div>
           </div>
         ) : null}

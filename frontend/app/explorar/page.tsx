@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import Link from 'next/link';
 import { getFeedServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
 import SubTabs from '@/components/SubTabs';
@@ -138,7 +139,7 @@ function EventCard({ e }: { e: FeedEvent }) {
                   className="mt-1.5 inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white"
                   style={{ background: `${meta!.color}33`, border: `1px solid ${meta!.color}88` }}
                 >
-                  Puxou um {meta!.label} 🔥
+                  Puxou um {meta!.label} <Icon name="flame" filled size={14} className="inline align-[-2px] text-accent2" />
                 </div>
               ) : (
                 <div className="mt-1 text-[11px] text-neutral-500">melhor carta do pacote</div>
@@ -163,7 +164,7 @@ function EventCard({ e }: { e: FeedEvent }) {
       ) : (
         <div className="flex items-center gap-3 border-t border-white/10 bg-[#08080a] px-4 py-4">
           <span className="text-xl" aria-hidden>
-            {e.kind === 'CHECKIN' ? '📍' : '🏆'}
+            {e.kind === 'CHECKIN' ? <Icon name="checkin" size={14} /> : <Icon name="trophy" size={14} />}
           </span>
           <div className="text-[13px] text-neutral-300">
             {e.kind === 'CHECKIN'
