@@ -17,6 +17,12 @@ export default function EntrarPage() {
   const [avail, setAvail] = useState<'idle' | 'checking' | 'free' | 'taken'>('idle');
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [hasNext, setHasNext] = useState(false);
+
+  // veio de uma página protegida? (?next=) — mensagem de contexto
+  useEffect(() => {
+    setHasNext(!!new URLSearchParams(window.location.search).get('next'));
+  }, []);
 
   // disponibilidade do usuário em tempo real (debounce 500ms)
   useEffect(() => {
@@ -78,6 +84,11 @@ export default function EntrarPage() {
         {mode === 'login' ? 'Entrar' : 'Criar conta'}
       </h1>
       <p className="mb-8 text-muted">Sua carteira de Lances começa aqui.</p>
+      {hasNext && mode === 'login' && (
+        <p className="mb-6 border border-accent3/30 bg-accent3/5 px-3 py-2 text-[13px] text-accent3">
+          Entre para continuar de onde você parou — a página te espera.
+        </p>
+      )}
 
       <div className="mb-6 flex gap-1  border border-line bg-panel p-1">
         {tab('login', 'Entrar')}

@@ -5,6 +5,7 @@ import { Sofia_Sans_Extra_Condensed, Roboto_Flex, Roboto_Mono } from 'next/font/
 import './globals.css';
 import TopBar from '@/components/TopBar';
 import SiteFooter from '@/components/SiteFooter';
+import OfflineBanner from '@/components/OfflineBanner';
 import Toaster from '@/components/Toaster';
 import BottomNav from '@/components/BottomNav';
 import NextTopLoader from 'nextjs-toploader';
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="pb-14 lg:pb-0" suppressHydrationWarning>
         {/* barra de progresso no topo durante as navegações (padrão Top Shot) */}
         <NextTopLoader color="#21d4e0" height={3} showSpinner={false} shadow="0 0 8px #21d4e0" />
+        <OfflineBanner />
         <Toaster>
           <Suspense fallback={<div className="h-[72px] border-b border-line" />}>
             <TopBar />
