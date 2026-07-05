@@ -45,15 +45,17 @@ export default function PerfilClient({
   const kpis = [
     {
       label: 'Pontuação wefans',
+      hint: 'O valor da sua coleção em pontos — cada Lance seu soma conforme a raridade.',
       value: me.topShotScore.toLocaleString('pt-BR'),
       sub: percentile ? `top ${percentile.score}% dos colecionadores` : undefined,
     },
     {
       label: 'Score do Colecionador',
+      hint: 'Usado nas filas de drop: pontos por raridade + bônus de desafios e check-ins.',
       value: me.collectorScore.toLocaleString('pt-BR'),
       sub: percentile ? `top ${percentile.collector}%` : undefined,
     },
-    { label: 'Lances', value: momentCount.toLocaleString('pt-BR'), sub: undefined },
+    { label: 'Lances', hint: undefined, value: momentCount.toLocaleString('pt-BR'), sub: undefined },
   ];
   const TABS = [
     { label: 'Visão geral', href: '/perfil', active: true },
@@ -109,9 +111,12 @@ export default function PerfilClient({
 
         <div className="flex gap-2">
           {kpis.map((k) => (
-            <div key={k.label} className="min-w-[110px]  border border-line bg-[#0e0e10] px-4 py-3">
+            <div key={k.label} title={k.hint} className="min-w-[110px]  border border-line bg-[#0e0e10] px-4 py-3">
               <div className="font-display text-xl text-ink">{k.value}</div>
-              <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">{k.label}</div>
+              <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">
+                {k.label}
+                {k.hint && ' ⓘ'}
+              </div>
               {k.sub && <div className="mt-0.5 text-[10px] font-semibold text-accent3">{k.sub}</div>}
             </div>
           ))}

@@ -22,9 +22,17 @@ export default async function PublicProfilePage({
   const canMessage = !!me && me.username !== profile.username;
 
   const kpis = [
-    { label: 'Pontuação wefans', value: profile.topShotScore.toLocaleString('pt-BR') },
-    { label: 'Score do Colecionador', value: profile.collectorScore.toLocaleString('pt-BR') },
-    { label: 'Lances', value: profile.momentCount.toLocaleString('pt-BR') },
+    {
+      label: 'Pontuação wefans',
+      hint: 'O valor da coleção em pontos — cada Lance soma conforme a raridade.',
+      value: profile.topShotScore.toLocaleString('pt-BR'),
+    },
+    {
+      label: 'Score do Colecionador',
+      hint: 'Usado nas filas de drop: pontos por raridade + bônus de desafios e check-ins.',
+      value: profile.collectorScore.toLocaleString('pt-BR'),
+    },
+    { label: 'Lances', hint: undefined, value: profile.momentCount.toLocaleString('pt-BR') },
   ];
 
   return (
@@ -55,9 +63,12 @@ export default async function PublicProfilePage({
 
       <div className="mb-10 grid max-w-lg grid-cols-3 gap-3">
         {kpis.map((k) => (
-          <div key={k.label} className="border border-line bg-panel p-4">
+          <div key={k.label} title={k.hint} className="border border-line bg-panel p-4">
             <div className="font-display text-2xl text-ink">{k.value}</div>
-            <div className="mt-1 text-xs text-muted">{k.label}</div>
+            <div className="mt-1 text-xs text-muted">
+              {k.label}
+              {k.hint && ' ⓘ'}
+            </div>
           </div>
         ))}
       </div>

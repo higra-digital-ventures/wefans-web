@@ -56,7 +56,10 @@ function ScoreGate({ required, mine }: { required: number; mine: number | null }
   }
   const ok = mine >= required;
   return (
-    <span className={`text-[11px] font-semibold ${ok ? 'text-emerald-300' : 'text-amber-300'}`}>
+    <span
+      title="Score do Colecionador: pontos por raridade + bônus de desafios e check-ins — sobe colecionando e jogando"
+      className={`text-[11px] font-semibold ${ok ? 'text-emerald-300' : 'text-amber-300'}`}
+    >
       exige {required.toLocaleString('pt-BR')} · você tem {mine.toLocaleString('pt-BR')}{' '}
       {ok ? '✓' : `✗ (faltam ${(required - mine).toLocaleString('pt-BR')})`}
     </span>
