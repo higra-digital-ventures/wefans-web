@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { fetchActivity } from '@/lib/api-client';
-import { brl, dateTime } from '@/lib/format';
-import { TIER_META } from '@/lib/tiers';
+import { brl, timeAgo } from '@/lib/format';
+import TacticalBoard from './TacticalBoard';
+import { TIER_META, isFoil } from '@/lib/tiers';
 import type { RecentSale } from '@/lib/types';
 
 // Feed de vendas ao vivo (seção 11.3) — atualiza por polling a cada 10s.
@@ -39,22 +40,35 @@ export default function ActivityFeed({ initial, limit = 20 }: { initial: RecentS
             className="flex items-center gap-3  px-2 py-2.5 transition-colors hover:bg-panel2/60"
           >
             <span
-              className="h-9 w-9 shrink-0"
-              style={{ background: `${TIER_META[s.template.tier].color}33`, boxShadow: `inset 0 0 0 1px ${TIER_META[s.template.tier].color}55` }}
-            />
+              className="h-12 w-9 shrink-0 overflow-hidden border"
+              style={{ borderColor: `${TIER_META[s.template.tier].color}66` }}
+              aria-hidden
+            >
+              <TacticalBoard
+                trajectory={s.template.trajectory}
+                jersey={s.template.player.jersey}
+                color={TIER_META[s.template.tier].color}
+                foil={isFoil(s.template.tier)}
+              />
+            </span>
             <div className="min-w-0 flex-1">
-              <div className="truncate text-sm text-ink">
-                {s.template.player.name} <span className="text-muted">#{s.serial}</span>
+              <div className="truncate text-[13px] font-semibold text-white">
+                {s.template.player.name}{' '}
+                <span className="tabular-nums font-normal text-neutral-500">#{s.serial}</span>
                 {s.flagged && <span className="ml-2 text-[10px] text-accent">preço anômalo</span>}
               </div>
-              <div className="truncate text-xs text-muted">
+              <div className="truncate text-[11px] text-neutral-400">
+                <span style={{ color: TIER_META[s.template.tier].color }}>
+                  {TIER_META[s.template.tier].label}
+                </span>
+                {' · '}
                 {s.template.title}
-                {s.buyer && ` · comprou @${s.buyer}`}
+                {s.buyer && ` · @${s.buyer}`}
               </div>
             </div>
             <div className="shrink-0 text-right">
-              <div className="tabular-nums text-sm text-accent3">{brl(s.priceCents)}</div>
-              <div className="text-[10px] text-muted">{dateTime(s.createdAt).split(' ')[1] ?? ''}</div>
+              <div className="text-[15px] font-bold tabular-nums text-white">{brl(s.priceCents)}</div>
+              <div className="text-[10px] text-neutral-500">{timeAgo(s.createdAt)}</div>
             </div>
           </Link>
         </li>

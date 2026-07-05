@@ -4,10 +4,17 @@ import {
   getChallengesServer,
   getDropsServer,
   getPacksServer,
+  getPackDetailServer,
+  getTemplatesServer,
+  getFastbreakRunsServer,
+  getMe,
 } from '@/lib/api-server';
 import ActivityFeed from '@/components/ActivityFeed';
-import { TIER_META } from '@/lib/tiers';
-import { brl, dateTime } from '@/lib/format';
+import Countdown from '@/components/Countdown';
+import LanceCard from '@/components/LanceCard';
+import TacticalBoard from '@/components/TacticalBoard';
+import { TIER_META, TIER_ORDER, isFoil } from '@/lib/tiers';
+import { brl } from '@/lib/format';
 import type { Tier } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -22,16 +29,29 @@ function SectionTitle({ white, colored }: { white: string; colored: string }) {
 }
 
 export default async function Home() {
-  const [drops, packs, activity, challenges] = await Promise.all([
+  const [drops, packs, activity, challenges, templates, runs, me] = await Promise.all([
     getDropsServer().catch(() => []),
     getPacksServer().catch(() => []),
     getActivityServer(8).catch(() => []),
     getChallengesServer().catch(() => []),
+    getTemplatesServer().catch(() => []),
+    getFastbreakRunsServer().catch(() => []),
+    getMe(),
   ]);
 
   const hero = drops.find((d) => d.status === 'LIVE') ?? drops.find((d) => d.status === 'WAITING') ?? drops[0];
+  const heroPack = hero?.packs[0] ? await getPackDetailServer(hero.packs[0].id) : null;
+  const heroLances = (heroPack?.possibleLances ?? [])
+    .slice()
+    .sort((a, b) => TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier))
+    .slice(0, 3);
   const buyablePacks = packs.filter((p) => p.priceCents > 0).slice(0, 3);
   const activeChallenges = challenges.filter((c) => c.active && !c.completed).slice(0, 3);
+  const rares = templates.filter((t) => isFoil(t.tier)).slice(0, 4);
+  const openRounds = runs.reduce((n, r) => n + r.days.filter((d) => !d.closed).length, 0);
+  const claimable = challenges.find(
+    (c) => c.active && !c.completed && c.progress && c.progress.have >= c.progress.need,
+  );
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
@@ -44,7 +64,8 @@ export default async function Home() {
             aria-hidden
             style={{ background: 'radial-gradient(80% 120% at 20% 0%, transparent 30%, #050505 100%)' }}
           />
-          <div className="relative px-6 py-10 sm:px-10 sm:py-14">
+          <div className="relative grid gap-8 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[minmax(0,620px)_1fr]">
+            <div>
             <div className="mb-2 flex items-center gap-2">
               <span
                 className={` px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
@@ -62,9 +83,18 @@ export default async function Home() {
             </h1>
             <p className="mt-3 max-w-lg text-sm text-muted">
               {hero.packs.map((p) => p.name).join(' · ')} — fila aleatória, janela de compra de 20
-              minutos{hero.hasRebound ? ' e rebound para quem ficar de fora' : ''}. Termina em{' '}
-              {dateTime(hero.endsAt).split(',')[0]}.
+              minutos{hero.hasRebound ? ' e repescagem para quem ficar de fora' : ''}.
             </p>
+            <div className="mt-4">
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
+                {hero.status === 'LIVE' ? 'termina em' : 'compra abre em'}
+              </div>
+              <Countdown
+                until={hero.status === 'LIVE' ? hero.endsAt : hero.startsAt}
+                endedLabel="a qualquer momento"
+                className="font-display text-4xl uppercase leading-none text-accent3"
+              />
+            </div>
             <div className="mt-6 flex flex-wrap gap-2">
               <Link
                 href={`/drop/${hero.id}`}
@@ -79,6 +109,95 @@ export default async function Home() {
                 Rip packs 24/7
               </Link>
             </div>
+            </div>
+
+            {/* vitrine do pack do drop (mesma do /drops) */}
+            {heroLances.length > 0 && (
+              <div className="hidden lg:block">
+                <div className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-300">
+                  O que pode vir no pack
+                </div>
+                <div className="flex gap-4">
+                  {heroLances.map((t) => {
+                    const m = TIER_META[t.tier];
+                    return (
+                      <Link
+                        key={t.id}
+                        href={hero.packs[0] ? `/pacote/${hero.packs[0].id}` : '/pacotes'}
+                        className="w-[120px] shrink-0"
+                        style={{ perspective: '480px' }}
+                      >
+                        <div
+                          className="aspect-[4/5] overflow-hidden border"
+                          style={{
+                            transform: 'rotateY(-12deg) rotateX(2deg)',
+                            borderColor: `${m.color}77`,
+                            boxShadow: `10px 8px 22px rgba(0,0,0,.6)${isFoil(t.tier) ? `, 0 0 16px ${m.color}40` : ''}`,
+                          }}
+                        >
+                          <TacticalBoard
+                            trajectory={t.trajectory}
+                            jersey={t.player.jersey}
+                            color={m.color}
+                            foil={isFoil(t.tier)}
+                          />
+                        </div>
+                        <div className="mt-1.5 text-center text-[10px] font-bold" style={{ color: m.color }}>
+                          {m.label}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* visitante: proposta de valor · logado: continue jogando */}
+      {!me ? (
+        <Link
+          href="/entrar"
+          className="mb-10 flex flex-wrap items-center justify-between gap-4 border border-accent3/40 bg-accent3/5 px-6 py-4 transition-colors hover:bg-accent3/10"
+        >
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent3">Comece agora</div>
+            <div className="font-display text-2xl uppercase text-ink">
+              Crie a conta, ganhe R$ 500 e abra seu primeiro pack
+            </div>
+            <div className="text-[12px] text-muted">Moeda de teste — nenhum dinheiro real.</div>
+          </div>
+          <span className="bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white">
+            Criar conta grátis
+          </span>
+        </Link>
+      ) : openRounds > 0 || claimable ? (
+        <Link
+          href="/jogar"
+          className="mb-10 flex flex-wrap items-center justify-between gap-4 border border-line bg-[#0e0e10] px-6 py-4 transition-colors hover:border-white/30"
+        >
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent3">Continue jogando</div>
+            <div className="font-display text-2xl uppercase text-ink">
+              {claimable
+                ? `${claimable.name} pronto para resgatar`
+                : `${openRounds} rodada${openRounds > 1 ? 's' : ''} aberta${openRounds > 1 ? 's' : ''} no Matchday`}
+            </div>
+          </div>
+          <span className="border border-white/25 px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white">
+            Ir para o Jogar
+          </span>
+        </Link>
+      ) : null}
+
+      {rares.length > 0 && (
+        <section className="mb-10">
+          <SectionTitle white="Raridade em campo." colored="Lendários e Galácticos" />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {rares.map((t) => (
+              <LanceCard key={t.id} template={t} href={`/lance/${t.id}`} />
+            ))}
           </div>
         </section>
       )}
