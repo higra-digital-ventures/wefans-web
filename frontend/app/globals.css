@@ -169,6 +169,89 @@ body {
   }
 }
 
+/* ===== abertura de pacote (brief 11.7): rasgo, refletor e confete ===== */
+@media (prefers-reduced-motion: no-preference) {
+  .wf-tear {
+    animation: wf-tear 0.5s ease-in both;
+  }
+  @keyframes wf-tear {
+    0% {
+      transform: none;
+      opacity: 1;
+    }
+    35% {
+      transform: rotate(-4deg) scale(1.05);
+    }
+    70% {
+      transform: rotate(3deg) scale(1.12);
+    }
+    100% {
+      transform: rotate(-8deg) scale(1.35);
+      opacity: 0;
+    }
+  }
+
+  .wf-spotlight {
+    animation: wf-spotlight 1.6s ease-out both;
+  }
+  @keyframes wf-spotlight {
+    0% {
+      opacity: 0;
+    }
+    18% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .wf-confetti {
+    top: -12px;
+    animation-name: wf-confetti;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+  @keyframes wf-confetti {
+    0% {
+      transform: translateY(0) rotate(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(105vh) rotate(720deg);
+      opacity: 0.4;
+    }
+  }
+
+  /* foil holográfico animado nos Lendário/Galáctico (brief 11.1) */
+  .wf-foil::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 32%,
+      rgba(255, 46, 136, 0.16) 44%,
+      rgba(157, 78, 221, 0.2) 50%,
+      rgba(33, 212, 224, 0.16) 56%,
+      transparent 68%
+    );
+    background-size: 300% 300%;
+    animation: wf-foil 4.5s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes wf-foil {
+    0%,
+    100% {
+      background-position: 100% 100%;
+    }
+    50% {
+      background-position: 0% 0%;
+    }
+  }
+}
+
 /* fade-in de conteúdo a cada navegação */
 @media (prefers-reduced-motion: no-preference) {
   .wf-page {

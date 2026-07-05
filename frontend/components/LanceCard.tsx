@@ -51,7 +51,7 @@ export default function LanceCard({
           style={{ transform: 'rotateY(-14deg) rotateX(3deg)', transformStyle: 'preserve-3d' }}
         >
           <div
-            className="relative aspect-[4/5] overflow-hidden  border"
+            className={`relative aspect-[4/5] overflow-hidden border ${foil ? 'wf-foil' : ''}`}
             style={{
               borderColor: `${meta.color}66`,
               boxShadow: foil
