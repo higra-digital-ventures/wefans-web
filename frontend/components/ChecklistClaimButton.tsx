@@ -25,6 +25,7 @@ export default function ChecklistClaimButton({
     <div>
       <button
         disabled={pending || !isAuthed || !complete}
+        title={!isAuthed ? 'Entre para resgatar' : !complete ? 'Complete o checklist para liberar o bônus' : undefined}
         onClick={() =>
           start(async () => {
             setError(null);

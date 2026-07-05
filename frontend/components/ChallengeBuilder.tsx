@@ -107,6 +107,7 @@ export default function ChallengeBuilder({
 
       <button
         disabled={!allCovered || pending || !isAuthed}
+        title={!isAuthed ? 'Entre para participar' : !allCovered ? 'Preencha todos os espaços do álbum primeiro' : undefined}
         onClick={submit}
         className="mt-5  bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >

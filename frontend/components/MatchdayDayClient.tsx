@@ -169,6 +169,7 @@ export default function MatchdayDayClient({
 
       <button
         disabled={!full || pending || !isAuthed}
+        title={!isAuthed ? 'Entre para escalar' : !full ? `Escale ${day.lineupSize} jogadores para enviar` : undefined}
         onClick={() =>
           run(() =>
             submitFastbreakLineup(

@@ -41,6 +41,7 @@ export default function QuestClaimButton({
       <button
         onClick={onClaim}
         disabled={pending || !isAuthed || !eligible}
+        title={!isAuthed ? 'Entre para resgatar' : !eligible ? 'Cumpra o critério da missão para liberar' : undefined}
         className="bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
       >
         {pending ? 'Resgatando…' : eligible ? 'Resgatar recompensa' : 'Critério não cumprido'}

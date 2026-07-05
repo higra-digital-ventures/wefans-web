@@ -69,6 +69,7 @@ export default function FlashClaim({
 
       <button
         disabled={pending || !isAuthed || !flash.eligible}
+        title={!isAuthed ? 'Entre para resgatar' : !flash.eligible ? 'Você ainda não cumpre o critério de hoje' : undefined}
         onClick={() =>
           start(async () => {
             setError(null);
