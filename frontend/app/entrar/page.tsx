@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { login, register } from '@/lib/api-client';
+import { checkUsername, login, register } from '@/lib/api-client';
+import Icon from '@/components/Icon';
 
 type Mode = 'login' | 'register';
 
@@ -12,8 +13,25 @@ export default function EntrarPage() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPass, setShowPass] = useState(false);
+  const [avail, setAvail] = useState<'idle' | 'checking' | 'free' | 'taken'>('idle');
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+
+  // disponibilidade do usuário em tempo real (debounce 500ms)
+  useEffect(() => {
+    if (mode !== 'register' || username.length < 3) {
+      setAvail('idle');
+      return;
+    }
+    setAvail('checking');
+    const t = setTimeout(() => {
+      checkUsername(username)
+        .then((free) => setAvail(free ? 'free' : 'taken'))
+        .catch(() => setAvail('idle'));
+    }, 500);
+    return () => clearTimeout(t);
+  }, [mode, username]);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -94,21 +112,39 @@ export default function EntrarPage() {
               className={field}
               placeholder="seu_usuario"
             />
+            {avail === 'checking' && <p className="mt-1 text-xs text-neutral-500">verificando…</p>}
+            {avail === 'free' && (
+              <p className="mt-1 text-xs font-semibold text-emerald-400">✓ @{username} está disponível</p>
+            )}
+            {avail === 'taken' && (
+              <p className="mt-1 text-xs font-semibold text-red-400">@{username} já está em uso</p>
+            )}
           </div>
         )}
 
         <div>
           <label className="mb-1 block text-xs uppercase tracking-widest text-muted">Senha</label>
-          <input
-            type="password"
-            required
-            minLength={mode === 'register' ? 8 : 1}
-            autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={field}
-            placeholder={mode === 'register' ? 'mínimo 8 caracteres' : '••••••••'}
-          />
+          <div className="relative">
+            <input
+              type={showPass ? 'text' : 'password'}
+              required
+              minLength={mode === 'register' ? 8 : 1}
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`${field} pr-11`}
+              placeholder={mode === 'register' ? 'mínimo 8 caracteres' : '••••••••'}
+            />
+            <button
+              type="button"
+              aria-label={showPass ? 'Ocultar senha' : 'Mostrar senha'}
+              title={showPass ? 'Ocultar senha' : 'Mostrar senha'}
+              onClick={() => setShowPass(!showPass)}
+              className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors ${showPass ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+            >
+              <Icon name="eye" size={18} />
+            </button>
+          </div>
         </div>
 
         {error && (

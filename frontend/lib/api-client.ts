@@ -27,6 +27,14 @@ export const register = (email: string, username: string, password: string) =>
 
 export const logout = () => request('POST', '/api/v1/auth/logout', {});
 
+// cadastro: usuário disponível? (200 = já existe, 404 = livre)
+export async function checkUsername(username: string): Promise<boolean> {
+  const res = await fetch(`${API}/api/v1/users/${encodeURIComponent(username)}`, {
+    credentials: 'include',
+  });
+  return res.status === 404;
+}
+
 export const deposit = (amountCents: number) =>
   request('POST', '/api/v1/wallet/deposit', { amountCents });
 
