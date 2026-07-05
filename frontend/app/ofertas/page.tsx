@@ -1,3 +1,4 @@
+import EmptyState from '@/components/EmptyState';
 import { redirect } from 'next/navigation';
 import { getMyOffersServer } from '@/lib/api-server';
 import CancelOfferButton from '@/components/CancelOfferButton';
@@ -14,7 +15,11 @@ export default async function OfertasPage() {
       <h1 className="mb-1 font-display text-4xl uppercase text-ink">Minhas Ofertas</h1>
       <p className="mb-6 text-muted">{offers.length} oferta(s) ativa(s)</p>
       {offers.length === 0 ? (
-        <p className="text-muted">Você não tem ofertas ativas. Faça uma na página de um Lance.</p>
+        <EmptyState
+          title="Nenhuma oferta ativa"
+          hint="Achou um Lance que quer? Faça uma oferta na página dele — o dono é avisado na hora."
+          cta={{ label: 'Explorar o mercado', href: '/mercado' }}
+        />
       ) : (
         <ul className="divide-y divide-line  border border-line bg-panel">
           {offers.map((o) => (

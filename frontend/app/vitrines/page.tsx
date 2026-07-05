@@ -1,3 +1,4 @@
+import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
 import { getMyShowcasesServer, getPublicShowcasesServer } from '@/lib/api-server';
 import CreateShowcaseForm from '@/components/CreateShowcaseForm';
@@ -33,7 +34,10 @@ export default async function VitrinesPage() {
             <CreateShowcaseForm />
           </div>
           {mine.length === 0 ? (
-            <p className="text-muted">Você ainda não criou vitrines.</p>
+            <EmptyState
+              title="Sua primeira vitrine te espera"
+              hint="Monte uma seleção dos seus melhores Lances e mostre para a galera."
+            />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {mine.map((s) => (
