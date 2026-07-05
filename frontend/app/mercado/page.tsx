@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getMarketServer, getChallengesServer } from '@/lib/api-server';
+import { getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import SubTabs from '@/components/SubTabs';
 import { TIER_META, TIER_ORDER } from '@/lib/tiers';
@@ -42,10 +42,13 @@ export default async function MercadoPage({
   const qs = new URLSearchParams();
   if (tier) qs.set('tier', tier);
   if (sort && API_SORTS.has(sort)) qs.set('sort', sort);
-  const [allListings, challenges] = await Promise.all([
+  const [allListings, challenges, me, myWishlist] = await Promise.all([
     getMarketServer(qs.toString() ? `?${qs}` : ''),
     getChallengesServer().catch(() => []),
+    getMe(),
+    getWishlistServer().catch(() => null),
   ]);
+  const wishedIds = new Set((myWishlist ?? []).map((t) => t.id));
   let listings = allListings;
   if (q) {
     const needle = q.toLowerCase();
@@ -310,6 +313,7 @@ export default async function MercadoPage({
               serial={l.serial}
               priceCents={l.priceCents}
               href={`/momento/${l.momentId}`}
+              wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
             />
           ))}
         </div>

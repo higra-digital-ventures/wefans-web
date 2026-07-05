@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CardWishlist from './CardWishlist';
 import TacticalBoard from './TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
 import { brl } from '@/lib/format';
@@ -15,6 +16,7 @@ export default function LanceCard({
   priceCents,
   listingPriceCents,
   className = '',
+  wishlist,
 }: {
   template: TemplateDTO;
   serial?: number;
@@ -23,6 +25,8 @@ export default function LanceCard({
   priceCents?: number; // Menor preço (mercado)
   listingPriceCents?: number | null; // badge "À venda" (coleção)
   className?: string;
+  /** estado da wishlist do usuário (undefined = marcador decorativo) */
+  wishlist?: { wished: boolean; canWish: boolean };
 }) {
   const meta = TIER_META[template.tier];
   const foil = isFoil(template.tier);
@@ -36,12 +40,16 @@ export default function LanceCard({
     <div
       className={`group relative overflow-hidden  border border-white/[0.06] bg-[#050505] transition-colors duration-150 hover:border-white/20 ${className}`}
     >
-      {/* marcador (wishlist) */}
-      <span className="absolute right-3 top-3 z-10 text-neutral-400 transition-colors group-hover:text-white" aria-hidden>
-        <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
-          <path d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.2L5 22V3a1 1 0 0 1 1-1Zm1 2v14.5l5-3 5 3V4H7Z" />
-        </svg>
-      </span>
+      {/* marcador (wishlist) — clicável quando a página fornece o estado */}
+      {wishlist ? (
+        <CardWishlist templateId={template.id} initial={wishlist.wished} canWish={wishlist.canWish} />
+      ) : (
+        <span className="absolute right-3 top-3 z-10 text-neutral-400 transition-colors group-hover:text-white" aria-hidden>
+          <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
+            <path d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.2L5 22V3a1 1 0 0 1 1-1Zm1 2v14.5l5-3 5 3V4H7Z" />
+          </svg>
+        </span>
+      )}
 
       {/* mídia em perspectiva (slab 3D); no hover desvira e preenche o card
           enquanto o lance "toca" (glitch + bola na trajetória) — Top Shot */}
@@ -81,6 +89,11 @@ export default function LanceCard({
             {serial !== undefined && (
               <span className="absolute bottom-1.5 left-1.5  bg-black/60 px-1 py-0.5 tabular-nums text-[9px] text-white">
                 #{serial}
+              </span>
+            )}
+            {priceCents != null && (
+              <span className="absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+                Ver e comprar · {brl(priceCents)}
               </span>
             )}
           </div>
