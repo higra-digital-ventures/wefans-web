@@ -142,7 +142,7 @@ export default function LanceCard({
           {limited && (
             <span
               className="rounded-full border border-white/30 px-1.5 py-px text-[9px] font-bold leading-tight text-neutral-300"
-              title="Limited Edition — tiragem fixa, nunca aumenta"
+              title="Limited Edition — quantidade fixa, nunca aumenta"
             >
               LE
             </span>

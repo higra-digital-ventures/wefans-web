@@ -89,7 +89,7 @@ function DropPackCard({ drop, pack }: { drop: DropSummary; pack: PackDTO }) {
         <div className="min-w-0">
           <div className="truncate text-sm font-bold uppercase text-ink">{pack.name}</div>
           <div className="text-[10px] text-muted">
-            Tiragem: {pack.totalSupply.toLocaleString('pt-BR')} · Restantes:{' '}
+            Supply: {pack.totalSupply.toLocaleString('pt-BR')} · Restantes:{' '}
             {remaining.toLocaleString('pt-BR')}
           </div>
         </div>

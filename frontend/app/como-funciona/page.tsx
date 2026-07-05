@@ -32,16 +32,16 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
               <strong style={{ color: TIER_META[t].color }}>{TIER_META[t].label}</strong>
             </span>
           ))}
-        . Quanto mais raro, menor a tiragem — Galácticos têm pouquíssimos exemplares no mundo.
+        . Quanto mais raro, menos exemplares existem — Galácticos têm pouquíssimos exemplares no mundo.
       </>
     ),
   },
   {
     id: 'edicoes',
-    title: 'LE e CC (tiragem)',
+    title: 'Limitada e Aberta (quantos existem)',
     body: (
       <>
-        <strong>LE (Edição Limitada)</strong>: a tiragem é fixa — "/45" significa que só 45
+        <strong>LE (Edição Limitada)</strong>: a quantidade é fixa — "/45" significa que só 45
         exemplares existirão, nunca mais. <strong>CC (Circulante)</strong>: novos exemplares ainda
         podem ser criados em pacotes; o número mostrado é quantos circulam hoje.{' '}
         <strong>Burned</strong> são exemplares queimados para sempre;{' '}
