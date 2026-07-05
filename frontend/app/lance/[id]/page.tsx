@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function LancePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [t, wishlist, tm, collectors] = await Promise.all([
+  const [t, wishlist, collectors, tm] = await Promise.all([
     getTemplateServer(id),
     getWishlistServer(),
     getTemplateCollectorsServer(id),
