@@ -96,7 +96,9 @@ export default async function MercadoPage({
     return `/mercado${p.toString() ? `?${p}` : ''}`;
   };
 
-  const CHIP = 'rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide transition-colors';
+  // py maior no touch (alvo ≥40px); compacto no desktop
+  const CHIP =
+    'rounded-full border px-3 py-2.5 lg:py-1 text-[11px] font-semibold uppercase tracking-wide transition-colors';
 
   return (
     <div className="bg-[#050505]">

@@ -131,7 +131,7 @@ export default async function ColecaoPage({
         <Link
           href={`/colecao?${new URLSearchParams({ ...(tier ? { tier } : {}), ...(q ? { q } : {}), ...(venda ? {} : { venda: '1' }) })}`}
           scroll={false}
-          className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide ${
+          className={`rounded-full border px-3 py-2.5 lg:py-1.5 text-[11px] font-semibold uppercase tracking-wide ${
             venda ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300' : 'border-white/40 text-white hover:bg-white/10'
           }`}
         >
@@ -142,7 +142,7 @@ export default async function ColecaoPage({
       <div className="mb-5 flex flex-wrap items-center gap-1.5">
         <Link
           href="/colecao"
-          className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+          className={`rounded-full border px-3 py-2.5 lg:py-1 text-[11px] font-semibold uppercase tracking-wide ${
             !tier ? 'border-accent text-accent' : 'border-white/20 text-neutral-400 hover:text-white'
           }`}
         >
@@ -155,7 +155,7 @@ export default async function ColecaoPage({
               key={t}
               href={tier === t ? '/colecao' : `/colecao?tier=${t}`}
               scroll={false}
-              className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
+              className={`rounded-full border px-3 py-2.5 lg:py-1 text-[11px] font-semibold uppercase tracking-wide ${
                 tier === t ? 'border-white text-white' : 'border-white/20 text-neutral-400 hover:text-white'
               }`}
               style={tier === t ? undefined : { color: n > 0 ? TIER_META[t].color : undefined }}
