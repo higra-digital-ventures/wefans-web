@@ -25,8 +25,8 @@ export default function BuyPackButton({
     start(async () => {
       try {
         const r = await buyPack(packId);
-        toast('Pacote comprado! Hora de abrir…', 'success');
-        router.push(`/abrir/${r.inventoryId}`);
+        toast('Pacote comprado! Rasgando…', 'success');
+        router.push(`/abrir/${r.inventoryId}?auto=1`);
         router.refresh(); // atualiza o saldo na top bar (layout persistente)
       } catch (e) {
         const msg = e instanceof Error ? e.message : 'Erro';

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { openPack } from '@/lib/api-client';
 import LanceCard from './LanceCard';
@@ -10,11 +10,18 @@ import type { MomentDTO } from '@/lib/types';
 
 // Sequência de abertura (brief 11.7): rasgar → cartas materializam uma a uma →
 // flash de refletor + confete em Lendário/Galáctico → resumo com valor estimado.
-export default function OpenPackClient({ inventoryId }: { inventoryId: string }) {
+export default function OpenPackClient({
+  inventoryId,
+  auto = false,
+}: {
+  inventoryId: string;
+  auto?: boolean; // veio da compra: rasga sozinho, sem parar na tela do lacrado
+}) {
   const [moments, setMoments] = useState<MomentDTO[] | null>(null);
   const [tearing, setTearing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
+  const autoFired = useRef(false);
 
   const rare = useMemo(
     () => (moments ?? []).some((m) => isFoil(m.template.tier)),
@@ -43,6 +50,15 @@ export default function OpenPackClient({ inventoryId }: { inventoryId: string })
       }
     });
   }
+
+  // veio da compra com ?auto=1: rasga sozinho (uma vez)
+  useEffect(() => {
+    if (auto && !autoFired.current) {
+      autoFired.current = true;
+      open();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auto]);
 
   if (moments) {
     const meta = bestTier ? TIER_META[bestTier] : null;
