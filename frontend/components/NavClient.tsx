@@ -7,37 +7,20 @@ import SearchOverlay from './SearchOverlay';
 import NotificationsBell from './NotificationsBell';
 import ProfileDrawer from './ProfileDrawer';
 import CountUp from './CountUp';
+import Icon, { type IconName } from './Icon';
 import type { TemplateDTO } from '@/lib/types';
 
 // Top bar no padrão do Top Shot: nav central com ícone+texto e sublinhado no ativo,
 // busca/sino/carteira/avatar à direita (seção 11.12a).
+// Ícones do set central (padrão X): outline por padrão, preenchido no ativo.
 
-const I = {
-  explore: <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.2 5.8-2.4 6-6 2.4 2.4-6 6-2.4Z" />,
-  drops: <path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.6 8 12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z" />,
-  market: <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Zm0 2h12l1.5 2h-15L6 4Zm-1 4h14v12H5V8Zm4 2v2a3 3 0 0 0 6 0v-2h-2v2a1 1 0 0 1-2 0v-2H9Z" />,
-  play: <path d="M7 6a5 5 0 0 0-5 5v4a3 3 0 0 0 5.4 1.8L9 15h6l1.6 1.8A3 3 0 0 0 22 15v-4a5 5 0 0 0-5-5H7Zm1 3h2v2h2v2h-2v2H8v-2H6v-2h2V9Zm8 .5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Zm2.5 3a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z" />,
-  checkin: <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" />,
-  collection: <path d="M4 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm0 2v14h10V5H4Zm14 1h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2v-2h2V8h-2V6Z" />,
-  search: <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />,
-  bell: <path d="M12 2a6 6 0 0 0-6 6v3.6L4 15v2h16v-2l-2-3.4V8a6 6 0 0 0-6-6Zm-2 17a2 2 0 0 0 4 0h-4Z" />,
-};
-
-function Icon({ d }: { d: React.ReactNode }) {
-  return (
-    <svg viewBox="0 0 24 24" className="h-[22px] w-[22px] fill-current" aria-hidden>
-      {d}
-    </svg>
-  );
-}
-
-const NAV = [
-  { label: 'Explorar', href: '/explorar', icon: I.explore },
-  { label: 'Drops', href: '/drops', icon: I.drops },
-  { label: 'Mercado', href: '/mercado', icon: I.market },
-  { label: 'Jogar', href: '/jogar', icon: I.play, badge: 'MATCHDAY' },
-  { label: 'Check-in', href: '/checkin', icon: I.checkin },
-  { label: 'Coleção', href: '/colecao', icon: I.collection },
+const NAV: { label: string; href: string; icon: IconName; badge?: string }[] = [
+  { label: 'Explorar', href: '/explorar', icon: 'explore' },
+  { label: 'Drops', href: '/drops', icon: 'drops' },
+  { label: 'Mercado', href: '/mercado', icon: 'market' },
+  { label: 'Jogar', href: '/jogar', icon: 'play', badge: 'MATCHDAY' },
+  { label: 'Check-in', href: '/checkin', icon: 'checkin' },
+  { label: 'Coleção', href: '/colecao', icon: 'collection' },
 ];
 
 const MOBILE_ITEMS = [
@@ -97,7 +80,7 @@ export default function NavClient({
                   active ? 'text-ink' : 'text-muted hover:text-ink'
                 }`}
               >
-                <Icon d={n.icon} />
+                <Icon name={n.icon} filled={active} size={22} />
                 {n.label}
                 {'badge' in n && n.badge && (
                   <span className="bg-accent2 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white">
