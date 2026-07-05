@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getChecklistsServer, getCollectionServer } from '@/lib/api-server';
@@ -107,9 +108,7 @@ export default async function ColecaoPage({
         <form action="/colecao" className="relative min-w-[220px] flex-1">
           {tier && <input type="hidden" name="tier" value={tier} />}
           {venda && <input type="hidden" name="venda" value={venda} />}
-          <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 fill-neutral-400" aria-hidden>
-            <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
-          </svg>
+          <Icon name="search" size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input
             name="q"
             defaultValue={q ?? ''}

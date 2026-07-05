@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from './Icon';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
@@ -42,25 +43,25 @@ export default function ProfileDrawer({
       href: '/chat',
       label: 'Mensagens',
       dot: unreadChats > 0,
-      d: 'M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2Z',
+      icon: 'chat' as const,
     },
     {
       href: '/ofertas',
       label: 'Minhas ofertas',
       dot: false,
-      d: 'M21.4 11.6 12.4 2.6A2 2 0 0 0 11 2H4a2 2 0 0 0-2 2v7c0 .5.2 1 .6 1.4l9 9a2 2 0 0 0 2.8 0l7-7a2 2 0 0 0 0-2.8ZM6.5 8A1.5 1.5 0 1 1 8 6.5 1.5 1.5 0 0 1 6.5 8Z',
+      icon: 'tag' as const,
     },
     {
       href: '/colecao',
       label: 'Minha coleção',
       dot: false,
-      d: 'M4 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm14 3h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2v-2h2V8h-2V6Z',
+      icon: 'collection' as const,
     },
     {
       href: '/perfil',
       label: 'Configurações da conta',
       dot: false,
-      d: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4a7 7 0 0 0-.1-1.2l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-2-1.2L16 3h-4l-.5 2.6a7.7 7.7 0 0 0-2 1.2l-2.4-1-2 3.5 2 1.5A7 7 0 0 0 7 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.5 2.4-1c.6.5 1.3.9 2 1.2L12 21h4l.5-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.5-2-1.5c.1-.4.1-.8.1-1.2Z',
+      icon: 'settings' as const,
     },
   ];
 
@@ -100,7 +101,7 @@ export default function ProfileDrawer({
                 onClick={() => setOpen(false)}
                 className="text-neutral-400 hover:text-white"
               >
-                ✕
+                <Icon name="close" size={20} />
               </button>
             </div>
 
@@ -130,18 +131,14 @@ export default function ProfileDrawer({
             <nav className="flex-1 overflow-y-auto py-2">
               {MENU.map((m) => (
                 <Link key={m.href} href={m.href} onClick={() => setOpen(false)} className={item}>
-                  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-neutral-300" aria-hidden>
-                    <path d={m.d} />
-                  </svg>
+                  <Icon name={m.icon} size={20} className="text-neutral-300" />
                   {m.label}
                   {m.dot && <span className="ml-auto h-2 w-2 rounded-full bg-accent" aria-label="não lidas" />}
                 </Link>
               ))}
               {me.isAdmin && (
                 <Link href="/admin" onClick={() => setOpen(false)} className={item}>
-                  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-accent2" aria-hidden>
-                    <path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Zm-1 14-3.5-3.5L9 11l2 2 4-4 1.5 1.5L11 16Z" />
-                  </svg>
+                  <Icon name="shield" size={20} className="text-accent2" />
                   <span className="text-accent2">Painel admin</span>
                 </Link>
               )}
@@ -161,9 +158,7 @@ export default function ProfileDrawer({
               }}
               className="flex items-center gap-3 border-t border-white/10 px-5 py-4 text-[14px] font-semibold text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
             >
-              <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current" aria-hidden>
-                <path d="M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5v-2H5V5h5V3Zm5 4-1.4 1.4L16.2 11H9v2h7.2l-2.6 2.6L15 17l5-5-5-5Z" />
-              </svg>
+              <Icon name="logout" size={20} />
               Sair
             </button>
           </aside>

@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from './Icon';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -36,9 +37,7 @@ export default function SortDropdown({
         className="flex h-full min-h-[48px] items-center gap-2 border border-white/60 bg-black px-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white hover:border-white"
       >
         {active.label}
-        <svg viewBox="0 0 24 24" className={`h-3 w-3 fill-current transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden>
-          <path d="m12 15-5-5h10l-5 5Z" />
-        </svg>
+        <Icon name="chevronDown" size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
         <ul

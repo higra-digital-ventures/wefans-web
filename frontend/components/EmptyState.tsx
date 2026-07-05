@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import Link from 'next/link';
 
 // Estado vazio padronizado: cluster de círculos da marca + título + dica + CTA.
@@ -21,9 +22,7 @@ export default function EmptyState({
         <div className="flex items-center gap-3.5">
           <span className="h-3.5 w-3.5 rounded-full" style={{ background: '#ff9e2c', opacity: 0.9 }} />
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent">
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-white">
-              <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.2 5.8-2.4 6-6 2.4 2.4-6 6-2.4Z" />
-            </svg>
+            <Icon name="explore" filled size={14} className="text-white" />
           </span>
           <span className="h-3.5 w-3.5 rounded-full" style={{ background: '#22c55e', opacity: 0.9 }} />
         </div>

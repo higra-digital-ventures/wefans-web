@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from './Icon';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchChats, fetchThread, sendChatMessage } from '@/lib/api-client';
@@ -96,9 +97,7 @@ export default function ChatClient({ initialWith }: { initialWith?: string }) {
               searchOpen ? 'bg-white/15 text-white' : 'bg-[#17171a] text-neutral-300 hover:text-white'
             }`}
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
-              <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
-            </svg>
+            <Icon name="search" size={16} />
           </button>
         </div>
         {searchOpen && (
@@ -174,9 +173,7 @@ export default function ChatClient({ initialWith }: { initialWith?: string }) {
               <div className="flex items-center gap-4">
                 <span className="h-4 w-4 rounded-full" style={{ background: '#3b82f6', opacity: 0.9 }} />
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent">
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 fill-white">
-                    <path d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2Z" />
-                  </svg>
+                  <Icon name="chat" filled size={16} className="text-white" />
                 </span>
                 <span className="h-4 w-4 rounded-full" style={{ background: '#ff2e88', opacity: 0.9 }} />
               </div>

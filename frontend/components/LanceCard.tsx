@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import Link from 'next/link';
 import CardWishlist from './CardWishlist';
 import TacticalBoard from './TacticalBoard';
@@ -47,9 +48,7 @@ export default function LanceCard({
         <CardWishlist templateId={template.id} initial={wishlist.wished} canWish={wishlist.canWish} />
       ) : (
         <span className="absolute right-3 top-3 z-10 text-neutral-400 transition-colors group-hover:text-white" aria-hidden>
-          <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
-            <path d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.2L5 22V3a1 1 0 0 1 1-1Zm1 2v14.5l5-3 5 3V4H7Z" />
-          </svg>
+          <Icon name="bookmark" size={20} />
         </span>
       )}
 

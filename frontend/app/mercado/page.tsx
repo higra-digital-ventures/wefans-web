@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import Link from 'next/link';
 import { getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
@@ -166,9 +167,7 @@ export default async function MercadoPage({
                     href={`/jogar/desafios/${c.id}`}
                     className="mt-2.5 flex items-center justify-center gap-1.5  border border-white/20 bg-[#141416] py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/10"
                   >
-                    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" aria-hidden>
-                      <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 2h3l.6 3H22l-2.4 8.5a2 2 0 0 1-1.9 1.5H8.1a2 2 0 0 1-2-1.6L4.2 4H3V2Zm4 5 1.2 6h10l1.7-6H7Z" />
-                    </svg>
+                    <Icon name="market" size={14} />
                     {c.completed ? 'Fechado!' : c.burnOnComplete ? 'Trocar' : 'Completar'}
                   </Link>
                 </div>
@@ -181,9 +180,7 @@ export default async function MercadoPage({
       {/* barra de filtros delineada (bordas brancas), como no print do Top Shot */}
       <div className="mb-2.5 flex flex-wrap items-stretch gap-2.5">
         <span className="flex w-12 shrink-0 items-center justify-center  border border-white/60 text-white" aria-hidden>
-          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current">
-            <path d="M6 3h2v6H6V3Zm0 10h2v8H6v-8Zm-2-3h6v2H4v-2Zm7-7h2v3h-2V3Zm0 7h2v11h-2V10ZM9 7h6v2H9V7Zm7-4h2v11h-2V3Zm-2 12h6v2h-6v-2Zm2 3h2v3h-2v-3Z" />
-          </svg>
+          <Icon name="sliders" size={18} />
         </span>
         <form action="/mercado" className="relative min-w-[260px] flex-1">
           {tier && <input type="hidden" name="tier" value={tier} />}
@@ -193,9 +190,7 @@ export default async function MercadoPage({
           {pmin && <input type="hidden" name="pmin" value={pmin} />}
           {pmax && <input type="hidden" name="pmax" value={pmax} />}
           {deal && <input type="hidden" name="deal" value={deal} />}
-          <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 fill-neutral-400" aria-hidden>
-            <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
-          </svg>
+          <Icon name="search" size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input
             name="q"
             defaultValue={q ?? ''}
@@ -266,9 +261,7 @@ export default async function MercadoPage({
             title="Em breve"
           >
             Floor gap
-            <svg viewBox="0 0 24 24" className="h-3 w-3 fill-current" aria-hidden>
-              <path d="m12 15-5-5h10l-5 5Z" />
-            </svg>
+            <Icon name="chevronDown" size={12} />
           </span>
           <Link
             href={href({ vis: undefined })}
@@ -284,18 +277,14 @@ export default async function MercadoPage({
             aria-label="Modo lista"
             className={`flex h-9 w-9 items-center justify-center rounded border ${vis === 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
-              <path d="M4 5h16v3H4V5Zm0 5.5h16v3H4v-3ZM4 16h16v3H4v-3Z" />
-            </svg>
+            <Icon name="list" size={16} />
           </Link>
           <Link
             href={href({ vis: 'compact' })}
             aria-label="Grade densa"
             className={`flex h-9 w-9 items-center justify-center  border ${dense ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
-              <path d="M3 3h18v18H3V3Zm2 2v3.5h6.5V5H5Zm8.5 0v3.5H19V5h-5.5ZM5 10.5V14h6.5v-3.5H5Zm8.5 0V14H19v-3.5h-5.5ZM5 16v3h6.5v-3H5Zm8.5 0v3H19v-3h-5.5Z" />
-            </svg>
+            <Icon name="grid" size={16} />
           </Link>
         </span>
       </div>

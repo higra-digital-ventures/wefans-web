@@ -1,5 +1,6 @@
 'use client';
 
+import Icon from './Icon';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
@@ -104,9 +105,7 @@ export default function SearchOverlay({
         onClick={() => setOpen(true)}
         className="flex h-10 w-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-panel2 hover:text-ink"
       >
-        <svg viewBox="0 0 24 24" className="h-[22px] w-[22px] fill-current" aria-hidden>
-          <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
-        </svg>
+        <Icon name="search" size={22} />
       </button>
 
       {open &&
@@ -130,13 +129,7 @@ export default function SearchOverlay({
                   go(q.trim());
                 }}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 fill-neutral-400"
-                  aria-hidden
-                >
-                  <path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z" />
-                </svg>
+                <Icon name="search" size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   ref={inputRef}
                   value={q}
@@ -150,9 +143,7 @@ export default function SearchOverlay({
                 onClick={() => setOpen(false)}
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-neutral-400 hover:text-white"
               >
-                <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden>
-                  <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm3.5 12.1-1.4 1.4L12 13.4l-2.1 2.1-1.4-1.4 2.1-2.1-2.1-2.1 1.4-1.4 2.1 2.1 2.1-2.1 1.4 1.4-2.1 2.1 2.1 2.1Z" />
-                </svg>
+                <Icon name="close" size={20} />
               </button>
             </div>
 
@@ -240,9 +231,7 @@ export default function SearchOverlay({
                     onClick={() => setOpen(false)}
                     className="mt-4 flex w-full items-center gap-2.5 border border-white/10 bg-[#141416] px-3 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
                   >
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-neutral-300" aria-hidden>
-                      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Zm0 2h12l1.5 2h-15L6 4Zm-1 4h14v12H5V8Z" />
-                    </svg>
+                    <Icon name="market" size={16} className="text-neutral-300" />
                     Fichas &amp; Rankings
                   </Link>
                 </div>
@@ -251,9 +240,7 @@ export default function SearchOverlay({
               <div className="min-w-0 flex-1">
                 <div className="mb-3 flex items-baseline justify-between">
                   <div className="flex items-center gap-2 text-[13px] font-bold text-white">
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 fill-neutral-300" aria-hidden>
-                      <path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.6 8 12 11.7 5.4 8 12 4.3Z" />
-                    </svg>
+                    <Icon name="drops" size={16} className="text-neutral-300" />
                     Moments populares
                   </div>
                   <Link

@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -31,9 +32,7 @@ function Panel({ title, children, open = true }: { title: string; children: Reac
     <details open={open} className="group border border-line bg-[#0e0e10]">
       <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 [&::-webkit-details-marker]:hidden">
         <span className="font-display text-lg uppercase tracking-wide text-ink">{title}</span>
-        <svg viewBox="0 0 24 24" className="h-4 w-4 fill-muted transition-transform group-open:rotate-180" aria-hidden>
-          <path d="m12 15.4-6-6L7.4 8l4.6 4.6L16.6 8 18 9.4l-6 6Z" />
-        </svg>
+        <Icon name="chevronDown" size={16} className="text-muted transition-transform group-open:rotate-180" />
       </summary>
       <div className="border-t border-line px-5 py-4">{children}</div>
     </details>

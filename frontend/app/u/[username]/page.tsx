@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getMe, getPublicCollectionServer, getPublicProfileServer, getPublicWishlistServer } from '@/lib/api-server';
@@ -46,9 +47,7 @@ export default async function PublicProfilePage({
             href={`/chat?u=${encodeURIComponent(profile.username)}`}
             className="mt-3 inline-flex items-center gap-2 border border-white/25 px-4 py-2 text-[12px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-white/10"
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
-              <path d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2Zm0 2v11.6L7.2 14H20V5H4Z" />
-            </svg>
+            <Icon name="chat" size={16} />
             Mensagem
           </Link>
         )}
