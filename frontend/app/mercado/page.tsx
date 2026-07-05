@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import EmptyState from '@/components/EmptyState';
+import PriceFilter from '@/components/PriceFilter';
 import SortDropdown from '@/components/SortDropdown';
 import SubTabs from '@/components/SubTabs';
 import TacticalBoard from '@/components/TacticalBoard';
@@ -198,15 +199,7 @@ export default async function MercadoPage({
             className="h-12 w-full  border border-white/60 bg-transparent pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-white"
           />
         </form>
-        <form action="/mercado" className="flex items-stretch gap-2.5">
-          {tier && <input type="hidden" name="tier" value={tier} />}
-          {q && <input type="hidden" name="q" value={q} />}
-          {badge && <input type="hidden" name="badge" value={badge} />}
-          {vis && <input type="hidden" name="vis" value={vis} />}
-          <button className="flex items-center gap-2 border border-white/60 px-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white hover:bg-white/10">
-            OK
-          </button>
-        </form>
+        <PriceFilter pmin={pmin} pmax={pmax} />
         <SortDropdown options={SORTS} current={sort ?? 'recent'} />
       </div>
 
