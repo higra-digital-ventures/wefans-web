@@ -278,7 +278,7 @@ export default function SearchOverlay({
                             />
                           </div>
                           <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/20 bg-black px-2 py-px text-[8px] font-bold text-neutral-300">
-                            {t.editionType === 'LIMITADA' ? `#/${t.editionSize} LE` : `CC · ${t.circulatingCount}`}
+                            {t.editionType === 'LIMITADA' ? `Limitada /${t.editionSize}` : `Aberta · ${t.circulatingCount}`}
                           </span>
                         </div>
                         <div className="mt-4 text-[13px] font-bold leading-tight text-white">

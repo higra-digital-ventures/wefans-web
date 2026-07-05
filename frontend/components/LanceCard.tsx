@@ -132,7 +132,7 @@ export default function LanceCard({
                 : 'Edição circulante: novos exemplares ainda podem ser criados'
             }
           >
-            {limited ? supply : `CC · ${supply}`}
+            {limited ? supply : `Aberta · ${supply}`}
           </span>
           {limited && (
             <span
