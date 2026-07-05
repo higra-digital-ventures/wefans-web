@@ -266,25 +266,26 @@ export default async function MercadoPage({
           <Link
             href={href({ vis: undefined })}
             aria-label="Grade confortável"
+            title="Grade confortável"
             className={`flex h-9 w-9 items-center justify-center  border ${!dense ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
-              <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2v14a7 7 0 0 1 0-14Z" />
-            </svg>
+            <Icon name="grid" size={16} />
           </Link>
           <Link
             href={href({ vis: 'list' })}
             aria-label="Modo lista"
-            className={`flex h-9 w-9 items-center justify-center rounded border ${vis === 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
+            title="Modo lista"
+            className={`flex h-9 w-9 items-center justify-center border ${vis === 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
           >
             <Icon name="list" size={16} />
           </Link>
           <Link
             href={href({ vis: 'compact' })}
             aria-label="Grade densa"
+            title="Grade densa"
             className={`flex h-9 w-9 items-center justify-center  border ${dense ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
           >
-            <Icon name="grid" size={16} />
+            <Icon name="gridDense" size={16} />
           </Link>
         </span>
       </div>
