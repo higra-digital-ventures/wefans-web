@@ -70,8 +70,12 @@ export const burnMoment = (id: string) => request('POST', `/api/v1/moments/${id}
 export const giftMoment = (id: string, toUsername: string) =>
   request('POST', `/api/v1/moments/${id}/gift`, { toUsername });
 
-export const makeOffer = (body: { momentId?: string; templateId?: string; priceCents: number }) =>
-  request('POST', '/api/v1/offers', body);
+export const makeOffer = (body: {
+  momentId?: string;
+  templateId?: string;
+  priceCents: number;
+  expiresAt?: string;
+}) => request('POST', '/api/v1/offers', body);
 export const acceptOffer = (offerId: string, momentId?: string) =>
   request('POST', `/api/v1/offers/${offerId}/accept`, momentId ? { momentId } : undefined);
 export const cancelOffer = (offerId: string) => request('DELETE', `/api/v1/offers/${offerId}`);

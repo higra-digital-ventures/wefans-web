@@ -514,7 +514,14 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
         )}
 
         <Panel title="Maiores ofertas" open={offers.length > 0}>
-          <OffersPanel momentId={m.id} isOwner={isOwner} isAuthed={!!me} offers={offers} bare />
+          <OffersPanel
+            momentId={m.id}
+            isOwner={isOwner}
+            isAuthed={!!me}
+            offers={offers}
+            balanceCents={me?.balanceCents ?? null}
+            bare
+          />
         </Panel>
 
         <Panel title="Histórico e procedência" open={false}>
