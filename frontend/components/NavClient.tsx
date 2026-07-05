@@ -14,11 +14,31 @@ import type { TemplateDTO } from '@/lib/types';
 // busca/sino/carteira/avatar à direita (seção 11.12a).
 // Ícones do set central (padrão X): outline por padrão, preenchido no ativo.
 
-const NAV: { label: string; href: string; icon: IconName; badge?: string }[] = [
+const NAV: {
+  label: string;
+  href: string;
+  icon: IconName;
+  badge?: string;
+  children?: { label: string; href: string }[];
+}[] = [
   { label: 'Explorar', href: '/explorar', icon: 'explore' },
   { label: 'Drops', href: '/drops', icon: 'drops' },
   { label: 'Mercado', href: '/mercado', icon: 'market' },
-  { label: 'Jogar', href: '/jogar', icon: 'play', badge: 'MATCHDAY' },
+  {
+    label: 'Jogar',
+    href: '/jogar',
+    icon: 'play',
+    badge: 'MATCHDAY',
+    // submenu no hover: os modos a um clique, sem passar pelo hub
+    children: [
+      { label: 'Matchday', href: '/jogar/matchday' },
+      { label: 'Desafios', href: '/jogar/desafios' },
+      { label: 'Rankings', href: '/jogar/rankings' },
+      { label: 'Missões', href: '/jogar/missoes' },
+      { label: 'Checklists', href: '/jogar/checklists' },
+      { label: 'Check-in', href: '/checkin' },
+    ],
+  },
   { label: 'Coleção', href: '/colecao', icon: 'collection' },
 ];
 
@@ -72,22 +92,36 @@ export default function NavClient({
           {NAV.map((n) => {
             const active = isActive(n.href);
             return (
-              <Link
-                key={n.href}
-                href={n.href}
-                className={`relative flex items-center gap-2 px-4 text-[15px] font-semibold transition-colors ${
-                  active ? 'text-ink' : 'text-muted hover:text-ink'
-                }`}
-              >
-                <Icon name={n.icon} filled={active} size={22} />
-                {n.label}
-                {'badge' in n && n.badge && (
-                  <span className="bg-accent2 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white">
-                    {n.badge}
-                  </span>
+              <div key={n.href} className="group relative flex items-stretch">
+                <Link
+                  href={n.href}
+                  className={`relative flex items-center gap-2 px-4 text-[15px] font-semibold transition-colors ${
+                    active ? 'text-ink' : 'text-muted hover:text-ink'
+                  }`}
+                >
+                  <Icon name={n.icon} filled={active} size={22} />
+                  {n.label}
+                  {n.badge && (
+                    <span className="bg-accent2 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white">
+                      {n.badge}
+                    </span>
+                  )}
+                  {active && <span className="absolute inset-x-2 bottom-0 h-[3px] bg-ink" />}
+                </Link>
+                {n.children && (
+                  <div className="absolute left-0 top-full z-50 hidden min-w-[190px] border border-white/10 bg-[#0c0c0e] py-1 shadow-[0_20px_50px_rgba(0,0,0,.7)] group-hover:block">
+                    {n.children.map((c) => (
+                      <Link
+                        key={c.href}
+                        href={c.href}
+                        className="block px-4 py-2 text-[13px] font-semibold text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
                 )}
-                {active && <span className="absolute inset-x-2 bottom-0 h-[3px] bg-ink" />}
-              </Link>
+              </div>
             );
           })}
         </nav>
