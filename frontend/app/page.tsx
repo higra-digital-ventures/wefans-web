@@ -1,5 +1,6 @@
 import Icon from '@/components/Icon';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import {
   getActivityServer,
   getChallengesServer,
@@ -7,7 +8,6 @@ import {
   getPacksServer,
   getPackDetailServer,
   getTemplatesServer,
-  getFastbreakRunsServer,
   getMe,
 } from '@/lib/api-server';
 import ActivityFeed from '@/components/ActivityFeed';
@@ -30,14 +30,17 @@ function SectionTitle({ white, colored }: { white: string; colored: string }) {
 }
 
 export default async function Home() {
-  const [drops, packs, activity, challenges, templates, runs, me] = await Promise.all([
+  // Uma "casa" só (padrão X): logado cai direto no feed; a vitrine abaixo
+  // é a landing do visitante.
+  const me = await getMe();
+  if (me) redirect('/explorar');
+
+  const [drops, packs, activity, challenges, templates] = await Promise.all([
     getDropsServer().catch(() => []),
     getPacksServer().catch(() => []),
     getActivityServer(8).catch(() => []),
     getChallengesServer().catch(() => []),
     getTemplatesServer().catch(() => []),
-    getFastbreakRunsServer().catch(() => []),
-    getMe(),
   ]);
 
   const hero = drops.find((d) => d.status === 'LIVE') ?? drops.find((d) => d.status === 'WAITING') ?? drops[0];
@@ -49,10 +52,6 @@ export default async function Home() {
   const buyablePacks = packs.filter((p) => p.priceCents > 0).slice(0, 3);
   const activeChallenges = challenges.filter((c) => c.active && !c.completed).slice(0, 3);
   const rares = templates.filter((t) => isFoil(t.tier)).slice(0, 4);
-  const openRounds = runs.reduce((n, r) => n + r.days.filter((d) => !d.closed).length, 0);
-  const claimable = challenges.find(
-    (c) => c.active && !c.completed && c.progress && c.progress.have >= c.progress.need,
-  );
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
@@ -156,41 +155,22 @@ export default async function Home() {
         </section>
       )}
 
-      {/* visitante: proposta de valor · logado: continue jogando */}
-      {!me ? (
-        <Link
-          href="/entrar"
-          className="mb-10 flex flex-wrap items-center justify-between gap-4 border border-accent3/40 bg-accent3/5 px-6 py-4 transition-colors hover:bg-accent3/10"
-        >
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent3">Comece agora</div>
-            <div className="font-display text-2xl uppercase text-ink">
-              Crie a conta, ganhe R$ 500 e abra seu primeiro pack
-            </div>
-            <div className="text-[12px] text-muted">Moeda de teste — nenhum dinheiro real.</div>
+      {/* landing de visitante: proposta de valor */}
+      <Link
+        href="/entrar"
+        className="mb-10 flex flex-wrap items-center justify-between gap-4 border border-accent3/40 bg-accent3/5 px-6 py-4 transition-colors hover:bg-accent3/10"
+      >
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent3">Comece agora</div>
+          <div className="font-display text-2xl uppercase text-ink">
+            Crie a conta, ganhe R$ 500 e abra seu primeiro pack
           </div>
-          <span className="bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white">
-            Criar conta grátis
-          </span>
-        </Link>
-      ) : openRounds > 0 || claimable ? (
-        <Link
-          href="/jogar"
-          className="mb-10 flex flex-wrap items-center justify-between gap-4 border border-line bg-[#0e0e10] px-6 py-4 transition-colors hover:border-white/30"
-        >
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent3">Continue jogando</div>
-            <div className="font-display text-2xl uppercase text-ink">
-              {claimable
-                ? `${claimable.name} pronto para resgatar`
-                : `${openRounds} rodada${openRounds > 1 ? 's' : ''} aberta${openRounds > 1 ? 's' : ''} no Matchday`}
-            </div>
-          </div>
-          <span className="border border-white/25 px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white">
-            Ir para o Jogar
-          </span>
-        </Link>
-      ) : null}
+          <div className="text-[12px] text-muted">Moeda de teste — nenhum dinheiro real.</div>
+        </div>
+        <span className="bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white">
+          Criar conta grátis
+        </span>
+      </Link>
 
       {rares.length > 0 && (
         <section className="mb-10">
