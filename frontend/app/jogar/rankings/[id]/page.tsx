@@ -27,7 +27,7 @@ export default async function RankingDetailPage({ params }: { params: Promise<{ 
 
       <div className="grid gap-8 md:grid-cols-[1fr_minmax(0,340px)]">
         <div className="border border-line bg-panel">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto"><table className="w-full text-sm">
             <thead>
               <tr className="border-b border-line text-left text-xs uppercase tracking-widest text-muted">
                 <th className="px-4 py-3">#</th>
@@ -58,7 +58,7 @@ export default async function RankingDetailPage({ params }: { params: Promise<{ 
                 ))
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         <RankingClient board={board} isAdmin={!!me?.isAdmin} isAuthed={!!me} />

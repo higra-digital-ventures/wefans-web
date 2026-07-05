@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCollectionServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
+import EmptyState from '@/components/EmptyState';
 import TierChips from '@/components/TierChips';
 import { brl } from '@/lib/format';
 import type { MomentDTO } from '@/lib/types';
@@ -96,12 +97,11 @@ export default async function ColecaoPage({
       <TierChips basePath="/colecao" active={tier} />
 
       {moments.length === 0 ? (
-        <div className="border border-line bg-panel p-8 text-center">
-          <p className="mb-4 text-muted">Você ainda não tem Lances{tier ? ' deste tier' : ''}.</p>
-          <Link href="/pacotes" className="bg-accent px-5 py-2.5 font-semibold text-white">
-            Abrir um pacote
-          </Link>
-        </div>
+        <EmptyState
+          title={tier ? 'Nada deste tier ainda' : 'Sua coleção começa aqui'}
+          hint="Abra um pacote e revele seus primeiros Lances numerados."
+          cta={{ label: 'Abrir um pacote', href: '/pacotes' }}
+        />
       ) : showAll ? (
         <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]">
           {moments.map((m) => (

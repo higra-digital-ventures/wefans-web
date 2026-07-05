@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getFeedServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
 import SubTabs from '@/components/SubTabs';
+import EmptyState from '@/components/EmptyState';
 import FeedPoller from '@/components/FeedPoller';
 import TacticalBoard from '@/components/TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
@@ -214,9 +215,10 @@ const FEED_TABS: { key: string; label: string; kinds: FeedEvent['kind'][] | null
 export default async function ExplorarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ f?: string; n?: string }>;
+  searchParams: Promise<{ f?: string; n?: string; d?: string }>;
 }) {
-  const { f, n } = await searchParams;
+  const { f, n, d } = await searchParams;
+  const compact = d === '1';
   const tab = FEED_TABS.find((t) => t.key === (f ?? '')) ?? FEED_TABS[0];
   // paginação simples: ?n= aumenta a janela do feed (teto 120 no backend)
   const size = Math.min(120, Math.max(40, Number(n) || 40));
@@ -344,15 +346,50 @@ export default async function ExplorarPage({
               }))}
             />
             <FeedPoller latestId={feed?.events[0]?.id ?? null} />
+            <div className="flex justify-end pb-1">
+              <Link
+                href={`/explorar?${new URLSearchParams({ ...(f ? { f } : {}), ...(compact ? {} : { d: '1' }) })}`}
+                className="text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-500 hover:text-white"
+              >
+                {compact ? 'modo cards' : 'modo compacto'}
+              </Link>
+            </div>
           </div>
           {events.length === 0 && (
-            <p className="border border-white/10 bg-[#0c0c0e] p-8 text-center text-sm text-neutral-400">
-              Sem atividade ainda — abra um pacote ou compre no mercado.
-            </p>
+            <EmptyState
+              title="Sem atividade ainda"
+              hint="Abra um pacote ou compre no mercado — cada jogada vira um evento aqui."
+              cta={{ label: 'Abrir um pacote', href: '/pacotes' }}
+            />
           )}
-          {events.map((e) => (
-            <EventCard key={e.id} e={e} />
-          ))}
+          {events.map((e) =>
+            compact ? (
+              <Link
+                key={e.id}
+                href={e.momentId ? `/momento/${e.momentId}` : e.template ? `/lance/${e.template.id}` : '/explorar'}
+                className="flex items-center gap-2.5 border border-white/[0.06] bg-[#0c0c0e] px-3 py-2 text-[12px] transition-colors hover:border-white/25"
+              >
+                <span
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-bold uppercase text-white"
+                  style={{ background: avatarBg(e.user) }}
+                >
+                  {(e.user ?? '?')[0]}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-neutral-300">
+                  <span className="font-bold text-white">@{e.user ?? 'anônimo'}</span> {ACTION[e.kind]}{' '}
+                  <span className="font-semibold text-white">
+                    {e.template ? `${e.template.player.name}${e.serial ? ` #${e.serial}` : ''}` : (e.label ?? '')}
+                  </span>
+                </span>
+                {e.priceCents != null && e.priceCents > 0 && (
+                  <span className="shrink-0 font-bold tabular-nums text-white">{brl(e.priceCents)}</span>
+                )}
+                <span className="shrink-0 text-[10px] text-neutral-500">{timeAgo(e.createdAt)}</span>
+              </Link>
+            ) : (
+              <EventCard key={e.id} e={e} />
+            ),
+          )}
           {(feed?.events.length ?? 0) >= fetchSize && size < 120 && (
             <Link
               href={`/explorar?${new URLSearchParams({ ...(f ? { f } : {}), n: String(size + 40) })}`}

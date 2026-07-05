@@ -344,7 +344,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400">
                 Maiores compras
               </div>
-              <table className="w-full">
+              <div className="overflow-x-auto"><table className="w-full min-w-[520px]">
                 <thead>
                   <tr className="border-b border-line">
                     <th className={TH}>Comprador</th>
@@ -374,12 +374,12 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
 
               <div className="mb-1 mt-6 text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400">
                 Compras recentes
               </div>
-              <table className="w-full">
+              <div className="overflow-x-auto"><table className="w-full min-w-[520px]">
                 <thead>
                   <tr className="border-b border-line">
                     <th className={TH}>Comprador</th>
@@ -404,7 +404,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
               <div className="mt-4 text-center">
                 <Link
                   href="/mercado/atividade"

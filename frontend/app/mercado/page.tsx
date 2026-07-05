@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
+import EmptyState from '@/components/EmptyState';
 import SortDropdown from '@/components/SortDropdown';
 import SubTabs from '@/components/SubTabs';
 import TacticalBoard from '@/components/TacticalBoard';
@@ -365,9 +366,11 @@ export default async function MercadoPage({
 
         <div>
           {listings.length === 0 ? (
-            <div className="border border-white/10 bg-[#0a0a0a] p-10 text-center text-sm text-neutral-400">
-              Nada à venda com esse filtro.
-            </div>
+            <EmptyState
+              title="Nada à venda com esse filtro"
+              hint="Afrouxe os filtros ou marque edições na wishlist para ser avisado quando listarem."
+              cta={{ label: 'Limpar filtros', href: '/mercado' }}
+            />
           ) : vis === 'list' ? (
             <ul className="divide-y divide-white/[0.06] border border-white/10 bg-[#0a0a0b]">
               {pageListings.map((l) => {
