@@ -1,4 +1,4 @@
 import GridSkeleton from '@/components/GridSkeleton';
 export default function Loading() {
-  return <GridSkeleton title="mercado" />;
+  return <GridSkeleton fullscreen title="mercado" />;
 }
