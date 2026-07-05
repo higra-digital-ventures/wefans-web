@@ -1,5 +1,6 @@
 'use client';
 
+import { useToast } from '@/components/Toaster';
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -17,15 +18,17 @@ export default function PackMarketClient({
   isAuthed: boolean;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [prices, setPrices] = useState<Record<string, string>>({});
 
-  const run = (fn: () => Promise<unknown>) => {
+  const run = (fn: () => Promise<unknown>, ok?: string) => {
     setError(null);
     start(async () => {
       try {
         await fn();
+        if (ok) toast(ok, 'success');
         router.refresh();
       } catch (e) {
         const m = e instanceof Error ? e.message : 'Erro';
@@ -56,7 +59,7 @@ export default function PackMarketClient({
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <span className="tabular-nums text-accent3">{brl(l.priceCents)}</span>
-                  <button className={primary} disabled={pending} onClick={() => run(() => buyPackListing(l.id))}>
+                  <button className={primary} disabled={pending} onClick={() => run(() => buyPackListing(l.id), 'Pacote comprado — está no seu estoque.')}>
                     Comprar
                   </button>
                 </div>
@@ -84,7 +87,7 @@ export default function PackMarketClient({
                     {p.listed ? (
                       <>
                         <span className="tabular-nums text-sm text-accent3">{brl(p.priceCents ?? 0)}</span>
-                        <button className={ghost} disabled={pending} onClick={() => run(() => cancelPackListing(p.listingId!))}>
+                        <button className={ghost} disabled={pending} onClick={() => run(() => cancelPackListing(p.listingId!), 'Anúncio cancelado.')}>
                           Cancelar
                         </button>
                       </>
@@ -104,7 +107,7 @@ export default function PackMarketClient({
                         <button
                           className={primary}
                           disabled={pending || !prices[p.id]}
-                          onClick={() => run(() => listPack(p.id, Math.round(Number(prices[p.id]) * 100)))}
+                          onClick={() => run(() => listPack(p.id, Math.round(Number(prices[p.id]) * 100)), 'Pacote anunciado no mercado.')}
                         >
                           Vender
                         </button>

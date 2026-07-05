@@ -1,5 +1,6 @@
 'use client';
 
+import { useToast } from '@/components/Toaster';
 import Icon from './Icon';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -24,6 +25,7 @@ export default function MatchdayDayClient({
   isAuthed: boolean;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({}); // playerId -> momentId
@@ -32,11 +34,12 @@ export default function MatchdayDayClient({
   const chosen = Object.keys(selected);
   const full = chosen.length === day.lineupSize;
 
-  const run = (fn: () => Promise<unknown>) => {
+  const run = (fn: () => Promise<unknown>, ok?: string) => {
     setError(null);
     start(async () => {
       try {
         await fn();
+        if (ok) toast(ok, 'success');
         router.refresh();
       } catch (e) {
         const m = e instanceof Error ? e.message : 'Erro';
@@ -171,12 +174,14 @@ export default function MatchdayDayClient({
         disabled={!full || pending || !isAuthed}
         title={!isAuthed ? 'Entre para escalar' : !full ? `Escale ${day.lineupSize} jogadores para enviar` : undefined}
         onClick={() =>
-          run(() =>
-            submitFastbreakLineup(
-              day.id,
-              Object.values(selected),
-              captainPlayer ? selected[captainPlayer] : undefined,
-            ),
+          run(
+            () =>
+              submitFastbreakLineup(
+                day.id,
+                Object.values(selected),
+                captainPlayer ? selected[captainPlayer] : undefined,
+              ),
+            'Escalação enviada — boa sorte na rodada!',
           )
         }
         className="bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
