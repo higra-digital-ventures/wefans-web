@@ -1,7 +1,7 @@
 'use client';
 
 import Icon from './Icon';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -19,6 +19,7 @@ export default function ProfileDrawer({
   const [open, setOpen] = useState(false);
   const [unreadChats, setUnreadChats] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const touchX = useRef<number | null>(null);
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
@@ -80,7 +81,17 @@ export default function ProfileDrawer({
         createPortal(
         <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menu do perfil">
           <div className="absolute inset-0 bg-black/70" onClick={() => setOpen(false)} aria-hidden />
-          <aside className="wf-drawer absolute inset-y-0 right-0 flex w-[86vw] max-w-[340px] flex-col border-l border-white/10 bg-[#0a0a0b] shadow-[-20px_0_60px_rgba(0,0,0,.7)]">
+          <aside
+            className="wf-drawer absolute inset-y-0 right-0 flex w-[86vw] max-w-[340px] flex-col border-l border-white/10 bg-[#0a0a0b] shadow-[-20px_0_60px_rgba(0,0,0,.7)]"
+            // gesto: arrastar para a direita fecha (mobile)
+            onTouchStart={(e) => {
+              touchX.current = e.touches[0].clientX;
+            }}
+            onTouchEnd={(e) => {
+              if (touchX.current != null && e.changedTouches[0].clientX - touchX.current > 60) setOpen(false);
+              touchX.current = null;
+            }}
+          >
             {/* cabeçalho: avatar + username + ver perfil + fechar */}
             <div className="flex items-start gap-3 px-5 pb-4 pt-5">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sunset text-lg font-bold uppercase text-white">
