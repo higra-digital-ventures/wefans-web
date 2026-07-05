@@ -12,6 +12,16 @@ import type { TemplateDTO } from '@/lib/types';
 
 // Busca global no padrão do Top Shot: a lupa da top bar abre um overlay full-width
 // com input centrado, "Categorias populares" à esquerda e "Lances populares" ao centro.
+
+// exemplos rotativos no placeholder (nomes reais do catálogo)
+const PLACEHOLDERS = [
+  'Busque por jogadores, times e tiers.',
+  'tente: Juca Ferrão',
+  'tente: Capital Cometas',
+  'tente: Galáctico',
+  'tente: golaço',
+];
+
 export default function SearchOverlay({
   popular,
   categories,
@@ -72,6 +82,14 @@ export default function SearchOverlay({
       )
       .slice(0, 6);
   }, [q, catalog]);
+
+  // placeholder rotativo enquanto o campo está vazio
+  const [phIdx, setPhIdx] = useState(0);
+  useEffect(() => {
+    if (!open || q) return;
+    const t = setInterval(() => setPhIdx((i) => (i + 1) % PLACEHOLDERS.length), 2600);
+    return () => clearInterval(t);
+  }, [open, q]);
 
   const [recents, setRecents] = useState<string[]>([]);
   useEffect(() => {
@@ -134,7 +152,7 @@ export default function SearchOverlay({
                   ref={inputRef}
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
-                  placeholder="Busque por jogadores, times e tiers."
+                  placeholder={PLACEHOLDERS[phIdx]}
                   className="h-10 w-full border border-white/50 bg-black pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
                 />
               </form>
