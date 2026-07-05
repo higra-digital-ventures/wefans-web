@@ -19,7 +19,6 @@ const NAV: { label: string; href: string; icon: IconName; badge?: string }[] = [
   { label: 'Drops', href: '/drops', icon: 'drops' },
   { label: 'Mercado', href: '/mercado', icon: 'market' },
   { label: 'Jogar', href: '/jogar', icon: 'play', badge: 'MATCHDAY' },
-  { label: 'Check-in', href: '/checkin', icon: 'checkin' },
   { label: 'Coleção', href: '/colecao', icon: 'collection' },
 ];
 

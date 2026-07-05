@@ -142,6 +142,16 @@ export default async function JogarPage() {
       reward: 'Prêmio: bônus de pontos no ranking',
       d: 'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4Z',
     },
+    {
+      href: '/checkin',
+      name: 'Check-in',
+      color: '#f7f7f8',
+      description: 'Foi ao estádio? Faça check-in no jogo e ganhe um pacote de presença.',
+      status: 'valendo em todo jogo da rodada',
+      deadline: null,
+      reward: 'Prêmio: pack de presença',
+      d: 'M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z',
+    },
   ];
 
   return (
@@ -190,7 +200,7 @@ export default async function JogarPage() {
         </Link>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {MODES.map((m) => (
           <Link
             key={m.href}
