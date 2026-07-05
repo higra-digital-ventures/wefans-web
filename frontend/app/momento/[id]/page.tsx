@@ -40,6 +40,30 @@ function Panel({ title, children, open = true }: { title: string; children: Reac
   );
 }
 
+// Analytics: linha de preço das vendas (ordem cronológica) — SVG sem JS
+function PriceSparkline({ sales }: { sales: { amountCents: number; createdAt: string }[] }) {
+  if (sales.length < 2) return null;
+  const pts = [...sales].sort((a, b) => a.createdAt.localeCompare(b.createdAt)).map((s) => s.amountCents);
+  const min = Math.min(...pts);
+  const max = Math.max(...pts);
+  const W = 560;
+  const H = 120;
+  const x = (i: number) => (i / (pts.length - 1)) * (W - 16) + 8;
+  const y = (v: number) => (max === min ? H / 2 : H - 14 - ((v - min) / (max - min)) * (H - 28));
+  const d = pts.map((v, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const up = pts[pts.length - 1] >= pts[0];
+  const color = up ? '#22c55e' : '#ff2e88';
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Histórico de preço">
+      <path d={`${d} L${x(pts.length - 1)},${H - 4} L8,${H - 4} Z`} fill={`${color}18`} />
+      <path d={d} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" />
+      {pts.map((v, i) => (
+        <circle key={i} cx={x(i)} cy={y(v)} r="2.6" fill={color} />
+      ))}
+    </svg>
+  );
+}
+
 const TH = 'px-3 py-2 text-left text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-500';
 const TD = 'px-3 py-2.5 text-[12px]';
 
@@ -123,8 +147,26 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               trajectory: t.trajectory,
             }}
           />
+          <div className="mt-3 flex items-center justify-center gap-2" aria-hidden>
+            {[
+              { label: 'Lance', bg: '#170b22', icon: '▶' },
+              { label: 'Escudo', bg: '#101014', icon: '◈' },
+              { label: 'Stats', bg: '#101014', icon: '≡' },
+              { label: 'Marca', bg: '#101014', icon: 'W' },
+            ].map((f) => (
+              <span
+                key={f.label}
+                className="flex h-11 w-9 flex-col items-center justify-center border border-white/15 text-[11px] text-neutral-400"
+                style={{ background: f.bg }}
+                title={`Face: ${f.label} — arraste o cubo para ver`}
+              >
+                <span>{f.icon}</span>
+                <span className="text-[7px] uppercase tracking-wide">{f.label}</span>
+              </span>
+            ))}
+          </div>
           <p className="mt-2 text-center text-[10px] uppercase tracking-wide text-muted">
-            arraste para girar
+            arraste para girar e ver as 4 faces
           </p>
         </div>
 
@@ -156,6 +198,15 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                 {b}
               </span>
             ))}
+          </div>
+
+          <div className="mt-3 flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-500" title="Variantes visuais da mesma edição">
+              Parallels ⓘ
+            </span>
+            <span className="border border-white/40 bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase text-white">
+              {t.parallel === 'BASE' ? 'Standard' : t.parallel}
+            </span>
           </div>
 
           {/* painel de compra (Lowest ask + CTA + linha "à venda · média") */}
@@ -272,6 +323,19 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           </div>
         </Panel>
 
+        {tm && tm.recentSales.length >= 2 && (
+          <Panel title="Analytics" open={false}>
+            <div className="mb-2 flex items-baseline justify-between text-[11px] text-neutral-400">
+              <span>Preço das últimas {tm.recentSales.length} vendas</span>
+              <span>
+                mín {brl(Math.min(...tm.recentSales.map((v) => v.amountCents)))} · máx{' '}
+                {brl(Math.max(...tm.recentSales.map((v) => v.amountCents)))}
+              </span>
+            </div>
+            <PriceSparkline sales={tm.recentSales} />
+          </Panel>
+        )}
+
         <Panel title="Histórico de vendas">
           {topPurchases.length === 0 ? (
             <p className="text-sm text-neutral-400">Nenhuma venda desta edição ainda.</p>
@@ -287,6 +351,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                     <th className={TH}>Preço</th>
                     <th className={TH}>Serial</th>
                     <th className={TH}>Data</th>
+                    <th className={TH}>TX</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -303,6 +368,9 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                       <td className={`${TD} text-neutral-400`} title={dateTime(s.createdAt)}>
                         {timeAgo(s.createdAt)}
                       </td>
+                      <td className={TD}>
+                        <span className="cursor-help text-neutral-600" title="Registro on-chain em breve (OwnershipProvider)">⛓</span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -318,6 +386,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                     <th className={TH}>Preço</th>
                     <th className={TH}>Serial</th>
                     <th className={TH}>Data</th>
+                    <th className={TH}>TX</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -328,6 +397,9 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                       <td className={`${TD} font-mono text-neutral-300`}>#{s.serial}</td>
                       <td className={`${TD} text-neutral-400`} title={dateTime(s.createdAt)}>
                         {timeAgo(s.createdAt)}
+                      </td>
+                      <td className={TD}>
+                        <span className="cursor-help text-neutral-600" title="Registro on-chain em breve (OwnershipProvider)">⛓</span>
                       </td>
                     </tr>
                   ))}

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { getTemplateMarketServer, getTemplateServer, getWishlistServer } from '@/lib/api-server';
+import { getTemplateCollectorsServer, getTemplateMarketServer, getTemplateServer, getWishlistServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import OwnershipStats from '@/components/OwnershipStats';
 import WishlistButton from '@/components/WishlistButton';
@@ -22,9 +22,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function LancePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [t, wishlist, tm] = await Promise.all([
+  const [t, wishlist, tm, collectors] = await Promise.all([
     getTemplateServer(id),
     getWishlistServer(),
+    getTemplateCollectorsServer(id),
     getTemplateMarketServer(id),
   ]);
   if (!t) notFound();
@@ -116,6 +117,41 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
       </div>
+
+      {/* todos os exemplares: serial → dono (como "ver todos os Moments da edição") */}
+      {collectors && collectors.serials.length > 0 && (
+        <section className="mt-10">
+          <h2 className="mb-3 font-display text-2xl uppercase tracking-tight text-ink">
+            Exemplares da edição
+          </h2>
+          <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
+            {collectors.serials.map((m) => (
+              <li key={m.serial}>
+                <Link
+                  href={`/momento/${m.momentId}`}
+                  className="flex items-center gap-3 border border-white/10 bg-[#0a0a0b] px-3 py-2 transition-colors hover:border-white/30"
+                >
+                  <span className="tabular-nums text-[13px] font-bold text-accent3">#{m.serial}</span>
+                  <span className="min-w-0 flex-1 truncate text-[12px] text-neutral-300">
+                    {m.burned ? (
+                      <span className="text-neutral-500">destruído</span>
+                    ) : m.owner ? (
+                      `@${m.owner}`
+                    ) : (
+                      '—'
+                    )}
+                  </span>
+                  {m.listedCents != null && (
+                    <span className="shrink-0 text-[11px] font-bold text-emerald-300">
+                      à venda · {brl(m.listedCents)}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </main>
   );
 }

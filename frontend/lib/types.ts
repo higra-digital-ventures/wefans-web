@@ -456,6 +456,7 @@ export type FeedPopular = {
 export type TemplateCollectors = {
   topCollectors: { username: string; count: number }[];
   specialSerials: { serial: number; label: string; owner: string | null; burned: boolean; momentId: string }[];
+  serials: { serial: number; momentId: string; owner: string | null; burned: boolean; listedCents: number | null }[];
 };
 
 export type NotificationDTO = {

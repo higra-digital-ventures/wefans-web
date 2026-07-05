@@ -134,5 +134,20 @@ export async function getTemplateCollectors(db: PrismaClient, templateId: string
     momentId: m.id,
   }));
 
-  return { topCollectors, specialSerials };
+  // todos os exemplares da edição (até 60) — página da edição lista serial → dono
+  const all = await db.moment.findMany({
+    where: { templateId },
+    include: { owner: { select: { username: true } }, listing: { select: { status: true, priceCents: true } } },
+    orderBy: { serial: 'asc' },
+    take: 60,
+  });
+  const serials = all.map((m) => ({
+    serial: m.serial,
+    momentId: m.id,
+    owner: m.burned ? null : (m.owner?.username ?? null),
+    burned: m.burned,
+    listedCents: m.listing && m.listing.status === 'ACTIVE' ? m.listing.priceCents : null,
+  }));
+
+  return { topCollectors, specialSerials, serials };
 }
