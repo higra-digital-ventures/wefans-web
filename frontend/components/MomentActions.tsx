@@ -13,6 +13,7 @@ import {
   redeemMomentTicket,
 } from '@/lib/api-client';
 import { brl } from '@/lib/format';
+import Icon from '@/components/Icon';
 import { useToast } from '@/components/Toaster';
 
 // Painel de compra/ações no padrão do Top Shot (seção 11.12d): CTA cheio em caps,
@@ -44,6 +45,7 @@ export default function MomentActions({
   const toast = useToast();
   const [pending, start] = useTransition();
   const [confirming, setConfirming] = useState(false);
+  const [more, setMore] = useState(false); // ações avançadas atrás de "Mais" (novato vê só Listar/Presentear)
   const [armed, setArmed] = useState<null | 'lock' | 'burn' | 'ticket'>(null); // ação destrutiva aguardando confirmação
   const [error, setError] = useState<string | null>(null);
   const [price, setPrice] = useState(String(Math.max(1, Math.round(suggestedPriceCents / 100) || 1)));
@@ -179,16 +181,31 @@ export default function MomentActions({
             </button>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 border-t border-line pt-3">
-            <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'lock' ? null : 'lock')}>
-              Travar · 1 ano
+          <div className="border-t border-line pt-3">
+            <button
+              className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-muted transition-colors hover:text-ink"
+              aria-expanded={more}
+              onClick={() => {
+                setMore(!more);
+                setArmed(null);
+              }}
+            >
+              <Icon name="more" size={16} />
+              {more ? 'Menos ações' : 'Mais ações'}
             </button>
-            <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'burn' ? null : 'burn')}>
-              Queimar
-            </button>
-            <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'ticket' ? null : 'ticket')}>
-              Virar ficha
-            </button>
+            {more && (
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'lock' ? null : 'lock')}>
+                  Travar · 1 ano
+                </button>
+                <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'burn' ? null : 'burn')}>
+                  Queimar
+                </button>
+                <button className={ghost} disabled={pending} onClick={() => setArmed(armed === 'ticket' ? null : 'ticket')}>
+                  Virar ficha
+                </button>
+              </div>
+            )}
           </div>
 
           {/* confirmação inline com a consequência escrita (nada de confirm() do navegador) */}
