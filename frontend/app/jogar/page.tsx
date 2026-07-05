@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Countdown from '@/components/Countdown';
+import FirstVisitBadge from '@/components/FirstVisitBadge';
 import {
   getChallengesServer,
   getQuestsServer,
@@ -201,7 +202,10 @@ export default async function JogarPage() {
               className="relative flex h-16 items-center justify-between px-4"
               style={{ background: `linear-gradient(120deg, ${m.color}33, #0a0a0b 80%)` }}
             >
-              <span className="font-display text-2xl uppercase text-ink">{m.name}</span>
+              <span className="flex items-center gap-2 font-display text-2xl uppercase text-ink">
+                {m.name}
+                <FirstVisitBadge id={m.href} />
+              </span>
               <svg viewBox="0 0 24 24" className="h-7 w-7 opacity-80" style={{ fill: m.color }} aria-hidden>
                 <path d={m.d} />
               </svg>
