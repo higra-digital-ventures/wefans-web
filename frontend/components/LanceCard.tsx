@@ -15,6 +15,7 @@ export default function LanceCard({
   live,
   priceCents,
   listingPriceCents,
+  paidCents,
   className = '',
   wishlist,
 }: {
@@ -24,6 +25,7 @@ export default function LanceCard({
   live?: boolean;
   priceCents?: number; // Menor preço (mercado)
   listingPriceCents?: number | null; // badge "À venda" (coleção)
+  paidCents?: number; // contexto de dono: rodapé vira "Média · Pago" com cor de lucro
   className?: string;
   /** estado da wishlist do usuário (undefined = marcador decorativo) */
   wishlist?: { wished: boolean; canWish: boolean };
@@ -78,7 +80,7 @@ export default function LanceCard({
             {/* glitch/scanlines na entrada do hover */}
             <div aria-hidden className="wf-glitch pointer-events-none absolute inset-0" />
             {/* chip de play (some enquanto o lance toca) */}
-            {!live && (
+            {!live && listingPriceCents == null && (
               <span
                 aria-hidden
                 className="absolute left-1.5 top-1.5  bg-black/50 px-1 py-0.5 tabular-nums text-[8px] text-white/80 transition-opacity duration-150 group-hover:opacity-0"
@@ -91,9 +93,19 @@ export default function LanceCard({
                 #{serial}
               </span>
             )}
+            {listingPriceCents != null && (
+              <span className="absolute left-1.5 top-1.5 bg-emerald-500 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-black">
+                À venda · {brl(listingPriceCents)}
+              </span>
+            )}
             {priceCents != null && (
               <span className="absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                 Ver e comprar · {brl(priceCents)}
+              </span>
+            )}
+            {priceCents == null && paidCents != null && (
+              <span className="absolute inset-x-2 bottom-2 translate-y-2 bg-white py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-black opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+                Ver · Vender
               </span>
             )}
           </div>
@@ -141,11 +153,6 @@ export default function LanceCard({
             style={{ background: `radial-gradient(circle at 35% 35%, ${meta.color}, #111 85%)` }}
             aria-hidden
           />
-          {listingPriceCents != null && (
-            <span className="bg-emerald-500/15 px-1.5 py-px text-[9px] font-bold uppercase text-emerald-300">
-              À venda
-            </span>
-          )}
         </div>
 
         <div className="mt-1.5 font-display text-[22px] uppercase leading-[1.04] text-white">
@@ -164,27 +171,46 @@ export default function LanceCard({
           {template.circulatingCount.toLocaleString('pt-BR')}
         </div>
         <div className="mt-0.5 truncate text-[11px] text-neutral-500">
-          {template.playType} · {template.competition} (Temporada 2025-26)
+          {template.competition} · {template.playType} (Temporada 2025-26)
         </div>
 
-        {/* rodapé em duas linhas, como no print: Lowest Ask / Avg Sale */}
+        {/* rodapé contextual: mercado (Menor preço/Média) · dono (Média/Pago) · catálogo (Média) */}
         <div className="mt-3.5 space-y-1 border-t border-white/10 pt-2.5">
-          <div className="flex items-baseline justify-between">
-            <span className="text-[12px] text-neutral-300" title="O anúncio mais barato desta edição à venda agora">
-              Menor preço
-            </span>
-            <span className="text-[15px] font-bold text-white">
-              {priceCents != null ? brl(priceCents) : '—'}
-            </span>
-          </div>
+          {priceCents != null && (
+            <div className="flex items-baseline justify-between">
+              <span className="text-[12px] text-neutral-300" title="O anúncio mais barato desta edição à venda agora">
+                Menor preço
+              </span>
+              <span className="text-[15px] font-bold text-white">{brl(priceCents)}</span>
+            </div>
+          )}
           <div className="flex items-baseline justify-between">
             <span className="text-[12px] text-neutral-500" title="Preço médio das últimas vendas desta edição">
               Média ⓘ
             </span>
-            <span className="text-[12px] font-semibold text-neutral-400">
+            <span className={`font-semibold ${paidCents != null ? 'text-[15px] font-bold text-white' : 'text-[12px] text-neutral-400'}`}>
               {template.aspCents > 0 ? brl(template.aspCents) : '—'}
             </span>
           </div>
+          {paidCents != null && (
+            <div className="flex items-baseline justify-between">
+              <span className="text-[12px] text-neutral-500" title="Quanto você pagou neste exemplar">
+                Pago
+              </span>
+              <span
+                className={`text-[12px] font-bold tabular-nums ${
+                  template.aspCents > 0
+                    ? template.aspCents >= paidCents
+                      ? 'text-emerald-400'
+                      : 'text-red-400'
+                    : 'text-neutral-400'
+                }`}
+                title={template.aspCents > 0 ? (template.aspCents >= paidCents ? 'a média está acima do que você pagou' : 'a média está abaixo do que você pagou') : undefined}
+              >
+                {brl(paidCents)}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>
