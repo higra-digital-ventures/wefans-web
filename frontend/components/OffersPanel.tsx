@@ -68,7 +68,7 @@ export default function OffersPanel({
               />
             </div>
             <button
-              className="bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="border border-white/40 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50"
               disabled={pending || !price}
               onClick={() => setConfirming(true)}
             >
