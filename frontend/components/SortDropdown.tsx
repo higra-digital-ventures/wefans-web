@@ -53,7 +53,7 @@ export default function SortDropdown({
                   setOpen(false);
                   const p = new URLSearchParams(window.location.search);
                   p.set(param, o.v);
-                  router.push(`${window.location.pathname}?${p}`);
+                  router.push(`${window.location.pathname}?${p}`, { scroll: false });
                 }}
                 className={`w-full px-4 py-2.5 text-left text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
                   o.v === current ? 'bg-white/10 text-white' : 'text-neutral-400 hover:bg-white/5 hover:text-white'

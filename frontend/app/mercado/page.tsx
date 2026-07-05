@@ -215,6 +215,7 @@ export default async function MercadoPage({
         </Link>
         <Link
           href={href({ deal: deal ? undefined : '1' })}
+          scroll={false}
           className={`${CHIP} ${deal ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300' : 'border-white/40 text-white hover:bg-white/10'}`}
           title="Anúncios abaixo do preço médio da edição"
         >
@@ -224,6 +225,7 @@ export default async function MercadoPage({
           <Link
             key={t}
             href={href({ tier: tier === t ? undefined : t })}
+            scroll={false}
             className={`${CHIP} ${tier === t ? 'border-white bg-white text-black' : 'border-white/40 text-white hover:bg-white/10'}`}
           >
             {TIER_META[t].label}s
@@ -233,6 +235,7 @@ export default async function MercadoPage({
           <Link
             key={b.v}
             href={href({ badge: badge === b.v ? undefined : b.v })}
+            scroll={false}
             className={`${CHIP} ${badge === b.v ? 'border-white bg-white text-black' : 'border-white/40 text-white hover:bg-white/10'}`}
           >
             {b.label}
@@ -242,6 +245,7 @@ export default async function MercadoPage({
           <Link
             key={t}
             href={href({ tier: tier === t ? undefined : t })}
+            scroll={false}
             className={`${CHIP} ${tier === t ? 'border-white bg-white text-black' : 'border-white/40 text-white hover:bg-white/10'}`}
           >
             {TIER_META[t].label}s
@@ -258,6 +262,7 @@ export default async function MercadoPage({
           </span>
           <Link
             href={href({ vis: undefined })}
+            scroll={false}
             aria-label="Grade confortável"
             title="Grade confortável"
             className={`flex h-9 w-9 items-center justify-center  border ${!dense ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
@@ -266,6 +271,7 @@ export default async function MercadoPage({
           </Link>
           <Link
             href={href({ vis: 'list' })}
+            scroll={false}
             aria-label="Modo lista"
             title="Modo lista"
             className={`flex h-9 w-9 items-center justify-center border ${vis === 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
@@ -274,6 +280,7 @@ export default async function MercadoPage({
           </Link>
           <Link
             href={href({ vis: 'compact' })}
+            scroll={false}
             aria-label="Grade densa"
             title="Grade densa"
             className={`flex h-9 w-9 items-center justify-center  border ${dense ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}

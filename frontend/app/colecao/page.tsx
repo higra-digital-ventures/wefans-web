@@ -130,6 +130,7 @@ export default async function ColecaoPage({
         />
         <Link
           href={`/colecao?${new URLSearchParams({ ...(tier ? { tier } : {}), ...(q ? { q } : {}), ...(venda ? {} : { venda: '1' }) })}`}
+          scroll={false}
           className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide ${
             venda ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300' : 'border-white/40 text-white hover:bg-white/10'
           }`}
@@ -153,6 +154,7 @@ export default async function ColecaoPage({
             <Link
               key={t}
               href={tier === t ? '/colecao' : `/colecao?tier=${t}`}
+              scroll={false}
               className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${
                 tier === t ? 'border-white text-white' : 'border-white/20 text-neutral-400 hover:text-white'
               }`}
