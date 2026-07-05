@@ -1,3 +1,4 @@
+import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
 import { getMe, getQuestsServer } from '@/lib/api-server';
 import QuestClaimButton from '@/components/QuestClaimButton';
@@ -15,10 +16,14 @@ export default async function MissoesPage() {
           desafios →
         </Link>
       </div>
-      <p className="mb-8 text-muted">Complete objetivos (ex.: montar uma vitrine) e ganhe recompensas.</p>
+      <p className="mb-8 text-muted">Caças ao tesouro fora de campo: monte vitrines, cumpra objetivos especiais e leve Lances de brinde.</p>
 
       {quests.length === 0 ? (
-        <p className="text-muted">Nenhuma missão ativa.</p>
+        <EmptyState
+          title="Nenhuma missão aberta agora"
+          hint="Missões novas caem sem aviso — de olho no feed."
+          cta={{ label: 'Ir para o feed', href: '/explorar' }}
+        />
       ) : (
         <div className="space-y-4">
           {quests.map((q) => (

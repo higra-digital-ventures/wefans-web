@@ -1,3 +1,4 @@
+import EmptyState from '@/components/EmptyState';
 import Link from 'next/link';
 import { getLeaderboardsServer } from '@/lib/api-server';
 
@@ -16,10 +17,14 @@ export default async function RankingsPage() {
           <Link href="/jogar/checklists" className="text-accent3 hover:underline">Checklists</Link>
         </span>
       </div>
-      <p className="mb-8 text-muted">Trave Lances do time ou do jogador para subir no ranking.</p>
+      <p className="mb-8 text-muted">A disputa da torcida: trave Lances do seu time ou craque e brigue pelo topo — o pack vai para quem estiver lá no apito final.</p>
 
       {boards.length === 0 ? (
-        <p className="text-muted">Nenhum ranking ativo.</p>
+        <EmptyState
+          title="Nenhuma disputa aberta agora"
+          hint="Os rankings abrem por rodada — volte no próximo jogo."
+          cta={{ label: 'Ver desafios ativos', href: '/jogar/desafios' }}
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {boards.map((b) => (
@@ -48,7 +53,7 @@ export default async function RankingsPage() {
                     <span className="tabular-nums text-accent3">{e.points.toLocaleString('pt-BR')}</span>
                   </li>
                 ))}
-                {b.top.length === 0 && <li className="text-muted">Sem participantes ainda.</li>}
+                {b.top.length === 0 && <li className="text-muted">Ninguém pontuou ainda — chegue primeiro.</li>}
               </ol>
               {b.myPoints !== null && (
                 <p className="mt-3 text-xs text-muted">
