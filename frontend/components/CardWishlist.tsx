@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addWishlist, removeWishlist } from '@/lib/api-client';
+import Icon from '@/components/Icon';
 import { useToast } from '@/components/Toaster';
 
 // Marcador de wishlist DENTRO do card (clicável direto da grade, como no Top Shot).
@@ -42,9 +43,7 @@ export default function CardWishlist({
         wished ? 'text-accent' : 'text-neutral-400 hover:text-white'
       }`}
     >
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill={wished ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={wished ? 0 : 1.8}>
-        <path d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.2L5 22V3a1 1 0 0 1 1-1Z" />
-      </svg>
+      <Icon name="bookmark" filled={wished} size={20} />
     </button>
   );
 }

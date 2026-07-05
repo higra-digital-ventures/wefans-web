@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { fetchNotifications, markNotificationsSeen } from '@/lib/api-client';
+import Icon from './Icon';
 import type { NotificationDTO } from '@/lib/types';
 
 // Sino de notificações (padrão do Top Shot): badge com não-lidas, dropdown escuro
@@ -127,9 +128,7 @@ export default function NotificationsBell() {
           open ? 'bg-panel2 text-ink' : 'text-muted hover:text-ink'
         }`}
       >
-        <svg viewBox="0 0 24 24" className="h-[22px] w-[22px] fill-current" aria-hidden>
-          <path d="M12 2a6 6 0 0 0-6 6v3.6L4 15v2h16v-2l-2-3.4V8a6 6 0 0 0-6-6Zm-2 17a2 2 0 0 0 4 0h-4Z" />
-        </svg>
+        <Icon name="bell" filled={open || unread > 0} size={22} />
         {unread > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold leading-none text-white">
             {unread > 9 ? '9+' : unread}
