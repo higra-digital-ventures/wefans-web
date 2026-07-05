@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { brl, dateTime } from '@/lib/format';
+import { brl, dateTime, timeAgo } from '@/lib/format';
 import type { ProvenanceTx } from '@/lib/types';
 
 const META: Record<string, { label: string; color: string; d: string }> = {
@@ -96,7 +96,7 @@ export default function Provenance({ items, bare = false }: { items: ProvenanceT
                   </>
                 ) : null}
                 {(tx.seller || tx.buyer) && ' · '}
-                {dateTime(tx.createdAt)}
+                <span title={dateTime(tx.createdAt)}>{timeAgo(tx.createdAt)}</span>
               </div>
             </li>
           );

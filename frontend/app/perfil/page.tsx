@@ -11,7 +11,7 @@ import {
 import PerfilClient from '@/components/PerfilClient';
 import LanceCard from '@/components/LanceCard';
 import { TIER_META, TIER_ORDER } from '@/lib/tiers';
-import { dateTime } from '@/lib/format';
+import { dateTime, timeAgo } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -132,7 +132,9 @@ export default async function PerfilPage() {
             {stats.openedPacks.map((p) => (
               <li key={p.id} className="flex items-center justify-between py-2 text-sm">
                 <span className="text-ink">{p.packName}</span>
-                <span className="tabular-nums text-xs text-muted">{dateTime(p.createdAt)}</span>
+                <span className="tabular-nums text-xs text-muted" title={dateTime(p.createdAt)}>
+                  {timeAgo(p.createdAt)}
+                </span>
               </li>
             ))}
           </ul>
