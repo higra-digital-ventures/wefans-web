@@ -218,7 +218,7 @@ export default async function DropsPage() {
           <span className="text-[13px] font-bold text-white">
             {fixtures[0].homeTeam} x {fixtures[0].awayTeam}
           </span>
-          <span className="text-[11px] text-neutral-400">{fixtures[0].stadium}</span>
+          <span className="text-[11px] text-neutral-400">{fixtures[0].stadium.name}</span>
           <span className="ml-auto text-[11px] font-bold uppercase tracking-wide text-emerald-300">
             check-in aberto — ganhe um pack →
           </span>
