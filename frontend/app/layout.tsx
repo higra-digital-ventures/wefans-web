@@ -14,12 +14,19 @@ import NextTopLoader from 'nextjs-toploader';
 // A "Owners" (wide, proprietária) não é usada. Ver DECISIONS.md.
 const sofia = Sofia_Sans_Extra_Condensed({ subsets: ['latin'], variable: '--font-display' });
 const robotoFlex = Roboto_Flex({ subsets: ['latin'], variable: '--font-text' });
-const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--tabular-nums' });
+const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'wefans — Momentos de Futebol',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  title: { default: 'wefans — Momentos de Futebol', template: '%s — wefans' },
   description:
     'Colecione Lances numerados de futebol. Mesma gramática do NBA Top Shot, conteúdo 100% fictício.',
+  openGraph: {
+    siteName: 'wefans',
+    type: 'website',
+    locale: 'pt_BR',
+  },
+  twitter: { card: 'summary_large_image' },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

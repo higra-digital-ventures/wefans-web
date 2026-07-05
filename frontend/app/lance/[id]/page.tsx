@@ -10,6 +10,16 @@ import { brl } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const t = await getTemplateServer(id);
+  if (!t) return { title: 'Lance' };
+  return {
+    title: `${t.player.name} — ${t.title}`,
+    description: `${t.playType} · ${t.competition} · edição ${t.editionType === 'LIMITADA' ? `limitada /${t.editionSize}` : 'circulante'} no wefans.`,
+  };
+}
+
 export default async function LancePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [t, wishlist, tm] = await Promise.all([

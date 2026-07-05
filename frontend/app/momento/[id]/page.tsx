@@ -14,6 +14,7 @@ import OwnershipGauge from '@/components/OwnershipGauge';
 import Provenance from '@/components/Provenance';
 import MomentActions from '@/components/MomentActions';
 import OffersPanel from '@/components/OffersPanel';
+import ShareButton from '@/components/ShareButton';
 import { TIER_META, editionLabel } from '@/lib/tiers';
 import { brl, dateTime, timeAgo } from '@/lib/format';
 
@@ -132,6 +133,9 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.15em]">
             <span style={{ color: meta.color }}>{meta.label}</span>
             <span className="text-neutral-400">{editionLabel(t, m.serial)}</span>
+            <span className="ml-auto">
+              <ShareButton title={`${t.player.name} ${editionLabel(t, m.serial)} — wefans`} />
+            </span>
           </div>
           <h1 className="mt-1 font-display text-4xl uppercase leading-[0.95] tracking-tight text-white sm:text-5xl">
             {t.player.name}
