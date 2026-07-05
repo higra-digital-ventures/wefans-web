@@ -1,7 +1,7 @@
 import type { PrismaClient, Prisma } from '@prisma/client';
 import type { ServiceContext } from './context';
 import { badRequest, notFound, unauthorized } from '../lib/errors';
-import { toMomentDTO, toPublicUserDTO, toTeamDTO, toUserDTO } from '../lib/dto';
+import { toMomentDTO, toPublicUserDTO, toTeamDTO, toTemplateDTO, toUserDTO } from '../lib/dto';
 
 export async function getMe(ctx: ServiceContext) {
   const userId = ctx.userId;
