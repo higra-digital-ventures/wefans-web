@@ -5,8 +5,9 @@ import { createContext, useCallback, useContext, useRef, useState, type ReactNod
 // Sistema único de toasts (sucesso/erro/info) — feedback padronizado para ações
 // (compra, venda, wishlist, ofertas…) em vez de cada componente tratar à sua maneira.
 
-type Toast = { id: number; type: 'success' | 'error' | 'info'; message: string };
-type ToastFn = (message: string, type?: Toast['type']) => void;
+type ToastAction = { label: string; onClick: () => void };
+type Toast = { id: number; type: 'success' | 'error' | 'info'; message: string; action?: ToastAction };
+type ToastFn = (message: string, type?: Toast['type'], action?: ToastAction) => void;
 
 const ToastContext = createContext<ToastFn>(() => {});
 
@@ -18,10 +19,11 @@ export default function Toaster({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const nextId = useRef(1);
 
-  const push = useCallback<ToastFn>((message, type = 'info') => {
+  const push = useCallback<ToastFn>((message, type = 'info', action) => {
     const id = nextId.current++;
-    setToasts((t) => [...t, { id, type, message }]);
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4500);
+    setToasts((t) => [...t, { id, type, message, action }]);
+    // toasts com ação (Desfazer) ficam mais tempo na tela
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), action ? 7000 : 4500);
   }, []);
 
   const COLOR: Record<Toast['type'], string> = {
@@ -44,6 +46,17 @@ export default function Toaster({ children }: { children: ReactNode }) {
           >
             <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: COLOR[t.type] }} aria-hidden />
             <p className="flex-1 text-[13px] leading-snug text-ink">{t.message}</p>
+            {t.action && (
+              <button
+                onClick={() => {
+                  t.action!.onClick();
+                  setToasts((x) => x.filter((y) => y.id !== t.id));
+                }}
+                className="shrink-0 text-[12px] font-bold uppercase tracking-wide text-accent3 hover:text-white"
+              >
+                {t.action.label}
+              </button>
+            )}
             <button
               aria-label="Fechar aviso"
               onClick={() => setToasts((x) => x.filter((y) => y.id !== t.id))}

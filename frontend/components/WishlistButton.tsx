@@ -30,7 +30,19 @@ export default function WishlistButton({
     start(async () => {
       try {
         if (next) await addWishlist(templateId);
-        else await removeWishlist(templateId);
+        else {
+          await removeWishlist(templateId);
+          // remover é reversível — oferece Desfazer no toast
+          toast('Removido da wishlist.', 'info', {
+            label: 'Desfazer',
+            onClick: () => {
+              setWished(true);
+              addWishlist(templateId)
+                .then(() => router.refresh())
+                .catch(() => setWished(false));
+            },
+          });
+        }
         router.refresh();
       } catch {
         setWished(!next);

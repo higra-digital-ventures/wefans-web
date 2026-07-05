@@ -34,10 +34,23 @@ export default function CardWishlist({
         }
         const next = !wished;
         setWished(next);
-        (next ? addWishlist(templateId) : removeWishlist(templateId)).catch(() => {
-          setWished(!next);
-          toast('Não deu para atualizar a wishlist — tente de novo.', 'error');
-        });
+        (next ? addWishlist(templateId) : removeWishlist(templateId))
+          .then(() => {
+            if (!next) {
+              // remover é reversível — oferece Desfazer no toast
+              toast('Removido da wishlist.', 'info', {
+                label: 'Desfazer',
+                onClick: () => {
+                  setWished(true);
+                  addWishlist(templateId).catch(() => setWished(false));
+                },
+              });
+            }
+          })
+          .catch(() => {
+            setWished(!next);
+            toast('Não deu para atualizar a wishlist — tente de novo.', 'error');
+          });
       }}
       className={`absolute right-3 top-3 z-10 transition-colors ${
         wished ? 'text-accent' : 'text-neutral-400 hover:text-white'
