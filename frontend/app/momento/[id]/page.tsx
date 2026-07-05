@@ -230,18 +230,21 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                 )}
               </div>
             </div>
-            <MomentActions
-              momentId={m.id}
-              listing={m.listing ?? null}
-              isOwner={isOwner}
-              isAuthed={!!me}
-              isLocked={isLocked}
-              isBurned={m.burned}
-              lockedUntil={m.lockedUntil ?? null}
-              suggestedPriceCents={suggested}
-              balanceCents={me?.balanceCents ?? null}
-              aspCents={tm?.aspCents ?? t.aspCents}
-            />
+            {/* âncora do fluxo "Vender" vindo da coleção */}
+            <div id="vender" className="scroll-mt-24">
+              <MomentActions
+                momentId={m.id}
+                listing={m.listing ?? null}
+                isOwner={isOwner}
+                isAuthed={!!me}
+                isLocked={isLocked}
+                isBurned={m.burned}
+                lockedUntil={m.lockedUntil ?? null}
+                suggestedPriceCents={suggested}
+                balanceCents={me?.balanceCents ?? null}
+                aspCents={tm?.aspCents ?? t.aspCents}
+              />
+            </div>
             {isOwner && tm && tm.recentSales.length > 0 && (
               <div className="mt-3 border-t border-line pt-3">
                 <div className="mb-1.5 text-[10px] uppercase tracking-widest text-neutral-500">
