@@ -39,6 +39,16 @@ const KIND_META: Record<NotificationDTO['kind'], { color: string; d: string }> =
   },
 };
 
+function dayLabel(iso: string) {
+  const d = new Date(iso);
+  const today = new Date();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const startToday = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+  if (d.getTime() >= startToday) return 'Hoje';
+  if (d.getTime() >= startToday - oneDay) return 'Ontem';
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+}
+
 function timeAgo(iso: string) {
   const s = Math.max(1, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
   if (s < 60) return `${s}s`;
@@ -65,6 +75,9 @@ export default function NotificationsBell() {
         if (!alive) return;
         setItems(notifications);
         setUnread(unreadCount);
+        // badge de não-lidas no título da aba
+        const base = document.title.replace(/^\(\d+\+?\) /, '');
+        document.title = unreadCount > 0 ? `(${unreadCount > 9 ? '9+' : unreadCount}) ${base}` : base;
       } catch {
         // deslogado ou rede fora — sino fica quieto
       }
@@ -145,11 +158,18 @@ export default function NotificationsBell() {
             </div>
           ) : (
             <ul className="max-h-[420px] divide-y divide-white/[0.06] overflow-y-auto">
-              {items.map((n) => {
+              {items.map((n, i) => {
                 const meta = KIND_META[n.kind];
                 const isNew = seenBefore != null && n.createdAt >= seenBefore;
+                const label = dayLabel(n.createdAt);
+                const showDay = i === 0 || dayLabel(items[i - 1].createdAt) !== label;
                 return (
                   <li key={n.id}>
+                    {showDay && (
+                      <div className="bg-[#101012] px-4 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-500">
+                        {label}
+                      </div>
+                    )}
                     <Link
                       href={n.href}
                       onClick={() => setOpen(false)}

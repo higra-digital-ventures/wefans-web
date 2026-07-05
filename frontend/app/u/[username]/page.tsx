@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getMe, getPublicCollectionServer, getPublicProfileServer } from '@/lib/api-server';
+import { getMe, getPublicCollectionServer, getPublicProfileServer, getPublicWishlistServer } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import { dateTime } from '@/lib/format';
 
@@ -14,7 +14,10 @@ export default async function PublicProfilePage({
   const { username } = await params;
   const [profile, me] = await Promise.all([getPublicProfileServer(username), getMe()]);
   if (!profile) notFound();
-  const moments = await getPublicCollectionServer(username);
+  const [moments, publicWishlist] = await Promise.all([
+    getPublicCollectionServer(username),
+    getPublicWishlistServer(username).catch(() => []),
+  ]);
   const canMessage = !!me && me.username !== profile.username;
 
   const kpis = [
@@ -69,6 +72,16 @@ export default async function PublicProfilePage({
             <LanceCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
           ))}
         </div>
+      )}
+      {publicWishlist.length > 0 && (
+        <section className="mt-12">
+          <h2 className="mb-4 font-display text-2xl uppercase tracking-tight text-ink">Wishlist</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {publicWishlist.slice(0, 4).map((t) => (
+              <LanceCard key={t.id} template={t} href={`/lance/${t.id}`} />
+            ))}
+          </div>
+        </section>
       )}
     </main>
   );

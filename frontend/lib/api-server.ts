@@ -255,3 +255,10 @@ export async function getFeedServer(
 export async function getTemplateCollectorsServer(id: string): Promise<TemplateCollectors | null> {
   return serverFetch<TemplateCollectors>(`/api/v1/catalog/templates/${id}/collectors`);
 }
+
+export async function getPublicWishlistServer(username: string): Promise<TemplateDTO[]> {
+  const data = await serverFetch<{ templates: TemplateDTO[] }>(
+    `/api/v1/users/${encodeURIComponent(username)}/wishlist`,
+  );
+  return data?.templates ?? [];
+}

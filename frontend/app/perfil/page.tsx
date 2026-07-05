@@ -6,6 +6,7 @@ import {
   getTeamsServer,
   getWalletServer,
   getWishlistServer,
+  getCollectionServer,
 } from '@/lib/api-server';
 import PerfilClient from '@/components/PerfilClient';
 import LanceCard from '@/components/LanceCard';
@@ -18,17 +19,70 @@ export default async function PerfilPage() {
   const me = await getMe();
   if (!me) redirect('/entrar');
 
-  const [wallet, teams, stats, wishlist] = await Promise.all([
+  const [wallet, teams, stats, wishlist, collection] = await Promise.all([
     getWalletServer(),
     getTeamsServer(),
     getMyStatsServer(),
     getWishlistServer(),
+    getCollectionServer().catch(() => null),
   ]);
   const wl = wishlist ?? [];
+  const col = collection ?? [];
+  // Destaques (pinned do Top Shot): os 3 Lances mais valiosos pela média
+  const pinned = [...col].sort((a, b) => (b.template.aspCents || 0) - (a.template.aspCents || 0)).slice(0, 3);
+  // Coleção por Times (clube do jogador)
+  const byClub = new Map<string, number>();
+  for (const m of col) byClub.set(m.template.player.club, (byClub.get(m.template.player.club) ?? 0) + 1);
+  const clubs = [...byClub.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
   const card = ' border border-line bg-panel p-5';
 
   return (
     <PerfilClient me={me} wallet={wallet} teams={teams} momentCount={stats?.momentCount ?? 0} percentile={stats?.percentile}>
+      <section className={`${card} mt-6`}>
+        <h2 className="mb-3 font-semibold text-ink">Destaques</h2>
+        {pinned.length === 0 ? (
+          <p className="text-sm text-muted">
+            Sem Lances ainda —{' '}
+            <Link href="/pacotes" className="text-accent3 underline">
+              abra um pacote
+            </Link>{' '}
+            para montar seus destaques.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {pinned.map((m) => (
+              <LanceCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className={`${card} mt-6`}>
+        <h2 className="mb-3 font-semibold text-ink">Coleção por times</h2>
+        {clubs.length === 0 ? (
+          <p className="text-sm text-muted">
+            Nada por time ainda — encontre craques no{' '}
+            <Link href="/mercado" className="text-accent3 underline">
+              mercado
+            </Link>
+            .
+          </p>
+        ) : (
+          <div className="grid gap-2 sm:grid-cols-2">
+            {clubs.map(([club, n]) => (
+              <Link
+                key={club}
+                href={`/mercado?q=${encodeURIComponent(club)}`}
+                className="flex items-center justify-between border border-line bg-[#0a0a0b] px-3 py-2.5 transition-colors hover:border-white/30"
+              >
+                <span className="text-[13px] font-semibold text-ink">{club}</span>
+                <span className="tabular-nums text-[12px] text-accent3">{n} Lance{n > 1 ? 's' : ''}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
       {stats && stats.momentCount > 0 && (
         <section className={`${card} mt-6`}>
           <h2 className="mb-3 font-semibold text-ink">Coleção por raridade</h2>

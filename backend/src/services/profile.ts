@@ -90,3 +90,16 @@ export async function getPublicCollection(db: PrismaClient, username: string) {
   });
   return moments.map(toMomentDTO);
 }
+
+/** Wishlist pública do perfil (como a aba WISHLIST do Top Shot). */
+export async function getPublicWishlist(db: PrismaClient, username: string) {
+  const user = await db.user.findUnique({ where: { username }, select: { id: true } });
+  if (!user) throw notFound('Perfil não encontrado');
+  const items = await db.wishlist.findMany({
+    where: { userId: user.id },
+    include: { template: { include: { player: true } } },
+    orderBy: { createdAt: 'desc' },
+    take: 24,
+  });
+  return items.map((w) => toTemplateDTO(w.template));
+}
