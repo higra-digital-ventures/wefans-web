@@ -294,6 +294,20 @@ async function main() {
     },
   });
 
+  // Rip Pack 24/7 — sempre à venda, sem fila (faixa "Rip Packs" da página de drops)
+  await prisma.pack.create({
+    data: {
+      name: 'Pack da Rodada 24/7',
+      priceCents: 2000,
+      momentCount: 3,
+      oddsJson: { COMUM: 0.62, TORCIDA: 0.25, RARO: 0.11, LENDARIO: 0.019, GALACTICO: 0.001 },
+      guaranteeTier: null,
+      totalSupply: 10000,
+      sealed: false,
+      ticketOnly: false,
+    },
+  });
+
   const checkinPack = await prisma.pack.create({
     data: {
       name: 'Pack Prova de Presença',
