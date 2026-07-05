@@ -144,7 +144,7 @@ export default async function JogarPage() {
   ];
 
   return (
-    <main className="w-full px-4 py-8 lg:px-8">
+    <main className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
       <h1 className="mb-1 font-display text-4xl uppercase text-ink">Jogar</h1>
       <p className="mb-6 text-muted">
         Seus Lances não são só colecionáveis — são peças de jogo.
