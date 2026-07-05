@@ -32,6 +32,38 @@ html:not([class*='__variable']) {
   border-radius: 4px;
 }
 
+html {
+  background-color: #050505; /* overscroll/rubber-band nunca mostra fundo claro */
+  overscroll-behavior-y: none;
+}
+
+/* seleção de texto na cor da marca */
+::selection {
+  background: rgba(255, 46, 136, 0.35);
+  color: #fff;
+}
+
+/* scrollbar escura (o padrão claro do Windows grita contra o preto) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2e #0a0a0b;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: #0a0a0b;
+}
+*::-webkit-scrollbar-thumb {
+  background: #2a2a2e;
+  border-radius: 5px;
+  border: 2px solid #0a0a0b;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3f;
+}
+
 body {
   background-color: #050505; /* preto, como as telas de referência do Top Shot */
   color: var(--ink);

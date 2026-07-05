@@ -3,12 +3,20 @@ import Link from 'next/link';
 // Footer no padrão do Top Shot (seção 11.12a): Comunidade + Suporte/Sobre/Legal,
 // badges de loja (o app é divulgado no rodapé da web) e linha de copyright com selos.
 
+const SOCIAL_HOVER: Record<string, string> = {
+  X: 'hover:text-white',
+  Instagram: 'hover:text-[#ff2e88]',
+  Facebook: 'hover:text-[#1877f2]',
+  YouTube: 'hover:text-[#ff0033]',
+};
+
 function Social({ label, path }: { label: string; path: string }) {
   return (
     <a
       href="#"
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-panel2 hover:text-ink"
+      title={`${label} (em breve)`}
+      className={`flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-panel2 ${SOCIAL_HOVER[label] ?? 'hover:text-ink'}`}
     >
       <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current" aria-hidden>
         <path d={path} />

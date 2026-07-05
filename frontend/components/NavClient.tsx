@@ -66,7 +66,19 @@ export default function NavClient({
       <div className="flex h-[72px] w-full items-center justify-between gap-3 px-4 lg:px-6">
         <div className="flex items-center gap-3">
           <MobileNav items={MOBILE_ITEMS} />
-          <Link href="/" className="flex items-baseline gap-1.5">
+          <Link href="/" className="flex items-center gap-2">
+            <svg viewBox="0 0 64 64" className="h-7 w-7" aria-hidden>
+              <defs>
+                <linearGradient id="wfmark" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#ff2e88" />
+                  <stop offset=".55" stopColor="#9d4edd" />
+                  <stop offset="1" stopColor="#3a1e6e" />
+                </linearGradient>
+              </defs>
+              <circle cx="32" cy="32" r="26" fill="url(#wfmark)" />
+              <path d="M10 42 Q30 8 54 28" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
+              <circle cx="10" cy="42" r="4" fill="#fff" />
+            </svg>
             <span className="bg-sunset bg-clip-text font-display text-[26px] uppercase leading-none tracking-tight text-transparent">
               wefans
             </span>
@@ -92,7 +104,7 @@ export default function NavClient({
                     {n.badge}
                   </span>
                 )}
-                {active && <span className="absolute inset-x-2 bottom-0 h-[3px]  bg-accent" />}
+                {active && <span className="absolute inset-x-2 bottom-0 h-[3px] bg-ink" />}
               </Link>
             );
           })}

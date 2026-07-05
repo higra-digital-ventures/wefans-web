@@ -60,7 +60,7 @@ export default function BottomNav() {
                 <path d={it.d} />
               </svg>
               {it.label}
-              {active && <span className="absolute top-0 h-[2px] w-8 bg-accent" aria-hidden />}
+              {active && <span className="absolute top-0 h-[2px] w-8 bg-ink" aria-hidden />}
             </Link>
           );
         })}
