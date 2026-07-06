@@ -5,7 +5,7 @@
 // verso = marca wefans. Arraste para girar; auto-rotação no idle (desliga com
 // prefers-reduced-motion). Sem post-processing pesado (glow fake por cor).
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 export interface Moment3DData {
@@ -202,10 +202,22 @@ function drawBack(ctx: CanvasRenderingContext2D, d: Moment3DData) {
   ctx.strokeRect(20, 20, w - 40, h - 40);
 }
 
+// ângulos de cada face (Y): frente levemente angulada (estética Top Shot),
+// escudo à esquerda (+90°), stats à direita (−90°), marca atrás (180°)
+const FRONT_Y = -0.26;
+const FACES = [
+  { key: 'lance', label: 'Lance', icon: '▶', y: FRONT_Y },
+  { key: 'escudo', label: 'Escudo', icon: '◈', y: Math.PI / 2 - 0.2 },
+  { key: 'stats', label: 'Stats', icon: '≡', y: -Math.PI / 2 + 0.2 },
+  { key: 'marca', label: 'Marca', icon: 'W', y: Math.PI },
+] as const;
+
 export default function Moment3D({ data }: { data: Moment3DData }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const dataRef = useRef(data);
   dataRef.current = data;
+  const targetRef = useRef(FRONT_Y);
+  const [face, setFace] = useState<string>('lance');
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -313,12 +325,13 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     rim.position.set(-5, -2, 4);
     scene.add(rim);
 
-    // interação: arrastar gira; idle auto-rotaciona
+    // interação: arrastar gira; no idle o cubo BALANÇA ancorado na frente
+    // (a mídia é o herói — nada de girar 360 e mostrar a traseira sozinho)
     let dragging = false;
     let lastX = 0;
     let lastY = 0;
-    let velX = reduced ? 0 : 0.008;
     let rotX = -0.08;
+    let swayPhase = 0;
     let idleTimer: ReturnType<typeof setTimeout> | null = null;
     const onDown = (e: PointerEvent) => {
       dragging = true;
@@ -329,14 +342,15 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     const onMove = (e: PointerEvent) => {
       if (!dragging) return;
       group.rotation.y += (e.clientX - lastX) * 0.011;
+      targetRef.current = group.rotation.y; // segue a mão enquanto arrasta
       rotX = Math.max(-0.9, Math.min(0.9, rotX + (e.clientY - lastY) * 0.006));
       lastX = e.clientX;
       lastY = e.clientY;
-      velX = 0;
     };
     const onUp = () => {
       dragging = false;
-      if (!reduced) idleTimer = setTimeout(() => (velX = 0.008), 2500);
+      // depois de 2,5s parado, volta suavemente para a frente
+      idleTimer = setTimeout(() => (targetRef.current = FRONT_Y), 2500);
     };
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.style.cursor = 'grab';
@@ -347,7 +361,14 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
 
     let raf = 0;
     const tick = () => {
-      group.rotation.y += velX;
+      if (!dragging) {
+        swayPhase += reduced ? 0 : 0.012;
+        const sway = reduced ? 0 : Math.sin(swayPhase) * 0.16;
+        const want = targetRef.current + sway;
+        // caminho mais curto (evita dar a volta ao voltar de um arrasto longo)
+        const delta = ((want - group.rotation.y + Math.PI) % (Math.PI * 2)) - Math.PI;
+        group.rotation.y += delta * 0.06;
+      }
       group.rotation.x += (rotX - group.rotation.x) * 0.08;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
@@ -372,11 +393,47 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
   }, []);
 
   return (
-    <div
-      ref={mountRef}
-      className="w-full select-none"
-      role="img"
-      aria-label={`Cartão 3D do Lance de ${data.playerName} — arraste para girar`}
-    />
+    <div>
+      <div className="relative">
+        <div
+          ref={mountRef}
+          className="w-full select-none"
+          role="img"
+          aria-label={`Cartão 3D do Lance de ${data.playerName} — arraste para girar`}
+        />
+        {/* sombra de chão: assenta o cubo no espaço */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-[12%] -bottom-2 h-8"
+          style={{ background: 'radial-gradient(50% 100% at 50% 50%, rgba(0,0,0,.65), transparent 70%)' }}
+        />
+      </div>
+
+      {/* navegação por faces: clicou, o cubo gira até lá (o arrasto continua livre) */}
+      <div className="mt-3 flex items-center justify-center gap-2">
+        {FACES.map((f) => (
+          <button
+            key={f.key}
+            type="button"
+            onClick={() => {
+              targetRef.current = f.y;
+              setFace(f.key);
+            }}
+            aria-label={`Girar para a face ${f.label}`}
+            className={`flex h-11 w-9 flex-col items-center justify-center rounded-lg border text-[11px] transition-colors ${
+              face === f.key
+                ? 'border-white bg-white/10 text-white'
+                : 'border-white/15 bg-[#101014] text-neutral-400 hover:border-white/40 hover:text-white'
+            }`}
+          >
+            <span aria-hidden>{f.icon}</span>
+            <span className="text-[7px] uppercase tracking-wide">{f.label}</span>
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] uppercase tracking-wide text-muted">
+        arraste para girar · toque numa face para ir direto
+      </p>
+    </div>
   );
 }

@@ -151,27 +151,6 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               crestUrl: clubCrestUrl(t.player.club),
             }}
           />
-          <div className="mt-3 flex items-center justify-center gap-2" aria-hidden>
-            {[
-              { label: 'Lance', bg: '#170b22', icon: '▶' },
-              { label: 'Escudo', bg: '#101014', icon: '◈' },
-              { label: 'Stats', bg: '#101014', icon: '≡' },
-              { label: 'Marca', bg: '#101014', icon: 'W' },
-            ].map((f) => (
-              <span
-                key={f.label}
-                className="flex h-11 w-9 flex-col items-center justify-center border border-white/15 text-[11px] text-neutral-400"
-                style={{ background: f.bg }}
-                title={`Face: ${f.label} — arraste o cubo para ver`}
-              >
-                <span>{f.icon}</span>
-                <span className="text-[7px] uppercase tracking-wide">{f.label}</span>
-              </span>
-            ))}
-          </div>
-          <p className="mt-2 text-center text-[10px] uppercase tracking-wide text-muted">
-            arraste para girar e ver as 4 faces
-          </p>
         </div>
 
         {/* painel direito: COMUM · #/N → nome → jogada · data → painel de compra */}
