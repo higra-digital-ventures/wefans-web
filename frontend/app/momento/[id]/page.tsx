@@ -210,6 +210,22 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
                 <div className="text-[26px] font-bold leading-tight text-white">
                   {tm?.floorCents != null ? brl(tm.floorCents) : '—'}
                 </div>
+                {(() => {
+                  const floorC = tm?.floorCents;
+                  const asp = tm?.aspCents ?? 0;
+                  if (floorC == null || asp <= 0) return null;
+                  const pct = Math.round(((floorC - asp) / asp) * 100);
+                  if (Math.abs(pct) < 5) return null;
+                  return (
+                    <div
+                      className={`text-[11px] font-bold tabular-nums ${pct < 0 ? 'text-emerald-400' : 'text-red-400'}`}
+                      title={`Diferença do menor preço para a média das vendas (${brl(asp)})`}
+                    >
+                      {pct > 0 ? '+' : ''}
+                      {pct}% vs média
+                    </div>
+                  );
+                })()}
               </div>
               <div className="text-right text-[11px] text-neutral-400">
                 {listed} à venda · Média: {tm ? brl(tm.aspCents) : '—'}
