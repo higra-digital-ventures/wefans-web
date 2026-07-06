@@ -134,6 +134,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
       <div className="mb-10 grid gap-10 md:grid-cols-[minmax(0,380px)_1fr]">
         <div>
           <Moment3D
+            key={m.id} // troca de Momento = palco novo (vídeo/rotação do zero)
             data={{
               playerName: t.player.name,
               club: t.player.club,
