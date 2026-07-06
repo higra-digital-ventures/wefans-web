@@ -9,7 +9,17 @@ import type Moment3DType from './Moment3D';
 const Moment3D = dynamic(() => import('./Moment3D'), {
   ssr: false,
   loading: () => (
-    <div className="mx-auto aspect-square w-full max-w-[380px] animate-pulse bg-panel" aria-hidden />
+    // skeleton no formato real do palco: proporção 4:5 + fileira de botões de face
+    <div aria-hidden>
+      <div className="relative mx-auto aspect-[4/5] w-full">
+        <div className="absolute inset-[8%] animate-pulse rounded-2xl bg-panel" />
+      </div>
+      <div className="mt-3 flex items-center justify-center gap-2">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="h-11 w-9 animate-pulse rounded-lg bg-panel" />
+        ))}
+      </div>
+    </div>
   ),
 });
 
