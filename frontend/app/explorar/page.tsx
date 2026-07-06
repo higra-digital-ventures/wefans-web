@@ -236,7 +236,7 @@ function EventCard({
                   className="mt-1.5 inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white"
                   style={{ background: `${meta!.color}33`, border: `1px solid ${meta!.color}88` }}
                 >
-                  Puxou um {meta!.label} <Icon name="flame" filled size={14} className="inline align-[-2px] text-accent2" />
+                  Puxou um {meta!.label} <Icon name="flame" filled size={14} className="inline align-[-2px]" />
                 </div>
               ) : (
                 <div className="mt-1 text-[11px] text-neutral-500">melhor carta do pacote</div>
@@ -245,14 +245,14 @@ function EventCard({
           {(e.kind === 'SALE' || e.kind === 'LIST') && (
             <div className="shrink-0 text-right">
               <div
-                className={`text-[10px] font-bold uppercase tracking-wide ${e.kind === 'LIST' ? 'text-accent3' : 'text-emerald-400'}`}
+                className={`text-[10px] font-bold uppercase tracking-wide ${e.kind === 'LIST' ? 'text-neutral-400' : 'text-emerald-400'}`}
               >
                 {e.kind === 'LIST' ? ((e.count ?? 1) > 1 ? 'a partir de' : 'pedindo') : 'vendido por'}
               </div>
               <div className="text-[20px] font-bold tabular-nums text-white">{brl(e.priceCents ?? 0)}</div>
               <PriceStory priceCents={e.priceCents} aspCents={e.template?.aspCents} />
               {e.kind === 'LIST' && (
-                <div className="mt-1.5 inline-block border border-accent3/60 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-accent3 transition-colors group-hover:bg-accent3 group-hover:text-black">
+                <div className="mt-1.5 inline-block border border-white/40 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white transition-colors group-hover:bg-white group-hover:text-black">
                   Comprar
                 </div>
               )}
@@ -318,7 +318,7 @@ function TrendingStrip({ items }: { items: { template: import('@/lib/types').Tem
   return (
     <section className="border border-white/10 bg-[#0c0c0e] p-3">
       <div className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
-        <Icon name="flame" filled size={14} className="text-accent2" />
+        <Icon name="flame" filled size={14} />
         Em alta · 24h
       </div>
       <div className="scrollbar-none -mx-1 flex gap-2.5 overflow-x-auto px-1 pb-1">
@@ -349,7 +349,7 @@ function TrendingStrip({ items }: { items: { template: import('@/lib/types').Tem
               <div className="mt-1.5 truncate text-[11px] font-bold text-white">{t.player.name}</div>
               <div className="flex items-baseline justify-between text-[10px]">
                 <span className="tabular-nums text-neutral-500">{count} negócios</span>
-                <span className="tabular-nums font-semibold text-accent3">
+                <span className="tabular-nums font-semibold text-neutral-200">
                   {t.aspCents > 0 ? brl(t.aspCents) : ''}
                 </span>
               </div>
