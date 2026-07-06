@@ -48,17 +48,18 @@ const ACTION: Record<FeedEvent['kind'], string> = {
   CHECKIN: 'fez check-in em',
 };
 
+// thumb reto no stream: o feed é sobre o fato, a carta 3D fica para as grades
+// e para a página do Momento (o lance ainda toca no hover)
 function MomentThumb({ e }: { e: FeedEvent }) {
   if (!e.template) return null;
   const meta = TIER_META[e.template.tier];
   return (
-    <div className="w-[120px] shrink-0" style={{ perspective: '450px' }}>
+    <div className="w-[96px] shrink-0">
       <div
         className="aspect-[4/5] overflow-hidden border"
         style={{
-          transform: 'rotateY(-10deg) rotateX(2deg)',
-          borderColor: `${meta.color}66`,
-          boxShadow: `6px 5px 14px rgba(0,0,0,.6)${isFoil(e.template.tier) ? `, 0 0 12px ${meta.color}40` : ''}`,
+          borderColor: `${meta.color}55`,
+          boxShadow: isFoil(e.template.tier) ? `0 0 12px ${meta.color}33` : undefined,
         }}
       >
         <TacticalBoard
@@ -200,8 +201,10 @@ function EventCard({
                 {e.template.player.name} #{e.serial}
               </span>
             )}
-          <span className="text-neutral-500"> · {timeAgo(e.createdAt)}</span>
         </p>
+        <span className="ml-auto shrink-0 text-[11px] text-neutral-500" title={new Date(e.createdAt).toLocaleString('pt-BR')}>
+          {timeAgo(e.createdAt)}
+        </span>
       </div>
 
       {/* corpo por tipo de evento */}
