@@ -85,6 +85,28 @@ export default async function MercadoPage({
   const pageListings = listings.slice(0, size);
 
   const activeChallenges = challenges.filter((c) => c.active).slice(0, 12);
+
+  // conversão quente: edições da SUA wishlist com anúncio ativo agora
+  const wishOnSale = (() => {
+    if (!me) return [];
+    const byTemplate = new Map<
+      string,
+      { template: (typeof allListings)[number]['template']; minCents: number; momentId: string; count: number }
+    >();
+    for (const l of allListings) {
+      if (!wishedIds.has(l.template.id) || l.seller === me.username) continue;
+      const cur = byTemplate.get(l.template.id);
+      if (!cur) byTemplate.set(l.template.id, { template: l.template, minCents: l.priceCents, momentId: l.momentId, count: 1 });
+      else {
+        cur.count += 1;
+        if (l.priceCents < cur.minCents) {
+          cur.minCents = l.priceCents;
+          cur.momentId = l.momentId;
+        }
+      }
+    }
+    return [...byTemplate.values()].sort((a, b) => a.minCents - b.minCents).slice(0, 6);
+  })();
   const dense = vis === 'compact';
   const hasFilter = !!(tier || badge || q || pmin || pmax || deal || ed);
 
@@ -189,6 +211,41 @@ export default async function MercadoPage({
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* da sua wishlist, à venda agora — a conversão mais quente da página */}
+      {wishOnSale.length > 0 && (
+        <section className="mb-6 border border-accent3/25 bg-accent3/[0.04] p-3">
+          <div className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-accent3">
+            <Icon name="bookmark" filled size={13} />
+            Da sua wishlist, à venda agora
+          </div>
+          <div className="scrollbar-none -mx-1 flex gap-2.5 overflow-x-auto px-1 pb-1">
+            {wishOnSale.map(({ template: t, minCents, momentId, count }) => {
+              const m = TIER_META[t.tier];
+              return (
+                <Link
+                  key={t.id}
+                  href={`/momento/${momentId}`}
+                  className="w-[128px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-accent3/50"
+                >
+                  <div className="mx-auto w-[80%]">
+                    <div className="aspect-[4/5] overflow-hidden border" style={{ borderColor: `${m.color}66` }}>
+                      <TacticalBoard trajectory={t.trajectory} jersey={t.player.jersey} color={m.color} foil={isFoil(t.tier)} />
+                    </div>
+                  </div>
+                  <div className="mt-1.5 truncate text-[11px] font-bold text-white">{t.player.name}</div>
+                  <div className="flex items-baseline justify-between text-[10px]">
+                    <span className="font-bold tabular-nums text-white">{brl(minCents)}</span>
+                    <span className="tabular-nums text-neutral-500">
+                      {count > 1 ? `${count} à venda` : 'só 1'}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
