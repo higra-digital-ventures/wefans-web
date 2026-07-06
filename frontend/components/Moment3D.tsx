@@ -58,7 +58,7 @@ function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, w: numb
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
 }
 
-function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData, photo?: HTMLImageElement) {
+function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData, photo?: HTMLImageElement, expectPhoto = false) {
   const w = 480;
   const h = 600;
   ctx.fillStyle = '#170b22';
@@ -71,6 +71,13 @@ function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData, photo?: HTMLI
     shade.addColorStop(0.5, 'rgba(5,5,5,0)');
     shade.addColorStop(1, 'rgba(5,5,5,0.8)');
     ctx.fillStyle = shade;
+    ctx.fillRect(0, 0, w, h);
+  } else if (expectPhoto) {
+    // foto a caminho: base escura com o glow do tier — nada de prancheta piscando
+    const glow = ctx.createRadialGradient(w / 2, h * 0.3, 40, w / 2, h * 0.3, w);
+    glow.addColorStop(0, `${d.tierColor}22`);
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
     ctx.fillRect(0, 0, w, h);
   } else {
     const glow = ctx.createRadialGradient(w / 2, h * 0.3, 40, w / 2, h * 0.3, w);
@@ -243,7 +250,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
 
     // slab com uma textura por face [right, left, top, bottom, front, back]
     const plain = new THREE.MeshStandardMaterial({ color: 0x15101c });
-    const frontTex = canvasTexture(480, 600, (c) => drawFront(c, d));
+    const frontTex = canvasTexture(480, 600, (c) => drawFront(c, d, undefined, !!d.photoUrl));
     const shieldTex = canvasTexture(200, 600, (c) => drawShield(c, d));
     let video: HTMLVideoElement | null = null;
     let frontMat: THREE.Material;
