@@ -368,6 +368,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       drawShield(c, d);
     });
     let video: HTMLVideoElement | null = null;
+    let videoTex: THREE.VideoTexture | null = null;
     let frontMat: THREE.Material;
     if (d.videoUrl) {
       // frente = clipe tocando (como o Moment do Top Shot)
@@ -377,9 +378,13 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       video.loop = true;
       video.playsInline = true;
       video.autoplay = true;
-      const vtex = new THREE.VideoTexture(video);
-      vtex.colorSpace = THREE.SRGBColorSpace;
-      vtex.wrapS = THREE.ClampToEdgeWrapping;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.crossOrigin = 'anonymous';
+      videoTex = new THREE.VideoTexture(video);
+      videoTex.colorSpace = THREE.SRGBColorSpace;
+      videoTex.wrapS = THREE.ClampToEdgeWrapping;
+      const vtex = videoTex;
       video.addEventListener('loadedmetadata', () => {
         // center-crop do 16:9 na face 4:5 (cover)
         const va = video!.videoWidth / video!.videoHeight;
@@ -389,23 +394,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
           vtex.offset.set((1 - fa / va) / 2, 0);
         }
       });
-      video.play().catch(() => {});
-      // poster primeiro: a foto segura a frente até o clipe ter frames prontos
-      const basic = new THREE.MeshBasicMaterial({ map: frontTex });
-      frontMat = basic;
-      video.addEventListener('canplay', () => {
-        basic.map = vtex;
-        basic.needsUpdate = true;
-      });
-      if (d.photoUrl) {
-        const img = new Image();
-        img.onload = () => {
-          const c = frontTex.image as HTMLCanvasElement;
-          drawFront(c.getContext('2d')!, d, img);
-          frontTex.needsUpdate = true;
-        };
-        img.src = d.photoUrl;
-      }
+      // a VideoTexture É a face desde o início — nada de poster que trava no 1º frame
+      frontMat = new THREE.MeshBasicMaterial({ map: vtex });
+      const kick = () => video!.play().catch(() => {});
+      kick();
+      video.addEventListener('loadeddata', kick);
+      video.addEventListener('canplay', kick);
     } else {
       frontMat = new THREE.MeshStandardMaterial({ map: frontTex });
       if (d.photoUrl) {
@@ -712,6 +706,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         if (!facingFront && !video.paused) video.pause();
         else if (facingFront && video.paused && !userPaused) video.play().catch(() => {});
       }
+      // VideoTexture congela sem needsUpdate por frame quando o vídeo está fora do DOM
+      if (videoTex && video && !video.paused && video.readyState >= 2) videoTex.needsUpdate = true;
       frame++;
       // botão da face mais próxima acende sozinho (segue o arrasto/inércia)
       {
