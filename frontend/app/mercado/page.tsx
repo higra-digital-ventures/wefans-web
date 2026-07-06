@@ -44,10 +44,10 @@ export default async function MercadoPage({
 }: {
   searchParams: Promise<{
     tier?: string; sort?: string; q?: string; badge?: string; vis?: string;
-    pmin?: string; pmax?: string; deal?: string; ed?: string; n?: string;
+    pmin?: string; pmax?: string; deal?: string; ed?: string; n?: string; g?: string;
   }>;
 }) {
-  const { tier, sort, q, badge, vis, pmin, pmax, deal, ed, n } = await searchParams;
+  const { tier, sort, q, badge, vis, pmin, pmax, deal, ed, n, g } = await searchParams;
   const qs = new URLSearchParams();
   if (tier) qs.set('tier', tier);
   if (sort && API_SORTS.has(sort)) qs.set('sort', sort);
@@ -93,6 +93,23 @@ export default async function MercadoPage({
   const size = Math.max(24, Number(n) || 24);
   const pageListings = listings.slice(0, size);
 
+  // "Por edição": um card por template com o anúncio mais barato ("a partir de")
+  const groupByEdition = g === '1' && vis !== 'list';
+  const editionGroups = (() => {
+    if (!groupByEdition) return [];
+    const map = new Map<string, { rep: (typeof listings)[number]; count: number }>();
+    for (const l of listings) {
+      const cur = map.get(l.template.id);
+      if (!cur) map.set(l.template.id, { rep: l, count: 1 });
+      else {
+        cur.count += 1;
+        if (l.priceCents < cur.rep.priceCents) cur.rep = l;
+      }
+    }
+    return [...map.values()];
+  })();
+  const pageGroups = editionGroups.slice(0, size);
+
   const activeChallenges = challenges.filter((c) => c.active).slice(0, 12);
 
   // conversão quente: edições da SUA wishlist com anúncio ativo agora
@@ -135,7 +152,7 @@ export default async function MercadoPage({
   // monta hrefs preservando os demais parâmetros
   const href = (patch: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
-    const merged = { tier, sort, q, badge, vis, pmin, pmax, deal, ed, ...patch };
+    const merged = { tier, sort, q, badge, vis, pmin, pmax, deal, ed, g, ...patch };
     for (const [k, v] of Object.entries(merged)) if (v) p.set(k, v);
     return `/mercado${p.toString() ? `?${p}` : ''}`;
   };
@@ -342,6 +359,18 @@ export default async function MercadoPage({
 
         <span className="ml-auto flex items-center gap-2">
           <Link
+            href={href({ g: g ? undefined : '1', n: undefined })}
+            scroll={false}
+            title="Um card por edição, com o menor preço"
+            className={`flex items-center gap-2 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors ${
+              groupByEdition
+                ? 'border-white bg-white text-black'
+                : 'border-white/25 text-neutral-400 hover:border-white/50 hover:text-white'
+            }`}
+          >
+            Por edição
+          </Link>
+          <Link
             href={href({ sort: sort === 'desconto' ? undefined : 'desconto', n: undefined })}
             scroll={false}
             title="Ordenar pelos anúncios mais abaixo da média da edição"
@@ -387,7 +416,7 @@ export default async function MercadoPage({
       {/* orientação: quantos sobraram e o que está filtrando (✕ remove um por um) */}
       <div className="mb-4 flex flex-wrap items-center gap-2 text-[13px]">
         <span className="font-bold tabular-nums text-white">
-          {listings.length} à venda
+          {groupByEdition ? `${editionGroups.length} edições · ${listings.length} anúncios` : `${listings.length} à venda`}
         </span>
         {activeFilters.map((fl) => (
           <Link
@@ -520,26 +549,37 @@ export default async function MercadoPage({
                   : 'grid gap-3.5 [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]'
               }
             >
-              {pageListings.map((l) => (
-                <LanceCard
-                  key={l.listingId}
-                  template={l.template}
-                  serial={l.serial}
-                  priceCents={l.priceCents}
-                  quickBuyListingId={me && l.seller !== me.username ? l.listingId : undefined}
-                  href={`/momento/${l.momentId}`}
-                  wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
-                />
-              ))}
+              {(groupByEdition ? pageGroups : pageListings.map((l) => ({ rep: l, count: 1 }))).map(
+                ({ rep: l, count }) => (
+                  <div key={l.listingId} className="relative">
+                    {groupByEdition && count > 1 && (
+                      <span
+                        className="absolute left-2 top-2 z-10 bg-white px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-black"
+                        title={`${count} anúncios desta edição — mostrando o mais barato`}
+                      >
+                        {count} à venda
+                      </span>
+                    )}
+                    <LanceCard
+                      template={l.template}
+                      serial={l.serial}
+                      priceCents={l.priceCents}
+                      quickBuyListingId={me && l.seller !== me.username ? l.listingId : undefined}
+                      href={`/momento/${l.momentId}`}
+                      wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
+                    />
+                  </div>
+                ),
+              )}
             </div>
           )}
-          {listings.length > size && (
+          {(groupByEdition ? editionGroups.length : listings.length) > size && (
             <Link
               href={href({ n: String(size + 24) })}
               scroll={false}
               className="mt-4 block border border-white/15 py-2.5 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
             >
-              Carregar mais ({listings.length - size} restantes)
+              Carregar mais ({(groupByEdition ? editionGroups.length : listings.length) - size} restantes)
             </Link>
           )}
         </div>
