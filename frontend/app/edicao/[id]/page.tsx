@@ -62,13 +62,21 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
         <LanceCard template={t} live />
 
         <div>
-          <span
-            className="rounded-full px-2.5 py-0.5 text-xs font-bold uppercase"
-            style={{ background: `${meta.color}26`, color: meta.color }}
-          >
-            {meta.label}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className="rounded-full px-2.5 py-0.5 text-xs font-bold uppercase"
+              style={{ background: `${meta.color}26`, color: meta.color }}
+            >
+              {meta.label}
+            </span>
+            <span className="rounded-full border border-white/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400">
+              Edição
+            </span>
+          </div>
           <h1 className="mt-2 font-display text-4xl uppercase text-ink">{t.player.name}</h1>
+          <p className="mb-1 text-[11px] uppercase tracking-[0.12em] text-neutral-500">
+            Todos os Momentos desta edição
+          </p>
           <p className="text-muted">
             {t.title} · {t.playType} · {new Date(t.matchDate).toLocaleDateString('pt-BR')}
           </p>
