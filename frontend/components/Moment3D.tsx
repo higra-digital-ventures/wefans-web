@@ -549,6 +549,11 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       if (sheenTex && !reduced) sheenTex.offset.x = (sheenTex.offset.x + 0.003) % 1;
       // moldura respira na cor do tier
       if (!reduced) barMat.color.copy(barBase).multiplyScalar(0.82 + 0.28 * Math.sin(swayPhase * 1.6));
+      // rim light orbita devagar — specular vivo vende o objeto físico
+      if (!reduced) {
+        rim.position.x = -5 + Math.sin(swayPhase * 0.7) * 1.6;
+        rim.position.y = -2 + Math.cos(swayPhase * 0.5) * 1.2;
+      }
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
