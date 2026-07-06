@@ -437,6 +437,11 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
           role="img"
           aria-label={`Cartão 3D do Lance de ${data.playerName} — arraste para girar`}
         />
+        {/* chip flutuante: raridade · serial (como o "Rare /249 LE" do Top Shot) */}
+        <div className="pointer-events-none absolute left-1/2 top-1 z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/15 bg-black/70 px-3 py-1 text-[11px] font-bold backdrop-blur-sm">
+          <span style={{ color: data.tierColor }}>{data.tierLabel}</span>
+          <span className="tabular-nums text-white"> · {data.serialLabel}</span>
+        </div>
         {/* sombra de chão: assenta o cubo no espaço */}
         <div
           aria-hidden
