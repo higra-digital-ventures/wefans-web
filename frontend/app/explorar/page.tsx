@@ -76,6 +76,22 @@ function Username({ user }: { user: string | null }) {
   );
 }
 
+// a micro-história do preço: barganha (abaixo da média) ou ousadia (acima)
+function PriceStory({ priceCents, aspCents }: { priceCents?: number; aspCents?: number }) {
+  if (!priceCents || !aspCents || aspCents <= 0) return null;
+  const pct = Math.round(((priceCents - aspCents) / aspCents) * 100);
+  if (Math.abs(pct) < 5) return null;
+  return (
+    <div
+      title={`Preço médio das últimas vendas: ${brl(aspCents)}`}
+      className={`mt-0.5 text-[10px] font-semibold tabular-nums ${pct < 0 ? 'text-emerald-400' : 'text-red-400'}`}
+    >
+      {pct > 0 ? '+' : ''}
+      {pct}% vs média
+    </div>
+  );
+}
+
 function EventCard({ e }: { e: FeedEvent }) {
   const meta = e.template ? TIER_META[e.template.tier] : null;
   // pull raro (Lendário/Galáctico) ganha moldura foil na cor do tier, como no Top Shot
@@ -153,6 +169,7 @@ function EventCard({ e }: { e: FeedEvent }) {
                 {e.kind === 'LIST' ? ((e.count ?? 1) > 1 ? 'a partir de' : 'pedindo') : 'vendido por'}
               </div>
               <div className="text-[20px] font-bold tabular-nums text-white">{brl(e.priceCents ?? 0)}</div>
+              <PriceStory priceCents={e.priceCents} aspCents={e.template?.aspCents} />
               {e.kind === 'LIST' && (
                 <div className="mt-1.5 inline-block border border-accent3/60 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-accent3 transition-colors group-hover:bg-accent3 group-hover:text-black">
                   Comprar
