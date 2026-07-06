@@ -450,7 +450,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     }
 
     // moldura neon: 12 barras emissivas nas arestas
-    const barMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(d.tierColor) });
+    const barBase = new THREE.Color(d.tierColor);
+    const barMat = new THREE.MeshBasicMaterial({ color: barBase.clone() });
     const t = 0.055;
     const mk = (sx: number, sy: number, sz: number, x: number, y: number, z: number) => {
       const bar = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), barMat);
@@ -546,6 +547,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       }
       group.rotation.x += (rotX - group.rotation.x) * 0.08;
       if (sheenTex && !reduced) sheenTex.offset.x = (sheenTex.offset.x + 0.003) % 1;
+      // moldura respira na cor do tier
+      if (!reduced) barMat.color.copy(barBase).multiplyScalar(0.82 + 0.28 * Math.sin(swayPhase * 1.6));
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
