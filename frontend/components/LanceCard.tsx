@@ -158,14 +158,16 @@ export default function LanceCard({
         <div className="flex flex-wrap items-center gap-1.5 text-[12px]">
           <span className="font-bold text-white">{meta.label}</span>
           <span
-            className="font-semibold text-neutral-400"
+            className={`font-semibold ${!limited && template.emissionClosed ? 'text-amber-300' : 'text-neutral-400'}`}
             title={
               limited
                 ? `Edição limitada: só ${template.editionSize?.toLocaleString('pt-BR')} exemplares existirão`
-                : 'Edição circulante: novos exemplares ainda podem ser criados'
+                : template.emissionClosed
+                  ? `Emissão encerrada: o supply congelou em ${template.circulatingCount.toLocaleString('pt-BR')} — nunca mais aumenta`
+                  : 'Edição circulante: novos exemplares ainda podem ser criados'
             }
           >
-            {limited ? supply : `Aberta · ${supply}`}
+            {limited ? supply : `${template.emissionClosed ? 'Encerrada' : 'Aberta'} · ${supply}`}
           </span>
           {limited && (
             <span

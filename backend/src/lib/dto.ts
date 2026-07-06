@@ -66,6 +66,7 @@ export function toTemplateDTO(t: TemplateWithPlayer) {
     tier: t.tier,
     editionType: t.editionType,
     editionSize: t.editionSize,
+    emissionClosed: t.status === 'ENCERRADO', // supply congelado — cerimônia de valorização
     mintedCount: t.mintedCount,
     circulatingCount: t.circulatingCount,
     parallel: t.parallel,

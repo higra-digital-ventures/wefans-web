@@ -27,7 +27,8 @@ export interface TemplateFilters {
 export async function listTemplates(db: PrismaClient, filters: TemplateFilters) {
   const templates = await db.template.findMany({
     where: {
-      status: 'PUBLICADO',
+      // ENCERRADO segue no catálogo: parou de mintar, não de existir
+      status: { in: ['PUBLICADO', 'ENCERRADO'] },
       ...(filters.tier ? { tier: filters.tier } : {}),
       ...(filters.setId ? { setId: filters.setId } : {}),
       ...(filters.seriesId ? { seriesId: filters.seriesId } : {}),
@@ -44,7 +45,7 @@ export async function listTemplates(db: PrismaClient, filters: TemplateFilters) 
 
 export async function getTemplateDetail(db: PrismaClient, id: string) {
   const template = await db.template.findUnique({ where: { id }, include: { player: true } });
-  if (!template || template.status !== 'PUBLICADO') throw notFound('Lance não encontrado');
+  if (!template || !['PUBLICADO', 'ENCERRADO'].includes(template.status)) throw notFound('Lance não encontrado');
   const listed = await db.listing.count({ where: { moment: { templateId: id }, status: 'ACTIVE' } });
   const burned = template.mintedCount - template.circulatingCount;
   return toTemplateDetailDTO(template, {

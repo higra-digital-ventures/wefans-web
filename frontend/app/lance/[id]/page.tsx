@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -73,6 +74,14 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
           </p>
 
           <div className="mt-4 tabular-nums text-2xl text-ink">{editionLabel(t)}</div>
+
+          {/* cerimônia de encerramento: supply congelado é argumento de valorização */}
+          {t.emissionClosed && (
+            <div className="mt-3 inline-flex items-center gap-2 border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-amber-300">
+              <Icon name="lock" size={13} />
+              Emissão encerrada · supply congelado em {t.circulatingCount.toLocaleString('pt-BR')}
+            </div>
+          )}
 
           <div className="mt-6 grid grid-cols-3 gap-4  border border-line bg-panel p-4">
             {stat('Menor preço', tm?.floorCents != null ? brl(tm.floorCents) : '—')}

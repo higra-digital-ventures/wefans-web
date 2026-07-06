@@ -46,6 +46,7 @@ export type TemplateDTO = {
   tier: Tier;
   editionType: EditionType;
   editionSize: number | null;
+  emissionClosed?: boolean; // emissão encerrada — supply congelado
   mintedCount: number;
   circulatingCount: number;
   parallel: string;
