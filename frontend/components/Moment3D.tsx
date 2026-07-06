@@ -838,7 +838,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     <div
       tabIndex={0}
       onKeyDown={onKeyDown}
-      aria-label="Cartão 3D — use as setas para girar e as teclas 1 a 4 para trocar de face"
+      aria-label="Momento 3D — use as setas para girar e as teclas 1 a 4 para trocar de face"
       className="outline-offset-4"
     >
       <div className="relative">
@@ -852,7 +852,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
           ref={mountRef}
           className="w-full select-none [filter:brightness(1.12)_contrast(1.07)_saturate(1.06)]"
           role="img"
-          aria-label={`Cartão 3D do Momento de ${data.playerName} — arraste para girar`}
+          aria-label={`Momento 3D de ${data.playerName} — arraste para girar`}
         />
         {/* sombra de chão: assenta o cubo no espaço */}
         <div
