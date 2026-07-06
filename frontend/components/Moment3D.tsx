@@ -577,6 +577,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     };
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.style.cursor = 'grab';
+    // zoom por scroll (limitado): aproxima para ver o detalhe da foto
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      camera.position.z = Math.min(10.5, Math.max(6, camera.position.z + e.deltaY * 0.004));
+    };
+    renderer.domElement.addEventListener('wheel', onWheel, { passive: false });
     renderer.domElement.addEventListener('pointermove', onHover);
     renderer.domElement.addEventListener('pointerleave', onLeave);
     renderer.domElement.addEventListener('dblclick', onDbl);
@@ -657,6 +663,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     return () => {
       cancelAnimationFrame(raf);
       if (idleTimer) clearTimeout(idleTimer);
+      renderer.domElement.removeEventListener('wheel', onWheel);
       renderer.domElement.removeEventListener('pointermove', onHover);
       renderer.domElement.removeEventListener('pointerleave', onLeave);
       renderer.domElement.removeEventListener('dblclick', onDbl);
