@@ -321,8 +321,14 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
 
     // slab com uma textura por face [right, left, top, bottom, front, back]
     const plain = new THREE.MeshStandardMaterial({ color: 0x15101c });
-    const frontTex = canvasTexture(480, 600, (c) => drawFront(c, d, undefined, !!d.photoUrl));
-    const shieldTex = canvasTexture(200, 600, (c) => drawShield(c, d));
+    const frontTex = canvasTexture(960, 1200, (c) => {
+      c.scale(2, 2);
+      drawFront(c, d, undefined, !!d.photoUrl);
+    });
+    const shieldTex = canvasTexture(400, 1200, (c) => {
+      c.scale(2, 2);
+      drawShield(c, d);
+    });
     let video: HTMLVideoElement | null = null;
     let frontMat: THREE.Material;
     if (d.videoUrl) {
@@ -374,7 +380,10 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         img.src = d.photoUrl;
       }
     }
-    const backTex = canvasTexture(480, 600, (c) => drawBack(c, d));
+    const backTex = canvasTexture(960, 1200, (c) => {
+      c.scale(2, 2);
+      drawBack(c, d);
+    });
     if (d.crestUrl) {
       const crest = new Image();
       crest.onload = () => {
@@ -388,7 +397,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       crest.src = d.crestUrl;
     }
     const mats: THREE.Material[] = [
-      new THREE.MeshStandardMaterial({ map: canvasTexture(200, 600, (c) => drawStats(c, d)) }),
+      new THREE.MeshStandardMaterial({
+        map: canvasTexture(400, 1200, (c) => {
+          c.scale(2, 2);
+          drawStats(c, d);
+        }),
+      }),
       new THREE.MeshStandardMaterial({ map: shieldTex, metalness: 0.6, roughness: 0.3 }),
       plain,
       plain,
