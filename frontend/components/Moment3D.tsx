@@ -360,8 +360,16 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     window.addEventListener('resize', setSize);
 
     let raf = 0;
+    // entrada cinematográfica: o cubo chega girando da traseira até a frente
+    let introT = reduced ? 1 : 0;
+    group.rotation.y = reduced ? FRONT_Y : Math.PI + FRONT_Y;
     const tick = () => {
-      if (!dragging) {
+      if (introT < 1) {
+        introT = Math.min(1, introT + 0.014);
+        const e = 1 - Math.pow(1 - introT, 3); // ease-out cúbico
+        group.rotation.y = (Math.PI + FRONT_Y) * (1 - e) + FRONT_Y * e;
+        group.scale.setScalar(0.9 + 0.1 * e);
+      } else if (!dragging) {
         swayPhase += reduced ? 0 : 0.012;
         const sway = reduced ? 0 : Math.sin(swayPhase) * 0.16;
         const want = targetRef.current + sway;
