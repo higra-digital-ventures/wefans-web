@@ -41,6 +41,12 @@ export default function LanceCard({
   const supply = limited
     ? `/${template.editionSize?.toLocaleString('pt-BR')}`
     : compact(template.circulatingCount);
+  // Δ do anúncio vs a média da edição (só quando relevante: ≥5%)
+  const rawPct =
+    priceCents != null && template.aspCents > 0
+      ? Math.round(((priceCents - template.aspCents) / template.aspCents) * 100)
+      : null;
+  const marketPct = rawPct != null && Math.abs(rawPct) >= 5 ? rawPct : null;
 
   const inner = (
     <div
@@ -196,6 +202,19 @@ export default function LanceCard({
               {template.aspCents > 0 ? brl(template.aspCents) : '—'}
             </span>
           </div>
+          {/* a conta que o comprador faria de cabeça: pedindo x% vs a média */}
+          {marketPct != null && (
+            <div className="flex items-baseline justify-between">
+              <span className="text-[11px] text-neutral-600">vs média</span>
+              <span
+                className={`text-[11px] font-bold tabular-nums ${marketPct < 0 ? 'text-emerald-400' : 'text-red-400'}`}
+                title={marketPct < 0 ? 'abaixo da média — achado' : 'acima da média'}
+              >
+                {marketPct > 0 ? '+' : ''}
+                {marketPct}%
+              </span>
+            </div>
+          )}
           {paidCents != null && (
             <div className="flex items-baseline justify-between">
               <span className="text-[12px] text-neutral-500" title="Quanto você pagou neste exemplar">
