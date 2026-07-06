@@ -231,17 +231,27 @@ async function computePopular(db: PrismaClient) {
 
   const byPlayer = new Map<string, number>();
   const byCompetition = new Map<string, number>();
+  // "Em alta": edições mais negociadas no período (carrossel do topo do feed)
+  const byTemplate = new Map<string, { template: (typeof txs)[number]['moment']['template']; count: number }>();
   for (const t of txs) {
     const p = t.moment.template.player.name;
     byPlayer.set(p, (byPlayer.get(p) ?? 0) + 1);
     const c = t.moment.template.competition;
     byCompetition.set(c, (byCompetition.get(c) ?? 0) + 1);
+    const tpl = t.moment.template;
+    const cur = byTemplate.get(tpl.id);
+    if (cur) cur.count += 1;
+    else byTemplate.set(tpl.id, { template: tpl, count: 1 });
   }
   const top = (m: Map<string, number>) =>
     [...m.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
       .map(([name, count]) => ({ name, count }));
+  const trending = [...byTemplate.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 6)
+    .map((x) => ({ template: toTemplateDTO(x.template), count: x.count }));
 
-  return { players: top(byPlayer), competitions: top(byCompetition) };
+  return { players: top(byPlayer), competitions: top(byCompetition), trending };
 }

@@ -207,6 +207,56 @@ function EventCard({ e, me }: { e: FeedEvent; me?: string | null }) {
   );
 }
 
+// carrossel "Em alta": edições mais negociadas nas últimas 24h — o que está
+// pegando fogo no mercado, antes mesmo de rolar o feed
+function TrendingStrip({ items }: { items: { template: import('@/lib/types').TemplateDTO; count: number }[] }) {
+  if (items.length < 2) return null;
+  return (
+    <section className="border border-white/10 bg-[#0c0c0e] p-3">
+      <div className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+        <Icon name="flame" filled size={14} className="text-accent2" />
+        Em alta · 24h
+      </div>
+      <div className="scrollbar-none -mx-1 flex gap-2.5 overflow-x-auto px-1 pb-1">
+        {items.map(({ template: t, count }) => {
+          const meta = TIER_META[t.tier];
+          return (
+            <Link
+              key={t.id}
+              href={`/lance/${t.id}`}
+              className="w-[118px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-white/30"
+            >
+              <div className="mx-auto w-[86%]" style={{ perspective: '400px' }}>
+                <div
+                  className="aspect-[4/5] overflow-hidden border"
+                  style={{
+                    transform: 'rotateY(-10deg) rotateX(2deg)',
+                    borderColor: `${meta.color}66`,
+                  }}
+                >
+                  <TacticalBoard
+                    trajectory={t.trajectory}
+                    jersey={t.player.jersey}
+                    color={meta.color}
+                    foil={isFoil(t.tier)}
+                  />
+                </div>
+              </div>
+              <div className="mt-1.5 truncate text-[11px] font-bold text-white">{t.player.name}</div>
+              <div className="flex items-baseline justify-between text-[10px]">
+                <span className="tabular-nums text-neutral-500">{count} negócios</span>
+                <span className="tabular-nums font-semibold text-accent3">
+                  {t.aspCents > 0 ? brl(t.aspCents) : ''}
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function PopularPanel({ title, rows }: { title: string; rows: { name: string; count: number }[] }) {
   if (rows.length === 0) return null;
   return (
@@ -432,6 +482,7 @@ export default async function ExplorarPage({
               </Link>
             </div>
           </div>
+          {!compact && <TrendingStrip items={feed?.popular.trending ?? []} />}
           {me && recapTotal > 0 && !compact && (
             <section className="border border-accent3/25 bg-accent3/[0.04] px-4 py-3">
               <div className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent3">
