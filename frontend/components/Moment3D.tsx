@@ -409,6 +409,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       frontMat,
       new THREE.MeshStandardMaterial({ map: backTex }),
     ];
+    // nitidez em ângulo: anisotropia máxima da GPU em todas as texturas
+    const maxAniso = renderer.capabilities.getMaxAnisotropy();
+    for (const m of mats) {
+      const map = (m as THREE.MeshStandardMaterial).map;
+      if (map) map.anisotropy = maxAniso;
+    }
     const group = new THREE.Group();
     group.add(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), mats));
 
