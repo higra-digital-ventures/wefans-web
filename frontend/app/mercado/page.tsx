@@ -88,6 +88,19 @@ export default async function MercadoPage({
   const dense = vis === 'compact';
   const hasFilter = !!(tier || badge || q || pmin || pmax || deal || ed);
 
+  // filtros ativos como chips removíveis (cada ✕ tira só aquele filtro)
+  const activeFilters: { label: string; clear: Record<string, string | undefined> }[] = [];
+  if (q) activeFilters.push({ label: `"${q}"`, clear: { q: undefined } });
+  if (tier) activeFilters.push({ label: TIER_META[tier as keyof typeof TIER_META]?.label ?? tier, clear: { tier: undefined } });
+  if (badgeChip) activeFilters.push({ label: badgeChip.label, clear: { badge: undefined } });
+  if (pmin || pmax)
+    activeFilters.push({
+      label: `R$ ${pmin || '0'}–${pmax || '∞'}`,
+      clear: { pmin: undefined, pmax: undefined },
+    });
+  if (deal) activeFilters.push({ label: 'Achados', clear: { deal: undefined } });
+  if (ed) activeFilters.push({ label: ed === 'LE' ? 'Limitada' : 'Aberta', clear: { ed: undefined } });
+
   // monta hrefs preservando os demais parâmetros
   const href = (patch: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
@@ -290,6 +303,30 @@ export default async function MercadoPage({
             <Icon name="gridDense" size={16} />
           </Link>
         </span>
+      </div>
+
+      {/* orientação: quantos sobraram e o que está filtrando (✕ remove um por um) */}
+      <div className="mb-4 flex flex-wrap items-center gap-2 text-[13px]">
+        <span className="font-bold tabular-nums text-white">
+          {listings.length} à venda
+        </span>
+        {activeFilters.map((fl) => (
+          <Link
+            key={fl.label}
+            href={href({ ...fl.clear, n: undefined })}
+            scroll={false}
+            title={`Remover filtro: ${fl.label}`}
+            className="flex items-center gap-1.5 border border-white/20 bg-white/5 px-2 py-0.5 text-[11px] font-semibold text-neutral-200 transition-colors hover:border-white/50 hover:text-white"
+          >
+            {fl.label}
+            <Icon name="close" size={10} />
+          </Link>
+        ))}
+        {activeFilters.length > 1 && (
+          <Link href="/mercado" className="text-[11px] text-neutral-500 underline underline-offset-2 hover:text-white">
+            limpar tudo
+          </Link>
+        )}
       </div>
 
       <div className="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-6">
