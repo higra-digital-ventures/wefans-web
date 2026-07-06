@@ -2,6 +2,7 @@ import Icon from './Icon';
 import Link from 'next/link';
 import CardWishlist from './CardWishlist';
 import QuickBuy from './QuickBuy';
+import CardMedia from './CardMedia';
 import TacticalBoard from './TacticalBoard';
 import { TIER_META, isFoil } from '@/lib/tiers';
 import { brl, compact } from '@/lib/format';
@@ -81,13 +82,16 @@ export default function LanceCard({
                 : '12px 10px 26px rgba(0,0,0,.6)',
             }}
           >
-            <TacticalBoard
+            <CardMedia
+              photoUrl={template.player.photoUrl}
+              videoUrl={template.videoUrl}
               trajectory={template.trajectory}
               jersey={template.player.jersey}
               color={meta.color}
               foil={foil}
               live={live}
               hoverPlay={!live}
+              alt={template.player.name}
             />
             {/* glitch/scanlines na entrada do hover */}
             <div aria-hidden className="wf-glitch pointer-events-none absolute inset-0" />

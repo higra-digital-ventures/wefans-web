@@ -8,6 +8,7 @@ export default function TacticalBoard({
   foil,
   live,
   hoverPlay,
+  bare,
 }: {
   trajectory: string | null;
   jersey: number;
@@ -15,6 +16,7 @@ export default function TacticalBoard({
   foil?: boolean;
   live?: boolean;
   hoverPlay?: boolean; // "toca" o lance no hover do card (.group) — glitch + bola + rastro
+  bare?: boolean; // só trajetória + bola (overlay sobre foto real)
 }) {
   const path = trajectory ?? 'M12,100 Q50,30 88,64';
   const start = path.match(/M\s*([\d.]+)[ ,]+([\d.]+)/);
@@ -35,30 +37,34 @@ export default function TacticalBoard({
           <stop offset="100%" stopColor="#170b22" stopOpacity="0" />
         </radialGradient>
       </defs>
-      <rect width="100" height="125" fill="#170b22" />
-      <rect width="100" height="125" fill={`url(#${gid})`} />
+      {!bare && (
+        <>
+          <rect width="100" height="125" fill="#170b22" />
+          <rect width="100" height="125" fill={`url(#${gid})`} />
 
-      {/* linhas de giz neon */}
-      <g stroke="#21d4e0" strokeOpacity="0.16" strokeWidth="0.5" fill="none">
-        <line x1="0" y1="62.5" x2="100" y2="62.5" />
-        <circle cx="50" cy="62.5" r="13" />
-        <rect x="30" y="-8" width="40" height="20" />
-        <rect x="30" y="113" width="40" height="20" />
-      </g>
+          {/* linhas de giz neon */}
+          <g stroke="#21d4e0" strokeOpacity="0.16" strokeWidth="0.5" fill="none">
+            <line x1="0" y1="62.5" x2="100" y2="62.5" />
+            <circle cx="50" cy="62.5" r="13" />
+            <rect x="30" y="-8" width="40" height="20" />
+            <rect x="30" y="113" width="40" height="20" />
+          </g>
 
-      {/* número de camisa (marca d'água) */}
-      <text
-        x="50"
-        y="80"
-        textAnchor="middle"
-        fontSize="54"
-        fontWeight="800"
-        fill="#ffffff"
-        fillOpacity="0.06"
-        fontFamily="system-ui, sans-serif"
-      >
-        {jersey}
-      </text>
+          {/* número de camisa (marca d'água) */}
+          <text
+            x="50"
+            y="80"
+            textAnchor="middle"
+            fontSize="54"
+            fontWeight="800"
+            fill="#ffffff"
+            fillOpacity="0.06"
+            fontFamily="system-ui, sans-serif"
+          >
+            {jersey}
+          </text>
+        </>
+      )}
 
       {/* trajetória — com pathLength=1 o dasharray normaliza e o redesenho do hover
           fica em sincronia com a bola (mesma duração/curva) */}

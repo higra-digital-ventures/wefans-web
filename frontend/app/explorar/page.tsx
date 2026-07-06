@@ -6,6 +6,7 @@ import EmptyState from '@/components/EmptyState';
 import FeedPoller from '@/components/FeedPoller';
 import MoversPanel from '@/components/MoversPanel';
 import ReactionButton from '@/components/ReactionButton';
+import CardMedia from '@/components/CardMedia';
 import TacticalBoard from '@/components/TacticalBoard';
 import TrendingStrip from '@/components/TrendingStrip';
 import UserHoverCard from '@/components/UserHoverCard';
@@ -65,12 +66,15 @@ function MomentThumb({ e }: { e: FeedEvent }) {
           boxShadow: isFoil(e.template.tier) ? `0 0 12px ${meta.color}33` : undefined,
         }}
       >
-        <TacticalBoard
+        <CardMedia
+          photoUrl={e.template.player.photoUrl}
+          videoUrl={e.template.videoUrl}
           trajectory={e.template.trajectory}
           jersey={e.template.player.jersey}
           color={meta.color}
           foil={isFoil(e.template.tier)}
           hoverPlay
+          alt={e.template.player.name}
         />
       </div>
     </div>
@@ -184,9 +188,18 @@ function EventCard({
       {/* cabeçalho: avatar + @user + ação + tempo (MATCH tem frase própria, sem usuário) */}
       <div className="flex items-center gap-2.5 px-4 py-3">
         {e.kind === 'MATCH' ? (
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white" aria-hidden>
-            <Icon name="ball" size={16} />
-          </span>
+          e.template?.player.photoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- asset local
+            <img
+              src={e.template.player.photoUrl}
+              alt=""
+              className="h-8 w-8 shrink-0 rounded-full object-cover object-top"
+            />
+          ) : (
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white" aria-hidden>
+              <Icon name="ball" size={16} />
+            </span>
+          )
         ) : (
           <span
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold uppercase text-white"
