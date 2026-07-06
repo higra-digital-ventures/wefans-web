@@ -9,7 +9,13 @@ import type { ChatSummary, ChatMessageDTO } from '@/lib/types';
 
 // Chat 1:1 no layout do Top Shot: rail esquerdo (busca + filtro + conversas) e
 // painel da conversa à direita, com polling leve enquanto a tela está aberta.
-export default function ChatClient({ initialWith }: { initialWith?: string }) {
+export default function ChatClient({
+  initialWith,
+  initialDraft,
+}: {
+  initialWith?: string;
+  initialDraft?: string; // mensagem pré-preenchida (ex.: proposta vinda do feed)
+}) {
   const router = useRouter();
   const [chats, setChats] = useState<ChatSummary[] | null>(null);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
@@ -17,7 +23,7 @@ export default function ChatClient({ initialWith }: { initialWith?: string }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [active, setActive] = useState<string | null>(initialWith ?? null);
   const [messages, setMessages] = useState<ChatMessageDTO[]>([]);
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useState(initialDraft ?? '');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);

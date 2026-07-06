@@ -154,6 +154,19 @@ function EventCard({ e, me }: { e: FeedEvent; me?: string | null }) {
             )}
           <span className="text-neutral-500"> · {timeAgo(e.createdAt)}</span>
         </p>
+        {/* proposta direta ao vendedor (liga o feed ao chat) */}
+        {e.kind === 'LIST' && e.user && e.user !== me && e.template && (
+          <Link
+            href={`/chat?u=${encodeURIComponent(e.user)}&draft=${encodeURIComponent(
+              `Oi! Vi seu anúncio do ${e.template.player.name} #${e.serial} por ${brl(e.priceCents ?? 0)} no feed — bora negociar?`,
+            )}`}
+            title="Fazer proposta no chat"
+            className="flex shrink-0 items-center gap-1 border border-white/15 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-neutral-400 transition-colors hover:border-white/40 hover:text-white"
+          >
+            <Icon name="chat" size={12} />
+            Proposta
+          </Link>
+        )}
       </div>
 
       {/* corpo por tipo de evento */}
