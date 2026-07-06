@@ -20,6 +20,9 @@ export interface Moment3DData {
   tierLabel: string;
   tierColor: string;
   trajectory: string | null;
+  photoUrl?: string | null; // foto real (frente, quando não há vídeo)
+  videoUrl?: string | null; // clipe (frente — VideoTexture)
+  crestUrl?: string | null; // escudo real (face lateral)
 }
 
 const W = 2.4;
@@ -37,35 +40,64 @@ function canvasTexture(w: number, h: number, draw: (ctx: CanvasRenderingContext2
   return tex;
 }
 
-function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData) {
+// desenha imagem em modo cover (viés para o topo — rosto do jogador)
+function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, w: number, h: number) {
+  const ia = img.width / img.height;
+  const fa = w / h;
+  let sw = img.width;
+  let sh = img.height;
+  let sx = 0;
+  let sy = 0;
+  if (ia > fa) {
+    sw = img.height * fa;
+    sx = (img.width - sw) / 2;
+  } else {
+    sh = img.width / fa;
+    sy = (img.height - sh) / 4;
+  }
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+}
+
+function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData, photo?: HTMLImageElement) {
   const w = 480;
   const h = 600;
   ctx.fillStyle = '#170b22';
   ctx.fillRect(0, 0, w, h);
-  const glow = ctx.createRadialGradient(w / 2, h * 0.3, 40, w / 2, h * 0.3, w);
-  glow.addColorStop(0, `${d.tierColor}33`);
-  glow.addColorStop(1, 'transparent');
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, w, h);
+  if (photo) {
+    // foto real como base + gradiente de leitura (a trajetória corre por cima)
+    drawCover(ctx, photo, w, h);
+    const shade = ctx.createLinearGradient(0, 0, 0, h);
+    shade.addColorStop(0, 'rgba(5,5,5,0.22)');
+    shade.addColorStop(0.5, 'rgba(5,5,5,0)');
+    shade.addColorStop(1, 'rgba(5,5,5,0.8)');
+    ctx.fillStyle = shade;
+    ctx.fillRect(0, 0, w, h);
+  } else {
+    const glow = ctx.createRadialGradient(w / 2, h * 0.3, 40, w / 2, h * 0.3, w);
+    glow.addColorStop(0, `${d.tierColor}33`);
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, w, h);
 
-  // linhas de giz
-  ctx.strokeStyle = 'rgba(33,212,224,0.22)';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(w * 0.28, -40, w * 0.44, 110);
-  ctx.strokeRect(w * 0.28, h - 70, w * 0.44, 110);
-  ctx.beginPath();
-  ctx.moveTo(0, h / 2);
-  ctx.lineTo(w, h / 2);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(w / 2, h / 2, 62, 0, Math.PI * 2);
-  ctx.stroke();
+    // linhas de giz
+    ctx.strokeStyle = 'rgba(33,212,224,0.22)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(w * 0.28, -40, w * 0.44, 110);
+    ctx.strokeRect(w * 0.28, h - 70, w * 0.44, 110);
+    ctx.beginPath();
+    ctx.moveTo(0, h / 2);
+    ctx.lineTo(w, h / 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, 62, 0, Math.PI * 2);
+    ctx.stroke();
 
-  // camisa em marca d'água
-  ctx.fillStyle = 'rgba(255,255,255,0.07)';
-  ctx.font = '900 300px system-ui, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(String(d.jersey), w / 2, h * 0.66);
+    // camisa em marca d'água
+    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    ctx.font = '900 300px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(d.jersey), w / 2, h * 0.66);
+  }
 
   // trajetória neon (Path2D aceita path SVG; espaço 100×125 → escala)
   ctx.save();
@@ -93,7 +125,7 @@ function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData) {
   ctx.fillText(d.serialLabel, w - 22, 42);
 }
 
-function drawShield(ctx: CanvasRenderingContext2D, d: Moment3DData) {
+function drawShield(ctx: CanvasRenderingContext2D, d: Moment3DData, crest?: HTMLImageElement) {
   const w = 200;
   const h = 600;
   const grad = ctx.createLinearGradient(0, 0, w, h);
@@ -115,11 +147,17 @@ function drawShield(ctx: CanvasRenderingContext2D, d: Moment3DData) {
   ctx.lineTo(w / 2 - 58, 190);
   ctx.closePath();
   ctx.fill();
-  const initials = d.club.split(' ').map((p) => p[0]).join('').slice(0, 3).toUpperCase();
-  ctx.fillStyle = '#f6eef3';
-  ctx.font = '900 52px system-ui, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(initials, w / 2, 330);
+  if (crest) {
+    const cw = 104;
+    const ch = (crest.height / crest.width) * cw;
+    ctx.drawImage(crest, w / 2 - cw / 2, 310 - ch / 2, cw, ch);
+  } else {
+    const initials = d.club.split(' ').map((p) => p[0]).join('').slice(0, 3).toUpperCase();
+    ctx.fillStyle = '#f6eef3';
+    ctx.font = '900 52px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(initials, w / 2, 330);
+  }
 }
 
 function drawStats(ctx: CanvasRenderingContext2D, d: Moment3DData) {
@@ -193,12 +231,59 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
 
     // slab com uma textura por face [right, left, top, bottom, front, back]
     const plain = new THREE.MeshStandardMaterial({ color: 0x15101c });
+    const frontTex = canvasTexture(480, 600, (c) => drawFront(c, d));
+    const shieldTex = canvasTexture(200, 600, (c) => drawShield(c, d));
+    let video: HTMLVideoElement | null = null;
+    let frontMat: THREE.Material;
+    if (d.videoUrl) {
+      // frente = clipe tocando (como o Moment do Top Shot)
+      video = document.createElement('video');
+      video.src = d.videoUrl;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.autoplay = true;
+      const vtex = new THREE.VideoTexture(video);
+      vtex.colorSpace = THREE.SRGBColorSpace;
+      vtex.wrapS = THREE.ClampToEdgeWrapping;
+      video.addEventListener('loadedmetadata', () => {
+        // center-crop do 16:9 na face 4:5 (cover)
+        const va = video!.videoWidth / video!.videoHeight;
+        const fa = W / H;
+        if (va > fa) {
+          vtex.repeat.set(fa / va, 1);
+          vtex.offset.set((1 - fa / va) / 2, 0);
+        }
+      });
+      video.play().catch(() => {});
+      frontMat = new THREE.MeshBasicMaterial({ map: vtex });
+    } else {
+      frontMat = new THREE.MeshStandardMaterial({ map: frontTex });
+      if (d.photoUrl) {
+        const img = new Image();
+        img.onload = () => {
+          const c = frontTex.image as HTMLCanvasElement;
+          drawFront(c.getContext('2d')!, d, img);
+          frontTex.needsUpdate = true;
+        };
+        img.src = d.photoUrl;
+      }
+    }
+    if (d.crestUrl) {
+      const crest = new Image();
+      crest.onload = () => {
+        const c = shieldTex.image as HTMLCanvasElement;
+        drawShield(c.getContext('2d')!, d, crest);
+        shieldTex.needsUpdate = true;
+      };
+      crest.src = d.crestUrl;
+    }
     const mats: THREE.Material[] = [
       new THREE.MeshStandardMaterial({ map: canvasTexture(200, 600, (c) => drawStats(c, d)) }),
-      new THREE.MeshStandardMaterial({ map: canvasTexture(200, 600, (c) => drawShield(c, d)), metalness: 0.6, roughness: 0.3 }),
+      new THREE.MeshStandardMaterial({ map: shieldTex, metalness: 0.6, roughness: 0.3 }),
       plain,
       plain,
-      new THREE.MeshStandardMaterial({ map: canvasTexture(480, 600, (c) => drawFront(c, d)) }),
+      frontMat,
       new THREE.MeshStandardMaterial({ map: canvasTexture(480, 600, (c) => drawBack(c, d)) }),
     ];
     const group = new THREE.Group();
@@ -276,6 +361,11 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('resize', setSize);
+      if (video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      }
       renderer.dispose();
       mount.removeChild(renderer.domElement);
     };

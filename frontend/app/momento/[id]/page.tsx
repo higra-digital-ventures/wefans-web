@@ -19,6 +19,7 @@ import OffersPanel from '@/components/OffersPanel';
 import ShareButton from '@/components/ShareButton';
 import { TIER_META, editionLabel } from '@/lib/tiers';
 import { brl, compact, dateTime, timeAgo } from '@/lib/format';
+import { clubCrestUrl } from '@/lib/media';
 
 export const dynamic = 'force-dynamic';
 
@@ -145,6 +146,9 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               tierLabel: meta.label,
               tierColor: meta.color,
               trajectory: t.trajectory,
+              photoUrl: t.player.photoUrl,
+              videoUrl: t.videoUrl,
+              crestUrl: clubCrestUrl(t.player.club),
             }}
           />
           <div className="mt-3 flex items-center justify-center gap-2" aria-hidden>
