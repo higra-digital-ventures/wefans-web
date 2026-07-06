@@ -1,6 +1,6 @@
 import Icon from '@/components/Icon';
 import Link from 'next/link';
-import { getFeedServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
+import { getCollectionServer, getFeedServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
 import SubTabs from '@/components/SubTabs';
 import EmptyState from '@/components/EmptyState';
 import FeedPoller from '@/components/FeedPoller';
@@ -250,17 +250,41 @@ export default async function ExplorarPage({
 }) {
   const { f, n, d } = await searchParams;
   const compact = d === '1';
-  const tab = FEED_TABS.find((t) => t.key === (f ?? '')) ?? FEED_TABS[0];
+  const me0 = await getMe();
+  // "Para você" só existe logado (padrão X: For you | Following)
+  const tabs = me0
+    ? [{ key: 'voce', label: 'Para você', kinds: null as FeedEvent['kind'][] | null }, ...FEED_TABS]
+    : FEED_TABS;
+  // 'tudo' força a aba geral mesmo logado (o default logado é 'voce')
+  const fKey = f === 'tudo' ? '' : f;
+  const tab = tabs.find((t) => t.key === (fKey ?? (me0 ? 'voce' : ''))) ?? tabs[0];
+  const forYou = tab.key === 'voce';
   // paginação simples: ?n= aumenta a janela do feed (teto 120 no backend)
   const size = Math.min(120, Math.max(40, Number(n) || 40));
-  const fetchSize = tab.kinds ? Math.min(120, size + 40) : size;
-  const [feed, me, wishlist, checklists] = await Promise.all([
+  const fetchSize = forYou || tab.kinds ? Math.min(120, size + 40) : size;
+  const [feed, wishlist, checklists, collection] = await Promise.all([
     getFeedServer(fetchSize),
-    getMe(),
     getWishlistServer().catch(() => null),
     getChecklistsServer().catch(() => []),
+    me0 ? getCollectionServer('').catch(() => null) : null,
   ]);
-  const events = (feed?.events ?? []).filter((e) => !tab.kinds || tab.kinds.includes(e.kind));
+  const me = me0;
+
+  // relevância: seus eventos, edições da wishlist, edições/jogadores que você coleciona
+  const wishIds = new Set((wishlist ?? []).map((t) => t.id));
+  const ownedTemplates = new Set((collection ?? []).map((m) => m.template.id));
+  const ownedPlayers = new Set((collection ?? []).map((m) => m.template.player.name));
+  const isRelevant = (e: FeedEvent) =>
+    !!me &&
+    (e.user === me.username ||
+      e.targetUser === me.username ||
+      (!!e.template &&
+        (wishIds.has(e.template.id) ||
+          ownedTemplates.has(e.template.id) ||
+          ownedPlayers.has(e.template.player.name))));
+
+  let events = (feed?.events ?? []).filter((e) => !tab.kinds || tab.kinds.includes(e.kind));
+  if (forYou) events = events.filter(isRelevant);
   const nearDone = checklists
     .filter((c) => c.progress && !c.claimed && c.progress.have > 0)
     .sort((a, b) => a.progress!.need - a.progress!.have - (b.progress!.need - b.progress!.have))
@@ -372,9 +396,9 @@ export default async function ExplorarPage({
         <div className="min-w-0 space-y-3">
           <div className="sticky top-[72px] z-20 -mx-1 bg-[#050505] px-1 pt-1">
             <SubTabs
-              items={FEED_TABS.map((t) => ({
+              items={tabs.map((t) => ({
                 label: t.label,
-                href: t.key ? `/explorar?f=${t.key}` : '/explorar',
+                href: t.key ? `/explorar?f=${t.key}` : me ? '/explorar?f=tudo' : '/explorar',
                 active: t.key === tab.key,
               }))}
             />
@@ -388,13 +412,20 @@ export default async function ExplorarPage({
               </Link>
             </div>
           </div>
-          {events.length === 0 && (
-            <EmptyState
-              title="Sem atividade ainda"
-              hint="Abra um pacote ou compre no mercado — cada jogada vira um evento aqui."
-              cta={{ label: 'Abrir um pacote', href: '/pacotes' }}
-            />
-          )}
+          {events.length === 0 &&
+            (forYou ? (
+              <EmptyState
+                title="Seu feed ainda está em aquecimento"
+                hint="Marque edições na wishlist e colecione jogadores — tudo que acontecer com eles aparece aqui."
+                cta={{ label: 'Explorar o mercado', href: '/mercado' }}
+              />
+            ) : (
+              <EmptyState
+                title="Sem atividade ainda"
+                hint="Abra um pacote ou compre no mercado — cada jogada vira um evento aqui."
+                cta={{ label: 'Abrir um pacote', href: '/pacotes' }}
+              />
+            ))}
           {events.map((e, i) => {
             const label = dayLabel(e.createdAt);
             const showDay = i === 0 || dayLabel(events[i - 1].createdAt) !== label;
