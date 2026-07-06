@@ -224,9 +224,9 @@ export default async function MercadoPage({
 
       <SubTabs
         items={[
-          { label: 'Explore', href: '/explorar' },
+          { label: 'Explorar', href: '/explorar' },
           { label: 'Momentos', href: '/mercado', active: true },
-          { label: 'Packs', href: '/mercado/pacotes' },
+          { label: 'Pacotes', href: '/mercado/pacotes' },
           { label: 'Últimas vendas', href: '/mercado/atividade' },
           { label: 'Drops', href: '/drops' },
           { label: 'Minhas ofertas', href: '/ofertas' },
