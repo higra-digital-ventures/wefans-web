@@ -330,7 +330,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 4 / 5, 0.1, 50);
-    camera.position.set(0, 0, 8.2);
+    camera.position.set(0, 0, 7.3);
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -637,7 +637,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     // zoom por scroll (limitado): aproxima para ver o detalhe da foto
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      camera.position.z = Math.min(10.5, Math.max(6, camera.position.z + e.deltaY * 0.004));
+      camera.position.z = Math.min(9.5, Math.max(5.2, camera.position.z + e.deltaY * 0.004));
     };
     renderer.domElement.addEventListener('wheel', onWheel, { passive: false });
     renderer.domElement.addEventListener('pointermove', onHover);
@@ -850,7 +850,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         />
         <div
           ref={mountRef}
-          className="w-full select-none"
+          className="w-full select-none [filter:brightness(1.12)_contrast(1.07)_saturate(1.06)]"
           role="img"
           aria-label={`Cartão 3D do Lance de ${data.playerName} — arraste para girar`}
         />
