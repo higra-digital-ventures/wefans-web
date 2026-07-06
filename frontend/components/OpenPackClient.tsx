@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { openPack } from '@/lib/api-client';
 import MomentCard from './MomentCard';
+import Pack3D from './Pack3DLazy';
 import { brl } from '@/lib/format';
 import { isFoil, TIER_META, TIER_ORDER } from '@/lib/tiers';
 import type { MomentDTO } from '@/lib/types';
@@ -42,8 +43,8 @@ export default function OpenPackClient({
     start(async () => {
       try {
         const r = await openPack(inventoryId);
-        // deixa a animação de rasgo respirar antes da revelação
-        setTimeout(() => setMoments(r.moments), 450);
+        // deixa a explosão do pacote 3D estourar antes da revelação (flash cobre a troca)
+        setTimeout(() => setMoments(r.moments), 900);
       } catch (e) {
         setTearing(false);
         setError(e instanceof Error ? e.message : 'Erro ao abrir');
@@ -129,7 +130,9 @@ export default function OpenPackClient({
 
   return (
     <div className="flex flex-col items-center py-10 text-center">
-      <div className={`mb-6 h-52 w-40 bg-sunset shadow-neon ${tearing ? 'wf-tear' : ''}`} />
+      <div className="mb-6 w-full max-w-[300px]">
+        <Pack3D tearing={tearing} />
+      </div>
       <h1 className="mb-2 font-display text-4xl uppercase text-ink">Pacote lacrado</h1>
       <p className="mb-6 max-w-sm text-muted">
         Rasgue para revelar seus Momentos. O que sair é seu — numerado e colecionável.
