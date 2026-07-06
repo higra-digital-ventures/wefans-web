@@ -115,26 +115,52 @@ async function main() {
 
   // ---------------------------------------------------------------- Estádios + Times (A2)
   const stadiumDefs = [
-    { name: 'Maracanã', city: 'Rio de Janeiro', lat: -22.9122, lng: -43.2302 },
-    { name: 'Allianz Parque', city: 'São Paulo', lat: -23.5273, lng: -46.6786 },
-    { name: 'Neo Química Arena', city: 'São Paulo', lat: -23.5453, lng: -46.4742 },
-    { name: 'Arena MRV', city: 'Belo Horizonte', lat: -19.9761, lng: -44.0004 },
-    { name: 'Estádio Nilton Santos', city: 'Rio de Janeiro', lat: -22.8933, lng: -43.2919 },
-    { name: 'Vila Belmiro', city: 'Santos', lat: -23.9519, lng: -46.3383 },
+    { name: 'Maracanã', city: 'Rio de Janeiro', lat: -22.9122, lng: -43.2302 }, // 0 Fla/Flu
+    { name: 'Allianz Parque', city: 'São Paulo', lat: -23.5273, lng: -46.6786 }, // 1
+    { name: 'Neo Química Arena', city: 'São Paulo', lat: -23.5453, lng: -46.4742 }, // 2
+    { name: 'Arena MRV', city: 'Belo Horizonte', lat: -19.9761, lng: -44.0004 }, // 3
+    { name: 'Estádio Nilton Santos', city: 'Rio de Janeiro', lat: -22.8933, lng: -43.2919 }, // 4
+    { name: 'Vila Belmiro', city: 'Santos', lat: -23.9519, lng: -46.3383 }, // 5
+    { name: 'Mineirão', city: 'Belo Horizonte', lat: -19.8659, lng: -43.9709 }, // 6
+    { name: 'MorumBIS', city: 'São Paulo', lat: -23.6002, lng: -46.7199 }, // 7
+    { name: 'São Januário', city: 'Rio de Janeiro', lat: -22.8905, lng: -43.229 }, // 8
+    { name: 'Arena do Grêmio', city: 'Porto Alegre', lat: -29.9711, lng: -51.1953 }, // 9
+    { name: 'Beira-Rio', city: 'Porto Alegre', lat: -30.0654, lng: -51.2358 }, // 10
+    { name: 'Arena Fonte Nova', city: 'Salvador', lat: -12.9789, lng: -38.5044 }, // 11
+    { name: 'Castelão', city: 'Fortaleza', lat: -3.8073, lng: -38.5224 }, // 12 For/Cea
+    { name: 'Ilha do Retiro', city: 'Recife', lat: -8.0631, lng: -34.9044 }, // 13
+    { name: 'Barradão', city: 'Salvador', lat: -12.9928, lng: -38.4653 }, // 14
+    { name: 'Alfredo Jaconi', city: 'Caxias do Sul', lat: -29.1634, lng: -51.193 }, // 15
+    { name: 'Estádio Maião', city: 'Mirassol', lat: -20.8193, lng: -49.5217 }, // 16
+    { name: 'Nabi Abi Chedid', city: 'Bragança Paulista', lat: -22.9527, lng: -46.5419 }, // 17
   ];
   const stadiums = [];
   for (const st of stadiumDefs) {
     stadiums.push(await prisma.stadium.create({ data: { ...st, radiusMeters: 300 } }));
   }
 
-  // 5 clubes publicados + 1 prospect (Atlético-MG) para demonstrar o ciclo de parceria (seção 10).
+  // Série A 2025 completa — 20 clubes, todos publicados.
   const teamDefs = [
     { name: 'Flamengo', stadium: 0, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
     { name: 'Palmeiras', stadium: 1, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
     { name: 'Corinthians', stadium: 2, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
-    { name: 'Atlético-MG', stadium: 3, partnerStatus: 'PROSPECT', status: 'RASCUNHO' },
+    { name: 'Atlético-MG', stadium: 3, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
     { name: 'Botafogo', stadium: 4, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
     { name: 'Santos', stadium: 5, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Cruzeiro', stadium: 6, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'São Paulo', stadium: 7, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Fluminense', stadium: 0, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Vasco da Gama', stadium: 8, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Grêmio', stadium: 9, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Internacional', stadium: 10, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Bahia', stadium: 11, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Fortaleza', stadium: 12, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Ceará', stadium: 12, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Sport', stadium: 13, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Vitória', stadium: 14, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Juventude', stadium: 15, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Mirassol', stadium: 16, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Red Bull Bragantino', stadium: 17, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
   ];
   const teams = [];
   for (const t of teamDefs) {
@@ -153,14 +179,14 @@ async function main() {
   const publishedTeams = teams.filter((t) => t.status === 'PUBLICADO');
 
   // ---------------------------------------------------------------- Jogadores (reais — dev; licenciamento depois)
-  // 5 jogadores por clube publicado (25 no total) — catálogo bem populado
+  // 5 jogadores reais por clube — Série A 2025 (100 no total)
   const playerDefs = [
     // Flamengo
     { name: 'Arrascaeta', club: 'Flamengo', position: 'MEI', jersey: 14, nationality: 'Uruguai' },
     { name: 'Pedro', club: 'Flamengo', position: 'ATA', jersey: 9, nationality: 'Brasil' },
     { name: 'Bruno Henrique', club: 'Flamengo', position: 'ATA', jersey: 27, nationality: 'Brasil' },
-    { name: 'Rossi', club: 'Flamengo', position: 'GOL', jersey: 1, nationality: 'Argentina' },
     { name: 'Léo Ortiz', club: 'Flamengo', position: 'ZAG', jersey: 3, nationality: 'Brasil' },
+    { name: 'Rossi', club: 'Flamengo', position: 'GOL', jersey: 1, nationality: 'Argentina' },
     // Palmeiras
     { name: 'Raphael Veiga', club: 'Palmeiras', position: 'MEI', jersey: 23, nationality: 'Brasil' },
     { name: 'Flaco López', club: 'Palmeiras', position: 'ATA', jersey: 42, nationality: 'Argentina' },
@@ -173,6 +199,12 @@ async function main() {
     { name: 'Rodrigo Garro', club: 'Corinthians', position: 'MEI', jersey: 8, nationality: 'Argentina' },
     { name: 'André Ramalho', club: 'Corinthians', position: 'ZAG', jersey: 4, nationality: 'Brasil' },
     { name: 'Hugo Souza', club: 'Corinthians', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Atlético-MG
+    { name: 'Hulk', club: 'Atlético-MG', position: 'ATA', jersey: 7, nationality: 'Brasil' },
+    { name: 'Gustavo Scarpa', club: 'Atlético-MG', position: 'MEI', jersey: 6, nationality: 'Brasil' },
+    { name: 'Rony', club: 'Atlético-MG', position: 'ATA', jersey: 11, nationality: 'Brasil' },
+    { name: 'Junior Alonso', club: 'Atlético-MG', position: 'ZAG', jersey: 4, nationality: 'Paraguai' },
+    { name: 'Everson', club: 'Atlético-MG', position: 'GOL', jersey: 22, nationality: 'Brasil' },
     // Botafogo
     { name: 'Savarino', club: 'Botafogo', position: 'MEI', jersey: 10, nationality: 'Venezuela' },
     { name: 'Artur', club: 'Botafogo', position: 'ATA', jersey: 7, nationality: 'Brasil' },
@@ -185,6 +217,90 @@ async function main() {
     { name: 'Tiquinho Soares', club: 'Santos', position: 'ATA', jersey: 9, nationality: 'Brasil' },
     { name: 'Zé Rafael', club: 'Santos', position: 'VOL', jersey: 6, nationality: 'Brasil' },
     { name: 'Gabriel Brazão', club: 'Santos', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Cruzeiro
+    { name: 'Gabigol', club: 'Cruzeiro', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Matheus Pereira', club: 'Cruzeiro', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Kaio Jorge', club: 'Cruzeiro', position: 'ATA', jersey: 19, nationality: 'Brasil' },
+    { name: 'Fabrício Bruno', club: 'Cruzeiro', position: 'ZAG', jersey: 26, nationality: 'Brasil' },
+    { name: 'Cássio', club: 'Cruzeiro', position: 'GOL', jersey: 12, nationality: 'Brasil' },
+    // São Paulo
+    { name: 'Oscar', club: 'São Paulo', position: 'MEI', jersey: 8, nationality: 'Brasil' },
+    { name: 'Lucas Moura', club: 'São Paulo', position: 'MEI', jersey: 7, nationality: 'Brasil' },
+    { name: 'Calleri', club: 'São Paulo', position: 'ATA', jersey: 9, nationality: 'Argentina' },
+    { name: 'Arboleda', club: 'São Paulo', position: 'ZAG', jersey: 5, nationality: 'Equador' },
+    { name: 'Rafael', club: 'São Paulo', position: 'GOL', jersey: 23, nationality: 'Brasil' },
+    // Fluminense
+    { name: 'Germán Cano', club: 'Fluminense', position: 'ATA', jersey: 14, nationality: 'Argentina' },
+    { name: 'Paulo Henrique Ganso', club: 'Fluminense', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Everaldo', club: 'Fluminense', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Thiago Silva', club: 'Fluminense', position: 'ZAG', jersey: 3, nationality: 'Brasil' },
+    { name: 'Fábio', club: 'Fluminense', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Vasco da Gama
+    { name: 'Philippe Coutinho', club: 'Vasco da Gama', position: 'MEI', jersey: 11, nationality: 'Brasil' },
+    { name: 'Vegetti', club: 'Vasco da Gama', position: 'ATA', jersey: 99, nationality: 'Argentina' },
+    { name: 'Rayan', club: 'Vasco da Gama', position: 'ATA', jersey: 77, nationality: 'Brasil' },
+    { name: 'Hugo Moura', club: 'Vasco da Gama', position: 'VOL', jersey: 5, nationality: 'Brasil' },
+    { name: 'Léo Jardim', club: 'Vasco da Gama', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Grêmio
+    { name: 'Braithwaite', club: 'Grêmio', position: 'ATA', jersey: 22, nationality: 'Dinamarca' },
+    { name: 'Cristaldo', club: 'Grêmio', position: 'MEI', jersey: 10, nationality: 'Argentina' },
+    { name: 'Villasanti', club: 'Grêmio', position: 'VOL', jersey: 20, nationality: 'Paraguai' },
+    { name: 'Kannemann', club: 'Grêmio', position: 'ZAG', jersey: 4, nationality: 'Argentina' },
+    { name: 'Tiago Volpi', club: 'Grêmio', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Internacional
+    { name: 'Alan Patrick', club: 'Internacional', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Rafael Borré', club: 'Internacional', position: 'ATA', jersey: 19, nationality: 'Colômbia' },
+    { name: 'Carbonero', club: 'Internacional', position: 'ATA', jersey: 7, nationality: 'Colômbia' },
+    { name: 'Vitão', club: 'Internacional', position: 'ZAG', jersey: 4, nationality: 'Brasil' },
+    { name: 'Rochet', club: 'Internacional', position: 'GOL', jersey: 1, nationality: 'Uruguai' },
+    // Bahia
+    { name: 'Everton Ribeiro', club: 'Bahia', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Cauly', club: 'Bahia', position: 'MEI', jersey: 8, nationality: 'Brasil' },
+    { name: 'Luciano Juba', club: 'Bahia', position: 'LAT', jersey: 46, nationality: 'Brasil' },
+    { name: 'Kanu', club: 'Bahia', position: 'ZAG', jersey: 4, nationality: 'Brasil' },
+    { name: 'Marcos Felipe', club: 'Bahia', position: 'GOL', jersey: 22, nationality: 'Brasil' },
+    // Fortaleza
+    { name: 'Lucero', club: 'Fortaleza', position: 'ATA', jersey: 9, nationality: 'Argentina' },
+    { name: 'Pochettino', club: 'Fortaleza', position: 'MEI', jersey: 7, nationality: 'Argentina' },
+    { name: 'Breno Lopes', club: 'Fortaleza', position: 'ATA', jersey: 19, nationality: 'Brasil' },
+    { name: 'Tinga', club: 'Fortaleza', position: 'LAT', jersey: 2, nationality: 'Brasil' },
+    { name: 'João Ricardo', club: 'Fortaleza', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Ceará
+    { name: 'Pedro Raul', club: 'Ceará', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Lucas Mugni', club: 'Ceará', position: 'MEI', jersey: 10, nationality: 'Argentina' },
+    { name: 'Richardson', club: 'Ceará', position: 'VOL', jersey: 88, nationality: 'Brasil' },
+    { name: 'Matheus Bahia', club: 'Ceará', position: 'LAT', jersey: 6, nationality: 'Brasil' },
+    { name: 'Bruno Ferreira', club: 'Ceará', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Sport
+    { name: 'Lucas Lima', club: 'Sport', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Barletta', club: 'Sport', position: 'ATA', jersey: 11, nationality: 'Brasil' },
+    { name: 'Du Queiroz', club: 'Sport', position: 'VOL', jersey: 5, nationality: 'Brasil' },
+    { name: 'Rafael Thyere', club: 'Sport', position: 'ZAG', jersey: 3, nationality: 'Brasil' },
+    { name: 'Caíque França', club: 'Sport', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Vitória
+    { name: 'Janderson', club: 'Vitória', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Matheuzinho', club: 'Vitória', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Lucas Halter', club: 'Vitória', position: 'ZAG', jersey: 4, nationality: 'Brasil' },
+    { name: 'Willian Oliveira', club: 'Vitória', position: 'VOL', jersey: 5, nationality: 'Brasil' },
+    { name: 'Lucas Arcanjo', club: 'Vitória', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Juventude
+    { name: 'Gabriel Taliari', club: 'Juventude', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Mandaca', club: 'Juventude', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Jadson', club: 'Juventude', position: 'VOL', jersey: 8, nationality: 'Brasil' },
+    { name: 'Wilker Ángel', club: 'Juventude', position: 'ZAG', jersey: 3, nationality: 'Venezuela' },
+    { name: 'Gustavo', club: 'Juventude', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Mirassol
+    { name: 'Reinaldo', club: 'Mirassol', position: 'LAT', jersey: 6, nationality: 'Brasil' },
+    { name: 'Danielzinho', club: 'Mirassol', position: 'MEI', jersey: 10, nationality: 'Brasil' },
+    { name: 'Negueba', club: 'Mirassol', position: 'ATA', jersey: 11, nationality: 'Brasil' },
+    { name: 'Edson Carioca', club: 'Mirassol', position: 'ATA', jersey: 18, nationality: 'Brasil' },
+    { name: 'Walter', club: 'Mirassol', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Red Bull Bragantino
+    { name: 'Eduardo Sasha', club: 'Red Bull Bragantino', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Jhon Jhon', club: 'Red Bull Bragantino', position: 'MEI', jersey: 8, nationality: 'Brasil' },
+    { name: 'Eric Ramires', club: 'Red Bull Bragantino', position: 'VOL', jersey: 5, nationality: 'Brasil' },
+    { name: 'Pedro Henrique', club: 'Red Bull Bragantino', position: 'ZAG', jersey: 4, nationality: 'Brasil' },
+    { name: 'Cleiton', club: 'Red Bull Bragantino', position: 'GOL', jersey: 1, nationality: 'Brasil' },
   ];
   const players = [];
   for (const def of playerDefs) {
@@ -193,11 +309,11 @@ async function main() {
 
   // ---------------------------------------------------------------- Templates (~60, 5 tiers)
   const tierPlan: Tier[] = [
-    ...Array(20).fill(Tier.COMUM),
-    ...Array(18).fill(Tier.TORCIDA),
-    ...Array(12).fill(Tier.RARO),
-    ...Array(7).fill(Tier.LENDARIO),
-    ...Array(3).fill(Tier.GALACTICO),
+    ...Array(40).fill(Tier.COMUM),
+    ...Array(36).fill(Tier.TORCIDA),
+    ...Array(24).fill(Tier.RARO),
+    ...Array(14).fill(Tier.LENDARIO),
+    ...Array(6).fill(Tier.GALACTICO),
   ];
   const playTypes = ['GOL', 'DEFESA', 'DRIBLE', 'FALTA', 'ASSISTENCIA', 'DESARME'];
   const titlesByType: Record<string, string[]> = {
@@ -366,7 +482,11 @@ async function main() {
   });
 
   // ---------------------------------------------------------------- Fixtures (A2.5)
-  const [flamengo, palmeiras, corinthians, , botafogo] = teams;
+  const byName = (n: string) => teams.find((t) => t.name === n)!;
+  const flamengo = byName('Flamengo');
+  const palmeiras = byName('Palmeiras');
+  const corinthians = byName('Corinthians');
+  const botafogo = byName('Botafogo');
   // 1 jogo AO VIVO agora (janela aberta) — fluxo feliz de check-in.
   await prisma.fixture.create({
     data: {
@@ -401,6 +521,32 @@ async function main() {
       status: 'SCHEDULED',
       checkinOpensAt: new Date(days(5).getTime() - 2 * 3_600_000),
       checkinClosesAt: new Date(days(5).getTime() + 3 * 3_600_000),
+      rewardPackId: checkinPack.id,
+    },
+  });
+
+  // mais dois clássicos agendados (Série A cheia)
+  await prisma.fixture.create({
+    data: {
+      homeTeamId: byName('Cruzeiro').id,
+      awayTeamId: byName('Atlético-MG').id,
+      stadiumId: byName('Cruzeiro').homeStadiumId!,
+      kickoffAt: days(3),
+      status: 'SCHEDULED',
+      checkinOpensAt: new Date(days(3).getTime() - 2 * 3_600_000),
+      checkinClosesAt: new Date(days(3).getTime() + 3 * 3_600_000),
+      rewardPackId: checkinPack.id,
+    },
+  });
+  await prisma.fixture.create({
+    data: {
+      homeTeamId: byName('São Paulo').id,
+      awayTeamId: byName('Santos').id,
+      stadiumId: byName('São Paulo').homeStadiumId!,
+      kickoffAt: days(4),
+      status: 'SCHEDULED',
+      checkinOpensAt: new Date(days(4).getTime() - 2 * 3_600_000),
+      checkinClosesAt: new Date(days(4).getTime() + 3 * 3_600_000),
       rewardPackId: checkinPack.id,
     },
   });
