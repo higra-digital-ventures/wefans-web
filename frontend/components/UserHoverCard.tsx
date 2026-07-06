@@ -49,7 +49,7 @@ export default function UserHoverCard({ username, children }: { username: string
     >
       {children}
       {open && (
-        <span className="absolute left-0 top-full z-40 mt-1.5 block w-[250px] border border-white/15 bg-[#101012] p-3.5 shadow-[0_16px_40px_rgba(0,0,0,.7)]">
+        <span className="rounded-2xl absolute left-0 top-full z-40 mt-1.5 block w-[250px] border border-white/15 bg-[#101012] p-3.5 shadow-[0_16px_40px_rgba(0,0,0,.7)]">
           {profile ? (
             <>
               <span className="block text-[14px] font-bold text-white">@{profile.username}</span>

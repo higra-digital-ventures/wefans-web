@@ -8,7 +8,7 @@ import type { Mover } from '@/lib/types';
 export default function MoversPanel({ movers }: { movers: Mover[] }) {
   if (movers.length === 0) return null;
   return (
-    <section className="border border-white/10 bg-[#0c0c0e] p-4">
+    <section className="rounded-2xl border border-white/10 bg-[#0c0c0e] p-4">
       <div className="mb-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
         <Icon name="trendUp" size={13} />
         Movers · 24h

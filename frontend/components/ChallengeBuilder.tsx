@@ -42,12 +42,12 @@ export default function ChallengeBuilder({
       <div className="border border-emerald-500/40 bg-emerald-500/10 p-6">
         <p className="mb-3 font-semibold text-emerald-300">Desafio concluído! 🎉</p>
         {result?.grantedPackInventoryId && (
-          <Link href={`/abrir/${result.grantedPackInventoryId}`} className="bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href={`/abrir/${result.grantedPackInventoryId}`} className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
             Abrir pacote de recompensa
           </Link>
         )}
         {result?.rewardMomentId && (
-          <Link href={`/momento/${result.rewardMomentId}`} className="bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href={`/momento/${result.rewardMomentId}`} className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
             Ver Lance de recompensa
           </Link>
         )}
@@ -57,7 +57,7 @@ export default function ChallengeBuilder({
   }
 
   return (
-    <div className="border border-line bg-panel p-5">
+    <div className="rounded-2xl border border-line bg-panel p-5">
       <h2 className="mb-1 font-semibold text-ink">Montador de Entrada</h2>
       <p className="mb-4 text-sm text-muted">
         Selecione um Lance seu para cada exigência.
@@ -109,7 +109,7 @@ export default function ChallengeBuilder({
         disabled={!allCovered || pending || !isAuthed}
         title={!isAuthed ? 'Entre para participar' : !allCovered ? 'Preencha todos os espaços do álbum primeiro' : undefined}
         onClick={submit}
-        className="mt-5  bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="rounded-lg mt-5  bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {pending ? 'Enviando…' : !isAuthed ? 'Entre para participar' : allCovered ? 'Completar desafio' : 'Selecione todos os Lances'}
       </button>

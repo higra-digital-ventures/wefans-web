@@ -30,14 +30,14 @@ export default async function AdminDashboard() {
 
       <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {cards.map((c) => (
-          <div key={c.label} className="border border-line bg-panel p-4">
+          <div key={c.label} className="rounded-2xl border border-line bg-panel p-4">
             <div className="font-display text-2xl text-ink">{c.value}</div>
             <div className="mt-1 text-xs text-muted">{c.label}</div>
           </div>
         ))}
       </div>
 
-      <div className="mb-8 flex flex-wrap items-center gap-3  border border-line bg-panel p-4">
+      <div className="rounded-2xl mb-8 flex flex-wrap items-center gap-3  border border-line bg-panel p-4">
         <span className="text-sm text-muted">Operações:</span>
         <AdminAction path="/admin/cron/tick" label="Rodar cron agora" />
         {metrics.reviewPending > 0 && (
@@ -49,7 +49,7 @@ export default async function AdminDashboard() {
 
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted">Auditoria (últimas ações)</h2>
-        <div className="border border-line bg-panel">
+        <div className="rounded-2xl border border-line bg-panel">
           {!auditData?.logs.length ? (
             <p className="px-4 py-6 text-sm text-muted">Sem registros ainda.</p>
           ) : (

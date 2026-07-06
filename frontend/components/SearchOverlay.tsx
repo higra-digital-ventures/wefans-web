@@ -137,7 +137,7 @@ export default function SearchOverlay({
             aria-hidden
           />
 
-          <div className="relative border-b border-white/10 bg-[#050505]">
+          <div className="rounded-2xl relative border-b border-white/10 bg-[#050505]">
             {/* faixa do input, centrada como no Top Shot */}
             <div className="flex h-14 items-center gap-3 px-4 lg:px-6">
               <form
@@ -153,7 +153,7 @@ export default function SearchOverlay({
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   placeholder={PLACEHOLDERS[phIdx]}
-                  className="h-10 w-full border border-white/50 bg-black pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
+                  className="rounded-lg h-10 w-full border border-white/50 bg-black pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
                 />
               </form>
               <button
@@ -236,7 +236,7 @@ export default function SearchOverlay({
                     <button
                       key={c.label}
                       onClick={() => go(c.q)}
-                      className="flex w-full items-center gap-2.5 border border-white/10 bg-[#141416] px-3 py-2 text-left text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
+                      className="rounded-2xl flex w-full items-center gap-2.5 border border-white/10 bg-[#141416] px-3 py-2 text-left text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
                     >
                       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sunset text-[10px] font-bold uppercase text-white">
                         {c.label[0]}
@@ -247,7 +247,7 @@ export default function SearchOverlay({
                   <Link
                     href="/jogar/rankings"
                     onClick={() => setOpen(false)}
-                    className="mt-4 flex w-full items-center gap-2.5 border border-white/10 bg-[#141416] px-3 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
+                    className="rounded-2xl mt-4 flex w-full items-center gap-2.5 border border-white/10 bg-[#141416] px-3 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
                   >
                     <Icon name="market" size={16} className="text-neutral-300" />
                     Fichas &amp; Rankings
@@ -277,11 +277,11 @@ export default function SearchOverlay({
                         key={t.id}
                         href={`/lance/${t.id}`}
                         onClick={() => setOpen(false)}
-                        className="w-[150px] shrink-0 border border-white/10 bg-[#0a0a0b] p-2.5 transition-colors hover:border-white/30"
+                        className="rounded-2xl w-[150px] shrink-0 border border-white/10 bg-[#0a0a0b] p-2.5 transition-colors hover:border-white/30"
                       >
                         <div className="relative mx-auto w-[80%]" style={{ perspective: '500px' }}>
                           <div
-                            className="aspect-[4/5] overflow-hidden border"
+                            className="aspect-[4/5] overflow-hidden rounded-lg border"
                             style={{
                               transform: 'rotateY(-12deg) rotateX(2deg)',
                               borderColor: `${meta.color}66`,

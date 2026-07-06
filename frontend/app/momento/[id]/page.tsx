@@ -30,7 +30,7 @@ export const dynamic = 'force-dynamic';
 
 function Panel({ title, children, open = true }: { title: string; children: React.ReactNode; open?: boolean }) {
   return (
-    <details open={open} className="group border border-line bg-[#0e0e10]">
+    <details open={open} className="rounded-2xl group border border-line bg-[#0e0e10]">
       <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 [&::-webkit-details-marker]:hidden">
         <span className="font-display text-lg uppercase tracking-wide text-ink">{title}</span>
         <Icon name="chevronDown" size={16} className="text-muted transition-transform group-open:rotate-180" />
@@ -210,7 +210,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           </div>
 
           {/* painel de compra (Lowest ask + CTA + linha "à venda · média") */}
-          <div className="mt-5 border border-line bg-[#0e0e10] p-4">
+          <div className="rounded-2xl mt-5 border border-line bg-[#0e0e10] p-4">
             <div className="mb-3 flex items-end justify-between">
               <div>
                 <div className="text-[10px] uppercase tracking-[0.15em] text-neutral-500">Menor preço</div>
@@ -555,7 +555,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           </div>
           <a
             href="#vender"
-            className="bg-accent px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.08em] text-white"
+            className="rounded-lg bg-accent px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.08em] text-white"
           >
             Comprar
           </a>

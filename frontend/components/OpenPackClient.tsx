@@ -116,7 +116,7 @@ export default function OpenPackClient({
           ))}
         </div>
         <div className="mt-8 flex gap-3">
-          <Link href="/colecao" className="bg-accent px-5 py-2.5 font-semibold text-white">
+          <Link href="/colecao" className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
             Ver coleção
           </Link>
           <Link href="/pacotes" className="border border-line px-5 py-2.5 text-muted hover:text-ink">
@@ -135,7 +135,7 @@ export default function OpenPackClient({
         Rasgue para revelar seus Lances. O que sair é seu — numerado e colecionável.
       </p>
       {error && (
-        <div className="mb-4 max-w-sm border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
+        <div className="rounded-lg mb-4 max-w-sm border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
           {error}
           <div className="mt-2">
             <Link href="/colecao" className="underline">
@@ -147,7 +147,7 @@ export default function OpenPackClient({
       <button
         onClick={open}
         disabled={pending || tearing}
-        className="bg-accent px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="rounded-lg bg-accent px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {pending || tearing ? 'Rasgando…' : 'Rasgar o pacote'}
       </button>

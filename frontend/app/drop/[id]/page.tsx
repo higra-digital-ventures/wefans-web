@@ -32,7 +32,7 @@ export default async function DropPage({ params }: { params: Promise<{ id: strin
 
         <div className="space-y-4">
           {drop.packs.map((p) => (
-            <div key={p.id} className="border border-line bg-panel p-4">
+            <div key={p.id} className="rounded-2xl border border-line bg-panel p-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="font-semibold text-ink">{p.name}</span>
                 <span className="tabular-nums text-sm text-accent3">{brl(p.priceCents)}</span>

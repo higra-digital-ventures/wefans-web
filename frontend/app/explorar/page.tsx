@@ -59,7 +59,7 @@ function MomentThumb({ e }: { e: FeedEvent }) {
   return (
     <div className="w-[96px] shrink-0">
       <div
-        className="aspect-[4/5] overflow-hidden border"
+        className="aspect-[4/5] overflow-hidden rounded-lg border"
         style={{
           borderColor: `${meta.color}55`,
           boxShadow: isFoil(e.template.tier) ? `0 0 12px ${meta.color}33` : undefined,
@@ -229,7 +229,7 @@ function EventCard({
       {e.template ? (
         <Link
           href={e.momentId ? `/momento/${e.momentId}` : `/lance/${e.template.id}`}
-          className={`group flex items-center gap-4 px-4 py-4 transition-colors ${
+          className={`rounded-2xl group flex items-center gap-4 px-4 py-4 transition-colors ${
             boxed ? 'border-t border-white/10 bg-[#08080a] hover:bg-white/5' : 'hover:bg-white/[0.03]'
           }`}
         >
@@ -279,7 +279,7 @@ function EventCard({
         </Link>
       ) : (
         <div
-          className={`flex items-center gap-3 px-4 py-4 ${boxed ? 'border-t border-white/10 bg-[#08080a]' : ''}`}
+          className={`rounded-2xl flex items-center gap-3 px-4 py-4 ${boxed ? 'border-t border-white/10 bg-[#08080a]' : ''}`}
         >
           <span className="text-xl" aria-hidden>
             {e.kind === 'CHECKIN' ? <Icon name="checkin" size={14} /> : <Icon name="trophy" size={14} />}
@@ -332,7 +332,7 @@ function EventCard({
 function PopularPanel({ title, rows }: { title: string; rows: { name: string; count: number }[] }) {
   if (rows.length === 0) return null;
   return (
-    <section className="border border-white/10 bg-[#0c0c0e] px-4 py-4">
+    <section className="rounded-2xl border border-white/10 bg-[#0c0c0e] px-4 py-4">
       <div className="mb-3 text-center text-[13px] font-bold uppercase tracking-[0.2em] text-white">
         {title}
       </div>
@@ -441,7 +441,7 @@ export default async function ExplorarPage({
         {/* rail pessoal (como o do Explore do Top Shot) */}
         <aside className="space-y-5 lg:sticky lg:top-[88px] lg:self-start">
           {me && (
-            <section className="border border-white/10 bg-[#0c0c0e] p-4">
+            <section className="rounded-2xl border border-white/10 bg-[#0c0c0e] p-4">
               <div className="mb-3 text-[13px] font-bold text-white">Seus números</div>
               <div className="space-y-2 text-[12px]">
                 {[
@@ -457,7 +457,7 @@ export default async function ExplorarPage({
               </div>
             </section>
           )}
-          <section className="border border-white/10 bg-[#0c0c0e] p-4">
+          <section className="rounded-2xl border border-white/10 bg-[#0c0c0e] p-4">
             <div className="mb-3 text-[13px] font-bold text-white">Perto de completar</div>
             {!me ? (
               <p className="text-[12px] text-neutral-400">
@@ -496,7 +496,7 @@ export default async function ExplorarPage({
             )}
           </section>
 
-          <section className="border border-white/10 bg-[#0c0c0e] p-4">
+          <section className="rounded-2xl border border-white/10 bg-[#0c0c0e] p-4">
             <div className="mb-3 flex items-baseline justify-between">
               <span className="text-[13px] font-bold text-white">Minha Wishlist</span>
               {me && (
@@ -560,7 +560,7 @@ export default async function ExplorarPage({
           </div>
           {!compact && <TrendingStrip items={feed?.popular.trending ?? []} />}
           {me && recapTotal > 0 && !compact && (
-            <section className="border border-accent3/25 bg-accent3/[0.04] px-4 py-3">
+            <section className="rounded-lg border border-accent3/25 bg-accent3/[0.04] px-4 py-3">
               <div className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent3">
                 Enquanto você esteve fora · 24h
               </div>
@@ -618,7 +618,7 @@ export default async function ExplorarPage({
               <Link
                 key={e.id}
                 href={e.momentId ? `/momento/${e.momentId}` : e.template ? `/lance/${e.template.id}` : '/explorar'}
-                className="flex items-center gap-2.5 border border-white/[0.06] bg-[#0c0c0e] px-3 py-2 text-[12px] transition-colors hover:border-white/25"
+                className="rounded-2xl flex items-center gap-2.5 border border-white/[0.06] bg-[#0c0c0e] px-3 py-2 text-[12px] transition-colors hover:border-white/25"
               >
                 <span
                   className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-bold uppercase text-white"

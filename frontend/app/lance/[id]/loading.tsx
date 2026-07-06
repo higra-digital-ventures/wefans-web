@@ -14,7 +14,7 @@ export default function Loading() {
           <div className="h-4 w-32 animate-pulse bg-panel" />
           <div className="h-12 w-3/4 animate-pulse bg-panel" />
           <div className="h-4 w-1/2 animate-pulse bg-panel" />
-          <div className="h-40 animate-pulse border border-line bg-panel" />
+          <div className="rounded-2xl h-40 animate-pulse border border-line bg-panel" />
         </div>
       </div>
     </main>

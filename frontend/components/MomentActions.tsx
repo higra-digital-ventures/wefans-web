@@ -75,16 +75,16 @@ export default function MomentActions({
 
   if (isBurned) {
     return (
-      <div className="border border-line bg-[#0e0e10] p-4 text-sm text-muted">
+      <div className="rounded-2xl border border-line bg-[#0e0e10] p-4 text-sm text-muted">
         Este Lance foi queimado — fora de circulação.
       </div>
     );
   }
 
   return (
-    <div className="space-y-3  border border-line bg-[#0e0e10] p-4">
+    <div className="rounded-2xl space-y-3  border border-line bg-[#0e0e10] p-4">
       {error && (
-        <p className="border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">{error}</p>
+        <p className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">{error}</p>
       )}
 
       {listing ? (
@@ -109,13 +109,13 @@ export default function MomentActions({
                   <button className={cta} disabled title="Seu saldo não cobre este preço">
                     Saldo insuficiente
                   </button>
-                  <div className="mt-2 border border-line bg-panel2 p-3">
+                  <div className="rounded-lg mt-2 border border-line bg-panel2 p-3">
                     <p className="text-xs text-muted">
                       Saldo: {brl(balanceCents)} · faltam{' '}
                       <span className="font-bold text-white">{brl(missing)}</span>
                     </p>
                     <button
-                      className="mt-2 w-full border border-accent3/50 bg-accent3/10 py-2 text-[12px] font-bold uppercase tracking-wide text-accent3 transition-colors hover:bg-accent3/20 disabled:opacity-50"
+                      className="rounded-lg mt-2 w-full border border-accent3/50 bg-accent3/10 py-2 text-[12px] font-bold uppercase tracking-wide text-accent3 transition-colors hover:bg-accent3/20 disabled:opacity-50"
                       disabled={pending}
                       onClick={() =>
                         run(async () => {
@@ -137,7 +137,7 @@ export default function MomentActions({
               );
             })()
           ) : confirming ? (
-            <div className="border border-line bg-panel2 p-3">
+            <div className="rounded-lg border border-line bg-panel2 p-3">
               <p className="text-sm text-ink">Confirmar compra por {brl(listing.priceCents)}?</p>
               {aspCents > 0 && listing.priceCents > 3 * aspCents && (
                 <p className="mt-1.5 border border-amber-400/40 bg-amber-400/10 px-2 py-1.5 text-xs text-amber-200">
@@ -187,7 +187,7 @@ export default function MomentActions({
       ) : isOwner ? (
         <>
           <div className="flex gap-2">
-            <div className="flex flex-1 items-center  border border-line bg-panel2 px-3">
+            <div className="rounded-lg flex flex-1 items-center  border border-line bg-panel2 px-3">
               <span className="text-sm text-muted">R$</span>
               <input
                 type="number"
@@ -199,7 +199,7 @@ export default function MomentActions({
               />
             </div>
             <button
-              className="bg-accent px-6 text-[13px] font-bold uppercase tracking-wide text-white disabled:opacity-50"
+              className="rounded-lg bg-accent px-6 text-[13px] font-bold uppercase tracking-wide text-white disabled:opacity-50"
               disabled={pending}
               onClick={() => run(() => createListing(momentId, Math.round(Number(price) * 100)))}
             >
@@ -258,7 +258,7 @@ export default function MomentActions({
               </p>
               <div className="mt-2.5 flex gap-2">
                 <button
-                  className="bg-amber-400 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wide text-black disabled:opacity-50"
+                  className="rounded-lg bg-amber-400 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wide text-black disabled:opacity-50"
                   disabled={pending}
                   onClick={() =>
                     run(async () => {
@@ -294,7 +294,7 @@ export default function MomentActions({
               value={giftTo}
               onChange={(e) => setGiftTo(e.target.value)}
               placeholder="usuário para presentear"
-              className="min-w-0 flex-1  border border-line bg-panel2 px-3 py-2 text-sm text-ink outline-none placeholder:text-muted/60"
+              className="rounded-lg min-w-0 flex-1  border border-line bg-panel2 px-3 py-2 text-sm text-ink outline-none placeholder:text-muted/60"
             />
             <button className={ghost} disabled={pending || !giftTo} onClick={() => run(() => giftMoment(momentId, giftTo))}>
               Presentear

@@ -193,7 +193,7 @@ export default async function JogarPage() {
                 className="font-display text-2xl uppercase leading-none text-accent3"
               />
             </div>
-            <span className="bg-accent px-6 py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-white">
+            <span className="rounded-lg bg-accent px-6 py-3 text-[13px] font-bold uppercase tracking-[0.08em] text-white">
               {cont.cta}
             </span>
           </div>
@@ -205,7 +205,7 @@ export default async function JogarPage() {
           <Link
             key={m.href}
             href={m.href}
-            className="group flex flex-col overflow-hidden border border-line bg-panel transition-colors hover:border-white/30"
+            className="rounded-2xl group flex flex-col overflow-hidden border border-line bg-panel transition-colors hover:border-white/30"
           >
             {/* faixa de arte (como os cards de drop) */}
             <div

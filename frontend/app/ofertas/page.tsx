@@ -21,7 +21,7 @@ export default async function OfertasPage() {
           cta={{ label: 'Explorar o mercado', href: '/mercado' }}
         />
       ) : (
-        <ul className="divide-y divide-line  border border-line bg-panel">
+        <ul className="rounded-2xl divide-y divide-line  border border-line bg-panel">
           {offers.map((o) => (
             <li key={o.id} className="flex items-center justify-between gap-3 px-4 py-3">
               <div className="min-w-0">

@@ -68,7 +68,7 @@ export default async function Home() {
             <div>
             <div className="mb-2 flex items-center gap-2">
               <span
-                className={` px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                className={`rounded-lg  px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                   hero.status === 'LIVE' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-panel2 text-muted'
                 }`}
               >
@@ -98,7 +98,7 @@ export default async function Home() {
             <div className="mt-6 flex flex-wrap gap-2">
               <Link
                 href={`/drop/${hero.id}`}
-                className="bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
+                className="rounded-lg bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
               >
                 Entrar no drop
               </Link>
@@ -128,7 +128,7 @@ export default async function Home() {
                         style={{ perspective: '480px' }}
                       >
                         <div
-                          className="aspect-[4/5] overflow-hidden border"
+                          className="aspect-[4/5] overflow-hidden rounded-lg border"
                           style={{
                             transform: 'rotateY(-12deg) rotateX(2deg)',
                             borderColor: `${m.color}77`,
@@ -158,7 +158,7 @@ export default async function Home() {
       {/* landing de visitante: proposta de valor */}
       <Link
         href="/entrar"
-        className="mb-10 flex flex-wrap items-center justify-between gap-4 border border-accent3/40 bg-accent3/5 px-6 py-4 transition-colors hover:bg-accent3/10"
+        className="rounded-lg mb-10 flex flex-wrap items-center justify-between gap-4 border border-accent3/40 bg-accent3/5 px-6 py-4 transition-colors hover:bg-accent3/10"
       >
         <div>
           <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent3">Comece agora</div>
@@ -167,7 +167,7 @@ export default async function Home() {
           </div>
           <div className="text-[12px] text-muted">Moeda de teste — nenhum dinheiro real.</div>
         </div>
-        <span className="bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white">
+        <span className="rounded-lg bg-accent px-6 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white">
           Criar conta grátis
         </span>
       </Link>
@@ -196,7 +196,7 @@ export default async function Home() {
                   <Link
                     key={p.id}
                     href={`/pacote/${p.id}`}
-                    className="group  border border-line bg-[#0e0e10] p-4 transition-colors hover:border-[#3a2b52]"
+                    className="rounded-2xl group  border border-line bg-[#0e0e10] p-4 transition-colors hover:border-[#3a2b52]"
                   >
                     <div className="mb-3 flex h-24 items-center justify-center  bg-sunset/20">
                       <div className="h-16 w-12  bg-sunset shadow-neon transition-transform group-hover:-translate-y-0.5" />
@@ -222,7 +222,7 @@ export default async function Home() {
                   <Link
                     key={c.id}
                     href={`/jogar/desafios/${c.id}`}
-                    className="flex items-center justify-between gap-3  border border-line bg-[#0e0e10] px-4 py-3 transition-colors hover:border-[#3a2b52]"
+                    className="rounded-2xl flex items-center justify-between gap-3  border border-line bg-[#0e0e10] px-4 py-3 transition-colors hover:border-[#3a2b52]"
                   >
                     <div className="min-w-0">
                       <div className="truncate text-sm font-bold text-ink">
@@ -251,7 +251,7 @@ export default async function Home() {
               Ver tudo
             </Link>
           </div>
-          <div className="border border-line bg-[#0e0e10] p-2">
+          <div className="rounded-2xl border border-line bg-[#0e0e10] p-2">
             <ActivityFeed initial={activity} limit={8} />
           </div>
           <div className="mt-3 flex flex-wrap gap-1.5">

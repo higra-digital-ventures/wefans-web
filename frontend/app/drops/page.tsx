@@ -99,14 +99,14 @@ function DropPackCard({ drop, pack }: { drop: DropSummary; pack: PackDTO }) {
         {soldOut ? (
           <Link
             href="/mercado/pacotes"
-            className="block bg-white py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-black"
+            className="rounded-lg block bg-white py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-black"
           >
             Ver no mercado
           </Link>
         ) : (
           <Link
             href={`/drop/${drop.id}`}
-            className="block bg-accent py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-white transition-opacity hover:opacity-90"
+            className="rounded-lg block bg-accent py-2 text-center text-[11px] font-bold uppercase tracking-[0.08em] text-white transition-opacity hover:opacity-90"
           >
             {drop.status === 'LIVE' ? `Comprar · ${brl(pack.priceCents)}` : `Entrar na fila · ${brl(pack.priceCents)}`}
           </Link>
@@ -123,7 +123,7 @@ function DropCard({ d, myScore }: { d: DropSummary; myScore: number | null }) {
     <Link
       key={d.id}
       href={`/drop/${d.id}`}
-      className={`group overflow-hidden border border-line bg-[#0e0e10] transition-colors hover:border-white/30 ${ended ? 'opacity-70' : ''}`}
+      className={`rounded-2xl group overflow-hidden border border-line bg-[#0e0e10] transition-colors hover:border-white/30 ${ended ? 'opacity-70' : ''}`}
     >
       <div className="relative flex h-20 items-end bg-sunset p-3" aria-hidden>
         <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 160% at 50% -30%, transparent 30%, #0e0e10 96%)' }} />
@@ -134,7 +134,7 @@ function DropCard({ d, myScore }: { d: DropSummary; myScore: number | null }) {
       <div className="p-4">
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <span
-            className={`px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
+            className={`rounded-lg px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
               d.status === 'LIVE' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-panel2 text-muted'
             }`}
           >
@@ -213,7 +213,7 @@ export default async function DropsPage() {
       {fixtures && fixtures.length > 0 && (
         <Link
           href="/checkin"
-          className="mb-4 flex flex-wrap items-center gap-3 border border-emerald-400/30 bg-emerald-400/5 px-4 py-2.5 transition-colors hover:bg-emerald-400/10"
+          className="rounded-lg mb-4 flex flex-wrap items-center gap-3 border border-emerald-400/30 bg-emerald-400/5 px-4 py-2.5 transition-colors hover:bg-emerald-400/10"
         >
           <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-300">
             <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" /> hoje tem jogo
@@ -241,7 +241,7 @@ export default async function DropsPage() {
             <div>
               <div className="mb-1 flex flex-wrap items-center gap-2">
                 <span
-                  className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                  className={`rounded-lg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                     hero.status === 'LIVE' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-black/40 text-ink'
                   }`}
                 >
@@ -280,7 +280,7 @@ export default async function DropsPage() {
 
               {/* estado da minha fila, quando inscrito */}
               {myEntry && (
-                <div className="mt-4 border border-accent3/40 bg-accent3/10 px-4 py-3 text-sm text-ink">
+                <div className="rounded-lg mt-4 border border-accent3/40 bg-accent3/10 px-4 py-3 text-sm text-ink">
                   {myEntry.purchased ? (
                     <>✓ Você já comprou neste drop.</>
                   ) : myEntry.canBuyNow ? (
@@ -399,7 +399,7 @@ export default async function DropsPage() {
           <h2 className="mb-4 font-display text-2xl uppercase tracking-tight">
             <span className="text-ink">Rip Packs.</span> <span className="text-accent3">24/7</span>
           </h2>
-          <div className="border border-line bg-[#0e0e10] p-5">
+          <div className="rounded-2xl border border-line bg-[#0e0e10] p-5">
             <p className="mb-4 text-sm text-muted">
               A experiência always-on do wefans — abra pacotes a qualquer hora, sem fila.
             </p>
@@ -426,7 +426,7 @@ export default async function DropsPage() {
       {(openDays.length > 0 || true) && (
         <section className="grid gap-3 lg:grid-cols-[1fr_minmax(0,340px)]">
           {openDays.length > 0 && (
-            <div className="border border-line bg-[#0e0e10] p-5">
+            <div className="rounded-2xl border border-line bg-[#0e0e10] p-5">
               <h2 className="mb-1 font-display text-2xl uppercase tracking-tight">
                 <span className="text-ink">Valendo hoje.</span>{' '}
                 <span className="text-accent3">Matchday</span>

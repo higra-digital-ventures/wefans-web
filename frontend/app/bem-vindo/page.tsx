@@ -47,7 +47,7 @@ export default async function BemVindoPage() {
 
       <div className="mt-8 space-y-4">
         {STEPS.map((s) => (
-          <section key={s.n} className="flex gap-4 border border-line bg-panel p-5">
+          <section key={s.n} className="rounded-2xl flex gap-4 border border-line bg-panel p-5">
             <span
               className="flex h-10 w-10 shrink-0 items-center justify-center font-display text-xl text-white"
               style={{ background: `${s.color}33`, border: `1px solid ${s.color}66` }}
@@ -74,7 +74,7 @@ export default async function BemVindoPage() {
           Dúvidas sobre termos? Veja o{' '}
           <Link href="/como-funciona" className="text-accent3 underline">guia Como funciona</Link>.
         </p>
-        <Link href="/pacotes" className="bg-accent px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90">
+        <Link href="/pacotes" className="rounded-lg bg-accent px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90">
           Começar agora
         </Link>
       </div>

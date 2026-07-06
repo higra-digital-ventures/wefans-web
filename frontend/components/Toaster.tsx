@@ -42,7 +42,7 @@ export default function Toaster({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className="wf-reveal pointer-events-auto flex items-start gap-2.5 border border-white/10 bg-[#101012] px-3.5 py-3 shadow-[0_12px_30px_rgba(0,0,0,.6)]"
+            className="rounded-2xl wf-reveal pointer-events-auto flex items-start gap-2.5 border border-white/10 bg-[#101012] px-3.5 py-3 shadow-[0_12px_30px_rgba(0,0,0,.6)]"
           >
             <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: COLOR[t.type] }} aria-hidden />
             <p className="flex-1 text-[13px] leading-snug text-ink">{t.message}</p>

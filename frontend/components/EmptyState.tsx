@@ -12,7 +12,7 @@ export default function EmptyState({
   cta?: { label: string; href: string };
 }) {
   return (
-    <div className="flex flex-col items-center border border-white/10 bg-[#0a0a0b] px-6 py-12 text-center">
+    <div className="rounded-2xl flex flex-col items-center border border-white/10 bg-[#0a0a0b] px-6 py-12 text-center">
       <div className="mb-4 flex flex-col items-center gap-1.5" aria-hidden>
         <div className="flex gap-5">
           {['#21d4e0', '#9d4edd'].map((c) => (
@@ -32,7 +32,7 @@ export default function EmptyState({
       {cta && (
         <Link
           href={cta.href}
-          className="mt-4 bg-accent px-5 py-2.5 text-[12px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
+          className="rounded-lg mt-4 bg-accent px-5 py-2.5 text-[12px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
         >
           {cta.label}
         </Link>

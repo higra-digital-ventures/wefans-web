@@ -116,7 +116,7 @@ export default async function ColecaoPage({
             name="q"
             defaultValue={q ?? ''}
             placeholder="Busque na sua coleção"
-            className="h-10 w-full border border-white/25 bg-transparent pl-9 pr-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
+            className="rounded-lg h-10 w-full border border-white/25 bg-transparent pl-9 pr-3 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-white"
           />
         </form>
         <SortDropdown
@@ -214,7 +214,7 @@ export default async function ColecaoPage({
       )}
 
       {nearDone.length > 0 && (
-        <section className="mt-10 border border-white/10 bg-[#0a0a0b] p-5">
+        <section className="rounded-2xl mt-10 border border-white/10 bg-[#0a0a0b] p-5">
           <div className="mb-3 flex items-baseline justify-between">
             <h2 className="font-display text-xl uppercase text-ink">Perto de completar</h2>
             <Link href="/jogar/checklists" className="text-[11px] text-neutral-400 underline underline-offset-2 hover:text-white">

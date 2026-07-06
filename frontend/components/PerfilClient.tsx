@@ -85,7 +85,7 @@ export default function PerfilClient({
             <div className="flex items-center gap-2">
               <h1 className="font-display text-3xl uppercase tracking-tight text-ink">@{me.username}</h1>
               {me.isAdmin && (
-                <span className="bg-accent2/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent2">
+                <span className="rounded-lg bg-accent2/20 px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent2">
                   admin
                 </span>
               )}
@@ -111,7 +111,7 @@ export default function PerfilClient({
 
         <div className="flex gap-2">
           {kpis.map((k) => (
-            <div key={k.label} title={k.hint} className="min-w-[110px]  border border-line bg-[#0e0e10] px-4 py-3">
+            <div key={k.label} title={k.hint} className="rounded-2xl min-w-[110px]  border border-line bg-[#0e0e10] px-4 py-3">
               <div className="font-display text-xl text-ink">{k.value}</div>
               <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">
                 {k.label}
@@ -140,13 +140,13 @@ export default function PerfilClient({
       </div>
 
       {error && (
-        <p className="mb-6  border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
+        <p className="rounded-lg mb-6  border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
           {error}
         </p>
       )}
 
       {/* carteira em destaque */}
-      <div className="mb-6 flex flex-wrap items-center gap-4  border border-line bg-[#0e0e10] px-5 py-4">
+      <div className="rounded-2xl mb-6 flex flex-wrap items-center gap-4  border border-line bg-[#0e0e10] px-5 py-4">
         <div>
           <div className="font-display text-2xl text-ink">{brl(me.balanceCents)}</div>
           <div className="text-[10px] uppercase tracking-wide text-muted">Saldo da carteira</div>
@@ -166,12 +166,12 @@ export default function PerfilClient({
         {/* Depósito */}
         <section className={card}>
           <h2 className="mb-1 font-semibold text-ink">Carteira</h2>
-          <p className="mb-3 border border-accent3/30 bg-accent3/5 px-3 py-2 text-[12px] leading-snug text-accent3">
+          <p className="rounded-lg mb-3 border border-accent3/30 bg-accent3/5 px-3 py-2 text-[12px] leading-snug text-accent3">
             Moeda de teste — o saldo é fictício, para experimentar o produto. Nenhum dinheiro
             real é movimentado; deposite à vontade.
           </p>
           <div className="mb-3 flex gap-2">
-            <div className="flex items-center  border border-line bg-panel2 px-3">
+            <div className="rounded-lg flex items-center  border border-line bg-panel2 px-3">
               <span className="text-muted">R$</span>
               <input
                 type="number"

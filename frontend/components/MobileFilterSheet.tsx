@@ -32,7 +32,7 @@ export default function MobileFilterSheet({
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Filtros">
           <div className="absolute inset-0 bg-black/70" onClick={() => setOpen(false)} aria-hidden />
-          <div className="absolute inset-x-0 bottom-0 max-h-[75dvh] overflow-y-auto border-t border-white/15 bg-[#0a0a0b] px-5 pb-8 pt-4">
+          <div className="rounded-t-2xl absolute inset-x-0 bottom-0 max-h-[75dvh] overflow-y-auto border-t border-white/15 bg-[#0a0a0b] px-5 pb-8 pt-4">
             <div className="mb-4 flex items-center justify-between">
               <span className="text-[14px] font-bold uppercase tracking-[0.12em] text-white">Filtros</span>
               <button

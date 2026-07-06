@@ -13,7 +13,7 @@ export default function AdminCreateTeam() {
   const field = ' border border-line bg-panel2 px-3 py-2 text-sm text-ink outline-none placeholder:text-muted/60';
 
   return (
-    <div className="border border-line bg-panel p-4">
+    <div className="rounded-2xl border border-line bg-panel p-4">
       <h3 className="mb-3 text-sm font-semibold text-ink">Novo time parceiro (+ estádio)</h3>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
         <input className={field} placeholder="Nome do time" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
@@ -25,7 +25,7 @@ export default function AdminCreateTeam() {
       {error && <p className="mt-2 text-xs text-accent">{error}</p>}
       <button
         disabled={!ok || pending}
-        className="mt-3  bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="rounded-lg mt-3  bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
         onClick={() => {
           setError(null);
           start(async () => {

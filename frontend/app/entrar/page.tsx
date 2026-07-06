@@ -85,12 +85,12 @@ export default function EntrarPage() {
       </h1>
       <p className="mb-8 text-muted">Sua carteira de Lances começa aqui.</p>
       {hasNext && mode === 'login' && (
-        <p className="mb-6 border border-accent3/30 bg-accent3/5 px-3 py-2 text-[13px] text-accent3">
+        <p className="rounded-lg mb-6 border border-accent3/30 bg-accent3/5 px-3 py-2 text-[13px] text-accent3">
           Entre para continuar de onde você parou — a página te espera.
         </p>
       )}
 
-      <div className="mb-6 flex gap-1  border border-line bg-panel p-1">
+      <div className="rounded-2xl mb-6 flex gap-1  border border-line bg-panel p-1">
         {tab('login', 'Entrar')}
         {tab('register', 'Cadastrar')}
       </div>
@@ -159,7 +159,7 @@ export default function EntrarPage() {
         </div>
 
         {error && (
-          <p className="border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
+          <p className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">
             {error}
           </p>
         )}
@@ -167,7 +167,7 @@ export default function EntrarPage() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full  bg-accent py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="rounded-lg w-full  bg-accent py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {pending ? 'Processando…' : mode === 'login' ? 'Entrar' : 'Criar conta'}
         </button>

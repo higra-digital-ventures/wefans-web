@@ -83,7 +83,7 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
             </div>
           )}
 
-          <div className="mt-6 grid grid-cols-3 gap-4  border border-line bg-panel p-4">
+          <div className="rounded-2xl mt-6 grid grid-cols-3 gap-4  border border-line bg-panel p-4">
             {stat('Menor preço', tm?.floorCents != null ? brl(tm.floorCents) : '—')}
             {stat('Preço médio', brl(tm?.aspCents ?? t.aspCents))}
             {stat('À venda', String(tm?.activeListings ?? 0))}
@@ -110,14 +110,14 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
             {tm?.floorMomentId ? (
               <Link
                 href={`/momento/${tm.floorMomentId}`}
-                className="inline-block  bg-accent px-5 py-2.5 font-semibold text-white"
+                className="rounded-lg inline-block  bg-accent px-5 py-2.5 font-semibold text-white"
               >
                 Comprar · {brl(tm.floorCents ?? 0)}
               </Link>
             ) : (
               <Link
                 href="/pacotes"
-                className="inline-block  bg-accent px-5 py-2.5 font-semibold text-white"
+                className="rounded-lg inline-block  bg-accent px-5 py-2.5 font-semibold text-white"
               >
                 Conseguir nos pacotes
               </Link>
@@ -138,7 +138,7 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
               <li key={m.serial}>
                 <Link
                   href={`/momento/${m.momentId}`}
-                  className="flex items-center gap-3 border border-white/10 bg-[#0a0a0b] px-3 py-2 transition-colors hover:border-white/30"
+                  className="rounded-2xl flex items-center gap-3 border border-white/10 bg-[#0a0a0b] px-3 py-2 transition-colors hover:border-white/30"
                 >
                   <span className="tabular-nums text-[13px] font-bold text-accent3">#{m.serial}</span>
                   <span className="min-w-0 flex-1 truncate text-[12px] text-neutral-300">

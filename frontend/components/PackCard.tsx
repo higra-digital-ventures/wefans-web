@@ -9,7 +9,7 @@ export default function PackCard({ pack }: { pack: PackDTO }) {
   const soldOut = remaining <= 0;
 
   return (
-    <div className="border border-line bg-panel p-5">
+    <div className="rounded-2xl border border-line bg-panel p-5">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <Link href={`/pacote/${pack.id}`} className="font-display text-xl text-ink hover:text-accent">

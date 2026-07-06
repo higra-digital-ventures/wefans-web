@@ -22,7 +22,7 @@ export default function GridSkeleton({ title, fullscreen = false }: { title: str
         }
       >
         {Array.from({ length: fullscreen ? 12 : 10 }).map((_, i) => (
-          <div key={i} className="animate-pulse overflow-hidden  border border-line bg-panel" aria-hidden>
+          <div key={i} className="rounded-2xl animate-pulse overflow-hidden  border border-line bg-panel" aria-hidden>
             <div className="aspect-[4/5] bg-panel2/60" />
             <div className="space-y-2 p-3">
               <div className="h-4 w-3/4  bg-panel2/60" />

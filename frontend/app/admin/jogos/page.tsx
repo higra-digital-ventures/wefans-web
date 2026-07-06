@@ -15,7 +15,7 @@ export default async function AdminJogos() {
         Cada jogo define a janela de check-in (2h antes → 3h depois do apito) e o pacote-prêmio.
       </p>
 
-      <div className="border border-line bg-panel">
+      <div className="rounded-2xl border border-line bg-panel">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-line text-left text-xs uppercase tracking-widest text-muted">

@@ -25,7 +25,7 @@ export default async function MatchdayPage() {
       ) : (
         <div className="space-y-8">
           {runs.map((r, idx) => (
-            <section key={r.id} className="border border-line bg-panel p-5">
+            <section key={r.id} className="rounded-2xl border border-line bg-panel p-5">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <h2 className="font-display text-2xl text-ink">{r.name}</h2>

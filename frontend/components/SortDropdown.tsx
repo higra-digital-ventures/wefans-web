@@ -42,7 +42,7 @@ export default function SortDropdown({
       {open && (
         <ul
           role="listbox"
-          className="absolute right-0 top-full z-30 mt-1 w-48 border border-white/15 bg-[#0c0c0e] shadow-[0_16px_40px_rgba(0,0,0,.7)]"
+          className="rounded-2xl absolute right-0 top-full z-30 mt-1 w-48 border border-white/15 bg-[#0c0c0e] shadow-[0_16px_40px_rgba(0,0,0,.7)]"
         >
           {options.map((o) => (
             <li key={o.v}>

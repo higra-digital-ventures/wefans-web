@@ -44,7 +44,7 @@ export default function BuyPackButton({
       <button
         onClick={onBuy}
         disabled={pending || soldOut}
-        className="bg-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {soldOut ? 'Esgotado' : pending ? 'Comprando…' : `Comprar · ${brl(priceCents)}`}
       </button>

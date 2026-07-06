@@ -297,7 +297,7 @@ export default async function MercadoPage({
                   )}
                   <Link
                     href={`/jogar/desafios/${c.id}`}
-                    className="mt-2.5 flex items-center justify-center gap-1.5  border border-white/20 bg-[#141416] py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/10"
+                    className="rounded-2xl mt-2.5 flex items-center justify-center gap-1.5  border border-white/20 bg-[#141416] py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/10"
                   >
                     <Icon name="market" size={14} />
                     {c.completed ? 'Fechado!' : c.burnOnComplete ? 'Trocar' : 'Completar'}
@@ -323,10 +323,10 @@ export default async function MercadoPage({
                 <Link
                   key={t.id}
                   href={`/momento/${momentId}`}
-                  className="w-[128px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-accent3/50"
+                  className="rounded-2xl w-[128px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-accent3/50"
                 >
                   <div className="mx-auto w-[80%]">
-                    <div className="aspect-[4/5] overflow-hidden border" style={{ borderColor: `${m.color}66` }}>
+                    <div className="aspect-[4/5] overflow-hidden rounded-lg border" style={{ borderColor: `${m.color}66` }}>
                       <TacticalBoard trajectory={t.trajectory} jersey={t.player.jersey} color={m.color} foil={isFoil(t.tier)} />
                     </div>
                   </div>
@@ -363,7 +363,7 @@ export default async function MercadoPage({
             name="q"
             defaultValue={q ?? ''}
             placeholder="Busque por jogadores, times e sets"
-            className="h-12 w-full  border border-white/60 bg-transparent pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-white"
+            className="rounded-lg h-12 w-full  border border-white/60 bg-transparent pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-white"
           />
         </form>
         <PriceFilter pmin={pmin} pmax={pmax} />
@@ -436,7 +436,7 @@ export default async function MercadoPage({
             href={href({ sort: sort === 'desconto' ? undefined : 'desconto', n: undefined })}
             scroll={false}
             title="Ordenar pelos anúncios mais abaixo da média da edição"
-            className={`flex items-center gap-2 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors ${
+            className={`rounded-lg flex items-center gap-2 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors ${
               sort === 'desconto'
                 ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300'
                 : 'border-white/25 text-neutral-400 hover:border-white/50 hover:text-white'
@@ -502,7 +502,7 @@ export default async function MercadoPage({
       <div className="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-6">
         {/* rail de filtros sticky (só desktop; no mobile os chips acima cobrem) */}
         <aside className="hidden lg:block lg:self-start lg:sticky lg:top-[88px]">
-          <div className="space-y-5 border border-white/10 bg-[#0a0a0b] p-4">
+          <div className="rounded-2xl space-y-5 border border-white/10 bg-[#0a0a0b] p-4">
             <div>
               <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">Raridade</div>
               <div className="space-y-1">
@@ -573,7 +573,7 @@ export default async function MercadoPage({
           ) : effVis === 'list' ? (
             <>
             {/* cabeçalho de colunas (tela de trader) */}
-            <div className="flex items-center gap-4 border border-b-0 border-white/10 bg-[#101012] px-4 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+            <div className="rounded-t-2xl flex items-center gap-4 border border-b-0 border-white/10 bg-[#101012] px-4 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-500">
               <span className="w-11 shrink-0" aria-hidden />
               <span className="min-w-0 flex-1">Lance</span>
               <span className="hidden w-14 text-right sm:block">Edição</span>
@@ -583,7 +583,7 @@ export default async function MercadoPage({
               </span>
               <span className="w-24 text-right">Preço</span>
             </div>
-            <ul className="divide-y divide-white/[0.06] border border-white/10 bg-[#0a0a0b]">
+            <ul className="rounded-b-2xl overflow-hidden divide-y divide-white/[0.06] border border-white/10 bg-[#0a0a0b]">
               {pageListings.map((l) => {
                 const m = TIER_META[l.template.tier];
                 return (
@@ -592,7 +592,7 @@ export default async function MercadoPage({
                       href={`/momento/${l.momentId}`}
                       className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-white/5"
                     >
-                      <span className="h-14 w-11 shrink-0 overflow-hidden border" style={{ borderColor: `${m.color}66` }} aria-hidden>
+                      <span className="h-14 w-11 shrink-0 overflow-hidden rounded-md border" style={{ borderColor: `${m.color}66` }} aria-hidden>
                         <TacticalBoard trajectory={l.template.trajectory} jersey={l.template.player.jersey} color={m.color} foil={isFoil(l.template.tier)} />
                       </span>
                       <span className="min-w-0 flex-1">

@@ -32,7 +32,7 @@ const HEAD = 'mb-3 text-[13px] font-semibold text-ink';
 
 export default function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-line bg-[#050505]">
+    <footer className="rounded-2xl mt-20 border-t border-line bg-[#050505]">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <div className={HEAD}>Entre na comunidade</div>

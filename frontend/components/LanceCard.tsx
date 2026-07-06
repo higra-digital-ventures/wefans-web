@@ -54,7 +54,7 @@ export default function LanceCard({
 
   const inner = (
     <div
-      className={`group relative overflow-hidden  border border-white/[0.06] bg-[#050505] transition-colors duration-150 hover:border-white/20 ${className}`}
+      className={`rounded-2xl group relative overflow-hidden  border border-white/[0.06] bg-[#050505] transition-colors duration-150 hover:border-white/20 ${className}`}
     >
       {/* marcador (wishlist) — clicável quando a página fornece o estado */}
       {wishlist ? (
@@ -73,7 +73,7 @@ export default function LanceCard({
           style={{ transform: 'rotateY(-14deg) rotateX(3deg)', transformStyle: 'preserve-3d' }}
         >
           <div
-            className={`relative aspect-[4/5] overflow-hidden border ${foil ? 'wf-foil' : ''}`}
+            className={`relative aspect-[4/5] overflow-hidden rounded-lg border ${foil ? 'wf-foil' : ''}`}
             style={{
               borderColor: `${meta.color}66`,
               boxShadow: foil
@@ -107,7 +107,7 @@ export default function LanceCard({
             )}
             {challengeWanted && (
               <span
-                className="absolute right-1.5 top-1.5 flex items-center gap-0.5 bg-accent px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white"
+                className="rounded-lg absolute right-1.5 top-1.5 flex items-center gap-0.5 bg-accent px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white"
                 title="Exigido num desafio ativo — feche o álbum e leve o prêmio"
               >
                 <Icon name="zap" size={9} />
@@ -131,12 +131,12 @@ export default function LanceCard({
             {priceCents != null && quickBuyListingId ? (
               <QuickBuy listingId={quickBuyListingId} priceCents={priceCents} />
             ) : priceCents != null ? (
-              <span className="absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+              <span className="rounded-lg absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                 Ver e comprar · {brl(priceCents)}
               </span>
             ) : null}
             {priceCents == null && paidCents != null && (
-              <span className="absolute inset-x-2 bottom-2 translate-y-2 bg-white py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-black opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+              <span className="rounded-lg absolute inset-x-2 bottom-2 translate-y-2 bg-white py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-black opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
                 Ver · Vender
               </span>
             )}

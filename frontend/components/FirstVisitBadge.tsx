@@ -37,7 +37,7 @@ export default function FirstVisitBadge({ id }: { id: string }) {
   return (
     <span
       ref={ref}
-      className="bg-accent3 px-1.5 py-0.5 align-middle text-[9px] font-bold uppercase tracking-wide text-black"
+      className="rounded-lg bg-accent3 px-1.5 py-0.5 align-middle text-[9px] font-bold uppercase tracking-wide text-black"
     >
       novo
     </span>

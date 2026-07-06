@@ -73,7 +73,7 @@ export default async function PerfilPage() {
               <Link
                 key={club}
                 href={`/mercado?q=${encodeURIComponent(club)}`}
-                className="flex items-center justify-between border border-line bg-[#0a0a0b] px-3 py-2.5 transition-colors hover:border-white/30"
+                className="rounded-2xl flex items-center justify-between border border-line bg-[#0a0a0b] px-3 py-2.5 transition-colors hover:border-white/30"
               >
                 <span className="text-[13px] font-semibold text-ink">{club}</span>
                 <span className="tabular-nums text-[12px] text-accent3">{n} Lance{n > 1 ? 's' : ''}</span>

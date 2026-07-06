@@ -44,7 +44,7 @@ export default function CheckinPanel({ fixture }: { fixture: ActiveFixture }) {
   }
 
   return (
-    <div className="border border-line bg-panel p-5">
+    <div className="rounded-2xl border border-line bg-panel p-5">
       <div className="mb-1 flex items-center justify-between gap-2">
         <h3 className="font-display text-xl text-ink">
           {fixture.homeTeam} <span className="text-muted">x</span> {fixture.awayTeam}
@@ -69,7 +69,7 @@ export default function CheckinPanel({ fixture }: { fixture: ActiveFixture }) {
           <button
             onClick={() => doCheckin(true)}
             disabled={pending}
-            className="bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {pending ? 'Verificando…' : 'Fazer check-in (no estádio)'}
           </button>
@@ -85,7 +85,7 @@ export default function CheckinPanel({ fixture }: { fixture: ActiveFixture }) {
 
       {msg && (
         <p
-          className={`mt-3  border px-3 py-2 text-sm ${
+          className={`rounded-lg mt-3  border px-3 py-2 text-sm ${
             msg.kind === 'err'
               ? 'border-accent/40 bg-accent/10 text-accent'
               : 'border-amber-500/40 bg-amber-500/10 text-amber-300'

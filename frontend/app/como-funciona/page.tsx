@@ -160,7 +160,7 @@ export default function ComoFuncionaPage() {
 
       <div className="mt-8 space-y-6">
         {SECTIONS.map((s) => (
-          <section key={s.id} id={s.id} className="border border-line bg-panel p-5 scroll-mt-20">
+          <section key={s.id} id={s.id} className="rounded-2xl border border-line bg-panel p-5 scroll-mt-20">
             <h2 className="font-display text-2xl uppercase text-ink">{s.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-300">{s.body}</p>
           </section>
@@ -171,7 +171,7 @@ export default function ComoFuncionaPage() {
         <p className="text-xs text-muted">Ficou com dúvida? Os rótulos dos cards têm tooltips.</p>
         <Link
           href="/pacotes"
-          className="bg-accent px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
+          className="rounded-lg bg-accent px-5 py-2.5 text-[13px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90"
         >
           Abrir um pacote
         </Link>

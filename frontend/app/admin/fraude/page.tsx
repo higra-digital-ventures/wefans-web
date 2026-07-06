@@ -18,13 +18,13 @@ export default async function AdminFraude() {
       </p>
 
       {checkins.length === 0 ? (
-        <div className="border border-line bg-panel p-8 text-center text-muted">
+        <div className="rounded-2xl border border-line bg-panel p-8 text-center text-muted">
           ✓ Fila vazia — nenhum check-in aguardando revisão.
         </div>
       ) : (
         <div className="space-y-3">
           {checkins.map((c) => (
-            <div key={c.id} className="flex flex-wrap items-center justify-between gap-3  border border-amber-500/30 bg-panel p-4">
+            <div key={c.id} className="rounded-2xl flex flex-wrap items-center justify-between gap-3  border border-amber-500/30 bg-panel p-4">
               <div>
                 <div className="text-ink">
                   @{c.username} · {c.fixture.home} x {c.fixture.away}{' '}

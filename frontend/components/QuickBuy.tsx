@@ -27,7 +27,7 @@ export default function QuickBuy({ listingId, priceCents }: { listingId: string;
           stop(e);
           setConfirming(true);
         }}
-        className="absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
+        className="rounded-lg absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
       >
         Comprar · {brl(priceCents)}
       </button>
@@ -64,7 +64,7 @@ export default function QuickBuy({ listingId, priceCents }: { listingId: string;
               }
             });
           }}
-          className="flex-1 bg-accent py-1.5 text-[11px] font-bold uppercase text-white disabled:opacity-50"
+          className="rounded-lg flex-1 bg-accent py-1.5 text-[11px] font-bold uppercase text-white disabled:opacity-50"
         >
           {pending ? 'Comprando…' : 'Confirmar'}
         </button>

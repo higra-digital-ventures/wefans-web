@@ -14,7 +14,7 @@ export default function TrendingStrip({
 }) {
   if (items.length < 2) return null;
   return (
-    <section className="border border-white/10 bg-[#0c0c0e] p-3">
+    <section className="rounded-2xl border border-white/10 bg-[#0c0c0e] p-3">
       <div className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white">
         <Icon name="flame" filled size={14} />
         Em alta · 24h
@@ -26,14 +26,14 @@ export default function TrendingStrip({
             <Link
               key={t.id}
               href={`/lance/${t.id}`}
-              className="relative w-[118px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-white/30"
+              className="rounded-2xl relative w-[118px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-white/30"
             >
               {/* posição no ranking — mini-tabela de cotação, não só vitrine */}
               <span className="absolute left-0 top-0 z-10 bg-white px-1.5 py-0.5 tabular-nums text-[10px] font-bold text-black">
                 {i + 1}
               </span>
               <div className="mx-auto w-[86%]">
-                <div className="aspect-[4/5] overflow-hidden border" style={{ borderColor: `${meta.color}66` }}>
+                <div className="aspect-[4/5] overflow-hidden rounded-lg border" style={{ borderColor: `${meta.color}66` }}>
                   <TacticalBoard
                     trajectory={t.trajectory}
                     jersey={t.player.jersey}

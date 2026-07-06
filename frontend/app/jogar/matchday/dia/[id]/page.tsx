@@ -45,7 +45,7 @@ export default async function MatchdayDayPage({ params }: { params: Promise<{ id
       <div className="grid gap-8 md:grid-cols-[1fr_minmax(0,320px)]">
         <MatchdayDayClient day={day} isAdmin={!!me?.isAdmin} isAuthed={!!me} />
 
-        <div className="border border-line bg-panel">
+        <div className="rounded-2xl border border-line bg-panel">
           <div className="border-b border-line px-4 py-3 text-xs font-semibold uppercase tracking-widest text-muted">
             Board do dia
           </div>
@@ -56,7 +56,7 @@ export default async function MatchdayDayPage({ params }: { params: Promise<{ id
               {day.board.map((b) => (
                 <li
                   key={b.username}
-                  className={`flex items-center justify-between px-4 py-2.5 text-sm ${
+                  className={`rounded-lg flex items-center justify-between px-4 py-2.5 text-sm ${
                     me && b.username === me.username ? 'bg-accent3/10' : ''
                   }`}
                 >

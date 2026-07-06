@@ -144,7 +144,7 @@ export default function NotificationsBell() {
       </span>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[92vw] max-w-[380px] border border-white/10 bg-[#0c0c0e] shadow-[0_20px_50px_rgba(0,0,0,.7)]">
+        <div className="rounded-2xl absolute right-0 top-full z-50 mt-2 w-[92vw] max-w-[380px] border border-white/10 bg-[#0c0c0e] shadow-[0_20px_50px_rgba(0,0,0,.7)]">
           <div className="flex items-baseline justify-between border-b border-white/10 px-4 py-3">
             <span className="text-[14px] font-bold text-white">Notificações</span>
             <span className="text-[10px] uppercase tracking-wide text-neutral-500">

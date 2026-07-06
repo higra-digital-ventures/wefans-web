@@ -126,11 +126,11 @@ export default function ChatClient({
 
         <div className="mt-4 space-y-1">
           {chats === null ? (
-            <p className="border border-white/10 bg-[#101012] p-4 text-center text-[12px] text-neutral-400">
+            <p className="rounded-2xl border border-white/10 bg-[#101012] p-4 text-center text-[12px] text-neutral-400">
               Carregando…
             </p>
           ) : visible.length === 0 ? (
-            <p className="border border-white/10 bg-[#101012] p-4 text-center text-[12px] text-neutral-400">
+            <p className="rounded-2xl border border-white/10 bg-[#101012] p-4 text-center text-[12px] text-neutral-400">
               Você ainda não tem conversas
             </p>
           ) : (
@@ -218,7 +218,7 @@ export default function ChatClient({
               {messages.map((m) => (
                 <div key={m.id} className={`flex ${m.mine ? 'justify-end' : 'justify-start'}`}>
                   <div
-                    className={`max-w-[75%] px-3 py-2 text-[13px] leading-snug ${
+                    className={`rounded-lg max-w-[75%] px-3 py-2 text-[13px] leading-snug ${
                       m.mine ? 'bg-accent text-white' : 'bg-[#17171a] text-neutral-200'
                     }`}
                   >
@@ -249,7 +249,7 @@ export default function ChatClient({
               />
               <button
                 disabled={sending || !draft.trim()}
-                className="bg-accent px-5 text-[12px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="rounded-lg bg-accent px-5 text-[12px] font-bold uppercase tracking-wide text-white transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {sending ? '…' : 'Enviar'}
               </button>

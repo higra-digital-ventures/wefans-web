@@ -63,8 +63,8 @@ export default function DropClient({
   );
 
   return (
-    <div className="space-y-3  border border-line bg-panel p-5">
-      {error && <p className="border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
+    <div className="rounded-2xl space-y-3  border border-line bg-panel p-5">
+      {error && <p className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
 
       {drop.status === 'WAITING' || drop.status === 'SCHEDULED' ? (
         <>

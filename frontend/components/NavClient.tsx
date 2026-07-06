@@ -102,14 +102,14 @@ export default function NavClient({
                   <Icon name={n.icon} filled={active} size={22} />
                   {n.label}
                   {n.badge && (
-                    <span className="bg-accent2 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white">
+                    <span className="rounded-lg bg-accent2 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white">
                       {n.badge}
                     </span>
                   )}
                   {active && <span className="absolute inset-x-2 bottom-0 h-[3px] bg-ink" />}
                 </Link>
                 {n.children && (
-                  <div className="absolute left-0 top-full z-50 hidden min-w-[190px] border border-white/10 bg-[#0c0c0e] py-1 shadow-[0_20px_50px_rgba(0,0,0,.7)] group-hover:block">
+                  <div className="rounded-2xl absolute left-0 top-full z-50 hidden min-w-[190px] border border-white/10 bg-[#0c0c0e] py-1 shadow-[0_20px_50px_rgba(0,0,0,.7)] group-hover:block">
                     {n.children.map((c) => (
                       <Link
                         key={c.href}
@@ -151,7 +151,7 @@ export default function NavClient({
           ) : (
             <Link
               href="/entrar"
-              className="bg-accent px-4 py-1.5 text-[13px] font-bold uppercase tracking-wide text-white"
+              className="rounded-lg bg-accent px-4 py-1.5 text-[13px] font-bold uppercase tracking-wide text-white"
             >
               Entrar
             </Link>

@@ -82,7 +82,7 @@ export default function ProfileDrawer({
         <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menu do perfil">
           <div className="absolute inset-0 bg-black/70" onClick={() => setOpen(false)} aria-hidden />
           <aside
-            className="wf-drawer absolute inset-y-0 right-0 flex w-[86vw] max-w-[340px] flex-col border-l border-white/10 bg-[#0a0a0b] shadow-[-20px_0_60px_rgba(0,0,0,.7)]"
+            className="rounded-l-2xl wf-drawer absolute inset-y-0 right-0 flex w-[86vw] max-w-[340px] flex-col border-l border-white/10 bg-[#0a0a0b] shadow-[-20px_0_60px_rgba(0,0,0,.7)]"
             // gesto: arrastar para a direita fecha (mobile)
             onTouchStart={(e) => {
               touchX.current = e.touches[0].clientX;

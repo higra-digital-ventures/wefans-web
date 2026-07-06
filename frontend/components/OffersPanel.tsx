@@ -53,7 +53,7 @@ export default function OffersPanel({
       {!isOwner && isAuthed && (
         <div className="mb-4">
           <div className="flex gap-2">
-            <div className="flex items-center  border border-line bg-panel2 px-3">
+            <div className="rounded-lg flex items-center  border border-line bg-panel2 px-3">
               <span className="text-muted">R$</span>
               <input
                 type="number"
@@ -78,7 +78,7 @@ export default function OffersPanel({
 
           {/* resumo de confirmação: valor, saldo e validade antes de enviar */}
           {confirming && price && (
-            <div className="mt-2 border border-line bg-panel2 p-3">
+            <div className="rounded-lg mt-2 border border-line bg-panel2 p-3">
               <p className="text-sm text-ink">
                 Oferecer <span className="font-bold">{brl(Math.round(Number(price) * 100))}</span> por este Lance?
               </p>
@@ -93,7 +93,7 @@ export default function OffersPanel({
               )}
               <div className="mt-2 flex gap-2">
                 <button
-                  className="bg-accent px-4 py-1.5 text-[12px] font-bold uppercase tracking-wide text-white disabled:opacity-50"
+                  className="rounded-lg bg-accent px-4 py-1.5 text-[12px] font-bold uppercase tracking-wide text-white disabled:opacity-50"
                   disabled={pending}
                   onClick={() =>
                     run(async () => {
@@ -137,7 +137,7 @@ export default function OffersPanel({
               </div>
               {isOwner && (
                 <button
-                  className="bg-accent px-3 py-1 text-xs font-semibold text-white disabled:opacity-50"
+                  className="rounded-lg bg-accent px-3 py-1 text-xs font-semibold text-white disabled:opacity-50"
                   disabled={pending}
                   onClick={() => run(() => acceptOffer(o.id, momentId))}
                 >

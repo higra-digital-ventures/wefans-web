@@ -10,7 +10,7 @@ export default function MobileNav({ items }: { items: { label: string; href: str
       >
         ☰
       </summary>
-      <nav className="absolute left-0 top-11 z-50 w-48  border border-line bg-panel p-2 shadow-neon">
+      <nav className="rounded-2xl absolute left-0 top-11 z-50 w-48  border border-line bg-panel p-2 shadow-neon">
         {items.map((i) => (
           <Link
             key={i.href}
