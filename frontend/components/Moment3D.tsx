@@ -476,6 +476,30 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       for (const y of [-H / 2, H / 2]) mk(t, t, D + t, x, y, 0); // profundidade
     scene.add(group);
 
+    // poeira de palco: pontos lentos subindo — profundidade barata
+    const dustCount = 36;
+    const dustPos = new Float32Array(dustCount * 3);
+    const dustVel = new Float32Array(dustCount);
+    for (let i = 0; i < dustCount; i++) {
+      dustPos[i * 3] = (Math.random() - 0.5) * 7;
+      dustPos[i * 3 + 1] = (Math.random() - 0.5) * 7;
+      dustPos[i * 3 + 2] = -1.5 - Math.random() * 2.5; // atrás do cubo
+      dustVel[i] = 0.0015 + Math.random() * 0.003;
+    }
+    const dustGeo = new THREE.BufferGeometry();
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+    const dust = new THREE.Points(
+      dustGeo,
+      new THREE.PointsMaterial({
+        color: new THREE.Color(d.tierColor),
+        size: 0.045,
+        transparent: true,
+        opacity: 0.35,
+        depthWrite: false,
+      }),
+    );
+    scene.add(dust);
+
     scene.add(new THREE.AmbientLight(0xffffff, 1.15));
     const key = new THREE.PointLight(0xffffff, 22);
     key.position.set(4, 4, 6);
@@ -563,6 +587,14 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       if (!reduced) {
         rim.position.x = -5 + Math.sin(swayPhase * 0.7) * 1.6;
         rim.position.y = -2 + Math.cos(swayPhase * 0.5) * 1.2;
+      }
+      // poeira sobe devagar e recicla por baixo
+      if (!reduced) {
+        for (let i = 0; i < dustCount; i++) {
+          dustPos[i * 3 + 1] += dustVel[i];
+          if (dustPos[i * 3 + 1] > 3.6) dustPos[i * 3 + 1] = -3.6;
+        }
+        dustGeo.attributes.position.needsUpdate = true;
       }
       // sombra de chão acompanha o giro (encolhe/desloca quando o cubo vira)
       if (shadowRef.current) {
