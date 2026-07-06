@@ -298,6 +298,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
   dataRef.current = data;
   const targetRef = useRef(FRONT_Y);
   const shadowRef = useRef<HTMLDivElement>(null);
+  const faceRef = useRef('lance');
   const [face, setFace] = useState<string>('lance');
 
   useEffect(() => {
@@ -610,6 +611,23 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         }
         dustGeo.attributes.position.needsUpdate = true;
       }
+      // botão da face mais próxima acende sozinho (segue o arrasto/inércia)
+      {
+        const norm = ((group.rotation.y + Math.PI) % (Math.PI * 2)) - Math.PI;
+        let best = FACES[0];
+        let bestDist = Infinity;
+        for (const f of FACES) {
+          const dist = Math.abs(((norm - f.y + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = f;
+          }
+        }
+        if (best.key !== faceRef.current) {
+          faceRef.current = best.key;
+          setFace(best.key);
+        }
+      }
       // sombra de chão acompanha o giro (encolhe/desloca quando o cubo vira)
       if (shadowRef.current) {
         const yaw = group.rotation.y;
@@ -653,6 +671,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       const idx = ['1', '2', '3', '4'].indexOf(e.key);
       if (idx >= 0) {
         targetRef.current = FACES[idx].y;
+        faceRef.current = FACES[idx].key;
         setFace(FACES[idx].key);
       }
     }
@@ -700,6 +719,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
             type="button"
             onClick={() => {
               targetRef.current = f.y;
+              faceRef.current = f.key;
               setFace(f.key);
             }}
             aria-label={`Girar para a face ${f.label}`}
