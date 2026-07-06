@@ -41,8 +41,8 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     title: 'Limitada e Aberta (quantos existem)',
     body: (
       <>
-        <strong>LE (Edição Limitada)</strong>: a quantidade é fixa — "/45" significa que só 45
-        exemplares existirão, nunca mais. <strong>CC (Circulante)</strong>: novos exemplares ainda
+        <strong>Limitada (LE)</strong>: a quantidade é fixa — "/45" significa que só 45
+        exemplares existirão, nunca mais. <strong>Aberta</strong>: novos exemplares ainda
         podem ser criados em pacotes; o número mostrado é quantos circulam hoje.{' '}
         <strong>Burned</strong> são exemplares queimados para sempre;{' '}
         <strong>Supply</strong> é o que restou em circulação.

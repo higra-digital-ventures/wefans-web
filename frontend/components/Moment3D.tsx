@@ -18,7 +18,7 @@ export interface Moment3DData {
   playType: string;
   matchDate: string;
   competition: string;
-  serialLabel: string; // "#12/410" ou "Circulante"
+  serialLabel: string; // "#12/410" ou "Aberta · N"
   tierLabel: string;
   tierColor: string;
   trajectory: string | null;

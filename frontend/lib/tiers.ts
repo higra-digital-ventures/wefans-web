@@ -20,5 +20,5 @@ export function editionLabel(
   if (t.editionType === 'LIMITADA') {
     return serial ? `#${serial}/${t.editionSize}` : `Limitada · /${t.editionSize}`;
   }
-  return `Circulante · ${t.circulatingCount.toLocaleString('pt-BR')}`;
+  return `Aberta · ${t.circulatingCount.toLocaleString('pt-BR')}`;
 }

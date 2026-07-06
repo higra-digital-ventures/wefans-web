@@ -541,7 +541,7 @@ export default async function MercadoPage({
               <div className="space-y-1">
                 {[
                   { v: 'LE', label: 'Limitada (LE)' },
-                  { v: 'CC', label: 'Circulante (CC)' },
+                  { v: 'CC', label: 'Aberta' },
                 ].map((o) => (
                   <Link
                     key={o.v}
