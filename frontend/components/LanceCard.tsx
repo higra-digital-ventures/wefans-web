@@ -69,10 +69,13 @@ export default function LanceCard({
       {/* mídia em perspectiva (slab 3D); no hover desvira e preenche o card
           enquanto o lance "toca" (glitch + bola na trajetória) — Top Shot */}
       <div className="px-5 pb-2 pt-7" style={{ perspective: '650px' }}>
-        <div
-          className="relative mx-auto w-[78%] transition-transform duration-300 ease-out group-hover:[transform:rotateY(0deg)_rotateX(0deg)_scale(1.2)]"
-          style={{ transform: 'rotateY(-14deg) rotateX(3deg)', transformStyle: 'preserve-3d' }}
-        >
+        <div className="wf-cube-bob relative mx-auto w-[78%]">
+          {/* cantoneiras neon (viewfinder, como no Top Shot) — moldura fixa, o cubo gira dentro */}
+          <span aria-hidden className="wf-corner -left-2.5 -top-2.5 rounded-tl border-l-2 border-t-2" />
+          <span aria-hidden className="wf-corner -right-2.5 -top-2.5 rounded-tr border-r-2 border-t-2" />
+          <span aria-hidden className="wf-corner -bottom-2.5 -left-2.5 rounded-bl border-b-2 border-l-2" />
+          <span aria-hidden className="wf-corner -bottom-2.5 -right-2.5 rounded-br border-b-2 border-r-2" />
+          <div className="wf-cube wf-cube-idle relative">
           <div
             className={`relative aspect-[4/5] overflow-hidden rounded-lg border ${foil ? 'wf-foil' : ''}`}
             style={{
@@ -145,15 +148,32 @@ export default function LanceCard({
               </span>
             )}
           </div>
-          {/* face lateral falsa (profundidade) — some quando o slab desvira */}
+          {/* face lateral do cubo: arte do set (grid na cor do tier, camisa e jogada) */}
           <div
             aria-hidden
-            className="absolute inset-y-0 right-0 w-[10px] origin-right  transition-opacity duration-200 group-hover:opacity-0"
-            style={{
-              transform: 'rotateY(64deg) translateX(10px)',
-              background: `linear-gradient(180deg, ${meta.color}55, #0a0a0a)`,
-            }}
-          />
+            className="absolute inset-y-0 right-0 w-[44px] origin-right overflow-hidden rounded-r-lg border"
+            style={{ transform: 'rotateY(90deg)', borderColor: `${meta.color}55`, background: '#0b0b0d' }}
+          >
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `repeating-linear-gradient(0deg, ${meta.color}16 0 1px, transparent 1px 9px), repeating-linear-gradient(90deg, ${meta.color}16 0 1px, transparent 1px 9px)`,
+              }}
+            />
+            <div className="relative flex h-full flex-col items-center justify-between py-2">
+              <span className="font-display text-[15px] leading-none text-white/25">
+                {template.player.jersey}
+              </span>
+              <span
+                className="font-display text-[12px] uppercase tracking-[0.25em]"
+                style={{ color: meta.color, writingMode: 'vertical-rl' }}
+              >
+                {template.playType}
+              </span>
+              <span className="text-[6px] font-bold uppercase tracking-[0.2em] text-white/30">2025</span>
+            </div>
+          </div>
+          </div>
         </div>
       </div>
 

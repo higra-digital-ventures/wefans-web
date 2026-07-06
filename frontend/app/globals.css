@@ -116,6 +116,52 @@ body {
   animation: wf-feed-in 0.45s ease-out both;
 }
 
+/* ===== Cubo do Lance (padrão Top Shot): tilt base, balanço idle em Y,
+   flutuação vertical e desvira no hover. Transform via classe (não inline)
+   para o hover conseguir sobrescrever. ===== */
+.wf-cube {
+  transform: rotateY(-16deg) rotateX(3deg);
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease-out;
+}
+@keyframes wf-cube-sway {
+  0%, 100% { transform: rotateY(-23deg) rotateX(3deg); }
+  50% { transform: rotateY(-9deg) rotateX(2deg); }
+}
+.wf-cube-idle {
+  animation: wf-cube-sway 7s ease-in-out infinite;
+}
+@keyframes wf-cube-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.wf-cube-bob {
+  animation: wf-cube-bob 5.2s ease-in-out infinite;
+}
+.group:hover .wf-cube,
+.group:hover .wf-cube-idle {
+  animation: none;
+  transform: rotateY(0deg) rotateX(0deg) scale(1.18);
+}
+.group:hover .wf-cube-bob {
+  animation-play-state: paused;
+}
+
+/* cantoneiras neon de viewfinder (pulso sutil) */
+@keyframes wf-corner-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.wf-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(33, 212, 224, 0.8);
+  filter: drop-shadow(0 0 4px rgba(33, 212, 224, 0.55));
+  animation: wf-corner-pulse 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
 /* ===== Hover do card de mercado (gramática do Top Shot): glitch de transição
    e o lance "tocando" — bola percorre a trajetória com rastro neon em loop. ===== */
 @media (prefers-reduced-motion: no-preference) {
