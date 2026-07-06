@@ -89,12 +89,6 @@ export default function MomentActions({
 
       {listing ? (
         <>
-          <div className="flex items-end justify-between">
-            <div>
-              <div className="text-[10px] uppercase tracking-wide text-muted">Menor preço</div>
-              <div className="font-display text-3xl text-ink">{brl(listing.priceCents)}</div>
-            </div>
-          </div>
           {isOwner ? (
             <button className={ctaWhite} disabled={pending} onClick={() => run(() => cancelListing(listing.id))}>
               {pending ? '…' : 'Cancelar venda'}
