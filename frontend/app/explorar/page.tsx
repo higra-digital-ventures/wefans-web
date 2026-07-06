@@ -127,6 +127,35 @@ function EventCard({
   // linhas, não cards (padrão X): o comum é plano com hairline; moldura só
   // para o que merece moldura — marco, pull foil ou evento seu
   const boxed = milestone || rarePull || mine;
+
+  // eventos leves (desafio/missão/check-in): uma linha só — o olho acelera
+  // no rotineiro e freia no que tem mídia e dinheiro
+  if (!e.template && !boxed) {
+    return (
+      <article className="flex items-center gap-2.5 border-b border-white/[0.06] px-4 py-2.5">
+        <span
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold uppercase text-white"
+          style={{ background: avatarBg(e.user) }}
+        >
+          {(e.user ?? '?')[0]}
+        </span>
+        <p className="min-w-0 flex-1 truncate text-[13px] text-neutral-400">
+          <Username user={e.user} me={me} /> {ACTION[e.kind]}{' '}
+          <span className="font-semibold text-neutral-200">{e.label}</span>
+        </p>
+        {reaction && (
+          <ReactionButton
+            eventKey={e.id}
+            count={reaction.count}
+            reacted={reaction.mine}
+            authed={reaction.authed}
+          />
+        )}
+        <span className="shrink-0 text-[11px] text-neutral-500">{timeAgo(e.createdAt)}</span>
+      </article>
+    );
+  }
+
   return (
     <article
       className={
