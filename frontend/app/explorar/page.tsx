@@ -569,22 +569,25 @@ export default async function ExplorarPage({
         {/* feed central */}
         <div className="min-w-0 space-y-3">
           <div className="sticky top-[72px] z-20 -mx-1 bg-[#050505] px-1 pt-1">
-            <SubTabs
-              items={tabs.map((t) => ({
-                label: t.label,
-                href: t.key ? `/explorar?f=${t.key}` : me ? '/explorar?f=tudo' : '/explorar',
-                active: t.key === tab.key,
-              }))}
-            />
-            <FeedPoller latestId={feed?.events[0]?.id ?? null} />
-            <div className="flex justify-end pb-1">
+            <div className="flex items-start justify-between gap-3">
+              <SubTabs
+                items={tabs.map((t) => ({
+                  label: t.label,
+                  href: t.key ? `/explorar?f=${t.key}` : me ? '/explorar?f=tudo' : '/explorar',
+                  active: t.key === tab.key,
+                }))}
+              />
               <Link
                 href={`/explorar?${new URLSearchParams({ ...(f ? { f } : {}), ...(compact ? {} : { d: '1' }) })}`}
-                className="text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-500 hover:text-white"
+                scroll={false}
+                aria-label={compact ? 'Modo cards' : 'Modo compacto'}
+                title={compact ? 'Modo cards' : 'Modo compacto'}
+                className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center border border-white/15 text-neutral-400 transition-colors hover:border-white/40 hover:text-white"
               >
-                {compact ? 'modo cards' : 'modo compacto'}
+                <Icon name={compact ? 'grid' : 'list'} size={14} />
               </Link>
             </div>
+            <FeedPoller latestId={feed?.events[0]?.id ?? null} />
           </div>
           {!compact && <TrendingStrip items={feed?.popular.trending ?? []} />}
           {me && recapTotal > 0 && !compact && (
@@ -680,8 +683,11 @@ export default async function ExplorarPage({
             return (
               <div key={e.id}>
                 {showDay && (
-                  <div className="pb-1.5 pt-3 text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-500">
-                    {label}
+                  <div className="flex items-center gap-3 py-2" aria-label={label}>
+                    <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-600">
+                      {label}
+                    </span>
+                    <span className="h-px flex-1 bg-white/[0.06]" aria-hidden />
                   </div>
                 )}
                 {row}
