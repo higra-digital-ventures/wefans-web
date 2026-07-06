@@ -614,7 +614,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       // botão da face mais próxima acende sozinho (segue o arrasto/inércia)
       {
         const norm = ((group.rotation.y + Math.PI) % (Math.PI * 2)) - Math.PI;
-        let best = FACES[0];
+        let best: (typeof FACES)[number] = FACES[0];
         let bestDist = Infinity;
         for (const f of FACES) {
           const dist = Math.abs(((norm - f.y + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
