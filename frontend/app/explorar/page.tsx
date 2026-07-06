@@ -285,6 +285,26 @@ export default async function ExplorarPage({
 
   let events = (feed?.events ?? []).filter((e) => !tab.kinds || tab.kinds.includes(e.kind));
   if (forYou) events = events.filter(isRelevant);
+
+  // recap pessoal: o que aconteceu com as SUAS coisas nas últimas 24h (eventos de terceiros)
+  const dayAgo = Date.now() - 86_400_000;
+  const recent = (feed?.events ?? []).filter(
+    (e) => new Date(e.createdAt).getTime() >= dayAgo && e.user !== me?.username,
+  );
+  const recapWishListed = recent.filter(
+    (e) => e.kind === 'LIST' && e.template && wishIds.has(e.template.id),
+  ).length;
+  const recapWishSold = recent.filter(
+    (e) => e.kind === 'SALE' && e.template && wishIds.has(e.template.id),
+  ).length;
+  const recapPlayerMoves = recent.filter(
+    (e) =>
+      (e.kind === 'SALE' || e.kind === 'LIST') &&
+      e.template &&
+      !wishIds.has(e.template.id) &&
+      ownedPlayers.has(e.template.player.name),
+  ).length;
+  const recapTotal = recapWishListed + recapWishSold + recapPlayerMoves;
   const nearDone = checklists
     .filter((c) => c.progress && !c.claimed && c.progress.have > 0)
     .sort((a, b) => a.progress!.need - a.progress!.have - (b.progress!.need - b.progress!.have))
@@ -412,6 +432,42 @@ export default async function ExplorarPage({
               </Link>
             </div>
           </div>
+          {me && recapTotal > 0 && !compact && (
+            <section className="border border-accent3/25 bg-accent3/[0.04] px-4 py-3">
+              <div className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent3">
+                Enquanto você esteve fora · 24h
+              </div>
+              <ul className="space-y-0.5 text-[13px] text-neutral-300">
+                {recapWishListed > 0 && (
+                  <li>
+                    <span className="font-bold text-white">{recapWishListed}</span> ediç
+                    {recapWishListed > 1 ? 'ões' : 'ão'} da sua wishlist{' '}
+                    {recapWishListed > 1 ? 'foram listadas' : 'foi listada'} à venda
+                  </li>
+                )}
+                {recapWishSold > 0 && (
+                  <li>
+                    <span className="font-bold text-white">{recapWishSold}</span> venda
+                    {recapWishSold > 1 ? 's' : ''} de edições da sua wishlist
+                  </li>
+                )}
+                {recapPlayerMoves > 0 && (
+                  <li>
+                    <span className="font-bold text-white">{recapPlayerMoves}</span> negócio
+                    {recapPlayerMoves > 1 ? 's' : ''} com jogadores que você coleciona
+                  </li>
+                )}
+              </ul>
+              {!forYou && (
+                <Link
+                  href="/explorar?f=voce"
+                  className="mt-1.5 inline-block text-[11px] font-bold uppercase tracking-wide text-accent3 hover:text-white"
+                >
+                  ver no seu feed →
+                </Link>
+              )}
+            </section>
+          )}
           {events.length === 0 &&
             (forYou ? (
               <EmptyState
