@@ -592,6 +592,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     window.addEventListener('resize', setSize);
 
     let raf = 0;
+    let frame = 0;
     let rafActive = false;
     let inView = true;
     // entrada cinematográfica: o cubo chega girando da traseira até a frente
@@ -633,6 +634,14 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         }
         dustGeo.attributes.position.needsUpdate = true;
       }
+      // clipe só gasta CPU quando a frente está à mostra (e sem pause manual)
+      if (video && frame % 15 === 0) {
+        const norm = ((group.rotation.y + Math.PI) % (Math.PI * 2)) - Math.PI;
+        const facingFront = Math.abs(norm) < 1.15;
+        if (!facingFront && !video.paused) video.pause();
+        else if (facingFront && video.paused && !userPaused) video.play().catch(() => {});
+      }
+      frame++;
       // botão da face mais próxima acende sozinho (segue o arrasto/inércia)
       {
         const norm = ((group.rotation.y + Math.PI) % (Math.PI * 2)) - Math.PI;
