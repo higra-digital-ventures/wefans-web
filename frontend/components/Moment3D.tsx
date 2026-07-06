@@ -275,7 +275,22 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         }
       });
       video.play().catch(() => {});
-      frontMat = new THREE.MeshBasicMaterial({ map: vtex });
+      // poster primeiro: a foto segura a frente até o clipe ter frames prontos
+      const basic = new THREE.MeshBasicMaterial({ map: frontTex });
+      frontMat = basic;
+      video.addEventListener('canplay', () => {
+        basic.map = vtex;
+        basic.needsUpdate = true;
+      });
+      if (d.photoUrl) {
+        const img = new Image();
+        img.onload = () => {
+          const c = frontTex.image as HTMLCanvasElement;
+          drawFront(c.getContext('2d')!, d, img);
+          frontTex.needsUpdate = true;
+        };
+        img.src = d.photoUrl;
+      }
     } else {
       frontMat = new THREE.MeshStandardMaterial({ map: frontTex });
       if (d.photoUrl) {
