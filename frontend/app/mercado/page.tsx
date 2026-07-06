@@ -17,6 +17,7 @@ const SORTS = [
   { v: 'recent', label: 'RECENTES' },
   { v: 'price_asc', label: 'MENOR PREÇO' },
   { v: 'price_desc', label: 'MAIOR PREÇO' },
+  { v: 'desconto', label: 'MAIOR DESCONTO' }, // % abaixo da média da edição (floor gap)
   { v: 'serial_asc', label: 'MENOR SERIAL' }, // low serial = prestígio (ordenado no front)
 ];
 const API_SORTS = new Set(['recent', 'price_asc', 'price_desc']);
@@ -79,6 +80,12 @@ export default async function MercadoPage({
   if (ed === 'LE') listings = listings.filter((l) => l.template.editionType === 'LIMITADA');
   if (ed === 'CC') listings = listings.filter((l) => l.template.editionType === 'CIRCULANTE');
   if (sort === 'serial_asc') listings = [...listings].sort((a, b) => a.serial - b.serial);
+  // maior desconto = mais % abaixo da média primeiro; sem média vai para o fim
+  if (sort === 'desconto') {
+    const gap = (l: (typeof listings)[number]) =>
+      l.template.aspCents > 0 ? (l.priceCents - l.template.aspCents) / l.template.aspCents : Infinity;
+    listings = [...listings].sort((a, b) => gap(a) - gap(b));
+  }
 
   // paginação da grade: mostra `size` e cresce em passos de 24
   const size = Math.max(24, Number(n) || 24);
@@ -325,13 +332,19 @@ export default async function MercadoPage({
         ))}
 
         <span className="ml-auto flex items-center gap-2">
-          <span
-            className="flex items-center gap-2  border border-white/25 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500"
-            title="Em breve"
+          <Link
+            href={href({ sort: sort === 'desconto' ? undefined : 'desconto', n: undefined })}
+            scroll={false}
+            title="Ordenar pelos anúncios mais abaixo da média da edição"
+            className={`flex items-center gap-2 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors ${
+              sort === 'desconto'
+                ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300'
+                : 'border-white/25 text-neutral-400 hover:border-white/50 hover:text-white'
+            }`}
           >
-            Floor gap
-            <Icon name="chevronDown" size={12} />
-          </span>
+            Maior desconto
+            <Icon name="trendUp" size={12} className="-scale-y-100" />
+          </Link>
           <Link
             href={href({ vis: undefined })}
             scroll={false}
