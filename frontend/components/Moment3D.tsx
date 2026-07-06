@@ -875,14 +875,19 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
               setFace(f.key);
             }}
             aria-label={`Girar para a face ${f.label}`}
-            className={`flex h-11 w-9 flex-col items-center justify-center rounded-lg border text-[11px] transition-colors ${
+            style={
               face === f.key
-                ? 'border-white bg-white/10 text-white'
+                ? { borderColor: data.tierColor, color: data.tierColor, boxShadow: `0 0 10px ${data.tierColor}44` }
+                : undefined
+            }
+            className={`flex h-12 w-11 flex-col items-center justify-center gap-0.5 rounded-lg border text-[13px] transition-colors ${
+              face === f.key
+                ? 'bg-white/[0.06]'
                 : 'border-white/15 bg-[#101014] text-neutral-400 hover:border-white/40 hover:text-white'
             }`}
           >
             <span aria-hidden>{f.icon}</span>
-            <span className="text-[7px] uppercase tracking-wide">{f.label}</span>
+            <span className="text-[8px] font-semibold uppercase tracking-wide">{f.label}</span>
           </button>
         ))}
       </div>
