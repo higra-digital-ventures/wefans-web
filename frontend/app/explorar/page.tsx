@@ -237,8 +237,10 @@ export default async function ExplorarPage({
     .slice(0, 3);
 
   return (
-    <main className="w-full px-4 py-8 lg:px-8">
-      <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
+    // Feed centralizado (padrão X): leitura vertical pede coluna limitada —
+    // fullscreen fica para as grades (mercado/coleção) e apps (chat).
+    <main className="mx-auto w-full max-w-[1360px] px-4 py-8 lg:px-8">
+      <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,680px)_300px] lg:justify-center">
         {/* rail pessoal (como o do Explore do Top Shot) */}
         <aside className="space-y-5 lg:sticky lg:top-[88px] lg:self-start">
           {me && (
