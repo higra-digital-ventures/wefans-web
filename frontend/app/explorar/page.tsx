@@ -25,6 +25,16 @@ function timeAgo(iso: string) {
   return `há ${Math.floor(h / 24)} d`;
 }
 
+// separadores de dia do stream (mesma régua das notificações)
+function dayLabel(iso: string) {
+  const d = new Date(iso);
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  if (d.getTime() >= startToday) return 'Hoje';
+  if (d.getTime() >= startToday - 86_400_000) return 'Ontem';
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+}
+
 const ACTION: Record<FeedEvent['kind'], string> = {
   SALE: 'comprou',
   LIST: 'colocou à venda',
@@ -382,8 +392,10 @@ export default async function ExplorarPage({
               cta={{ label: 'Abrir um pacote', href: '/pacotes' }}
             />
           )}
-          {events.map((e) =>
-            compact ? (
+          {events.map((e, i) => {
+            const label = dayLabel(e.createdAt);
+            const showDay = i === 0 || dayLabel(events[i - 1].createdAt) !== label;
+            const row = compact ? (
               <Link
                 key={e.id}
                 href={e.momentId ? `/momento/${e.momentId}` : e.template ? `/lance/${e.template.id}` : '/explorar'}
@@ -408,8 +420,18 @@ export default async function ExplorarPage({
               </Link>
             ) : (
               <EventCard key={e.id} e={e} />
-            ),
-          )}
+            );
+            return (
+              <div key={e.id} className="space-y-3">
+                {showDay && (
+                  <div className="pt-1 text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-500">
+                    {label}
+                  </div>
+                )}
+                {row}
+              </div>
+            );
+          })}
           {(feed?.events.length ?? 0) >= fetchSize && size < 120 && (
             <Link
               href={`/explorar?${new URLSearchParams({ ...(f ? { f } : {}), n: String(size + 40) })}`}
