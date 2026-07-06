@@ -109,11 +109,26 @@ function EventCard({ e, me }: { e: FeedEvent; me?: string | null }) {
   const rarePull = e.kind === 'PACK_OPEN' && e.template && isFoil(e.template.tier);
   // evento seu: borda de acento — ver a si mesmo no feed
   const mine = !!me && (e.user === me || e.targetUser === me);
+  // eventos-marco: recorde da semana e serial #1 (dourado)
+  const serialOne = e.serial === 1 && !!e.template && (e.kind === 'PACK_OPEN' || e.kind === 'SALE' || e.kind === 'LIST');
+  const milestone = e.record || serialOne;
   return (
     <article
-      className={`border bg-[#0c0c0e] ${mine ? 'border-accent3/50' : 'border-white/10'}`}
-      style={rarePull ? { borderColor: `${meta!.color}88`, boxShadow: `0 0 18px ${meta!.color}30` } : undefined}
+      className={`border bg-[#0c0c0e] ${milestone ? 'border-amber-400/60' : mine ? 'border-accent3/50' : 'border-white/10'}`}
+      style={
+        milestone
+          ? { boxShadow: '0 0 18px rgba(251,191,36,.18)' }
+          : rarePull
+            ? { borderColor: `${meta!.color}88`, boxShadow: `0 0 18px ${meta!.color}30` }
+            : undefined
+      }
     >
+      {milestone && (
+        <div className="flex items-center gap-1.5 border-b border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300">
+          <Icon name="trophy" size={12} />
+          {e.record ? 'Maior venda da semana' : 'Serial #1 — o primeiro exemplar'}
+        </div>
+      )}
       {/* cabeçalho: avatar + @user + ação + tempo */}
       <div className="flex items-center gap-2.5 px-4 py-3">
         <span

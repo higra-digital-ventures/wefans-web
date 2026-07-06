@@ -19,6 +19,7 @@ type FeedEvent = {
   serial?: number;
   template?: ReturnType<typeof toTemplateDTO>;
   label?: string; // nome do desafio/missão ou "Time A x Time B (Estádio)"
+  record?: boolean; // maior venda dos últimos 7 dias (evento-marco)
 };
 
 const TIER_RANK: Record<string, number> = {
@@ -198,6 +199,18 @@ export async function getFeed(db: PrismaClient, limit = 30) {
       createdAt: c.createdAt.toISOString(),
       label: `${c.fixture.homeTeam.name} x ${c.fixture.awayTeam.name} (${c.fixture.stadium.name})`,
     });
+  }
+
+  // evento-marco: a maior venda dos últimos 7 dias ganha selo de recorde
+  const weekAgo = new Date(Date.now() - 7 * 86_400_000);
+  const topSale = await db.transaction.findFirst({
+    where: { type: { in: ['BUY', 'OFFER_ACCEPT'] }, createdAt: { gte: weekAgo }, amountCents: { gt: 0 } },
+    orderBy: { amountCents: 'desc' },
+    select: { id: true },
+  });
+  if (topSale) {
+    const ev = events.find((e) => e.id === topSale.id);
+    if (ev) ev.record = true;
   }
 
   // privacidade: quem desligou "aparecer no feed" sai do stream público

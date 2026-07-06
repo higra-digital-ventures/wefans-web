@@ -447,6 +447,7 @@ export type FeedEvent = {
   serial?: number;
   template?: TemplateDTO;
   label?: string;
+  record?: boolean; // maior venda dos últimos 7 dias
 };
 
 export type FeedPopular = {
