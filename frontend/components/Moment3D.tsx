@@ -641,8 +641,30 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     };
   }, []);
 
+  // teclado: ← → giram; 1-4 pulam direto para cada face (a11y)
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') {
+      targetRef.current -= 0.45;
+      e.preventDefault();
+    } else if (e.key === 'ArrowRight') {
+      targetRef.current += 0.45;
+      e.preventDefault();
+    } else {
+      const idx = ['1', '2', '3', '4'].indexOf(e.key);
+      if (idx >= 0) {
+        targetRef.current = FACES[idx].y;
+        setFace(FACES[idx].key);
+      }
+    }
+  };
+
   return (
-    <div>
+    <div
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+      aria-label="Cartão 3D — use as setas para girar e as teclas 1 a 4 para trocar de face"
+      className="outline-offset-4"
+    >
       <div className="relative">
         {/* palco: glow radial na cor do tier atrás do cubo (canvas é alpha) */}
         <div
