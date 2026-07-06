@@ -42,7 +42,7 @@ export function toUserDTO(user: User, favoriteTeam?: Team | null) {
 }
 
 export function toTeamDTO(team: Team) {
-  return { id: team.id, name: team.name, partnerStatus: team.partnerStatus };
+  return { id: team.id, name: team.name, partnerStatus: team.partnerStatus, crestUrl: team.crestUrl ?? null };
 }
 
 export function toWalletTxDTO(tx: WalletTransaction) {
@@ -76,6 +76,7 @@ export function toTemplateDTO(t: TemplateWithPlayer) {
     setId: t.setId,
     seriesId: t.seriesId,
     teamId: t.teamId,
+    videoUrl: t.videoUrl ?? null,
     player: {
       id: t.player.id,
       name: t.player.name,
@@ -83,6 +84,7 @@ export function toTemplateDTO(t: TemplateWithPlayer) {
       position: t.player.position,
       jersey: t.player.jersey,
       nationality: t.player.nationality,
+      photoUrl: t.player.photoUrl ?? null,
     },
   };
 }

@@ -132,12 +132,13 @@ model Set {
 }
 
 model Player {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   club        String
   position    String
   jersey      Int
   nationality String
+  photoUrl    String? // foto real (Wikimedia) — mídia de teste
 
   templates    Template[]
   momentUsages MomentUsage[]
@@ -552,6 +553,7 @@ model MomentUsage {
 model Team {
   id            String    @id @default(cuid())
   name          String
+  crestUrl      String? // escudo (Wikimedia) — mídia de teste
   homeStadiumId String?
   partnerStatus String    @default("PROSPECT") // PROSPECT|ATIVO|PAUSADO|ENCERRADO
   status        String    @default("RASCUNHO") // RASCUNHO|AGENDADO|PUBLICADO|ENCERRADO

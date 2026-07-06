@@ -1,4 +1,4 @@
-export type TeamDTO = { id: string; name: string; partnerStatus: string };
+export type TeamDTO = { id: string; name: string; partnerStatus: string; crestUrl?: string | null };
 
 export type UserDTO = {
   id: string;
@@ -35,6 +35,7 @@ export type PlayerDTO = {
   position: string;
   jersey: number;
   nationality: string;
+  photoUrl?: string | null; // foto real (Wikimedia) — mídia de teste
 };
 
 export type TemplateDTO = {
@@ -56,6 +57,7 @@ export type TemplateDTO = {
   setId: string | null;
   seriesId: string;
   teamId: string | null;
+  videoUrl?: string | null; // clipe de teste (Wikimedia CC)
   player: PlayerDTO;
   counts?: { existing: number; circulating: number; burned: number; listed: number };
 };

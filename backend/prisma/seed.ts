@@ -1,8 +1,19 @@
 import 'dotenv/config';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { PrismaClient, Tier, EditionType, ChallengeType, TxType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
+
+// Mídia de teste (fotos/escudos/clipes) gerada pelo script de coleta — opcional.
+const media: { players: Record<string, string>; clubs: Record<string, string>; videos: string[] } = (() => {
+  try {
+    return JSON.parse(readFileSync(join(process.cwd(), 'prisma', 'media-manifest.json'), 'utf-8'));
+  } catch {
+    return { players: {}, clubs: {}, videos: [] };
+  }
+})();
 
 // Dados REAIS de clubes/jogadores para desenvolvimento — sem afiliação oficial;
 // licenciamento será tratado antes de qualquer lançamento (ver .claude/LEGAL.md).
@@ -168,6 +179,7 @@ async function main() {
       await prisma.team.create({
         data: {
           name: t.name,
+          crestUrl: media.clubs[t.name] ?? null,
           homeStadiumId: stadiums[t.stadium].id,
           partnerStatus: t.partnerStatus,
           status: t.status,
@@ -304,7 +316,9 @@ async function main() {
   ];
   const players = [];
   for (const def of playerDefs) {
-    players.push(await prisma.player.create({ data: def }));
+    players.push(
+      await prisma.player.create({ data: { ...def, photoUrl: media.players[def.name] ?? null } }),
+    );
   }
 
   // ---------------------------------------------------------------- Templates (~60, 5 tiers)
@@ -373,7 +387,10 @@ async function main() {
           playType: type,
           competition: pick(competitions, i),
           matchDate: days(-25 + (i % 25)),
-          videoUrl: null, // placeholder — a UI anima a trajetória (LEGAL.md)
+          videoUrl:
+            tier !== Tier.COMUM && tier !== Tier.TORCIDA && media.videos.length > 0
+              ? media.videos[i % media.videos.length]
+              : null, // clipes CC (Wikimedia) nos tiers altos; comuns ficam com a prancheta
           trajectory: pick(trajectories, i),
           tier,
           editionType,
