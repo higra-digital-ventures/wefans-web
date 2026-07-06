@@ -447,17 +447,21 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     let dragging = false;
     let lastX = 0;
     let lastY = 0;
+    let moved = 0; // distingue clique (play/pause) de arrasto
+    let userPaused = false;
     let rotX = -0.08;
     let swayPhase = 0;
     let idleTimer: ReturnType<typeof setTimeout> | null = null;
     const onDown = (e: PointerEvent) => {
       dragging = true;
+      moved = 0;
       lastX = e.clientX;
       lastY = e.clientY;
       if (idleTimer) clearTimeout(idleTimer);
     };
     const onMove = (e: PointerEvent) => {
       if (!dragging) return;
+      moved += Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY);
       group.rotation.y += (e.clientX - lastX) * 0.011;
       targetRef.current = group.rotation.y; // segue a mão enquanto arrasta
       rotX = Math.max(-0.9, Math.min(0.9, rotX + (e.clientY - lastY) * 0.006));
@@ -465,7 +469,22 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       lastY = e.clientY;
     };
     const onUp = () => {
+      if (!dragging) return;
       dragging = false;
+      // clique seco na frente = play/pause do clipe
+      if (video && moved < 6) {
+        const norm = ((group.rotation.y % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+        const facingFront = norm < 0.9 || norm > Math.PI * 2 - 0.9;
+        if (facingFront) {
+          if (video.paused) {
+            userPaused = false;
+            video.play().catch(() => {});
+          } else {
+            userPaused = true;
+            video.pause();
+          }
+        }
+      }
       // depois de 2,5s parado, volta suavemente para a frente
       idleTimer = setTimeout(() => (targetRef.current = FRONT_Y), 2500);
     };
