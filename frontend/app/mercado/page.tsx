@@ -556,6 +556,18 @@ export default async function MercadoPage({
               cta={{ label: 'Limpar filtros', href: '/mercado' }}
             />
           ) : effVis === 'list' ? (
+            <>
+            {/* cabeçalho de colunas (tela de trader) */}
+            <div className="flex items-center gap-4 border border-b-0 border-white/10 bg-[#101012] px-4 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+              <span className="w-11 shrink-0" aria-hidden />
+              <span className="min-w-0 flex-1">Lance</span>
+              <span className="hidden w-14 text-right sm:block">Edição</span>
+              <span className="hidden w-20 text-right md:block">Média</span>
+              <span className="hidden w-14 text-right sm:block" title="diferença do preço para a média">
+                Δ%
+              </span>
+              <span className="w-24 text-right">Preço</span>
+            </div>
             <ul className="divide-y divide-white/[0.06] border border-white/10 bg-[#0a0a0b]">
               {pageListings.map((l) => {
                 const m = TIER_META[l.template.tier];
@@ -576,18 +588,37 @@ export default async function MercadoPage({
                           <span style={{ color: m.color }}>{m.label}</span> · {l.template.title}
                         </span>
                       </span>
-                      <span className="hidden text-[11px] text-neutral-500 sm:block">
-                        {l.template.editionType === 'LIMITADA' ? `/${l.template.editionSize}` : 'CC'}
+                      <span className="hidden w-14 text-right text-[11px] tabular-nums text-neutral-500 sm:block">
+                        {l.template.editionType === 'LIMITADA' ? `/${l.template.editionSize}` : 'Aberta'}
                       </span>
-                      <span className="shrink-0 text-right">
+                      <span className="hidden w-20 text-right text-[12px] tabular-nums text-neutral-400 md:block">
+                        {l.template.aspCents > 0 ? brl(l.template.aspCents) : '—'}
+                      </span>
+                      {(() => {
+                        const d =
+                          l.template.aspCents > 0
+                            ? Math.round(((l.priceCents - l.template.aspCents) / l.template.aspCents) * 100)
+                            : null;
+                        return (
+                          <span
+                            className={`hidden w-14 text-right text-[12px] font-bold tabular-nums sm:block ${
+                              d == null ? 'text-neutral-600' : d < 0 ? 'text-emerald-400' : d > 0 ? 'text-red-400' : 'text-neutral-500'
+                            }`}
+                          >
+                            {d == null ? '—' : `${d > 0 ? '+' : ''}${d}%`}
+                          </span>
+                        );
+                      })()}
+                      <span className="w-24 shrink-0 text-right">
                         <span className="block text-[15px] font-bold tabular-nums text-white">{brl(l.priceCents)}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-accent3">comprar →</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-neutral-400">comprar →</span>
                       </span>
                     </Link>
                   </li>
                 );
               })}
             </ul>
+            </>
           ) : (
             <div
               className={
