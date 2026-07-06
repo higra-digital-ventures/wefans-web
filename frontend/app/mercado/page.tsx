@@ -1,4 +1,5 @@
 import Icon from '@/components/Icon';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { getFeedServer, getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
@@ -9,6 +10,7 @@ import SortDropdown from '@/components/SortDropdown';
 import SubTabs from '@/components/SubTabs';
 import TrendingStrip from '@/components/TrendingStrip';
 import TacticalBoard from '@/components/TacticalBoard';
+import VisCookie from '@/components/VisCookie';
 import { brl } from '@/lib/format';
 import { isFoil } from '@/lib/tiers';
 import { TIER_META, TIER_ORDER } from '@/lib/tiers';
@@ -49,6 +51,9 @@ export default async function MercadoPage({
   }>;
 }) {
   const { tier, sort, q, badge, vis, pmin, pmax, deal, ed, n, g } = await searchParams;
+  // preferência de visualização lembrada: URL manda; sem URL, vale o cookie
+  const cookieVis = (await cookies()).get('wf-vis')?.value;
+  const effVis = vis ?? (cookieVis === 'list' || cookieVis === 'compact' ? cookieVis : undefined);
   const qs = new URLSearchParams();
   if (tier) qs.set('tier', tier);
   if (sort && API_SORTS.has(sort)) qs.set('sort', sort);
@@ -95,7 +100,7 @@ export default async function MercadoPage({
   const pageListings = listings.slice(0, size);
 
   // "Por edição": um card por template com o anúncio mais barato ("a partir de")
-  const groupByEdition = g === '1' && vis !== 'list';
+  const groupByEdition = g === '1' && effVis !== 'list';
   const editionGroups = (() => {
     if (!groupByEdition) return [];
     const map = new Map<string, { rep: (typeof listings)[number]; count: number }>();
@@ -134,7 +139,7 @@ export default async function MercadoPage({
     }
     return [...byTemplate.values()].sort((a, b) => a.minCents - b.minCents).slice(0, 6);
   })();
-  const dense = vis === 'compact';
+  const dense = effVis === 'compact';
   const hasFilter = !!(tier || badge || q || pmin || pmax || deal || ed);
 
   // filtros ativos como chips removíveis (cada ✕ tira só aquele filtro)
@@ -165,6 +170,7 @@ export default async function MercadoPage({
   return (
     <div className="bg-[#050505]">
     <main className="w-full px-4 py-7 lg:px-8">
+      <VisCookie vis={vis} />
       <h1 className="mb-4 text-[40px] font-extrabold uppercase leading-none tracking-[0.01em] text-white">Marketplace</h1>
 
       <SubTabs
@@ -385,11 +391,11 @@ export default async function MercadoPage({
             <Icon name="trendUp" size={12} className="-scale-y-100" />
           </Link>
           <Link
-            href={href({ vis: undefined })}
+            href={href({ vis: 'grid' })}
             scroll={false}
             aria-label="Grade confortável"
             title="Grade confortável"
-            className={`flex h-9 w-9 items-center justify-center  border ${!dense ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
+            className={`flex h-9 w-9 items-center justify-center  border ${!dense && effVis !== 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
           >
             <Icon name="grid" size={16} />
           </Link>
@@ -398,7 +404,7 @@ export default async function MercadoPage({
             scroll={false}
             aria-label="Modo lista"
             title="Modo lista"
-            className={`flex h-9 w-9 items-center justify-center border ${vis === 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
+            className={`flex h-9 w-9 items-center justify-center border ${effVis === 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
           >
             <Icon name="list" size={16} />
           </Link>
@@ -509,7 +515,7 @@ export default async function MercadoPage({
               hint="Afrouxe os filtros ou marque edições na wishlist para ser avisado quando listarem."
               cta={{ label: 'Limpar filtros', href: '/mercado' }}
             />
-          ) : vis === 'list' ? (
+          ) : effVis === 'list' ? (
             <ul className="divide-y divide-white/[0.06] border border-white/10 bg-[#0a0a0b]">
               {pageListings.map((l) => {
                 const m = TIER_META[l.template.tier];
