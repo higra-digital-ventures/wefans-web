@@ -322,7 +322,7 @@ export default async function MercadoPage({
               return (
                 <Link
                   key={t.id}
-                  href={`/momento/${momentId}`}
+                  href={`/moment/${t.id}`}
                   className="rounded-2xl w-[128px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-accent3/50"
                 >
                   <div className="mx-auto w-[80%]">
@@ -589,7 +589,7 @@ export default async function MercadoPage({
                 return (
                   <li key={l.listingId}>
                     <Link
-                      href={`/momento/${l.momentId}`}
+                      href={`/moment/${l.template.id}`}
                       className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-white/5"
                     >
                       <span className="h-14 w-11 shrink-0 overflow-hidden rounded-md border" style={{ borderColor: `${m.color}66` }} aria-hidden>
@@ -660,7 +660,7 @@ export default async function MercadoPage({
                       quickBuyListingId={me && l.seller !== me.username ? l.listingId : undefined}
                       hotLabel={hotByPlayer.get(l.template.player.id)}
                       challengeWanted={challengeWantedIds.has(l.template.id)}
-                      href={`/momento/${l.momentId}`}
+                      href={`/moment/${l.template.id}`}
                       wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
                     />
                   </div>

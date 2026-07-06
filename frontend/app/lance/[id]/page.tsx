@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
-// A página da edição virou /edicao/:id — mantém links antigos funcionando.
+// A página virou /moment/:id — mantém links antigos (/lance) funcionando.
 export default async function LanceRedirect({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  redirect(`/edicao/${id}`);
+  redirect(`/moment/${id}`);
 }

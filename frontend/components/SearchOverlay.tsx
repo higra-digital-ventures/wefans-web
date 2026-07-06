@@ -179,7 +179,7 @@ export default function SearchOverlay({
                       return (
                         <li key={t.id}>
                           <Link
-                            href={`/edicao/${t.id}`}
+                            href={`/moment/${t.id}`}
                             onClick={() => setOpen(false)}
                             className="flex items-center gap-3 px-2 py-2.5 transition-colors hover:bg-white/5"
                           >
@@ -275,7 +275,7 @@ export default function SearchOverlay({
                     return (
                       <Link
                         key={t.id}
-                        href={`/edicao/${t.id}`}
+                        href={`/moment/${t.id}`}
                         onClick={() => setOpen(false)}
                         className="rounded-2xl w-[150px] shrink-0 border border-white/10 bg-[#0a0a0b] p-2.5 transition-colors hover:border-white/30"
                       >

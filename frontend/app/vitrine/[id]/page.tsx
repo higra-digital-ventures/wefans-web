@@ -38,7 +38,7 @@ export default async function VitrinePage({ params }: { params: Promise<{ id: st
                   key={i.moment.id}
                   template={i.moment.template}
                   serial={i.moment.serial}
-                  href={`/momento/${i.moment.id}`}
+                  href={`/moment/${i.moment.template.id}`}
                 />
               ))}
             </div>

@@ -111,7 +111,7 @@ export default function OpenPackClient({
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {moments.map((m, i) => (
             <div key={m.id} className="wf-reveal" style={{ animationDelay: `${i * 420}ms` }}>
-              <MomentCard template={m.template} serial={m.serial} href={`/momento/${m.id}`} live />
+              <MomentCard template={m.template} serial={m.serial} href={`/moment/${m.template.id}`} live />
             </div>
           ))}
         </div>

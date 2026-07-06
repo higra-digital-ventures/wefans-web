@@ -79,7 +79,7 @@ export default async function PublicProfilePage({
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {moments.map((m) => (
-            <MomentCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
+            <MomentCard key={m.id} template={m.template} serial={m.serial} href={`/moment/${m.template.id}`} />
           ))}
         </div>
       )}
@@ -88,7 +88,7 @@ export default async function PublicProfilePage({
           <h2 className="mb-4 font-display text-2xl uppercase tracking-tight text-ink">Wishlist</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {publicWishlist.slice(0, 4).map((t) => (
-              <MomentCard key={t.id} template={t} href={`/edicao/${t.id}`} />
+              <MomentCard key={t.id} template={t} href={`/moment/${t.id}`} />
             ))}
           </div>
         </section>

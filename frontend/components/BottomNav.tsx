@@ -18,7 +18,7 @@ export default function BottomNav() {
   const pathname = usePathname();
   const isActive = (href: string) =>
     href === '/mercado'
-      ? pathname.startsWith('/mercado') || pathname.startsWith('/momento') || pathname.startsWith('/lance')
+      ? pathname.startsWith('/mercado') || pathname.startsWith('/moment') || pathname.startsWith('/edicao') || pathname.startsWith('/lance')
       : pathname.startsWith(href);
 
   return (

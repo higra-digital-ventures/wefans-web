@@ -177,7 +177,7 @@ export default async function Home() {
           <SectionTitle white="Raridade em campo." colored="Lendários e Galácticos" />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {rares.map((t) => (
-              <MomentCard key={t.id} template={t} href={`/edicao/${t.id}`} stillMedia />
+              <MomentCard key={t.id} template={t} href={`/moment/${t.id}`} stillMedia />
             ))}
           </div>
         </section>

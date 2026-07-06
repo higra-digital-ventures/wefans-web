@@ -182,7 +182,7 @@ export default async function ColecaoPage({
               serial={m.serial}
               listingPriceCents={m.listingPriceCents}
               paidCents={m.acquiredPriceCents}
-              href={`/momento/${m.id}#vender`}
+              href={`/moment/${m.template.id}#exemplares`}
             />
           ))}
         </div>
@@ -205,7 +205,7 @@ export default async function ColecaoPage({
                   serial={m.serial}
                   listingPriceCents={m.listingPriceCents}
                   paidCents={m.acquiredPriceCents}
-                  href={`/momento/${m.id}#vender`}
+                  href={`/moment/${m.template.id}#exemplares`}
                 />
               </div>
             );
