@@ -101,6 +101,21 @@ body {
   animation: wf-reveal 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+/* entrada dos eventos do feed: desliza de cima, suave (sem o 3D do wf-reveal) */
+@keyframes wf-feed-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.wf-feed-in {
+  animation: wf-feed-in 0.45s ease-out both;
+}
+
 /* ===== Hover do card de mercado (gramática do Top Shot): glitch de transição
    e o lance "tocando" — bola percorre a trajetória com rastro neon em loop. ===== */
 @media (prefers-reduced-motion: no-preference) {

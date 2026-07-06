@@ -697,7 +697,11 @@ export default async function ExplorarPage({
               />
             );
             return (
-              <div key={e.id}>
+              <div
+                key={e.id}
+                className={i < 6 ? 'wf-feed-in' : undefined}
+                style={i < 6 ? { animationDelay: `${i * 60}ms` } : undefined}
+              >
                 {showDay && (
                   <div className="flex items-center gap-3 py-2" aria-label={label}>
                     <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-600">
