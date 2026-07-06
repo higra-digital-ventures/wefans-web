@@ -16,7 +16,7 @@ export default function MoversPanel({ movers }: { movers: Mover[] }) {
       <ol className="space-y-2">
         {movers.map((m) => (
           <li key={m.template.id}>
-            <Link href={`/lance/${m.template.id}`} className="flex items-baseline justify-between gap-2 hover:text-white">
+            <Link href={`/edicao/${m.template.id}`} className="flex items-baseline justify-between gap-2 hover:text-white">
               <span className="min-w-0">
                 <span className="block truncate text-[12px] font-semibold text-neutral-200">
                   {m.template.player.name}

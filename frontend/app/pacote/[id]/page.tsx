@@ -64,7 +64,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
           </h3>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {g.lances.map((l) => (
-              <LanceCard key={l.id} template={l} href={`/lance/${l.id}`} />
+              <LanceCard key={l.id} template={l} href={`/edicao/${l.id}`} />
             ))}
           </div>
         </section>

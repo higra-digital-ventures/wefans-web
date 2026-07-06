@@ -25,7 +25,7 @@ export default function TrendingStrip({
           return (
             <Link
               key={t.id}
-              href={`/lance/${t.id}`}
+              href={`/edicao/${t.id}`}
               className="rounded-2xl relative w-[118px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-white/30"
             >
               {/* posição no ranking — mini-tabela de cotação, não só vitrine */}

@@ -309,7 +309,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
             <div>
               <OwnershipGauge existing={t.mintedCount} listed={listed} locked={locked} burned={burned} legend={false} />
               <p className="-mt-1 text-center text-[11px] text-neutral-400">
-                <Link href={`/lance/${t.id}`} className="underline underline-offset-2 hover:text-white">
+                <Link href={`/edicao/${t.id}`} className="underline underline-offset-2 hover:text-white">
                   Ver todos os Momentos da edição
                 </Link>
               </p>
@@ -549,7 +549,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {moreMoments.map((r) => (
-              <LanceCard key={r.id} template={r} href={`/lance/${r.id}`} />
+              <LanceCard key={r.id} template={r} href={`/edicao/${r.id}`} />
             ))}
           </div>
         </section>

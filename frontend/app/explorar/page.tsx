@@ -241,7 +241,7 @@ function EventCard({
       {/* corpo por tipo de evento */}
       {e.template ? (
         <Link
-          href={e.momentId ? `/momento/${e.momentId}` : `/lance/${e.template.id}`}
+          href={e.momentId ? `/momento/${e.momentId}` : `/edicao/${e.template.id}`}
           className={`rounded-2xl group flex items-center gap-4 px-4 py-4 transition-colors ${
             boxed ? 'border-t border-white/10 bg-[#08080a] hover:bg-white/5' : 'hover:bg-white/[0.03]'
           }`}
@@ -331,7 +331,7 @@ function EventCard({
         )}
         {e.template && (
           <Link
-            href={e.momentId ? `/momento/${e.momentId}` : `/lance/${e.template.id}`}
+            href={e.momentId ? `/momento/${e.momentId}` : `/edicao/${e.template.id}`}
             className="ml-auto text-[11px] font-semibold text-neutral-500 transition-colors hover:text-white"
           >
             ver Momento →
@@ -531,7 +531,7 @@ export default async function ExplorarPage({
             ) : (
               <div className="space-y-2.5">
                 {wishlist.slice(0, 4).map((t) => (
-                  <Link key={t.id} href={`/lance/${t.id}`} className="flex items-baseline justify-between gap-2">
+                  <Link key={t.id} href={`/edicao/${t.id}`} className="flex items-baseline justify-between gap-2">
                     <span className="min-w-0">
                       <span className="block truncate text-[12px] font-semibold text-neutral-200">
                         {t.player.name}
@@ -630,7 +630,7 @@ export default async function ExplorarPage({
             const row = compact ? (
               <Link
                 key={e.id}
-                href={e.momentId ? `/momento/${e.momentId}` : e.template ? `/lance/${e.template.id}` : '/explorar'}
+                href={e.momentId ? `/momento/${e.momentId}` : e.template ? `/edicao/${e.template.id}` : '/explorar'}
                 className="rounded-2xl flex items-center gap-2.5 border border-white/[0.06] bg-[#0c0c0e] px-3 py-2 text-[12px] transition-colors hover:border-white/25"
               >
                 <span
