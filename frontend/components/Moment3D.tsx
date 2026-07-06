@@ -156,9 +156,19 @@ function drawShield(ctx: CanvasRenderingContext2D, d: Moment3DData, crest?: HTML
   ctx.closePath();
   ctx.fill();
   if (crest) {
-    const cw = 104;
+    // halo atrás do escudo (vitrine) + brasão maior
+    const halo = ctx.createRadialGradient(w / 2, 310, 10, w / 2, 310, 110);
+    halo.addColorStop(0, 'rgba(255,255,255,0.32)');
+    halo.addColorStop(0.6, `${d.tierColor}2e`);
+    halo.addColorStop(1, 'transparent');
+    ctx.fillStyle = halo;
+    ctx.fillRect(0, 180, w, 280);
+    const cw = 140;
     const ch = (crest.height / crest.width) * cw;
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 14;
     ctx.drawImage(crest, w / 2 - cw / 2, 310 - ch / 2, cw, ch);
+    ctx.shadowBlur = 0;
   } else {
     const initials = d.club.split(' ').map((p) => p[0]).join('').slice(0, 3).toUpperCase();
     ctx.fillStyle = '#f6eef3';
