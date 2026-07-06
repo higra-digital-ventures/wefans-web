@@ -297,6 +297,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
   const dataRef = useRef(data);
   dataRef.current = data;
   const targetRef = useRef(FRONT_Y);
+  const shadowRef = useRef<HTMLDivElement>(null);
   const [face, setFace] = useState<string>('lance');
 
   useEffect(() => {
@@ -563,6 +564,13 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         rim.position.x = -5 + Math.sin(swayPhase * 0.7) * 1.6;
         rim.position.y = -2 + Math.cos(swayPhase * 0.5) * 1.2;
       }
+      // sombra de chão acompanha o giro (encolhe/desloca quando o cubo vira)
+      if (shadowRef.current) {
+        const yaw = group.rotation.y;
+        const squeeze = 0.86 + 0.14 * Math.abs(Math.cos(yaw));
+        shadowRef.current.style.transform = `translateX(${Math.sin(yaw) * -6}px) scaleX(${squeeze})`;
+        shadowRef.current.style.opacity = String(0.75 + 0.25 * Math.abs(Math.cos(yaw)));
+      }
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
@@ -608,6 +616,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         </div>
         {/* sombra de chão: assenta o cubo no espaço */}
         <div
+          ref={shadowRef}
           aria-hidden
           className="pointer-events-none absolute inset-x-[12%] -bottom-2 h-8"
           style={{ background: 'radial-gradient(50% 100% at 50% 50%, rgba(0,0,0,.65), transparent 70%)' }}
