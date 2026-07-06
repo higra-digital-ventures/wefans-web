@@ -556,8 +556,15 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       // depois de 2,5s parado, volta suavemente para a frente
       idleTimer = setTimeout(() => (targetRef.current = FRONT_Y), 2500);
     };
+    // duplo clique/tap: volta direto para a frente
+    const onDbl = () => {
+      spin = 0;
+      targetRef.current = FRONT_Y;
+      setFace('lance');
+    };
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.style.cursor = 'grab';
+    renderer.domElement.addEventListener('dblclick', onDbl);
     renderer.domElement.addEventListener('pointerdown', onDown);
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
@@ -618,6 +625,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     return () => {
       cancelAnimationFrame(raf);
       if (idleTimer) clearTimeout(idleTimer);
+      renderer.domElement.removeEventListener('dblclick', onDbl);
       renderer.domElement.removeEventListener('pointerdown', onDown);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
