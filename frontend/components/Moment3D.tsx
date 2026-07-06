@@ -302,6 +302,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
   const faceRef = useRef('lance');
   const [face, setFace] = useState<string>('lance');
   const [glFailed, setGlFailed] = useState(false);
+  const captureRef = useRef<(() => string) | null>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -697,6 +698,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     io2.observe(mount);
     const onVis = () => syncLoop();
     document.addEventListener('visibilitychange', onVis);
+    // captura para compartilhar: renderiza um frame e lê o canvas na hora
+    captureRef.current = () => {
+      renderer.render(scene, camera);
+      return renderer.domElement.toDataURL('image/png');
+    };
+
     rafActive = true;
     tick();
 
@@ -817,7 +824,21 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         ))}
       </div>
       <p className="mt-2 text-center text-[10px] uppercase tracking-wide text-muted">
-        arraste para girar · toque numa face para ir direto
+        arraste para girar · toque numa face para ir direto ·{' '}
+        <button
+          type="button"
+          className="underline underline-offset-2 transition-colors hover:text-white"
+          onClick={() => {
+            const url = captureRef.current?.();
+            if (!url) return;
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wefans-${data.playerName.toLowerCase().replace(/\s+/g, '-')}-${data.serialLabel.replace(/[^0-9a-z]/gi, '')}.png`;
+            a.click();
+          }}
+        >
+          baixar card
+        </button>
       </p>
     </div>
   );
