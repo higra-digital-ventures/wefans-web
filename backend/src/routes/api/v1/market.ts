@@ -10,6 +10,7 @@ import {
   listMarket,
   listRecentSales,
 } from '../../../services/market';
+import { getHotPlayersToday } from '../../../services/performance';
 
 const tierEnum = z.enum(['COMUM', 'TORCIDA', 'RARO', 'LENDARIO', 'GALACTICO']);
 const marketQuery = z.object({
@@ -24,6 +25,9 @@ export async function marketRoutes(app: FastifyInstance) {
     const { tier, sort } = marketQuery.parse(req.query ?? {});
     return { listings: await listMarket(prisma, { tier }, sort ?? 'recent') };
   });
+
+  // pulso do dia: artilheiros do matchSim — performance vira sinal de mercado
+  app.get('/market/pulse', async () => ({ hot: await getHotPlayersToday(prisma) }));
 
   app.get('/market/activity', async (req) => {
     const { limit } = z.object({ limit: z.coerce.number().int().positive().max(50).optional() }).parse(req.query ?? {});

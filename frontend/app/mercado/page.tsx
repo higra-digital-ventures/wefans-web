@@ -1,7 +1,7 @@
 import Icon from '@/components/Icon';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { getFeedServer, getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
+import { getFeedServer, getMarketServer, getMarketPulseServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import LoadMoreSentinel from '@/components/LoadMoreSentinel';
 import MobileFilterSheet from '@/components/MobileFilterSheet';
@@ -58,14 +58,17 @@ export default async function MercadoPage({
   const qs = new URLSearchParams();
   if (tier) qs.set('tier', tier);
   if (sort && API_SORTS.has(sort)) qs.set('sort', sort);
-  const [allListings, challenges, me, myWishlist, feedPulse] = await Promise.all([
+  const [allListings, challenges, me, myWishlist, feedPulse, pulse] = await Promise.all([
     getMarketServer(qs.toString() ? `?${qs}` : ''),
     getChallengesServer().catch(() => []),
     getMe(),
     getWishlistServer().catch(() => null),
     getFeedServer(1).catch(() => null), // só pelo popular.trending (termômetro)
+    getMarketPulseServer().catch(() => null), // artilheiros do dia (matchSim)
   ]);
   const wishedIds = new Set((myWishlist ?? []).map((t) => t.id));
+  // performance do dia → chip "N gols hoje" nos cards do jogador
+  const hotByPlayer = new Map((pulse?.hot ?? []).map((h) => [h.playerId, `${h.gols} gols hoje`]));
   let listings = allListings;
   if (q) {
     const needle = q.toLowerCase();
@@ -643,6 +646,7 @@ export default async function MercadoPage({
                       serial={l.serial}
                       priceCents={l.priceCents}
                       quickBuyListingId={me && l.seller !== me.username ? l.listingId : undefined}
+                      hotLabel={hotByPlayer.get(l.template.player.id)}
                       href={`/momento/${l.momentId}`}
                       wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
                     />

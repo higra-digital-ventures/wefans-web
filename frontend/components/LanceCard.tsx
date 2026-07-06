@@ -19,6 +19,7 @@ export default function LanceCard({
   listingPriceCents,
   paidCents,
   quickBuyListingId,
+  hotLabel,
   className = '',
   wishlist,
 }: {
@@ -30,6 +31,7 @@ export default function LanceCard({
   listingPriceCents?: number | null; // badge "À venda" (coleção)
   paidCents?: number; // contexto de dono: rodapé vira "Média · Pago" com cor de lucro
   quickBuyListingId?: string; // compra rápida no hover, sem sair da grade (logado)
+  hotLabel?: string; // performance do dia ("2 gols hoje") — matchSim → mercado
   className?: string;
   /** estado da wishlist do usuário (undefined = marcador decorativo) */
   wishlist?: { wished: boolean; canWish: boolean };
@@ -88,7 +90,7 @@ export default function LanceCard({
             {/* glitch/scanlines na entrada do hover */}
             <div aria-hidden className="wf-glitch pointer-events-none absolute inset-0" />
             {/* chip de play (some enquanto o lance toca) */}
-            {!live && listingPriceCents == null && (
+            {!live && listingPriceCents == null && !hotLabel && (
               <span
                 aria-hidden
                 className="absolute left-1.5 top-1.5  bg-black/50 px-1 py-0.5 tabular-nums text-[8px] text-white/80 transition-opacity duration-150 group-hover:opacity-0"
@@ -104,6 +106,15 @@ export default function LanceCard({
             {listingPriceCents != null && (
               <span className="absolute left-1.5 top-1.5 bg-emerald-500 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-black">
                 À venda · {brl(listingPriceCents)}
+              </span>
+            )}
+            {hotLabel && listingPriceCents == null && (
+              <span
+                className="absolute left-1.5 top-1.5 flex items-center gap-1 bg-white px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-black"
+                title="Performance de hoje no matchSim — jogador em evidência"
+              >
+                <Icon name="ball" size={10} />
+                {hotLabel}
               </span>
             )}
             {priceCents != null && quickBuyListingId ? (

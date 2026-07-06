@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 import { toTemplateDTO } from '../lib/dto';
+import { getHotPlayersToday } from './performance';
 
 /**
  * Feed social do Explorar (gramática do "Explore" do Top Shot): agrega eventos que
@@ -9,7 +10,7 @@ import { toTemplateDTO } from '../lib/dto';
 
 type FeedEvent = {
   id: string;
-  kind: 'SALE' | 'LIST' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN';
+  kind: 'SALE' | 'LIST' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN' | 'MATCH';
   user: string | null;
   targetUser?: string | null;
   createdAt: string;
@@ -199,6 +200,30 @@ export async function getFeed(db: PrismaClient, limit = 30) {
       createdAt: c.createdAt.toISOString(),
       label: `${c.fixture.homeTeam.name} x ${c.fixture.awayTeam.name} (${c.fixture.stadium.name})`,
     });
+  }
+
+  // performance do dia (matchSim): artilheiro vira notícia no feed, com a carta
+  // mais valiosa dele como mídia — o mecanismo nº 1 de valorização do Top Shot
+  const hot = await getHotPlayersToday(db).catch(() => []);
+  if (hot.length > 0) {
+    const day = new Date().toISOString().slice(0, 10);
+    const hotTemplates = await db.template.findMany({
+      where: { id: { in: hot.map((h) => h.topTemplateId).filter((x): x is string => !!x) } },
+      include: { player: true },
+    });
+    const tplOf = new Map(hotTemplates.map((t) => [t.id, t]));
+    for (const h of hot.slice(0, 4)) {
+      const tpl = h.topTemplateId ? tplOf.get(h.topTemplateId) : undefined;
+      events.push({
+        id: `perf-${day}-${h.playerId}`,
+        kind: 'MATCH',
+        user: null,
+        createdAt: `${day}T12:00:00.000Z`,
+        count: h.gols,
+        label: `${h.name} marcou ${h.gols} gols hoje`,
+        template: tpl ? toTemplateDTO(tpl) : undefined,
+      });
+    }
   }
 
   // evento-marco: a maior venda dos últimos 7 dias ganha selo de recorde

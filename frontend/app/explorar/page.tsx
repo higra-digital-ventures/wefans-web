@@ -47,6 +47,7 @@ const ACTION: Record<FeedEvent['kind'], string> = {
   CHALLENGE: 'completou o desafio',
   QUEST: 'completou a missão',
   CHECKIN: 'fez check-in em',
+  MATCH: 'marcou', // não usado — MATCH tem frase própria
 };
 
 // thumb reto no stream: o feed é sobre o fato, a carta 3D fica para as grades
@@ -179,15 +180,28 @@ function EventCard({
           {e.record ? 'Maior venda da semana' : 'Serial #1 — o primeiro exemplar'}
         </div>
       )}
-      {/* cabeçalho: avatar + @user + ação + tempo */}
+      {/* cabeçalho: avatar + @user + ação + tempo (MATCH tem frase própria, sem usuário) */}
       <div className="flex items-center gap-2.5 px-4 py-3">
-        <span
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold uppercase text-white"
-          style={{ background: avatarBg(e.user) }}
-        >
-          {(e.user ?? '?')[0]}
-        </span>
+        {e.kind === 'MATCH' ? (
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white" aria-hidden>
+            <Icon name="ball" size={16} />
+          </span>
+        ) : (
+          <span
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold uppercase text-white"
+            style={{ background: avatarBg(e.user) }}
+          >
+            {(e.user ?? '?')[0]}
+          </span>
+        )}
         <p className="min-w-0 flex-1 truncate text-[13px] text-neutral-300">
+          {e.kind === 'MATCH' ? (
+            <>
+              <span className="font-bold text-white">{e.label}</span>
+              <span className="text-neutral-500"> — os Lances dele em evidência</span>
+            </>
+          ) : (
+            <>
           <Username user={e.user} me={me} /> {ACTION[e.kind]}{' '}
           {e.kind === 'PACK_OPEN' && <span className="font-bold text-white">{e.count} Lances</span>}
           {e.kind === 'LIST' && (e.count ?? 1) > 1 && (
@@ -202,6 +216,8 @@ function EventCard({
                 {e.template.player.name} #{e.serial}
               </span>
             )}
+            </>
+          )}
         </p>
         <span className="ml-auto shrink-0 text-[11px] text-neutral-500" title={new Date(e.createdAt).toLocaleString('pt-BR')}>
           {timeAgo(e.createdAt)}

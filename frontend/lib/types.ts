@@ -437,7 +437,7 @@ export type PackInventoryDTO = { id: string; opened: boolean; createdAt: string;
 // ----- Feed do Explorar (rede de eventos, gramática do Explore do Top Shot) -----
 export type FeedEvent = {
   id: string;
-  kind: 'SALE' | 'LIST' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN';
+  kind: 'SALE' | 'LIST' | 'PACK_OPEN' | 'GIFT' | 'BURN' | 'CHALLENGE' | 'QUEST' | 'CHECKIN' | 'MATCH';
   user: string | null;
   targetUser?: string | null;
   createdAt: string;
@@ -454,6 +454,16 @@ export type FeedPopular = {
   players: { name: string; count: number }[];
   competitions: { name: string; count: number }[];
   trending?: { template: TemplateDTO; count: number; dir?: 'up' | 'down' | null }[];
+};
+
+export type HotPlayer = {
+  playerId: string;
+  name: string;
+  club: string;
+  gols: number;
+  assistencias: number;
+  nota: number;
+  topTemplateId: string | null;
 };
 
 export type FeedReactions = {
