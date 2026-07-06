@@ -124,9 +124,16 @@ function EventCard({
   // eventos-marco: recorde da semana e serial #1 (dourado)
   const serialOne = e.serial === 1 && !!e.template && (e.kind === 'PACK_OPEN' || e.kind === 'SALE' || e.kind === 'LIST');
   const milestone = e.record || serialOne;
+  // linhas, não cards (padrão X): o comum é plano com hairline; moldura só
+  // para o que merece moldura — marco, pull foil ou evento seu
+  const boxed = milestone || rarePull || mine;
   return (
     <article
-      className={`border bg-[#0c0c0e] ${milestone ? 'border-amber-400/60' : mine ? 'border-accent3/50' : 'border-white/10'}`}
+      className={
+        boxed
+          ? `my-2.5 border bg-[#0c0c0e] ${milestone ? 'border-amber-400/60' : mine ? 'border-accent3/50' : 'border-white/10'}`
+          : 'border-b border-white/[0.06]'
+      }
       style={
         milestone
           ? { boxShadow: '0 0 18px rgba(251,191,36,.18)' }
@@ -185,7 +192,9 @@ function EventCard({
       {e.template ? (
         <Link
           href={e.momentId ? `/momento/${e.momentId}` : `/lance/${e.template.id}`}
-          className="group flex items-center gap-4 border-t border-white/10 bg-[#08080a] px-4 py-4 transition-colors hover:bg-white/5"
+          className={`group flex items-center gap-4 px-4 py-4 transition-colors ${
+            boxed ? 'border-t border-white/10 bg-[#08080a] hover:bg-white/5' : 'hover:bg-white/[0.03]'
+          }`}
         >
           <MomentThumb e={e} />
           <div className="min-w-0 flex-1">
@@ -232,7 +241,9 @@ function EventCard({
           )}
         </Link>
       ) : (
-        <div className="flex items-center gap-3 border-t border-white/10 bg-[#08080a] px-4 py-4">
+        <div
+          className={`flex items-center gap-3 px-4 py-4 ${boxed ? 'border-t border-white/10 bg-[#08080a]' : ''}`}
+        >
           <span className="text-xl" aria-hidden>
             {e.kind === 'CHECKIN' ? <Icon name="checkin" size={14} /> : <Icon name="trophy" size={14} />}
           </span>
@@ -585,6 +596,8 @@ export default async function ExplorarPage({
                 cta={{ label: 'Abrir um pacote', href: '/pacotes' }}
               />
             ))}
+          {/* stream contínuo: linhas coladas (hairline), caixas destacadas com respiro próprio */}
+          <div className={compact ? 'space-y-2' : 'border-t border-white/[0.06]'}>
           {events.map((e, i) => {
             const label = dayLabel(e.createdAt);
             const showDay = i === 0 || dayLabel(events[i - 1].createdAt) !== label;
@@ -624,9 +637,9 @@ export default async function ExplorarPage({
               />
             );
             return (
-              <div key={e.id} className="space-y-3">
+              <div key={e.id}>
                 {showDay && (
-                  <div className="pt-1 text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-500">
+                  <div className="pb-1.5 pt-3 text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-500">
                     {label}
                   </div>
                 )}
@@ -634,6 +647,7 @@ export default async function ExplorarPage({
               </div>
             );
           })}
+          </div>
           {(feed?.events.length ?? 0) >= fetchSize && size < 120 && (
             <Link
               href={`/explorar?${new URLSearchParams({ ...(f ? { f } : {}), n: String(size + 40) })}`}
