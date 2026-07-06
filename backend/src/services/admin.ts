@@ -133,6 +133,27 @@ export async function listTemplatesAdmin(db: PrismaClient) {
     orderBy: [{ status: 'asc' }, { title: 'asc' }],
     take: 200,
   });
+  // painel de emissão (a lição do crash do Top Shot): antes de mintar mais,
+  // o admin vê o impacto — floor, média e quantos anúncios cada edição segura
+  const floors = await db.listing.groupBy({
+    by: ['momentId'],
+    where: { status: 'ACTIVE' },
+    _min: { priceCents: true },
+  });
+  const momentIds = floors.map((f) => f.momentId);
+  const moments = momentIds.length
+    ? await db.moment.findMany({ where: { id: { in: momentIds } }, select: { id: true, templateId: true } })
+    : [];
+  const templateOf = new Map(moments.map((m) => [m.id, m.templateId]));
+  const floorByTemplate = new Map<string, number>();
+  const listedByTemplate = new Map<string, number>();
+  for (const f of floors) {
+    const tid = templateOf.get(f.momentId);
+    if (!tid || f._min.priceCents == null) continue;
+    listedByTemplate.set(tid, (listedByTemplate.get(tid) ?? 0) + 1);
+    const cur = floorByTemplate.get(tid);
+    if (cur == null || f._min.priceCents < cur) floorByTemplate.set(tid, f._min.priceCents);
+  }
   return templates.map((t) => ({
     id: t.id,
     title: t.title,
@@ -142,6 +163,10 @@ export async function listTemplatesAdmin(db: PrismaClient) {
     editionType: t.editionType,
     editionSize: t.editionSize,
     mintedCount: t.mintedCount,
+    circulatingCount: t.circulatingCount,
+    aspCents: t.aspCents,
+    floorCents: floorByTemplate.get(t.id) ?? null,
+    activeListings: listedByTemplate.get(t.id) ?? 0,
     status: t.status,
     publishAt: t.publishAt?.toISOString() ?? null,
   }));

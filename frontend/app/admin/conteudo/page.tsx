@@ -1,3 +1,4 @@
+import { brl } from '@/lib/format';
 import { adminGet } from '@/lib/api-server';
 import AdminAction from '@/components/AdminAction';
 import { TIER_META } from '@/lib/tiers';
@@ -32,6 +33,9 @@ export default async function AdminConteudo() {
               <th className="px-4 py-3">Jogador · Time</th>
               <th className="px-4 py-3">Tier</th>
               <th className="px-4 py-3">Edição</th>
+              <th className="px-4 py-3 text-right" title="anúncio mais barato ativo">Floor</th>
+              <th className="px-4 py-3 text-right" title="preço médio das últimas vendas">Média</th>
+              <th className="px-4 py-3 text-right" title="anúncios ativos">À venda</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3 text-right">Ações</th>
             </tr>
@@ -50,6 +54,24 @@ export default async function AdminConteudo() {
                 <td className="px-4 py-2 tabular-nums text-xs text-muted">
                   {t.editionType === 'LIMITADA' ? `${t.mintedCount}/${t.editionSize}` : `CC · ${t.mintedCount}`}
                 </td>
+                <td
+                  className={`px-4 py-2 text-right tabular-nums text-xs ${
+                    t.floorCents != null && t.aspCents > 0 && t.floorCents < t.aspCents * 0.5
+                      ? 'font-bold text-red-400'
+                      : 'text-muted'
+                  }`}
+                  title={
+                    t.floorCents != null && t.aspCents > 0 && t.floorCents < t.aspCents * 0.5
+                      ? 'floor abaixo de metade da média — sinal de excesso de oferta; segure a emissão'
+                      : undefined
+                  }
+                >
+                  {t.floorCents != null ? brl(t.floorCents) : '—'}
+                </td>
+                <td className="px-4 py-2 text-right tabular-nums text-xs text-muted">
+                  {t.aspCents > 0 ? brl(t.aspCents) : '—'}
+                </td>
+                <td className="px-4 py-2 text-right tabular-nums text-xs text-muted">{t.activeListings}</td>
                 <td className={`px-4 py-2 ${STATUS_COLOR[t.status] ?? 'text-muted'}`}>{t.status}</td>
                 <td className="space-x-1 px-4 py-2 text-right">
                   {t.status !== 'PUBLICADO' && (

@@ -340,6 +340,10 @@ export type AdminTemplate = {
   editionType: string;
   editionSize: number | null;
   mintedCount: number;
+  circulatingCount: number;
+  aspCents: number;
+  floorCents: number | null;
+  activeListings: number;
   status: string;
   publishAt: string | null;
 };
