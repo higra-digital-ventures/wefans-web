@@ -51,7 +51,7 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
     <main className="mx-auto max-w-5xl px-6 py-12">
       <Breadcrumbs items={[{ label: 'Mercado', href: '/mercado' }, { label: t.player.club, href: `/mercado?q=${encodeURIComponent(t.player.club)}` }, { label: t.player.name }]} />
       <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted">
-        <span>Temporada 1</span>
+        <span>Brasileirão 2025</span>
         <span>·</span>
         <span>{t.player.club}</span>
         <span>·</span>

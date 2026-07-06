@@ -104,16 +104,16 @@ export default function SiteFooter() {
           <div className="text-[11px] leading-relaxed text-muted">
             <div>© 2026 wefans.</div>
             <div>
-              Todo o conteúdo (jogadores, clubes e competições) é fictício — nenhuma associação com
-              ligas ou atletas reais.
+              Projeto em desenvolvimento. Nomes de clubes, atletas e competições aparecem apenas
+              para demonstração — sem afiliação, patrocínio ou licenciamento oficial.
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {['LA', 'CM', 'SN'].map((liga) => (
+            {['BR', 'CB', 'LIB'].map((liga) => (
               <span
                 key={liga}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-line font-display text-[10px] text-muted"
-                title={liga === 'LA' ? 'Liga Aurora' : liga === 'CM' ? 'Copa das Marés' : 'Supercopa Neon'}
+                title={liga === 'BR' ? 'Brasileirão Série A' : liga === 'CB' ? 'Copa do Brasil' : 'Libertadores'}
               >
                 {liga}
               </span>

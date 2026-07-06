@@ -16,8 +16,8 @@ import type { TemplateDTO } from '@/lib/types';
 // exemplos rotativos no placeholder (nomes reais do catálogo)
 const PLACEHOLDERS = [
   'Busque por jogadores, times e tiers.',
-  'tente: Juca Ferrão',
-  'tente: Capital Cometas',
+  'tente: Neymar',
+  'tente: Flamengo',
   'tente: Galáctico',
   'tente: golaço',
 ];
@@ -303,7 +303,7 @@ export default function SearchOverlay({
                           {t.player.name}
                         </div>
                         <div className="mt-1 line-clamp-2 text-[11px] leading-snug text-neutral-400">
-                          {meta.label}: {t.playType} - {t.title} (Temporada 25/26)
+                          {meta.label}: {t.playType} - {t.title} (2025)
                         </div>
                       </Link>
                     );

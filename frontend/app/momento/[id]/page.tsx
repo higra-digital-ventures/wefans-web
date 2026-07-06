@@ -116,7 +116,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
       {/* breadcrumb em chips */}
       <div className="mb-5 flex flex-wrap items-center gap-1.5">
         {[
-          { label: `${t.competition} (25/26)`, href: '/mercado' },
+          { label: `${t.competition} (2025)`, href: '/mercado' },
           { label: t.player.club, href: `/mercado?q=${encodeURIComponent(t.player.club)}` },
           { label: t.player.name, href: `/mercado?q=${encodeURIComponent(t.player.name)}` },
         ].map((crumb) => (
@@ -188,7 +188,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           <p className="mt-1 text-sm text-neutral-400">{t.title}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             <span className="bg-panel2 px-2 py-0.5 text-[10px] font-bold uppercase text-neutral-300">
-              {t.competition} (Temporada 25/26)
+              {t.competition} (2025)
             </span>
             {t.parallel !== 'BASE' && (
               <span className="bg-panel2 px-2 py-0.5 text-[10px] font-bold uppercase text-ink">{t.parallel}</span>

@@ -205,7 +205,7 @@ export default function LanceCard({
           {template.circulatingCount.toLocaleString('pt-BR')}
         </div>
         <div className="mt-0.5 truncate text-[11px] text-neutral-500">
-          {template.competition} · {template.playType} (Temporada 2025-26)
+          {template.competition} · {template.playType} (Brasileirão 2025)
         </div>
 
         {/* rodapé contextual: mercado (Menor preço/Média) · dono (Média/Pago) · catálogo (Média) */}

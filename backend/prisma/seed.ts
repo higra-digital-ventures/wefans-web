@@ -4,7 +4,8 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-// Conteúdo 100% fictício (ver .claude/LEGAL.md). Determinístico onde possível.
+// Dados REAIS de clubes/jogadores para desenvolvimento — sem afiliação oficial;
+// licenciamento será tratado antes de qualquer lançamento (ver .claude/LEGAL.md).
 const now = new Date();
 const mins = (n: number) => new Date(now.getTime() + n * 60_000);
 const hours = (n: number) => new Date(now.getTime() + n * 3_600_000);
@@ -30,6 +31,8 @@ const SEED_ACQUIRE_CENTS: Record<Tier, number> = {
 
 async function wipe() {
   // Ordem segura de FKs (filhos antes dos pais).
+  await prisma.feedReaction.deleteMany();
+  await prisma.chatMessage.deleteMany();
   await prisma.wishlist.deleteMany();
   await prisma.showcaseItem.deleteMany();
   await prisma.showcase.deleteMany();
@@ -86,8 +89,8 @@ async function main() {
   // ---------------------------------------------------------------- Temporada + Coleções
   const series = await prisma.series.create({
     data: {
-      name: 'Temporada 1',
-      season: '25/26',
+      name: 'Brasileirão 2025',
+      season: '2025',
       startsAt: days(-30),
       endsAt: days(300),
       status: 'PUBLICADO',
@@ -96,7 +99,7 @@ async function main() {
   });
 
   const setDefs = [
-    { name: 'Base', description: 'Coleção base da Temporada 1.' },
+    { name: 'Base', description: 'Coleção base do Brasileirão 2025.' },
     { name: 'Estreias', description: 'Primeiros Lances de novos craques.' },
     { name: 'Golaços da Rodada', description: 'Os melhores gols de cada rodada.' },
   ];
@@ -112,26 +115,26 @@ async function main() {
 
   // ---------------------------------------------------------------- Estádios + Times (A2)
   const stadiumDefs = [
-    { name: 'Arena Vila Neon', city: 'São Paulo', lat: -23.5505, lng: -46.6333 },
-    { name: 'Estádio Maré Alta', city: 'Santos', lat: -23.9608, lng: -46.3336 },
-    { name: 'Arena Alto Andino', city: 'Curitiba', lat: -25.4284, lng: -49.2733 },
-    { name: 'Estádio Miragem', city: 'Fortaleza', lat: -3.7319, lng: -38.5267 },
-    { name: 'Arena Órbita', city: 'Brasília', lat: -15.7939, lng: -47.8828 },
-    { name: 'Arena Dossel', city: 'Manaus', lat: -3.119, lng: -60.0217 },
+    { name: 'Maracanã', city: 'Rio de Janeiro', lat: -22.9122, lng: -43.2302 },
+    { name: 'Allianz Parque', city: 'São Paulo', lat: -23.5273, lng: -46.6786 },
+    { name: 'Neo Química Arena', city: 'São Paulo', lat: -23.5453, lng: -46.4742 },
+    { name: 'Arena MRV', city: 'Belo Horizonte', lat: -19.9761, lng: -44.0004 },
+    { name: 'Estádio Nilton Santos', city: 'Rio de Janeiro', lat: -22.8933, lng: -43.2919 },
+    { name: 'Vila Belmiro', city: 'Santos', lat: -23.9519, lng: -46.3383 },
   ];
   const stadiums = [];
   for (const st of stadiumDefs) {
     stadiums.push(await prisma.stadium.create({ data: { ...st, radiusMeters: 300 } }));
   }
 
-  // 5 times publicados + 1 rascunho (Deserto Real) para demonstrar o ciclo de parceria (seção 10).
+  // 5 clubes publicados + 1 prospect (Atlético-MG) para demonstrar o ciclo de parceria (seção 10).
   const teamDefs = [
-    { name: 'Serpentes FC', stadium: 0, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
-    { name: 'Litoral United', stadium: 1, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
-    { name: 'Cordilheira SC', stadium: 2, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
-    { name: 'Deserto Real', stadium: 3, partnerStatus: 'PROSPECT', status: 'RASCUNHO' },
-    { name: 'Capital Cometas', stadium: 4, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
-    { name: 'Selva Jaguar', stadium: 5, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Flamengo', stadium: 0, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Palmeiras', stadium: 1, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Corinthians', stadium: 2, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Atlético-MG', stadium: 3, partnerStatus: 'PROSPECT', status: 'RASCUNHO' },
+    { name: 'Botafogo', stadium: 4, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
+    { name: 'Santos', stadium: 5, partnerStatus: 'ATIVO', status: 'PUBLICADO' },
   ];
   const teams = [];
   for (const t of teamDefs) {
@@ -149,27 +152,26 @@ async function main() {
   }
   const publishedTeams = teams.filter((t) => t.status === 'PUBLICADO');
 
-  // ---------------------------------------------------------------- Jogadores (fictícios)
-  const playerNames = [
-    'Téo Marreco', 'Juca Ferrão', 'Dinho Salgado', 'Vavá Contente', 'Ítalo Brenha',
-    'Piá Landim', 'Zeca Torrão', 'Bóris Andrade', 'Nando Cavalo', 'Lipe Aurora',
-    'Kadu Serrano', 'Wesley Maré', 'Gui Petrônio', 'Rai Falcão',
+  // ---------------------------------------------------------------- Jogadores (reais — dev; licenciamento depois)
+  const playerDefs = [
+    { name: 'Neymar Jr', club: 'Santos', position: 'ATA', jersey: 10, nationality: 'Brasil' },
+    { name: 'Arrascaeta', club: 'Flamengo', position: 'MEI', jersey: 14, nationality: 'Uruguai' },
+    { name: 'Pedro', club: 'Flamengo', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Rossi', club: 'Flamengo', position: 'GOL', jersey: 1, nationality: 'Argentina' },
+    { name: 'Léo Ortiz', club: 'Flamengo', position: 'ZAG', jersey: 3, nationality: 'Brasil' },
+    { name: 'Raphael Veiga', club: 'Palmeiras', position: 'MEI', jersey: 23, nationality: 'Brasil' },
+    { name: 'Weverton', club: 'Palmeiras', position: 'GOL', jersey: 21, nationality: 'Brasil' },
+    { name: 'Flaco López', club: 'Palmeiras', position: 'ATA', jersey: 42, nationality: 'Argentina' },
+    { name: 'Vitor Roque', club: 'Palmeiras', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Yuri Alberto', club: 'Corinthians', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Memphis Depay', club: 'Corinthians', position: 'ATA', jersey: 94, nationality: 'Holanda' },
+    { name: 'Rodrigo Garro', club: 'Corinthians', position: 'MEI', jersey: 8, nationality: 'Argentina' },
+    { name: 'Savarino', club: 'Botafogo', position: 'MEI', jersey: 10, nationality: 'Venezuela' },
+    { name: 'John', club: 'Botafogo', position: 'GOL', jersey: 1, nationality: 'Brasil' },
   ];
-  const positions = ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'];
-  const nationalities = ['Verdelândia', 'Nortália', 'Sulméria', 'Atlantia', 'Montana do Sol'];
   const players = [];
-  for (let i = 0; i < playerNames.length; i++) {
-    players.push(
-      await prisma.player.create({
-        data: {
-          name: playerNames[i],
-          club: pick(publishedTeams, i).name,
-          position: pick(positions, i),
-          jersey: (i % 30) + 1,
-          nationality: pick(nationalities, i),
-        },
-      }),
-    );
+  for (const def of playerDefs) {
+    players.push(await prisma.player.create({ data: def }));
   }
 
   // ---------------------------------------------------------------- Templates (~60, 5 tiers)
@@ -189,7 +191,7 @@ async function main() {
     ASSISTENCIA: ['Passe de letra decisivo', 'Lançamento milimétrico'],
     DESARME: ['Corte providencial', 'Desarme na última linha'],
   };
-  const competitions = ['Liga Aurora', 'Copa das Marés', 'Supercopa Neon'];
+  const competitions = ['Brasileirão Série A', 'Copa do Brasil', 'Libertadores'];
   const trajectories = [
     'M10,90 Q50,10 90,40', 'M15,80 C30,20 70,20 90,60', 'M10,70 Q50,95 90,20',
     'M20,85 Q40,15 85,55', 'M12,60 C40,90 60,10 88,45',
@@ -225,11 +227,12 @@ async function main() {
     const tier = tierPlan[i];
     const type = pick(playTypes, i);
     const { editionType, editionSize } = editionFor(tier, i);
-    const teamId = i % 6 === 5 ? null : pick(publishedTeams, i).id;
+    const tplPlayer = pick(players, i);
+    const teamId = i % 6 === 5 ? null : (publishedTeams.find((t) => t.name === tplPlayer.club)?.id ?? null);
     templates.push(
       await prisma.template.create({
         data: {
-          playerId: pick(players, i).id,
+          playerId: tplPlayer.id,
           seriesId: series.id,
           setId: pick(sets, i).id,
           teamId,
@@ -256,7 +259,7 @@ async function main() {
   // ---------------------------------------------------------------- Drop + Pacotes
   const drop = await prisma.drop.create({
     data: {
-      name: 'Kickoff Drop — Temporada 1',
+      name: 'Kickoff Drop — Brasileirão 2025',
       waitingRoomOpensAt: hours(-2),
       startsAt: hours(1), // sala de espera aberta; admin gera a fila ao iniciar
       endsAt: days(7),
@@ -346,13 +349,13 @@ async function main() {
   });
 
   // ---------------------------------------------------------------- Fixtures (A2.5)
-  const [serpentes, litoral, cordilheira, , cometas] = teams;
+  const [flamengo, palmeiras, corinthians, , botafogo] = teams;
   // 1 jogo AO VIVO agora (janela aberta) — fluxo feliz de check-in.
   await prisma.fixture.create({
     data: {
-      homeTeamId: serpentes.id,
-      awayTeamId: litoral.id,
-      stadiumId: serpentes.homeStadiumId!,
+      homeTeamId: flamengo.id,
+      awayTeamId: palmeiras.id,
+      stadiumId: flamengo.homeStadiumId!,
       kickoffAt: mins(-30),
       status: 'LIVE',
       checkinOpensAt: hours(-2),
@@ -362,9 +365,9 @@ async function main() {
   });
   await prisma.fixture.create({
     data: {
-      homeTeamId: cordilheira.id,
-      awayTeamId: cometas.id,
-      stadiumId: cordilheira.homeStadiumId!,
+      homeTeamId: corinthians.id,
+      awayTeamId: botafogo.id,
+      stadiumId: corinthians.homeStadiumId!,
       kickoffAt: days(2),
       status: 'SCHEDULED',
       checkinOpensAt: new Date(days(2).getTime() - 2 * 3_600_000),
@@ -374,9 +377,9 @@ async function main() {
   });
   await prisma.fixture.create({
     data: {
-      homeTeamId: cometas.id,
-      awayTeamId: serpentes.id,
-      stadiumId: cometas.homeStadiumId!,
+      homeTeamId: botafogo.id,
+      awayTeamId: flamengo.id,
+      stadiumId: botafogo.homeStadiumId!,
       kickoffAt: days(5),
       status: 'SCHEDULED',
       checkinOpensAt: new Date(days(5).getTime() - 2 * 3_600_000),
@@ -401,8 +404,8 @@ async function main() {
   await prisma.leaderboard.create({
     data: {
       kind: 'TEAM',
-      refKey: serpentes.name,
-      name: `Ranking ${serpentes.name}`,
+      refKey: flamengo.name,
+      name: `Ranking ${flamengo.name}`,
       rewardsJson: { top1: 'Pacote de Troca — Lendário', top1PackId: ticketPack.id },
     },
   });
@@ -419,7 +422,7 @@ async function main() {
   // ---------------------------------------------------------------- Fast Break (Matchday, 7 dias)
   const run = await prisma.fastBreakRun.create({
     data: {
-      name: 'Matchday Temporada 1 — Semana 1',
+      name: 'Matchday Brasileirão — Semana 1',
       startsAt: days(-1),
       endsAt: days(6),
       lineupSize: 5,
@@ -463,7 +466,7 @@ async function main() {
       username: 'colecionador',
       passwordHash,
       balanceCents: 50_000,
-      favoriteTeamId: serpentes.id, // segue o time do jogo ao vivo (check-in demo)
+      favoriteTeamId: flamengo.id, // segue o time do jogo ao vivo (check-in demo)
     },
   });
 
@@ -476,7 +479,7 @@ async function main() {
     templates.find((t) => t.tier === Tier.RARO)!,
     templates.find((t) => t.tier === Tier.LENDARIO)!,
     templates.find((t) => t.tier === Tier.GALACTICO)!,
-    templates.find((t) => t.competition === 'Copa das Marés')!, // garante 3 competições p/ a Missão
+    templates.find((t) => t.competition === 'Copa do Brasil')!, // garante 3 competições p/ a Missão
   ];
   const ownedMoments = [];
   let topShotScore = 0;
@@ -548,8 +551,8 @@ async function main() {
   // Checklist alinhado à coleção do colecionador (bônus vai pro ranking do time + Collector Score).
   await prisma.checklist.create({
     data: {
-      name: `Checklist ${serpentes.name} — Temporada 1`,
-      kind: serpentes.name,
+      name: `Checklist ${flamengo.name} — Brasileirão 2025`,
+      kind: flamengo.name,
       requiredTemplateIds: [seedTemplates[2].id, seedTemplates[3].id],
       bonusPoints: 500,
     },
@@ -562,7 +565,7 @@ async function main() {
     await prisma.wishlist.create({ data: { userId: collector.id, templateId: t.id } });
   }
   const showcase = await prisma.showcase.create({
-    data: { ownerId: collector.id, name: 'Minha Vitrine', description: 'Meus Lances favoritos da Temporada 1.', public: true },
+    data: { ownerId: collector.id, name: 'Minha Vitrine', description: 'Meus Lances favoritos do Brasileirão 2025.', public: true },
   });
   for (let i = 0; i < Math.min(3, ownedMoments.length); i++) {
     await prisma.showcaseItem.create({ data: { showcaseId: showcase.id, momentId: ownedMoments[i].id, order: i } });

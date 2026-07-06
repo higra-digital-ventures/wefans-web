@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: { default: 'wefans — Momentos de Futebol', template: '%s — wefans' },
   description:
-    'Colecione Lances numerados de futebol. Mesma gramática do NBA Top Shot, conteúdo 100% fictício.',
+    'Colecione Lances numerados do futebol brasileiro. Projeto em desenvolvimento — sem afiliação oficial com clubes, ligas ou atletas.',
   openGraph: {
     siteName: 'wefans',
     type: 'website',

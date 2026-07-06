@@ -31,8 +31,9 @@ export default function CondutaPage() {
             interações não podem conter assédio, ódio ou conteúdo ilegal.
           </li>
           <li>
-            <span className="text-ink">Conteúdo é fictício.</span> Jogadores, clubes e competições do
-            wefans são criações próprias; nenhuma associação com marcas reais é reivindicada.
+            <span className="text-ink">Sem afiliação oficial.</span> Nomes de jogadores, clubes e
+            competições aparecem apenas para demonstração durante o desenvolvimento; nenhum
+            patrocínio ou licenciamento é reivindicado.
           </li>
         </ol>
         <p>
