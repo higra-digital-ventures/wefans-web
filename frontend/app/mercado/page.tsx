@@ -1,11 +1,12 @@
 import Icon from '@/components/Icon';
 import Link from 'next/link';
-import { getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
+import { getFeedServer, getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import EmptyState from '@/components/EmptyState';
 import PriceFilter from '@/components/PriceFilter';
 import SortDropdown from '@/components/SortDropdown';
 import SubTabs from '@/components/SubTabs';
+import TrendingStrip from '@/components/TrendingStrip';
 import TacticalBoard from '@/components/TacticalBoard';
 import { brl } from '@/lib/format';
 import { isFoil } from '@/lib/tiers';
@@ -50,11 +51,12 @@ export default async function MercadoPage({
   const qs = new URLSearchParams();
   if (tier) qs.set('tier', tier);
   if (sort && API_SORTS.has(sort)) qs.set('sort', sort);
-  const [allListings, challenges, me, myWishlist] = await Promise.all([
+  const [allListings, challenges, me, myWishlist, feedPulse] = await Promise.all([
     getMarketServer(qs.toString() ? `?${qs}` : ''),
     getChallengesServer().catch(() => []),
     getMe(),
     getWishlistServer().catch(() => null),
+    getFeedServer(1).catch(() => null), // só pelo popular.trending (termômetro)
   ]);
   const wishedIds = new Set((myWishlist ?? []).map((t) => t.id));
   let listings = allListings;
@@ -157,6 +159,13 @@ export default async function MercadoPage({
           { label: 'Minhas ofertas', href: '/ofertas' },
         ]}
       />
+
+      {/* termômetro do mercado: o mesmo Em alta do feed */}
+      {(feedPulse?.popular.trending?.length ?? 0) >= 2 && (
+        <div className="mb-6">
+          <TrendingStrip items={feedPulse!.popular.trending!} />
+        </div>
+      )}
 
       {/* Colecione e Ganhe — campanhas (desafios ativos), como o "Collect and Earn" */}
       {activeChallenges.length > 0 && (
