@@ -453,7 +453,7 @@ export type FeedEvent = {
 export type FeedPopular = {
   players: { name: string; count: number }[];
   competitions: { name: string; count: number }[];
-  trending?: { template: TemplateDTO; count: number }[];
+  trending?: { template: TemplateDTO; count: number; dir?: 'up' | 'down' | null }[];
 };
 
 export type FeedReactions = {

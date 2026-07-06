@@ -235,26 +235,33 @@ export async function getFeedPopular(db: PrismaClient) {
 }
 
 async function computePopular(db: PrismaClient) {
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const since24 = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const since48 = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  // janela dupla: as 24h atuais rankeiam; as 24h anteriores dão a seta de tendência
   const txs = await db.transaction.findMany({
-    where: { createdAt: { gte: since }, type: { in: ['BUY', 'OFFER_ACCEPT', 'MINT'] } },
+    where: { createdAt: { gte: since48 }, type: { in: ['BUY', 'OFFER_ACCEPT', 'MINT'] } },
     include: { moment: { include: { template: { include: { player: true } } } } },
-    take: 500,
+    take: 1000,
   });
 
   const byPlayer = new Map<string, number>();
   const byCompetition = new Map<string, number>();
   // "Em alta": edições mais negociadas no período (carrossel do topo do feed)
-  const byTemplate = new Map<string, { template: (typeof txs)[number]['moment']['template']; count: number }>();
+  const byTemplate = new Map<
+    string,
+    { template: (typeof txs)[number]['moment']['template']; count: number; prev: number }
+  >();
   for (const t of txs) {
-    const p = t.moment.template.player.name;
-    byPlayer.set(p, (byPlayer.get(p) ?? 0) + 1);
-    const c = t.moment.template.competition;
-    byCompetition.set(c, (byCompetition.get(c) ?? 0) + 1);
+    const current = t.createdAt >= since24;
     const tpl = t.moment.template;
-    const cur = byTemplate.get(tpl.id);
-    if (cur) cur.count += 1;
-    else byTemplate.set(tpl.id, { template: tpl, count: 1 });
+    const cur = byTemplate.get(tpl.id) ?? { template: tpl, count: 0, prev: 0 };
+    if (current) cur.count += 1;
+    else cur.prev += 1;
+    byTemplate.set(tpl.id, cur);
+    if (!current) continue; // players/competitions seguem sendo só das últimas 24h
+    const p = tpl.player.name;
+    byPlayer.set(p, (byPlayer.get(p) ?? 0) + 1);
+    byCompetition.set(tpl.competition, (byCompetition.get(tpl.competition) ?? 0) + 1);
   }
   const top = (m: Map<string, number>) =>
     [...m.entries()]
@@ -262,9 +269,14 @@ async function computePopular(db: PrismaClient) {
       .slice(0, 5)
       .map(([name, count]) => ({ name, count }));
   const trending = [...byTemplate.values()]
+    .filter((x) => x.count > 0)
     .sort((a, b) => b.count - a.count)
     .slice(0, 6)
-    .map((x) => ({ template: toTemplateDTO(x.template), count: x.count }));
+    .map((x) => ({
+      template: toTemplateDTO(x.template),
+      count: x.count,
+      dir: x.count > x.prev ? ('up' as const) : x.count < x.prev ? ('down' as const) : null,
+    }));
 
   return { players: top(byPlayer), competitions: top(byCompetition), trending };
 }

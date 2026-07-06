@@ -313,7 +313,11 @@ function EventCard({
 
 // carrossel "Em alta": edições mais negociadas nas últimas 24h — o que está
 // pegando fogo no mercado, antes mesmo de rolar o feed
-function TrendingStrip({ items }: { items: { template: import('@/lib/types').TemplateDTO; count: number }[] }) {
+function TrendingStrip({
+  items,
+}: {
+  items: { template: import('@/lib/types').TemplateDTO; count: number; dir?: 'up' | 'down' | null }[];
+}) {
   if (items.length < 2) return null;
   return (
     <section className="border border-white/10 bg-[#0c0c0e] p-3">
@@ -322,22 +326,20 @@ function TrendingStrip({ items }: { items: { template: import('@/lib/types').Tem
         Em alta · 24h
       </div>
       <div className="scrollbar-none -mx-1 flex gap-2.5 overflow-x-auto px-1 pb-1">
-        {items.map(({ template: t, count }) => {
+        {items.map(({ template: t, count, dir }, i) => {
           const meta = TIER_META[t.tier];
           return (
             <Link
               key={t.id}
               href={`/lance/${t.id}`}
-              className="w-[118px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-white/30"
+              className="relative w-[118px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-white/30"
             >
-              <div className="mx-auto w-[86%]" style={{ perspective: '400px' }}>
-                <div
-                  className="aspect-[4/5] overflow-hidden border"
-                  style={{
-                    transform: 'rotateY(-10deg) rotateX(2deg)',
-                    borderColor: `${meta.color}66`,
-                  }}
-                >
+              {/* posição no ranking — mini-tabela de cotação, não só vitrine */}
+              <span className="absolute left-0 top-0 z-10 bg-white px-1.5 py-0.5 tabular-nums text-[10px] font-bold text-black">
+                {i + 1}
+              </span>
+              <div className="mx-auto w-[86%]">
+                <div className="aspect-[4/5] overflow-hidden border" style={{ borderColor: `${meta.color}66` }}>
                   <TacticalBoard
                     trajectory={t.trajectory}
                     jersey={t.player.jersey}
@@ -348,7 +350,21 @@ function TrendingStrip({ items }: { items: { template: import('@/lib/types').Tem
               </div>
               <div className="mt-1.5 truncate text-[11px] font-bold text-white">{t.player.name}</div>
               <div className="flex items-baseline justify-between text-[10px]">
-                <span className="tabular-nums text-neutral-500">{count} negócios</span>
+                <span
+                  className={`tabular-nums font-semibold ${
+                    dir === 'up' ? 'text-emerald-400' : dir === 'down' ? 'text-red-400' : 'text-neutral-500'
+                  }`}
+                  title={
+                    dir === 'up'
+                      ? 'mais negócios que nas 24h anteriores'
+                      : dir === 'down'
+                        ? 'menos negócios que nas 24h anteriores'
+                        : `${count} negócios em 24h`
+                  }
+                >
+                  {dir === 'up' ? '↑ ' : dir === 'down' ? '↓ ' : ''}
+                  {count} neg.
+                </span>
                 <span className="tabular-nums font-semibold text-neutral-200">
                   {t.aspCents > 0 ? brl(t.aspCents) : ''}
                 </span>
