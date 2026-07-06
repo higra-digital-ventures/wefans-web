@@ -488,22 +488,57 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       group.add(sheen);
     }
 
-    // moldura neon: 12 barras emissivas nas arestas
-    const barBase = new THREE.Color(d.tierColor);
-    const barMat = new THREE.MeshBasicMaterial({ color: barBase.clone() });
-    const t = 0.055;
-    const mk = (sx: number, sy: number, sz: number, x: number, y: number, z: number) => {
-      const bar = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), barMat);
-      bar.position.set(x, y, z);
-      group.add(bar);
-    };
-    for (const y of [-H / 2, H / 2])
-      for (const z of [-D / 2, D / 2]) mk(W + t, t, t, 0, y, z); // horizontais
-    for (const x of [-W / 2, W / 2])
-      for (const z of [-D / 2, D / 2]) mk(t, H + t, t, x, 0, z); // verticais
-    for (const x of [-W / 2, W / 2])
-      for (const y of [-H / 2, H / 2]) mk(t, t, D + t, x, y, 0); // profundidade
     scene.add(group);
+
+    // gaiola de LED externa (padrão Top Shot): cantoneiras 3D nos 8 cantos de
+    // uma caixa maior, ESTÁTICA — o cubo gira dentro da moldura. Cor = tier.
+    const cage = new THREE.Group();
+    const cageBase = new THREE.Color(d.tierColor).lerp(new THREE.Color('#ffffff'), 0.35);
+    const cageMat = new THREE.MeshBasicMaterial({ color: cageBase.clone() });
+    const CW = 3.5;
+    const CH = 4.1;
+    const CD = 2.6;
+    const armLen = 0.55;
+    const armTk = 0.05;
+    for (const sx of [-1, 1])
+      for (const sy of [-1, 1])
+        for (const sz of [-1, 1]) {
+          const cx = (sx * CW) / 2;
+          const cy = (sy * CH) / 2;
+          const cz = (sz * CD) / 2;
+          const armX = new THREE.Mesh(new THREE.BoxGeometry(armLen, armTk, armTk), cageMat);
+          armX.position.set(cx - (sx * armLen) / 2, cy, cz);
+          const armY = new THREE.Mesh(new THREE.BoxGeometry(armTk, armLen, armTk), cageMat);
+          armY.position.set(cx, cy - (sy * armLen) / 2, cz);
+          const armZ = new THREE.Mesh(new THREE.BoxGeometry(armTk, armTk, armLen), cageMat);
+          armZ.position.set(cx, cy, cz - (sz * armLen) / 2);
+          cage.add(armX, armY, armZ);
+        }
+    // bloom de LED: sprite aditivo em cada canto
+    const glowTex = canvasTexture(128, 128, (c) => {
+      const g = c.createRadialGradient(64, 64, 4, 64, 64, 62);
+      g.addColorStop(0, 'rgba(255,255,255,0.9)');
+      g.addColorStop(0.35, `${d.tierColor}66`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = g;
+      c.fillRect(0, 0, 128, 128);
+    });
+    const glowMat = new THREE.SpriteMaterial({
+      map: glowTex,
+      blending: THREE.AdditiveBlending,
+      transparent: true,
+      depthWrite: false,
+      opacity: 0.8,
+    });
+    for (const sx of [-1, 1])
+      for (const sy of [-1, 1])
+        for (const sz of [-1, 1]) {
+          const spr = new THREE.Sprite(glowMat);
+          spr.position.set((sx * CW) / 2, (sy * CH) / 2, (sz * CD) / 2);
+          spr.scale.setScalar(0.6);
+          cage.add(spr);
+        }
+    scene.add(cage);
 
     // poeira de palco: pontos lentos subindo — profundidade barata
     const dustCount = 36;
@@ -651,8 +686,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       }
       group.rotation.x += (rotX - (reduced ? 0 : hoverY * 0.1) - group.rotation.x) * 0.08;
       if (sheenTex && !reduced) sheenTex.offset.x = (sheenTex.offset.x + 0.003) % 1;
-      // moldura respira na cor do tier
-      if (!reduced) barMat.color.copy(barBase).multiplyScalar(0.82 + 0.28 * Math.sin(swayPhase * 1.6));
+      // gaiola de LED respira na cor do tier (foil pulsa mais forte)
+      if (!reduced) {
+        const amp = d.foil ? 0.4 : 0.22;
+        cageMat.color.copy(cageBase).multiplyScalar(0.85 + amp * Math.sin(swayPhase * 1.6));
+        glowMat.opacity = 0.65 + amp * Math.sin(swayPhase * 1.6);
+      }
       // rim light orbita devagar — specular vivo vende o objeto físico
       if (!reduced) {
         rim.position.x = -5 + Math.sin(swayPhase * 0.7) * 1.6;
