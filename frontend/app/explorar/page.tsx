@@ -5,6 +5,7 @@ import SubTabs from '@/components/SubTabs';
 import EmptyState from '@/components/EmptyState';
 import FeedPoller from '@/components/FeedPoller';
 import TacticalBoard from '@/components/TacticalBoard';
+import UserHoverCard from '@/components/UserHoverCard';
 import { TIER_META, isFoil } from '@/lib/tiers';
 import { brl } from '@/lib/format';
 import type { FeedEvent } from '@/lib/types';
@@ -81,9 +82,11 @@ function Username({ user, me }: { user: string | null; me?: string | null }) {
   if (!user) return <span className="font-bold text-white">@anônimo</span>;
   if (me && user === me) return <span className="font-bold text-accent3">você</span>;
   return (
-    <Link href={`/u/${user}`} className="font-bold text-white hover:underline">
-      @{user}
-    </Link>
+    <UserHoverCard username={user}>
+      <Link href={`/u/${user}`} className="font-bold text-white hover:underline">
+        @{user}
+      </Link>
+    </UserHoverCard>
   );
 }
 
