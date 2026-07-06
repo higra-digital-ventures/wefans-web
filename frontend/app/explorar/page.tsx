@@ -202,19 +202,6 @@ function EventCard({
             )}
           <span className="text-neutral-500"> · {timeAgo(e.createdAt)}</span>
         </p>
-        {/* proposta direta ao vendedor (liga o feed ao chat) */}
-        {e.kind === 'LIST' && e.user && e.user !== me && e.template && (
-          <Link
-            href={`/chat?u=${encodeURIComponent(e.user)}&draft=${encodeURIComponent(
-              `Oi! Vi seu anúncio do ${e.template.player.name} #${e.serial} por ${brl(e.priceCents ?? 0)} no feed — bora negociar?`,
-            )}`}
-            title="Fazer proposta no chat"
-            className="flex shrink-0 items-center gap-1 border border-white/15 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-neutral-400 transition-colors hover:border-white/40 hover:text-white"
-          >
-            <Icon name="chat" size={12} />
-            Proposta
-          </Link>
-        )}
       </div>
 
       {/* corpo por tipo de evento */}
@@ -284,17 +271,39 @@ function EventCard({
         </div>
       )}
 
-      {/* rodapé social: 🔥 */}
-      {reaction && (
-        <div className="flex items-center border-t border-white/[0.06] px-4 py-1.5">
+      {/* fileira de ações (padrão X): 🔥 · Proposta · ver Lance */}
+      <div
+        className={`flex items-center gap-5 px-4 py-2 ${boxed ? 'border-t border-white/[0.06]' : ''}`}
+      >
+        {reaction && (
           <ReactionButton
             eventKey={e.id}
             count={reaction.count}
             reacted={reaction.mine}
             authed={reaction.authed}
           />
-        </div>
-      )}
+        )}
+        {e.kind === 'LIST' && e.user && e.user !== me && e.template && (
+          <Link
+            href={`/chat?u=${encodeURIComponent(e.user)}&draft=${encodeURIComponent(
+              `Oi! Vi seu anúncio do ${e.template.player.name} #${e.serial} por ${brl(e.priceCents ?? 0)} no feed — bora negociar?`,
+            )}`}
+            title="Fazer proposta no chat"
+            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-neutral-500 transition-colors hover:text-white"
+          >
+            <Icon name="chat" size={13} />
+            Proposta
+          </Link>
+        )}
+        {e.template && (
+          <Link
+            href={e.momentId ? `/momento/${e.momentId}` : `/lance/${e.template.id}`}
+            className="ml-auto text-[11px] font-semibold text-neutral-500 transition-colors hover:text-white"
+          >
+            ver Lance →
+          </Link>
+        )}
+      </div>
     </article>
   );
 }
