@@ -188,22 +188,63 @@ function drawStats(ctx: CanvasRenderingContext2D, d: Moment3DData) {
   ctx.restore();
 }
 
-function drawBack(ctx: CanvasRenderingContext2D, d: Moment3DData) {
+function drawBack(ctx: CanvasRenderingContext2D, d: Moment3DData, crest?: HTMLImageElement) {
+  // arte do set (estilo "Video Game Numbers" do Top Shot): grid do tier,
+  // serial gigante e a identidade da edição — a marca fica discreta no rodapé
   const w = 480;
   const h = 600;
-  ctx.fillStyle = '#050505';
+  ctx.fillStyle = '#08080d';
   ctx.fillRect(0, 0, w, h);
-  const grad = ctx.createLinearGradient(0, h, w, 0);
-  grad.addColorStop(0, '#ff2e88');
-  grad.addColorStop(0.5, '#9d4edd');
-  grad.addColorStop(1, '#3a1e6e');
-  ctx.fillStyle = grad;
-  ctx.font = '900 84px system-ui, sans-serif';
+
+  // grid neon na cor do tier
+  ctx.strokeStyle = `${d.tierColor}26`;
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= w; x += 30) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= h; y += 30) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  // horizonte em perspectiva (synthwave sutil)
+  const horizon = ctx.createLinearGradient(0, h * 0.55, 0, h);
+  horizon.addColorStop(0, 'transparent');
+  horizon.addColorStop(1, `${d.tierColor}30`);
+  ctx.fillStyle = horizon;
+  ctx.fillRect(0, h * 0.55, w, h * 0.45);
+
+  // escudo pequeno no topo
+  if (crest) {
+    const cw = 64;
+    const ch = (crest.height / crest.width) * cw;
+    ctx.drawImage(crest, w / 2 - cw / 2, 54 - ch / 2 + 20, cw, ch);
+  }
+
+  // tipo da jogada + serial gigante (o número é a estrela da traseira)
   ctx.textAlign = 'center';
-  ctx.fillText('WEFANS', w / 2, h / 2 - 10);
-  ctx.fillStyle = '#9a8aa6';
-  ctx.font = '600 24px system-ui, sans-serif';
-  ctx.fillText('prova de presença', w / 2, h / 2 + 40);
+  ctx.fillStyle = `${d.tierColor}cc`;
+  ctx.font = '800 30px system-ui, sans-serif';
+  ctx.fillText(d.playType.toUpperCase(), w / 2, h * 0.36);
+  ctx.fillStyle = '#f6eef3';
+  ctx.shadowColor = d.tierColor;
+  ctx.shadowBlur = 18;
+  ctx.font = '900 88px system-ui, sans-serif';
+  ctx.fillText(d.serialLabel, w / 2, h * 0.52);
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(246,238,243,0.55)';
+  ctx.font = '700 22px system-ui, sans-serif';
+  ctx.fillText(d.tierLabel.toUpperCase(), w / 2, h * 0.59);
+
+  // rodapé: marca discreta
+  ctx.fillStyle = 'rgba(246,238,243,0.4)';
+  ctx.font = '800 20px system-ui, sans-serif';
+  ctx.fillText('WEFANS · BRASILEIRÃO 2025', w / 2, h - 34);
+
   ctx.strokeStyle = `${d.tierColor}55`;
   ctx.lineWidth = 2;
   ctx.strokeRect(20, 20, w - 40, h - 40);
@@ -303,12 +344,16 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         img.src = d.photoUrl;
       }
     }
+    const backTex = canvasTexture(480, 600, (c) => drawBack(c, d));
     if (d.crestUrl) {
       const crest = new Image();
       crest.onload = () => {
         const c = shieldTex.image as HTMLCanvasElement;
         drawShield(c.getContext('2d')!, d, crest);
         shieldTex.needsUpdate = true;
+        const b = backTex.image as HTMLCanvasElement;
+        drawBack(b.getContext('2d')!, d, crest);
+        backTex.needsUpdate = true;
       };
       crest.src = d.crestUrl;
     }
@@ -318,7 +363,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       plain,
       plain,
       frontMat,
-      new THREE.MeshStandardMaterial({ map: canvasTexture(480, 600, (c) => drawBack(c, d)) }),
+      new THREE.MeshStandardMaterial({ map: backTex }),
     ];
     const group = new THREE.Group();
     group.add(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), mats));
