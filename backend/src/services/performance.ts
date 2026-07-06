@@ -29,10 +29,11 @@ export async function getHotPlayersToday(db: PrismaClient): Promise<HotPlayer[]>
   // só jogadores com Lances visíveis interessam ao mercado
   const players = await db.player.findMany({
     where: { templates: { some: { status: { in: ['PUBLICADO', 'ENCERRADO'] } } } },
-    select: { id: true, name: true, club: true },
+    select: { id: true, name: true, club: true, position: true },
   });
 
   const scored = players
+    .filter((p) => p.position !== 'GOL') // goleiro não vira artilheiro do dia
     .map((p) => ({ p, box: simulatePlayerDay(new Date(), p.id) }))
     .filter((x) => x.box.gols >= 2) // artilheiro do dia = 2+ gols
     .sort((a, b) => b.box.gols - a.box.gols || b.box.nota - a.box.nota)
@@ -113,5 +114,7 @@ export async function getMovers(db: PrismaClient): Promise<Mover[]> {
   moversCache = { ts: Date.now(), data };
   return data;
 }
+
+
 
 

@@ -153,21 +153,38 @@ async function main() {
   const publishedTeams = teams.filter((t) => t.status === 'PUBLICADO');
 
   // ---------------------------------------------------------------- Jogadores (reais — dev; licenciamento depois)
+  // 5 jogadores por clube publicado (25 no total) — catálogo bem populado
   const playerDefs = [
-    { name: 'Neymar Jr', club: 'Santos', position: 'ATA', jersey: 10, nationality: 'Brasil' },
+    // Flamengo
     { name: 'Arrascaeta', club: 'Flamengo', position: 'MEI', jersey: 14, nationality: 'Uruguai' },
     { name: 'Pedro', club: 'Flamengo', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Bruno Henrique', club: 'Flamengo', position: 'ATA', jersey: 27, nationality: 'Brasil' },
     { name: 'Rossi', club: 'Flamengo', position: 'GOL', jersey: 1, nationality: 'Argentina' },
     { name: 'Léo Ortiz', club: 'Flamengo', position: 'ZAG', jersey: 3, nationality: 'Brasil' },
+    // Palmeiras
     { name: 'Raphael Veiga', club: 'Palmeiras', position: 'MEI', jersey: 23, nationality: 'Brasil' },
-    { name: 'Weverton', club: 'Palmeiras', position: 'GOL', jersey: 21, nationality: 'Brasil' },
     { name: 'Flaco López', club: 'Palmeiras', position: 'ATA', jersey: 42, nationality: 'Argentina' },
     { name: 'Vitor Roque', club: 'Palmeiras', position: 'ATA', jersey: 9, nationality: 'Brasil' },
-    { name: 'Yuri Alberto', club: 'Corinthians', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Gustavo Gómez', club: 'Palmeiras', position: 'ZAG', jersey: 15, nationality: 'Paraguai' },
+    { name: 'Weverton', club: 'Palmeiras', position: 'GOL', jersey: 21, nationality: 'Brasil' },
+    // Corinthians
     { name: 'Memphis Depay', club: 'Corinthians', position: 'ATA', jersey: 94, nationality: 'Holanda' },
+    { name: 'Yuri Alberto', club: 'Corinthians', position: 'ATA', jersey: 9, nationality: 'Brasil' },
     { name: 'Rodrigo Garro', club: 'Corinthians', position: 'MEI', jersey: 8, nationality: 'Argentina' },
+    { name: 'André Ramalho', club: 'Corinthians', position: 'ZAG', jersey: 4, nationality: 'Brasil' },
+    { name: 'Hugo Souza', club: 'Corinthians', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    // Botafogo
     { name: 'Savarino', club: 'Botafogo', position: 'MEI', jersey: 10, nationality: 'Venezuela' },
-    { name: 'John', club: 'Botafogo', position: 'GOL', jersey: 1, nationality: 'Brasil' },
+    { name: 'Artur', club: 'Botafogo', position: 'ATA', jersey: 7, nationality: 'Brasil' },
+    { name: 'Marlon Freitas', club: 'Botafogo', position: 'VOL', jersey: 17, nationality: 'Brasil' },
+    { name: 'Alex Telles', club: 'Botafogo', position: 'LAT', jersey: 13, nationality: 'Brasil' },
+    { name: 'John', club: 'Botafogo', position: 'GOL', jersey: 12, nationality: 'Brasil' },
+    // Santos
+    { name: 'Neymar Jr', club: 'Santos', position: 'ATA', jersey: 10, nationality: 'Brasil' },
+    { name: 'Guilherme', club: 'Santos', position: 'ATA', jersey: 11, nationality: 'Brasil' },
+    { name: 'Tiquinho Soares', club: 'Santos', position: 'ATA', jersey: 9, nationality: 'Brasil' },
+    { name: 'Zé Rafael', club: 'Santos', position: 'VOL', jersey: 6, nationality: 'Brasil' },
+    { name: 'Gabriel Brazão', club: 'Santos', position: 'GOL', jersey: 1, nationality: 'Brasil' },
   ];
   const players = [];
   for (const def of playerDefs) {
