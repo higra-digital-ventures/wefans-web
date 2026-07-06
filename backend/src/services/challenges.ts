@@ -76,6 +76,7 @@ export async function listChallenges(db: PrismaClient, userId?: string) {
       burnOnComplete: c.burnOnComplete,
       completed,
       progress,
+      requiredTemplateIds: c.requiredTemplateIds,
     });
   }
   return out;

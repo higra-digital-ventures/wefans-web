@@ -20,6 +20,7 @@ export default function LanceCard({
   paidCents,
   quickBuyListingId,
   hotLabel,
+  challengeWanted,
   className = '',
   wishlist,
 }: {
@@ -32,6 +33,7 @@ export default function LanceCard({
   paidCents?: number; // contexto de dono: rodapé vira "Média · Pago" com cor de lucro
   quickBuyListingId?: string; // compra rápida no hover, sem sair da grade (logado)
   hotLabel?: string; // performance do dia ("2 gols hoje") — matchSim → mercado
+  challengeWanted?: boolean; // exigido por desafio ativo — demanda de utilidade
   className?: string;
   /** estado da wishlist do usuário (undefined = marcador decorativo) */
   wishlist?: { wished: boolean; canWish: boolean };
@@ -101,6 +103,15 @@ export default function LanceCard({
             {serial !== undefined && (
               <span className="absolute bottom-1.5 left-1.5  bg-black/60 px-1 py-0.5 tabular-nums text-[9px] text-white">
                 #{serial}
+              </span>
+            )}
+            {challengeWanted && (
+              <span
+                className="absolute right-1.5 top-1.5 flex items-center gap-0.5 bg-accent px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white"
+                title="Exigido num desafio ativo — feche o álbum e leve o prêmio"
+              >
+                <Icon name="zap" size={9} />
+                desafio
               </span>
             )}
             {listingPriceCents != null && (

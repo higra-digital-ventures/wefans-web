@@ -10,7 +10,7 @@ import type { PrismaClient } from '@prisma/client';
 
 type Notification = {
   id: string;
-  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY' | 'WISHLIST';
+  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY' | 'WISHLIST' | 'CHALLENGE';
   title: string;
   body: string;
   href: string;
@@ -29,7 +29,7 @@ export async function getNotifications(db: PrismaClient, userId: string) {
     moment: { include: { template: { include: { player: true } } } },
   } as const;
 
-  const [sales, gifts, offers, checkins, windows, lineups, wishlistHits] = await Promise.all([
+  const [sales, gifts, offers, checkins, windows, lineups, newChallenges, wishlistHits] = await Promise.all([
     db.transaction.findMany({
       where: { type: { in: ['BUY', 'OFFER_ACCEPT'] }, sellerId: userId },
       include: { ...momentInclude, buyer: { select: { username: true } } },
@@ -64,6 +64,15 @@ export async function getNotifications(db: PrismaClient, userId: string) {
       include: { day: { include: { run: { select: { name: true } } } } },
       orderBy: { submittedAt: 'desc' },
       take: 5,
+    }),
+    // anúncio de desafio: novo desafio no ar = demanda pelos Lances exigidos
+    db.challenge.findMany({
+      where: {
+        startsAt: { gte: new Date(Date.now() - 72 * 60 * 60 * 1000), lte: new Date() },
+        endsAt: { gte: new Date() },
+      },
+      orderBy: { startsAt: 'desc' },
+      take: 3,
     }),
     // alerta de wishlist: anúncios ativos (de outros) em edições que eu marquei
     db.listing.findMany({
@@ -153,6 +162,17 @@ export async function getNotifications(db: PrismaClient, userId: string) {
       body: `${l.day.run.name} · Dia ${l.day.dayNumber}: seu score foi ${l.score} (alvo ${l.day.targetScore}) — ${l.won ? 'você venceu!' : 'não foi dessa vez.'}`,
       href: `/jogar/matchday/dia/${l.dayId}`,
       createdAt: (l.day.closedAt ?? l.submittedAt).toISOString(),
+    });
+  }
+
+  for (const c of newChallenges) {
+    items.push({
+      id: `chn-${c.id}`,
+      kind: 'CHALLENGE',
+      title: 'Novo desafio no ar',
+      body: `${c.name}${c.requiredTemplateIds.length ? ` — exige ${c.requiredTemplateIds.length} figurinha${c.requiredTemplateIds.length > 1 ? 's' : ''} no álbum` : ''}. Feche antes do apito final.`,
+      href: `/jogar/desafios/${c.id}`,
+      createdAt: c.startsAt.toISOString(),
     });
   }
 

@@ -140,6 +140,7 @@ export type ChallengeSummary = {
   burnOnComplete: boolean;
   completed: boolean;
   progress: { have: number; need: number } | null;
+  requiredTemplateIds?: string[];
 };
 
 export type ChallengeDetail = {
@@ -485,7 +486,7 @@ export type TemplateCollectors = {
 
 export type NotificationDTO = {
   id: string;
-  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY' | 'WISHLIST';
+  kind: 'SALE' | 'GIFT' | 'OFFER' | 'CHECKIN' | 'DROP_WINDOW' | 'MATCHDAY' | 'WISHLIST' | 'CHALLENGE';
   title: string;
   body: string;
   href: string;

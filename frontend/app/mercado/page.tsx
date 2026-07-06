@@ -122,6 +122,12 @@ export default async function MercadoPage({
   const pageGroups = editionGroups.slice(0, size);
 
   const activeChallenges = challenges.filter((c) => c.active).slice(0, 12);
+  // templates exigidos por desafios ativos (não completados) — demanda de utilidade
+  const challengeWantedIds = new Set(
+    challenges
+      .filter((c) => c.active && !c.completed)
+      .flatMap((c) => c.requiredTemplateIds ?? []),
+  );
 
   // conversão quente: edições da SUA wishlist com anúncio ativo agora
   const wishOnSale = (() => {
@@ -653,6 +659,7 @@ export default async function MercadoPage({
                       priceCents={l.priceCents}
                       quickBuyListingId={me && l.seller !== me.username ? l.listingId : undefined}
                       hotLabel={hotByPlayer.get(l.template.player.id)}
+                      challengeWanted={challengeWantedIds.has(l.template.id)}
                       href={`/momento/${l.momentId}`}
                       wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
                     />
