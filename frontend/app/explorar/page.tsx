@@ -77,8 +77,9 @@ function avatarBg(user: string | null) {
   return `linear-gradient(135deg, hsl(${h} 75% 46%), hsl(${(h + 45) % 360} 75% 34%))`;
 }
 
-function Username({ user }: { user: string | null }) {
+function Username({ user, me }: { user: string | null; me?: string | null }) {
   if (!user) return <span className="font-bold text-white">@anônimo</span>;
+  if (me && user === me) return <span className="font-bold text-accent3">você</span>;
   return (
     <Link href={`/u/${user}`} className="font-bold text-white hover:underline">
       @{user}
@@ -102,13 +103,15 @@ function PriceStory({ priceCents, aspCents }: { priceCents?: number; aspCents?: 
   );
 }
 
-function EventCard({ e }: { e: FeedEvent }) {
+function EventCard({ e, me }: { e: FeedEvent; me?: string | null }) {
   const meta = e.template ? TIER_META[e.template.tier] : null;
   // pull raro (Lendário/Galáctico) ganha moldura foil na cor do tier, como no Top Shot
   const rarePull = e.kind === 'PACK_OPEN' && e.template && isFoil(e.template.tier);
+  // evento seu: borda de acento — ver a si mesmo no feed
+  const mine = !!me && (e.user === me || e.targetUser === me);
   return (
     <article
-      className="border border-white/10 bg-[#0c0c0e]"
+      className={`border bg-[#0c0c0e] ${mine ? 'border-accent3/50' : 'border-white/10'}`}
       style={rarePull ? { borderColor: `${meta!.color}88`, boxShadow: `0 0 18px ${meta!.color}30` } : undefined}
     >
       {/* cabeçalho: avatar + @user + ação + tempo */}
@@ -120,7 +123,7 @@ function EventCard({ e }: { e: FeedEvent }) {
           {(e.user ?? '?')[0]}
         </span>
         <p className="min-w-0 flex-1 truncate text-[13px] text-neutral-300">
-          <Username user={e.user} /> {ACTION[e.kind]}{' '}
+          <Username user={e.user} me={me} /> {ACTION[e.kind]}{' '}
           {e.kind === 'PACK_OPEN' && <span className="font-bold text-white">{e.count} Lances</span>}
           {e.kind === 'LIST' && (e.count ?? 1) > 1 && (
             <span className="font-bold text-white">{e.count} Lances</span>
@@ -419,7 +422,7 @@ export default async function ExplorarPage({
                 <span className="shrink-0 text-[10px] text-neutral-500">{timeAgo(e.createdAt)}</span>
               </Link>
             ) : (
-              <EventCard key={e.id} e={e} />
+              <EventCard key={e.id} e={e} me={me?.username ?? null} />
             );
             return (
               <div key={e.id} className="space-y-3">
