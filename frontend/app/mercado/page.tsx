@@ -9,6 +9,7 @@ import EmptyState from '@/components/EmptyState';
 import PriceFilter from '@/components/PriceFilter';
 import SortDropdown from '@/components/SortDropdown';
 import SubTabs from '@/components/SubTabs';
+import MoversPanel from '@/components/MoversPanel';
 import TrendingStrip from '@/components/TrendingStrip';
 import TacticalBoard from '@/components/TacticalBoard';
 import VisCookie from '@/components/VisCookie';
@@ -226,10 +227,15 @@ export default async function MercadoPage({
         ]}
       />
 
-      {/* termômetro do mercado: o mesmo Em alta do feed */}
-      {(feedPulse?.popular.trending?.length ?? 0) >= 2 && (
-        <div className="mb-6">
-          <TrendingStrip items={feedPulse!.popular.trending!} />
+      {/* termômetro do mercado: Em alta (volume) + Movers (preço) */}
+      {((feedPulse?.popular.trending?.length ?? 0) >= 2 || (pulse?.movers.length ?? 0) > 0) && (
+        <div className="mb-6 grid gap-3 lg:grid-cols-[minmax(0,1fr)_300px]">
+          {(feedPulse?.popular.trending?.length ?? 0) >= 2 ? (
+            <TrendingStrip items={feedPulse!.popular.trending!} />
+          ) : (
+            <span aria-hidden />
+          )}
+          <MoversPanel movers={pulse?.movers ?? []} />
         </div>
       )}
 

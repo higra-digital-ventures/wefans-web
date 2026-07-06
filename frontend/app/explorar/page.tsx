@@ -1,9 +1,10 @@
 import Icon from '@/components/Icon';
 import Link from 'next/link';
-import { getCollectionServer, getFeedServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
+import { getCollectionServer, getFeedServer, getMarketPulseServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
 import SubTabs from '@/components/SubTabs';
 import EmptyState from '@/components/EmptyState';
 import FeedPoller from '@/components/FeedPoller';
+import MoversPanel from '@/components/MoversPanel';
 import ReactionButton from '@/components/ReactionButton';
 import TacticalBoard from '@/components/TacticalBoard';
 import TrendingStrip from '@/components/TrendingStrip';
@@ -383,11 +384,12 @@ export default async function ExplorarPage({
   // paginação simples: ?n= aumenta a janela do feed (teto 120 no backend)
   const size = Math.min(120, Math.max(40, Number(n) || 40));
   const fetchSize = forYou || tab.kinds ? Math.min(120, size + 40) : size;
-  const [feed, wishlist, checklists, collection] = await Promise.all([
+  const [feed, wishlist, checklists, collection, pulse] = await Promise.all([
     getFeedServer(fetchSize),
     getWishlistServer().catch(() => null),
     getChecklistsServer().catch(() => []),
     me0 ? getCollectionServer('').catch(() => null) : null,
+    getMarketPulseServer().catch(() => null),
   ]);
   const me = me0;
 
@@ -679,6 +681,7 @@ export default async function ExplorarPage({
 
         {/* rail direito: populares 24h + banner (como o Explore do Top Shot) */}
         <aside className="hidden space-y-5 lg:sticky lg:top-[88px] lg:block lg:self-start">
+          <MoversPanel movers={pulse?.movers ?? []} />
           <PopularPanel title="Jogadores mais populares" rows={feed?.popular.players ?? []} />
           <Link
             href="/jogar/desafios"

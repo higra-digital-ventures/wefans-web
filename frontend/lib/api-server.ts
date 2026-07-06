@@ -35,6 +35,7 @@ import type {
   FeedPopular,
   FeedReactions,
   HotPlayer,
+  Mover,
   TemplateCollectors,
 } from './types';
 
@@ -256,8 +257,8 @@ export async function getFeedServer(
   );
 }
 
-export async function getMarketPulseServer(): Promise<{ hot: HotPlayer[] } | null> {
-  return serverFetch<{ hot: HotPlayer[] }>('/api/v1/market/pulse');
+export async function getMarketPulseServer(): Promise<{ hot: HotPlayer[]; movers: Mover[] } | null> {
+  return serverFetch<{ hot: HotPlayer[]; movers: Mover[] }>('/api/v1/market/pulse');
 }
 
 export async function getTemplateCollectorsServer(id: string): Promise<TemplateCollectors | null> {

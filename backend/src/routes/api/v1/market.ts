@@ -10,7 +10,7 @@ import {
   listMarket,
   listRecentSales,
 } from '../../../services/market';
-import { getHotPlayersToday } from '../../../services/performance';
+import { getHotPlayersToday, getMovers } from '../../../services/performance';
 
 const tierEnum = z.enum(['COMUM', 'TORCIDA', 'RARO', 'LENDARIO', 'GALACTICO']);
 const marketQuery = z.object({
@@ -26,8 +26,11 @@ export async function marketRoutes(app: FastifyInstance) {
     return { listings: await listMarket(prisma, { tier }, sort ?? 'recent') };
   });
 
-  // pulso do dia: artilheiros do matchSim — performance vira sinal de mercado
-  app.get('/market/pulse', async () => ({ hot: await getHotPlayersToday(prisma) }));
+  // pulso do dia: artilheiros do matchSim + movers de preço (24h vs anteriores)
+  app.get('/market/pulse', async () => {
+    const [hot, movers] = await Promise.all([getHotPlayersToday(prisma), getMovers(prisma)]);
+    return { hot, movers };
+  });
 
   app.get('/market/activity', async (req) => {
     const { limit } = z.object({ limit: z.coerce.number().int().positive().max(50).optional() }).parse(req.query ?? {});
@@ -54,3 +57,4 @@ export async function marketRoutes(app: FastifyInstance) {
     return buyMoment(prisma, req.userId!, id);
   });
 }
+

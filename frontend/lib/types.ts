@@ -466,6 +466,12 @@ export type HotPlayer = {
   topTemplateId: string | null;
 };
 
+export type Mover = {
+  template: TemplateDTO;
+  pct: number; // variação % do preço médio 24h vs 24h anteriores
+  avgCents: number;
+};
+
 export type FeedReactions = {
   counts: Record<string, number>;
   mine: string[]; // eventKeys que o usuário logado já reagiu

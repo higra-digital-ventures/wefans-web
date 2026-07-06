@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 import { simulatePlayerDay } from '../lib/matchSim';
+import { toTemplateDTO } from '../lib/dto';
 
 /**
  * Performance → mercado (o mecanismo nº 1 de valorização do Top Shot):
@@ -60,3 +61,57 @@ export async function getHotPlayersToday(db: PrismaClient): Promise<HotPlayer[]>
   cache = { day, data };
   return data;
 }
+
+/**
+ * Movers 24h: edições cujo preço médio de venda mais mudou vs as 24h anteriores.
+ * Exige venda nas DUAS janelas (sem base de comparação não há "subiu/caiu").
+ */
+export type Mover = {
+  template: ReturnType<typeof toTemplateDTO>;
+  pct: number; // variação % do preço médio (24h vs 24h anteriores)
+  avgCents: number; // média das últimas 24h
+};
+
+const MOVERS_TTL_MS = 5 * 60_000;
+let moversCache: { ts: number; data: Mover[] } | null = null;
+
+export async function getMovers(db: PrismaClient): Promise<Mover[]> {
+  if (moversCache && Date.now() - moversCache.ts < MOVERS_TTL_MS) return moversCache.data;
+  const since24 = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const since48 = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  const txs = await db.transaction.findMany({
+    where: {
+      type: { in: ['BUY', 'OFFER_ACCEPT'] },
+      amountCents: { gt: 0 },
+      createdAt: { gte: since48 },
+    },
+    include: { moment: { include: { template: { include: { player: true } } } } },
+    take: 1000,
+  });
+
+  const byTemplate = new Map<
+    string,
+    { template: (typeof txs)[number]['moment']['template']; cur: number[]; prev: number[] }
+  >();
+  for (const t of txs) {
+    const tpl = t.moment.template;
+    const e = byTemplate.get(tpl.id) ?? { template: tpl, cur: [], prev: [] };
+    (t.createdAt >= since24 ? e.cur : e.prev).push(t.amountCents);
+    byTemplate.set(tpl.id, e);
+  }
+  const avg = (xs: number[]) => xs.reduce((n, x) => n + x, 0) / xs.length;
+  const data = [...byTemplate.values()]
+    .filter((e) => e.cur.length > 0 && e.prev.length > 0)
+    .map((e) => ({
+      template: toTemplateDTO(e.template),
+      pct: Math.round((avg(e.cur) / avg(e.prev) - 1) * 100),
+      avgCents: Math.round(avg(e.cur)),
+    }))
+    .filter((m) => Math.abs(m.pct) >= 10) // só movimento relevante
+    .sort((a, b) => Math.abs(b.pct) - Math.abs(a.pct))
+    .slice(0, 4);
+  moversCache = { ts: Date.now(), data };
+  return data;
+}
+
+
