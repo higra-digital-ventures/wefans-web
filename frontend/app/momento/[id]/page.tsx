@@ -149,6 +149,14 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               photoUrl: t.player.photoUrl,
               videoUrl: t.videoUrl,
               crestUrl: clubCrestUrl(t.player.club),
+              stats: [
+                { label: 'Supply', value: compact(t.circulatingCount) },
+                { label: 'Burned', value: compact(burned) },
+                { label: 'À venda', value: String(listed) },
+                { label: 'Média', value: t.aspCents > 0 ? brl(t.aspCents) : '—' },
+                { label: 'Jogada', value: t.playType },
+                { label: 'Donos únicos', value: String(collectors?.topCollectors.length ?? 0) + '+' },
+              ],
             }}
           />
         </div>

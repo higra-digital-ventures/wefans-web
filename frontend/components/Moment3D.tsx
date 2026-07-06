@@ -23,6 +23,7 @@ export interface Moment3DData {
   photoUrl?: string | null; // foto real (frente, quando não há vídeo)
   videoUrl?: string | null; // clipe (frente — VideoTexture)
   crestUrl?: string | null; // escudo real (face lateral)
+  stats?: { label: string; value: string }[]; // painel da face Stats (dados da edição)
 }
 
 const W = 2.4;
@@ -170,21 +171,40 @@ function drawShield(ctx: CanvasRenderingContext2D, d: Moment3DData, crest?: HTML
 function drawStats(ctx: CanvasRenderingContext2D, d: Moment3DData) {
   const w = 200;
   const h = 600;
-  ctx.fillStyle = '#15101c';
+  ctx.fillStyle = '#0c0a12';
   ctx.fillRect(0, 0, w, h);
   ctx.strokeStyle = `${d.tierColor}66`;
   ctx.lineWidth = 3;
   ctx.strokeRect(8, 8, w - 16, h - 16);
+  // painel deitado (a face é lida com o cubo girado): espaço 600×200
   ctx.save();
   ctx.translate(w / 2, h / 2);
   ctx.rotate(-Math.PI / 2);
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#f6eef3';
-  ctx.font = '800 34px system-ui, sans-serif';
-  ctx.fillText(`${d.playType} · ${d.serialLabel}`, 0, -18);
-  ctx.fillStyle = '#9a8aa6';
-  ctx.font = '600 24px system-ui, sans-serif';
-  ctx.fillText(`${d.competition} · ${new Date(d.matchDate).toLocaleDateString('pt-BR')}`, 0, 26);
+  ctx.textAlign = 'left';
+  ctx.fillStyle = d.tierColor;
+  ctx.font = '800 24px system-ui, sans-serif';
+  ctx.fillText('EDIÇÃO', -262, -62);
+  const rows = d.stats?.length
+    ? d.stats
+    : [
+        { label: 'Jogada', value: d.playType },
+        { label: 'Serial', value: d.serialLabel },
+        { label: 'Data', value: new Date(d.matchDate).toLocaleDateString('pt-BR') },
+      ];
+  const colW = 176;
+  rows.slice(0, 6).forEach((r, i) => {
+    const x = -262 + (i % 3) * colW;
+    const y = i < 3 ? -8 : 62;
+    ctx.fillStyle = '#8d8798';
+    ctx.font = '700 15px system-ui, sans-serif';
+    ctx.fillText(r.label.toUpperCase(), x, y - 26);
+    ctx.fillStyle = '#f6eef3';
+    ctx.font = '800 24px system-ui, sans-serif';
+    ctx.fillText(r.value, x, y);
+  });
+  ctx.fillStyle = 'rgba(246,238,243,0.45)';
+  ctx.font = '600 15px system-ui, sans-serif';
+  ctx.fillText(`${d.competition} · ${new Date(d.matchDate).toLocaleDateString('pt-BR')}`, -262, 84);
   ctx.restore();
 }
 
