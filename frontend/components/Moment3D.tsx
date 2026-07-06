@@ -592,6 +592,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     window.addEventListener('resize', setSize);
 
     let raf = 0;
+    let rafActive = false;
+    let inView = true;
     // entrada cinematográfica: o cubo chega girando da traseira até a frente
     let introT = reduced ? 1 : 0;
     group.rotation.y = reduced ? FRONT_Y : Math.PI + FRONT_Y;
@@ -658,9 +660,31 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
+
+    // só renderiza quando o palco está visível E a aba ativa (economia real de GPU)
+    const syncLoop = () => {
+      const shouldRun = inView && !document.hidden;
+      if (shouldRun && !rafActive) {
+        rafActive = true;
+        raf = requestAnimationFrame(tick);
+      } else if (!shouldRun && rafActive) {
+        rafActive = false;
+        cancelAnimationFrame(raf);
+      }
+    };
+    const io2 = new IntersectionObserver((entries) => {
+      inView = entries.some((e) => e.isIntersecting);
+      syncLoop();
+    });
+    io2.observe(mount);
+    const onVis = () => syncLoop();
+    document.addEventListener('visibilitychange', onVis);
+    rafActive = true;
     tick();
 
     return () => {
+      io2.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
       cancelAnimationFrame(raf);
       if (idleTimer) clearTimeout(idleTimer);
       renderer.domElement.removeEventListener('wheel', onWheel);
