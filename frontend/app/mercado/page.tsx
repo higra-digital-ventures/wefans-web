@@ -2,6 +2,7 @@ import Icon from '@/components/Icon';
 import Link from 'next/link';
 import { getFeedServer, getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
+import LoadMoreSentinel from '@/components/LoadMoreSentinel';
 import EmptyState from '@/components/EmptyState';
 import PriceFilter from '@/components/PriceFilter';
 import SortDropdown from '@/components/SortDropdown';
@@ -574,6 +575,8 @@ export default async function MercadoPage({
             </div>
           )}
           {(groupByEdition ? editionGroups.length : listings.length) > size && (
+            <>
+            <LoadMoreSentinel href={href({ n: String(size + 24) })} />
             <Link
               href={href({ n: String(size + 24) })}
               scroll={false}
@@ -581,6 +584,7 @@ export default async function MercadoPage({
             >
               Carregar mais ({(groupByEdition ? editionGroups.length : listings.length) - size} restantes)
             </Link>
+            </>
           )}
         </div>
       </div>
