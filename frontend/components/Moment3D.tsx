@@ -425,6 +425,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
   return (
     <div>
       <div className="relative">
+        {/* palco: glow radial na cor do tier atrás do cubo (canvas é alpha) */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-[-6%]"
+          style={{ background: `radial-gradient(58% 48% at 50% 46%, ${data.tierColor}1f, transparent 72%)` }}
+        />
         <div
           ref={mountRef}
           className="w-full select-none"
