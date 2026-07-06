@@ -17,7 +17,7 @@ import Provenance from '@/components/Provenance';
 import MomentActions from '@/components/MomentActions';
 import OffersPanel from '@/components/OffersPanel';
 import ShareButton from '@/components/ShareButton';
-import { TIER_META, editionLabel } from '@/lib/tiers';
+import { TIER_META, editionLabel, isFoil } from '@/lib/tiers';
 import { brl, compact, dateTime, timeAgo } from '@/lib/format';
 import { clubCrestUrl } from '@/lib/media';
 
@@ -149,6 +149,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               photoUrl: t.player.photoUrl,
               videoUrl: t.videoUrl,
               crestUrl: clubCrestUrl(t.player.club),
+              foil: isFoil(t.tier),
               stats: [
                 { label: 'Supply', value: compact(t.circulatingCount) },
                 { label: 'Burned', value: compact(burned) },

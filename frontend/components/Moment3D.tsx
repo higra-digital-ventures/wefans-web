@@ -24,6 +24,7 @@ export interface Moment3DData {
   videoUrl?: string | null; // clipe (frente — VideoTexture)
   crestUrl?: string | null; // escudo real (face lateral)
   stats?: { label: string; value: string }[]; // painel da face Stats (dados da edição)
+  foil?: boolean; // Lendário/Galáctico: sheen holográfico varrendo a frente
 }
 
 const W = 2.4;
@@ -418,6 +419,36 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     const group = new THREE.Group();
     group.add(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), mats));
 
+    // foil holográfico: plano aditivo colado à frente com um feixe diagonal
+    // que varre em loop (paridade com o wf-foil dos cards 2D)
+    let sheenTex: THREE.CanvasTexture | null = null;
+    if (d.foil) {
+      sheenTex = canvasTexture(256, 256, (c) => {
+        const g = c.createLinearGradient(0, 256, 256, 0);
+        g.addColorStop(0.38, 'rgba(0,0,0,0)');
+        g.addColorStop(0.46, 'rgba(255,46,136,0.35)');
+        g.addColorStop(0.5, 'rgba(255,255,255,0.5)');
+        g.addColorStop(0.54, 'rgba(33,212,224,0.35)');
+        g.addColorStop(0.62, 'rgba(0,0,0,0)');
+        c.fillStyle = g;
+        c.fillRect(0, 0, 256, 256);
+      });
+      sheenTex.wrapS = THREE.RepeatWrapping;
+      sheenTex.wrapT = THREE.RepeatWrapping;
+      const sheen = new THREE.Mesh(
+        new THREE.PlaneGeometry(W, H),
+        new THREE.MeshBasicMaterial({
+          map: sheenTex,
+          transparent: true,
+          opacity: 0.55,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        }),
+      );
+      sheen.position.z = D / 2 + 0.012;
+      group.add(sheen);
+    }
+
     // moldura neon: 12 barras emissivas nas arestas
     const barMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(d.tierColor) });
     const t = 0.055;
@@ -514,6 +545,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         group.rotation.y += delta * 0.06;
       }
       group.rotation.x += (rotX - group.rotation.x) * 0.08;
+      if (sheenTex && !reduced) sheenTex.offset.x = (sheenTex.offset.x + 0.003) % 1;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
