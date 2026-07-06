@@ -514,6 +514,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     let lastX = 0;
     let lastY = 0;
     let moved = 0; // distingue clique (play/pause) de arrasto
+    let spin = 0; // inércia: velocidade residual ao soltar
     let userPaused = false;
     let rotX = -0.08;
     let swayPhase = 0;
@@ -528,7 +529,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     const onMove = (e: PointerEvent) => {
       if (!dragging) return;
       moved += Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY);
-      group.rotation.y += (e.clientX - lastX) * 0.011;
+      spin = (e.clientX - lastX) * 0.011; // última velocidade vira inércia
+      group.rotation.y += spin;
       targetRef.current = group.rotation.y; // segue a mão enquanto arrasta
       rotX = Math.max(-0.9, Math.min(0.9, rotX + (e.clientY - lastY) * 0.006));
       lastX = e.clientX;
@@ -571,6 +573,11 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         const e = 1 - Math.pow(1 - introT, 3); // ease-out cúbico
         group.rotation.y = (Math.PI + FRONT_Y) * (1 - e) + FRONT_Y * e;
         group.scale.setScalar(0.9 + 0.1 * e);
+      } else if (!dragging && Math.abs(spin) > 0.0035) {
+        // solta com velocidade: continua girando e desacelera
+        group.rotation.y += spin;
+        spin *= 0.94;
+        targetRef.current = group.rotation.y;
       } else if (!dragging) {
         swayPhase += reduced ? 0 : 0.012;
         const sway = reduced ? 0 : Math.sin(swayPhase) * 0.16;
