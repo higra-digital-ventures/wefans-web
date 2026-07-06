@@ -44,6 +44,24 @@ function canvasTexture(w: number, h: number, draw: (ctx: CanvasRenderingContext2
   return tex;
 }
 
+// limitante de texto: reduz o tamanho da fonte até caber em maxWidth
+function fitText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  weight: number,
+  baseSize: number,
+  minSize: number,
+) {
+  let size = baseSize;
+  ctx.font = `${weight} ${size}px system-ui, sans-serif`;
+  while (size > minSize && ctx.measureText(text).width > maxWidth) {
+    size -= 2;
+    ctx.font = `${weight} ${size}px system-ui, sans-serif`;
+  }
+  return size;
+}
+
 // desenha imagem em modo cover (viés para o topo — rosto do jogador)
 function drawCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, w: number, h: number) {
   const ia = img.width / img.height;
@@ -124,15 +142,15 @@ function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData, photo?: HTMLI
   // "UI de transmissão": sobrenome + tier
   const lastName = d.playerName.split(' ').slice(-1)[0]?.toUpperCase() ?? '';
   ctx.fillStyle = '#f6eef3';
-  ctx.font = '800 44px system-ui, sans-serif';
   ctx.textAlign = 'left';
+  fitText(ctx, lastName, w - 200, 800, 44, 24);
   ctx.fillText(lastName, 24, h - 30);
   ctx.fillStyle = d.tierColor;
   ctx.font = '700 22px system-ui, sans-serif';
   ctx.fillText(d.tierLabel.toUpperCase(), 24, 42);
   ctx.textAlign = 'right';
   ctx.fillStyle = 'rgba(246,238,243,0.8)';
-  ctx.font = '600 20px ui-monospace, monospace';
+  fitText(ctx, d.serialLabel, 220, 600, 20, 12);
   ctx.fillText(d.serialLabel, w - 22, 42);
 }
 
@@ -212,7 +230,7 @@ function drawStats(ctx: CanvasRenderingContext2D, d: Moment3DData) {
     ctx.font = '700 15px system-ui, sans-serif';
     ctx.fillText(r.label.toUpperCase(), x, y - 26);
     ctx.fillStyle = '#f6eef3';
-    ctx.font = '800 24px system-ui, sans-serif';
+    fitText(ctx, r.value, colW - 18, 800, 24, 14);
     ctx.fillText(r.value, x, y);
   });
   ctx.fillStyle = 'rgba(246,238,243,0.45)';
@@ -266,7 +284,7 @@ function drawBack(ctx: CanvasRenderingContext2D, d: Moment3DData, crest?: HTMLIm
   ctx.fillStyle = '#f6eef3';
   ctx.shadowColor = d.tierColor;
   ctx.shadowBlur = 18;
-  ctx.font = '900 88px system-ui, sans-serif';
+  fitText(ctx, d.serialLabel, w - 72, 900, 88, 34);
   ctx.fillText(d.serialLabel, w / 2, h * 0.52);
   ctx.shadowBlur = 0;
   ctx.fillStyle = 'rgba(246,238,243,0.55)';
