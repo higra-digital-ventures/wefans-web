@@ -2,7 +2,7 @@ import Icon from '@/components/Icon';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getMe, getPublicCollectionServer, getPublicProfileServer, getPublicWishlistServer } from '@/lib/api-server';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import { dateTime } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
@@ -79,7 +79,7 @@ export default async function PublicProfilePage({
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {moments.map((m) => (
-            <LanceCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
+            <MomentCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
           ))}
         </div>
       )}
@@ -88,7 +88,7 @@ export default async function PublicProfilePage({
           <h2 className="mb-4 font-display text-2xl uppercase tracking-tight text-ink">Wishlist</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {publicWishlist.slice(0, 4).map((t) => (
-              <LanceCard key={t.id} template={t} href={`/edicao/${t.id}`} />
+              <MomentCard key={t.id} template={t} href={`/edicao/${t.id}`} />
             ))}
           </div>
         </section>

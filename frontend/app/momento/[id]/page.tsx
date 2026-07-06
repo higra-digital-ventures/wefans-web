@@ -11,7 +11,7 @@ import {
   getTemplatesServer,
 } from '@/lib/api-server';
 import Moment3D from '@/components/Moment3DLazy';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import OwnershipGauge from '@/components/OwnershipGauge';
 import Provenance from '@/components/Provenance';
 import MomentActions from '@/components/MomentActions';
@@ -549,7 +549,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {moreMoments.map((r) => (
-              <LanceCard key={r.id} template={r} href={`/edicao/${r.id}`} />
+              <MomentCard key={r.id} template={r} href={`/edicao/${r.id}`} />
             ))}
           </div>
         </section>

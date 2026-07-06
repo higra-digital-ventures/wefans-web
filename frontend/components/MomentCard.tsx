@@ -11,7 +11,7 @@ import type { TemplateDTO } from '@/lib/types';
 // Carta de mercado copiada da anatomia do Top Shot (print de referência): card preto,
 // slab 3D na mídia, linha "Tier /N (LE)", NOME em caps, descrição, Destruídos/Em circulação,
 // set, e rodapé em duas linhas — Menor preço (branco, bold) e Média (cinza).
-export default function LanceCard({
+export default function MomentCard({
   template,
   serial,
   href,

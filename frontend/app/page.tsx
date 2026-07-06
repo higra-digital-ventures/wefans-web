@@ -12,7 +12,7 @@ import {
 } from '@/lib/api-server';
 import ActivityFeed from '@/components/ActivityFeed';
 import Countdown from '@/components/Countdown';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import TacticalBoard from '@/components/TacticalBoard';
 import { TIER_META, TIER_ORDER, isFoil } from '@/lib/tiers';
 import { brl } from '@/lib/format';
@@ -177,7 +177,7 @@ export default async function Home() {
           <SectionTitle white="Raridade em campo." colored="Lendários e Galácticos" />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {rares.map((t) => (
-              <LanceCard key={t.id} template={t} href={`/edicao/${t.id}`} stillMedia />
+              <MomentCard key={t.id} template={t} href={`/edicao/${t.id}`} stillMedia />
             ))}
           </div>
         </section>

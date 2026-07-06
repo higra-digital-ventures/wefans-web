@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getChecklistsServer, getCollectionServer } from '@/lib/api-server';
 import CountUp from '@/components/CountUp';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import EmptyState from '@/components/EmptyState';
 import SortDropdown from '@/components/SortDropdown';
 import Term from '@/components/Term';
@@ -176,7 +176,7 @@ export default async function ColecaoPage({
       ) : showAll ? (
         <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]">
           {moments.map((m) => (
-            <LanceCard
+            <MomentCard
               key={m.id}
               template={m.template}
               serial={m.serial}
@@ -200,7 +200,7 @@ export default async function ColecaoPage({
                     ×{g.length}
                   </span>
                 )}
-                <LanceCard
+                <MomentCard
                   template={m.template}
                   serial={m.serial}
                   listingPriceCents={m.listingPriceCents}

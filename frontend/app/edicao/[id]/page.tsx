@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { getTemplateCollectorsServer, getTemplateMarketServer, getTemplateServer, getWishlistServer } from '@/lib/api-server';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import OwnershipStats from '@/components/OwnershipStats';
 import WishlistButton from '@/components/WishlistButton';
 import { TIER_META, editionLabel } from '@/lib/tiers';
@@ -59,7 +59,7 @@ export default async function LancePage({ params }: { params: Promise<{ id: stri
       </div>
 
       <div className="grid gap-8 md:grid-cols-[minmax(0,340px)_1fr]">
-        <LanceCard template={t} live />
+        <MomentCard template={t} live />
 
         <div>
           <div className="flex items-center gap-2">

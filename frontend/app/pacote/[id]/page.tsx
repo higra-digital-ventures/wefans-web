@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { getPackDetailServer } from '@/lib/api-server';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import BuyPackButton from '@/components/BuyPackButton';
 import { TIER_META, TIER_ORDER } from '@/lib/tiers';
 import { brl } from '@/lib/format';
@@ -64,7 +64,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
           </h3>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {g.lances.map((l) => (
-              <LanceCard key={l.id} template={l} href={`/edicao/${l.id}`} />
+              <MomentCard key={l.id} template={l} href={`/edicao/${l.id}`} />
             ))}
           </div>
         </section>

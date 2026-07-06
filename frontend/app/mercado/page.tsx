@@ -2,7 +2,7 @@ import Icon from '@/components/Icon';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { getFeedServer, getMarketServer, getMarketPulseServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import LoadMoreSentinel from '@/components/LoadMoreSentinel';
 import MobileFilterSheet from '@/components/MobileFilterSheet';
 import EmptyState from '@/components/EmptyState';
@@ -653,7 +653,7 @@ export default async function MercadoPage({
                         {count} à venda
                       </span>
                     )}
-                    <LanceCard
+                    <MomentCard
                       template={l.template}
                       serial={l.serial}
                       priceCents={l.priceCents}

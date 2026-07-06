@@ -5,7 +5,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { getChallengeServer, getMe } from '@/lib/api-server';
 import ChallengeBuilder from '@/components/ChallengeBuilder';
 import FlashClaim from '@/components/FlashClaim';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +38,7 @@ export default async function ChallengeDetailPage({ params }: { params: Promise<
         {challenge.rewardTemplate ? (
           <div>
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-widest text-muted">Recompensa</h2>
-            <LanceCard template={challenge.rewardTemplate} />
+            <MomentCard template={challenge.rewardTemplate} />
           </div>
         ) : challenge.hasPackReward ? (
           <div>

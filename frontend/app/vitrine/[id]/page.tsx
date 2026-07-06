@@ -1,7 +1,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import { getCollectionServer, getShowcaseServer } from '@/lib/api-server';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import ShowcaseEditor from '@/components/ShowcaseEditor';
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +34,7 @@ export default async function VitrinePage({ params }: { params: Promise<{ id: st
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {showcase.items.map((i) => (
-                <LanceCard
+                <MomentCard
                   key={i.moment.id}
                   template={i.moment.template}
                   serial={i.moment.serial}

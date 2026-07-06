@@ -9,7 +9,7 @@ import {
   getCollectionServer,
 } from '@/lib/api-server';
 import PerfilClient from '@/components/PerfilClient';
-import LanceCard from '@/components/LanceCard';
+import MomentCard from '@/components/MomentCard';
 import { TIER_META, TIER_ORDER } from '@/lib/tiers';
 import { dateTime, timeAgo } from '@/lib/format';
 
@@ -51,7 +51,7 @@ export default async function PerfilPage() {
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {pinned.map((m) => (
-              <LanceCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
+              <MomentCard key={m.id} template={m.template} serial={m.serial} href={`/momento/${m.id}`} />
             ))}
           </div>
         )}
@@ -119,7 +119,7 @@ export default async function PerfilPage() {
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {wl.map((t) => (
-              <LanceCard key={t.id} template={t} href={`/edicao/${t.id}`} />
+              <MomentCard key={t.id} template={t} href={`/edicao/${t.id}`} />
             ))}
           </div>
         )}

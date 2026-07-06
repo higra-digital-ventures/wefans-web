@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { openPack } from '@/lib/api-client';
-import LanceCard from './LanceCard';
+import MomentCard from './MomentCard';
 import { brl } from '@/lib/format';
 import { isFoil, TIER_META, TIER_ORDER } from '@/lib/tiers';
 import type { MomentDTO } from '@/lib/types';
@@ -111,7 +111,7 @@ export default function OpenPackClient({
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {moments.map((m, i) => (
             <div key={m.id} className="wf-reveal" style={{ animationDelay: `${i * 420}ms` }}>
-              <LanceCard template={m.template} serial={m.serial} href={`/momento/${m.id}`} live />
+              <MomentCard template={m.template} serial={m.serial} href={`/momento/${m.id}`} live />
             </div>
           ))}
         </div>
