@@ -516,6 +516,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     let lastY = 0;
     let moved = 0; // distingue clique (play/pause) de arrasto
     let spin = 0; // inércia: velocidade residual ao soltar
+    let hoverX = 0; // parallax: o cubo inclina levemente seguindo o mouse
+    let hoverY = 0;
     let userPaused = false;
     let rotX = -0.08;
     let swayPhase = 0;
@@ -563,8 +565,20 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       targetRef.current = FRONT_Y;
       setFace('lance');
     };
+    const onHover = (e: PointerEvent) => {
+      if (dragging || e.pointerType !== 'mouse') return;
+      const r = renderer.domElement.getBoundingClientRect();
+      hoverX = (e.clientX - r.left) / r.width - 0.5;
+      hoverY = (e.clientY - r.top) / r.height - 0.5;
+    };
+    const onLeave = () => {
+      hoverX = 0;
+      hoverY = 0;
+    };
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.style.cursor = 'grab';
+    renderer.domElement.addEventListener('pointermove', onHover);
+    renderer.domElement.addEventListener('pointerleave', onLeave);
     renderer.domElement.addEventListener('dblclick', onDbl);
     renderer.domElement.addEventListener('pointerdown', onDown);
     window.addEventListener('pointermove', onMove);
@@ -589,12 +603,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       } else if (!dragging) {
         swayPhase += reduced ? 0 : 0.012;
         const sway = reduced ? 0 : Math.sin(swayPhase) * 0.16;
-        const want = targetRef.current + sway;
+        const want = targetRef.current + sway + (reduced ? 0 : hoverX * 0.14);
         // caminho mais curto (evita dar a volta ao voltar de um arrasto longo)
         const delta = ((want - group.rotation.y + Math.PI) % (Math.PI * 2)) - Math.PI;
         group.rotation.y += delta * 0.06;
       }
-      group.rotation.x += (rotX - group.rotation.x) * 0.08;
+      group.rotation.x += (rotX - (reduced ? 0 : hoverY * 0.1) - group.rotation.x) * 0.08;
       if (sheenTex && !reduced) sheenTex.offset.x = (sheenTex.offset.x + 0.003) % 1;
       // moldura respira na cor do tier
       if (!reduced) barMat.color.copy(barBase).multiplyScalar(0.82 + 0.28 * Math.sin(swayPhase * 1.6));
@@ -643,6 +657,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     return () => {
       cancelAnimationFrame(raf);
       if (idleTimer) clearTimeout(idleTimer);
+      renderer.domElement.removeEventListener('pointermove', onHover);
+      renderer.domElement.removeEventListener('pointerleave', onLeave);
       renderer.domElement.removeEventListener('dblclick', onDbl);
       renderer.domElement.removeEventListener('pointerdown', onDown);
       window.removeEventListener('pointermove', onMove);
