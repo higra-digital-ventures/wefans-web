@@ -604,6 +604,10 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     let raf = 0;
     let frame = 0;
     let rafActive = false;
+    // DPR adaptativo: mede o frame time no aquecimento e degrada se necessário
+    let perfAccum = 0;
+    let lastT = performance.now();
+    let dprTuned = false;
     let inView = true;
     // entrada cinematográfica: o cubo chega girando da traseira até a frente
     let introT = reduced ? 1 : 0;
@@ -677,6 +681,17 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         shadowRef.current.style.opacity = String(0.75 + 0.25 * Math.abs(Math.cos(yaw)));
       }
       renderer.render(scene, camera);
+      if (!dprTuned) {
+        const now = performance.now();
+        if (frame > 20 && frame <= 80) perfAccum += now - lastT;
+        lastT = now;
+        if (frame === 80) {
+          dprTuned = true;
+          const avg = perfAccum / 60;
+          if (avg > 26) renderer.setPixelRatio(1); // GPU sofrendo: prioriza fluidez
+          else if (avg > 20) renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        }
+      }
       raf = requestAnimationFrame(tick);
     };
 
