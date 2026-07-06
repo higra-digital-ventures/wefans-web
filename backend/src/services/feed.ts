@@ -136,7 +136,7 @@ export async function getFeed(db: PrismaClient, limit = 30) {
   }
 
   // agrupa MINTs do mesmo usuário em janelas de 90s = uma abertura de pacote;
-  // a arte do evento é o Lance de tier mais alto do lote
+  // a arte do evento é o Momento de tier mais alto do lote
   const packGroups = new Map<string, typeof mints>();
   for (const m of mints) {
     const bucket = Math.floor(m.createdAt.getTime() / 90_000);

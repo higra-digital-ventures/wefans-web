@@ -9,7 +9,7 @@ export default async function PacotesPage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <h1 className="mb-2 font-display text-4xl uppercase text-ink">Pacotes</h1>
-      <p className="mb-8 text-muted">Compre, abra e revele Lances numerados.</p>
+      <p className="mb-8 text-muted">Compre, abra e revele Momentos numerados.</p>
       {packs.length === 0 ? (
         <p className="text-muted">Nenhum pacote disponível no momento.</p>
       ) : (

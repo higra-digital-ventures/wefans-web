@@ -36,7 +36,7 @@ export default async function AdminParcerias() {
               <th className="px-4 py-3">Estádio</th>
               <th className="px-4 py-3">Parceria</th>
               <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Lances</th>
+              <th className="px-4 py-3">Momentos</th>
               <th className="px-4 py-3 text-right">Ações</th>
             </tr>
           </thead>

@@ -13,7 +13,7 @@ export async function listPacks(db: PrismaClient) {
   return packs.map(toPackDTO);
 }
 
-/** Detalhe do pacote + Lances possíveis (catálogo publicado) agrupados por tier (seção 11.6). */
+/** Detalhe do pacote + Momentos possíveis (catálogo publicado) agrupados por tier (seção 11.6). */
 export async function getPackDetail(db: PrismaClient, packId: string) {
   const pack = await db.pack.findUnique({ where: { id: packId } });
   if (!pack) throw notFound('Pacote não encontrado');

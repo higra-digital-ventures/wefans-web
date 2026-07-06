@@ -28,7 +28,7 @@ export default async function PerfilPage() {
   ]);
   const wl = wishlist ?? [];
   const col = collection ?? [];
-  // Destaques (pinned do Top Shot): os 3 Lances mais valiosos pela média
+  // Destaques (pinned do Top Shot): os 3 Momentos mais valiosos pela média
   const pinned = [...col].sort((a, b) => (b.template.aspCents || 0) - (a.template.aspCents || 0)).slice(0, 3);
   // Coleção por Times (clube do jogador)
   const byClub = new Map<string, number>();
@@ -42,7 +42,7 @@ export default async function PerfilPage() {
         <h2 className="mb-3 font-semibold text-ink">Destaques</h2>
         {pinned.length === 0 ? (
           <p className="text-sm text-muted">
-            Sem Lances ainda —{' '}
+            Sem Momentos ainda —{' '}
             <Link href="/pacotes" className="text-accent3 underline">
               abra um pacote
             </Link>{' '}
@@ -76,7 +76,7 @@ export default async function PerfilPage() {
                 className="rounded-2xl flex items-center justify-between border border-line bg-[#0a0a0b] px-3 py-2.5 transition-colors hover:border-white/30"
               >
                 <span className="text-[13px] font-semibold text-ink">{club}</span>
-                <span className="tabular-nums text-[12px] text-accent3">{n} Lance{n > 1 ? 's' : ''}</span>
+                <span className="tabular-nums text-[12px] text-accent3">{n} Momento{n > 1 ? 's' : ''}</span>
               </Link>
             ))}
           </div>
@@ -114,7 +114,7 @@ export default async function PerfilPage() {
         </div>
         {wl.length === 0 ? (
           <p className="text-sm text-muted">
-            Marque Lances na página da edição (★) para acompanhá-los aqui.
+            Marque Momentos na página da edição (★) para acompanhá-los aqui.
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">

@@ -95,7 +95,7 @@ export default function OpenPackClient({
               Veio um <span style={{ color: meta.color }}>{meta.label}</span>!
             </>
           ) : (
-            <>Você revelou {moments.length} Lances!</>
+            <>Você revelou {moments.length} Momentos!</>
           )}
         </h1>
         <p className="mb-8 text-muted">
@@ -132,7 +132,7 @@ export default function OpenPackClient({
       <div className={`mb-6 h-52 w-40 bg-sunset shadow-neon ${tearing ? 'wf-tear' : ''}`} />
       <h1 className="mb-2 font-display text-4xl uppercase text-ink">Pacote lacrado</h1>
       <p className="mb-6 max-w-sm text-muted">
-        Rasgue para revelar seus Lances. O que sair é seu — numerado e colecionável.
+        Rasgue para revelar seus Momentos. O que sair é seu — numerado e colecionável.
       </p>
       {error && (
         <div className="rounded-lg mb-4 max-w-sm border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">

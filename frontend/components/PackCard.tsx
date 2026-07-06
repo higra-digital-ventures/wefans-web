@@ -15,7 +15,7 @@ export default function PackCard({ pack }: { pack: PackDTO }) {
           <Link href={`/pacote/${pack.id}`} className="font-display text-xl text-ink hover:text-accent">
             {pack.name}
           </Link>
-          <p className="text-xs text-muted">{pack.momentCount} Lances por pacote</p>
+          <p className="text-xs text-muted">{pack.momentCount} Momentos por pacote</p>
         </div>
         <span className="shrink-0 rounded-full bg-panel2 px-2.5 py-1 tabular-nums text-sm text-accent3">
           {brl(pack.priceCents)}
@@ -50,7 +50,7 @@ export default function PackCard({ pack }: { pack: PackDTO }) {
           href={`/pacote/${pack.id}`}
           className="border border-line px-3 py-2 text-sm text-muted transition-colors hover:border-accent/40 hover:text-ink"
         >
-          Ver Lances
+          Ver Momentos
         </Link>
       </div>
     </div>

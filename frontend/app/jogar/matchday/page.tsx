@@ -17,7 +17,7 @@ export default async function MatchdayPage() {
         </Link>
       </div>
       <p className="mb-8 text-muted">
-        Fantasy diário: escale seus Lances, bata o alvo do dia e suba no ranking do run.
+        Fantasy diário: escale seus Momentos, bata o alvo do dia e suba no ranking do run.
       </p>
 
       {runs.length === 0 ? (

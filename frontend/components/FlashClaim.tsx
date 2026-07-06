@@ -38,7 +38,7 @@ export default function FlashClaim({
     <div className="rounded-2xl border border-line bg-panel p-5">
       <h2 className="mb-1 font-semibold text-ink"><Icon name="zap" size={14} className="inline align-[-2px] text-accent2" /> Critério de hoje</h2>
       <p className="mb-4 text-sm text-muted">
-        Tenha o Lance de um jogador com {flash.min}+ {flash.stat} hoje (stats simuladas).
+        Tenha o Momento de um jogador com {flash.min}+ {flash.stat} hoje (stats simuladas).
       </p>
 
       <div className="mb-4">
@@ -86,7 +86,7 @@ export default function FlashClaim({
         }
         className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white disabled:opacity-50"
       >
-        {pending ? 'Resgatando…' : !isAuthed ? 'Entre para participar' : flash.eligible ? 'Resgatar recompensa' : 'Nenhum Lance seu cumpre hoje'}
+        {pending ? 'Resgatando…' : !isAuthed ? 'Entre para participar' : flash.eligible ? 'Resgatar recompensa' : 'Nenhum Momento seu cumpre hoje'}
       </button>
     </div>
   );

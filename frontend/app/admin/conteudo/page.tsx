@@ -29,7 +29,7 @@ export default async function AdminConteudo() {
         <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-line text-left text-xs uppercase tracking-widest text-muted">
-              <th className="px-4 py-3">Lance</th>
+              <th className="px-4 py-3">Momento</th>
               <th className="px-4 py-3">Jogador · Time</th>
               <th className="px-4 py-3">Tier</th>
               <th className="px-4 py-3">Edição</th>

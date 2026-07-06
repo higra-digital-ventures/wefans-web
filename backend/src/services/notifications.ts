@@ -2,7 +2,7 @@ import type { PrismaClient } from '@prisma/client';
 
 /**
  * Notificações do usuário — derivadas dos eventos que a economia já registra
- * (mesma filosofia do feed do Explorar): venda dos seus Lances, presentes,
+ * (mesma filosofia do feed do Explorar): venda dos seus Momentos, presentes,
  * ofertas recebidas, check-ins resolvidos, janela de drop e rodadas do Matchday.
  * Estado de leitura = marca d'água `User.notificationsSeenAt` (uma coluna, sem
  * tabela nova); "não lidas" = itens mais novos que a marca.
@@ -65,7 +65,7 @@ export async function getNotifications(db: PrismaClient, userId: string) {
       orderBy: { submittedAt: 'desc' },
       take: 5,
     }),
-    // anúncio de desafio: novo desafio no ar = demanda pelos Lances exigidos
+    // anúncio de desafio: novo desafio no ar = demanda pelos Momentos exigidos
     db.challenge.findMany({
       where: {
         startsAt: { gte: new Date(Date.now() - 72 * 60 * 60 * 1000), lte: new Date() },
@@ -94,7 +94,7 @@ export async function getNotifications(db: PrismaClient, userId: string) {
     items.push({
       id: `sale-${s.id}`,
       kind: 'SALE',
-      title: 'Lance vendido',
+      title: 'Momento vendido',
       body: `${t.player.name} #${s.moment.serial} foi vendido por ${money(s.amountCents)} para @${s.buyer?.username ?? '—'}.`,
       href: `/momento/${s.momentId}`,
       createdAt: s.createdAt.toISOString(),

@@ -191,7 +191,7 @@ export async function getTemplateMarket(db: PrismaClient, templateId: string) {
       },
     }),
   ]);
-  if (!template) throw notFound('Lance não encontrado');
+  if (!template) throw notFound('Momento não encontrado');
   return {
     aspCents: template.aspCents,
     floorCents: floor?.priceCents ?? null,

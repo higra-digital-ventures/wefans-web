@@ -26,7 +26,7 @@ export async function getHotPlayersToday(db: PrismaClient): Promise<HotPlayer[]>
   const day = dayKey();
   if (cache && cache.day === day) return cache.data; // determinístico por dia
 
-  // só jogadores com Lances visíveis interessam ao mercado
+  // só jogadores com Momentos visíveis interessam ao mercado
   const players = await db.player.findMany({
     where: { templates: { some: { status: { in: ['PUBLICADO', 'ENCERRADO'] } } } },
     select: { id: true, name: true, club: true, position: true },

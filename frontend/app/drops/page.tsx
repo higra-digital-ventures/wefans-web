@@ -200,7 +200,7 @@ export default async function DropsPage() {
     .flatMap((r) => r.days.filter((day) => !day.closed).map((day) => ({ run: r, day })))
     .slice(0, 3);
 
-  // vitrine do hero: os melhores Lances possíveis do pack, por raridade
+  // vitrine do hero: os melhores Momentos possíveis do pack, por raridade
   const heroLances = (heroPack?.possibleLances ?? [])
     .slice()
     .sort((a, b) => TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier))
@@ -361,7 +361,7 @@ export default async function DropsPage() {
                   href={`/pacote/${hero.packs[0].id}`}
                   className="mt-4 inline-block text-[11px] text-neutral-300 underline underline-offset-2 hover:text-white"
                 >
-                  Ver todos os Lances possíveis →
+                  Ver todos os Momentos possíveis →
                 </Link>
               </div>
             )}

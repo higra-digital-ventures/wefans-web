@@ -47,7 +47,7 @@ export default async function RankingDetailPage({ params }: { params: Promise<{ 
               {board.entries.length === 0 ? (
                 <tr>
                   <td colSpan={3} className="px-4 py-6 text-center text-muted">
-                    Sem participantes ainda — seja o primeiro a travar um Lance.
+                    Sem participantes ainda — seja o primeiro a travar um Momento.
                   </td>
                 </tr>
               ) : (

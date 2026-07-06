@@ -48,7 +48,7 @@ export default function ChallengeBuilder({
         )}
         {result?.rewardMomentId && (
           <Link href={`/momento/${result.rewardMomentId}`} className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-white">
-            Ver Lance de recompensa
+            Ver Momento de recompensa
           </Link>
         )}
         {!result && <p className="text-sm text-muted">Você já completou este desafio.</p>}
@@ -60,9 +60,9 @@ export default function ChallengeBuilder({
     <div className="rounded-2xl border border-line bg-panel p-5">
       <h2 className="mb-1 font-semibold text-ink">Montador de Entrada</h2>
       <p className="mb-4 text-sm text-muted">
-        Selecione um Lance seu para cada exigência.
+        Selecione um Momento seu para cada exigência.
         {challenge.burnOnComplete && (
-          <span className="text-accent"> Atenção: os Lances usados serão QUEIMADOS.</span>
+          <span className="text-accent"> Atenção: os Momentos usados serão QUEIMADOS.</span>
         )}
       </p>
 
@@ -74,7 +74,7 @@ export default function ChallengeBuilder({
             </div>
             {r.eligible.length === 0 ? (
               <p className="text-xs text-accent">
-                Você não possui este Lance —{' '}
+                Você não possui este Momento —{' '}
                 <Link
                   href={`/mercado?q=${encodeURIComponent(r.template.player.name)}`}
                   className="text-accent3 underline underline-offset-2 hover:text-ink"
@@ -111,7 +111,7 @@ export default function ChallengeBuilder({
         onClick={submit}
         className="rounded-lg mt-5  bg-accent px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        {pending ? 'Enviando…' : !isAuthed ? 'Entre para participar' : allCovered ? 'Completar desafio' : 'Selecione todos os Lances'}
+        {pending ? 'Enviando…' : !isAuthed ? 'Entre para participar' : allCovered ? 'Completar desafio' : 'Selecione todos os Momentos'}
       </button>
     </div>
   );

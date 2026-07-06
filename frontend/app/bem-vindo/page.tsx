@@ -23,14 +23,14 @@ export default async function BemVindoPage() {
       n: '2',
       color: '#ff2e88',
       title: 'Abra seu primeiro pacote',
-      body: 'Cada pacote revela 3 Lances numerados — jogadas de futebol colecionáveis, com raridades de Comum a Galáctico. É aqui que tudo começa.',
+      body: 'Cada pacote revela 3 Momentos numerados — jogadas de futebol colecionáveis, com raridades de Comum a Galáctico. É aqui que tudo começa.',
       cta: { label: 'Abrir um pacote', href: '/pacotes' },
     },
     {
       n: '3',
       color: '#9d4edd',
       title: 'Colecione, negocie e jogue',
-      body: 'Seus Lances valem pontos, entram em desafios, rankings e no fantasy Matchday — e podem ser vendidos no mercado a qualquer momento.',
+      body: 'Seus Momentos valem pontos, entram em desafios, rankings e no fantasy Matchday — e podem ser vendidos no mercado a qualquer momento.',
       cta: { label: 'Explorar o mercado', href: '/mercado' },
     },
   ];

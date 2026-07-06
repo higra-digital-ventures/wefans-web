@@ -29,7 +29,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
           <div>
             <h1 className="font-display text-4xl uppercase text-ink">{pack.name}</h1>
             <p className="mt-1 text-muted">
-              {pack.momentCount} Lances · {remaining > 0 ? `${remaining.toLocaleString('pt-BR')} disponíveis` : 'esgotado'}
+              {pack.momentCount} Momentos · {remaining > 0 ? `${remaining.toLocaleString('pt-BR')} disponíveis` : 'esgotado'}
               {pack.guaranteeTier && ` · garante ${TIER_META[pack.guaranteeTier].label}+`}
             </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
@@ -55,7 +55,7 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
       </header>
 
       <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted">
-        Lances possíveis neste pacote
+        Momentos possíveis neste pacote
       </h2>
       {groups.map((g) => (
         <section key={g.tier} className="mb-10">

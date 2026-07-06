@@ -17,7 +17,7 @@ export default async function OfertasPage() {
       {offers.length === 0 ? (
         <EmptyState
           title="Nenhuma oferta ativa"
-          hint="Achou um Lance que quer? Faça uma oferta na página dele — o dono é avisado na hora."
+          hint="Achou um Momento que quer? Faça uma oferta na página dele — o dono é avisado na hora."
           cta={{ label: 'Explorar o mercado', href: '/mercado' }}
         />
       ) : (
@@ -26,7 +26,7 @@ export default async function OfertasPage() {
             <li key={o.id} className="flex items-center justify-between gap-3 px-4 py-3">
               <div className="min-w-0">
                 <div className="truncate text-ink">
-                  {o.template?.player.name ?? 'Lance'}{' '}
+                  {o.template?.player.name ?? 'Momento'}{' '}
                   <span className="text-muted">
                     {o.scope === 'serial' && o.serial ? `#${o.serial}` : '· edição'}
                   </span>

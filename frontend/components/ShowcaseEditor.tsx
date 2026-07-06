@@ -56,10 +56,10 @@ export default function ShowcaseEditor({
       </div>
 
       <div>
-        <div className="mb-1 text-sm text-muted">Adicionar Lance</div>
+        <div className="mb-1 text-sm text-muted">Adicionar Momento</div>
         <div className="flex gap-2">
           <select value={addId} onChange={(e) => setAddId(e.target.value)} className={`${field} flex-1`}>
-            <option value="">Escolha um Lance…</option>
+            <option value="">Escolha um Momento…</option>
             {available.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.template.player.name} · #{m.serial}

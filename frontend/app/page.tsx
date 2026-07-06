@@ -203,7 +203,7 @@ export default async function Home() {
                     </div>
                     <div className="text-sm font-bold uppercase text-ink">{p.name}</div>
                     <div className="mt-1 text-[11px] text-muted">
-                      {p.momentCount} Lances · {remaining.toLocaleString('pt-BR')} restantes
+                      {p.momentCount} Momentos · {remaining.toLocaleString('pt-BR')} restantes
                       {pct >= 50 && <span className="ml-1 text-amber-300">· {pct}% vendido</span>}
                     </div>
                     <div className="mt-2 text-[13px] font-bold text-accent3">{brl(p.priceCents)}</div>

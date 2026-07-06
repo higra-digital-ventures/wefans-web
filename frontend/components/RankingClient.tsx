@@ -45,15 +45,15 @@ export default function RankingClient({
   return (
     <div className="rounded-2xl space-y-4  border border-line bg-panel p-5">
       <div>
-        <h2 className="mb-1 font-semibold text-ink">Travar Lance para pontuar</h2>
+        <h2 className="mb-1 font-semibold text-ink">Travar Momento para pontuar</h2>
         <p className="mb-3 text-xs text-muted">
-          Travar soma a Pontuação wefans do Lance ao seu total neste ranking (trava temporária de 7 dias).
+          Travar soma a Pontuação wefans do Momento ao seu total neste ranking (trava temporária de 7 dias).
         </p>
         {error && <p className="rounded-lg mb-2  border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
         {!isAuthed ? (
           <p className="text-sm text-muted">Entre para participar.</p>
         ) : board.eligibleMoments.length === 0 ? (
-          <p className="text-sm text-muted">Você não tem Lances elegíveis (ou já travou todos).</p>
+          <p className="text-sm text-muted">Você não tem Momentos elegíveis (ou já travou todos).</p>
         ) : (
           <div className="flex gap-2">
             <select
@@ -61,7 +61,7 @@ export default function RankingClient({
               onChange={(e) => setMomentId(e.target.value)}
               className="rounded-lg flex-1  border border-line bg-panel2 px-3 py-2 text-ink outline-none"
             >
-              <option value="">Escolha um Lance…</option>
+              <option value="">Escolha um Momento…</option>
               {board.eligibleMoments.map((m) => (
                 <option key={m.id} value={m.id}>
                   {m.playerName} #{m.serial} · {m.points} pts

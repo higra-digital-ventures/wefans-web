@@ -12,7 +12,7 @@ export default async function FichasPage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
       <h1 className="mb-2 font-display text-4xl uppercase text-ink">Fichas de Troca</h1>
-      <p className="mb-8 text-muted">Troque Lances por fichas, e fichas por pacotes exclusivos.</p>
+      <p className="mb-8 text-muted">Troque Momentos por fichas, e fichas por pacotes exclusivos.</p>
       <FichasClient packs={packs} tradeTickets={me.tradeTickets} />
     </main>
   );

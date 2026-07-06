@@ -24,7 +24,7 @@ export default async function PublicProfilePage({
   const kpis = [
     {
       label: 'Pontuação wefans',
-      hint: 'O valor da coleção em pontos — cada Lance soma conforme a raridade.',
+      hint: 'O valor da coleção em pontos — cada Momento soma conforme a raridade.',
       value: profile.topShotScore.toLocaleString('pt-BR'),
     },
     {
@@ -32,7 +32,7 @@ export default async function PublicProfilePage({
       hint: 'Usado nas filas de drop: pontos por raridade + bônus de desafios e check-ins.',
       value: profile.collectorScore.toLocaleString('pt-BR'),
     },
-    { label: 'Lances', hint: undefined, value: profile.momentCount.toLocaleString('pt-BR') },
+    { label: 'Momentos', hint: undefined, value: profile.momentCount.toLocaleString('pt-BR') },
   ];
 
   return (
@@ -75,7 +75,7 @@ export default async function PublicProfilePage({
 
       <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-muted">Coleção</h2>
       {moments.length === 0 ? (
-        <p className="text-muted">Sem Lances públicos ainda.</p>
+        <p className="text-muted">Sem Momentos públicos ainda.</p>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {moments.map((m) => (

@@ -55,7 +55,7 @@ export default function PackMarketClient({
               <div key={l.id} className="rounded-2xl border border-line bg-panel p-5">
                 <div className="font-semibold text-ink">{l.pack.name}</div>
                 <div className="text-xs text-muted">
-                  {l.pack.momentCount} Lances · vendedor @{l.seller}
+                  {l.pack.momentCount} Momentos · vendedor @{l.seller}
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <span className="tabular-nums text-accent3">{brl(l.priceCents)}</span>
@@ -79,7 +79,7 @@ export default function PackMarketClient({
               {myPacks.map((p) => (
                 <div key={p.id} className="rounded-2xl border border-line bg-panel p-5">
                   <div className="font-semibold text-ink">{p.pack.name}</div>
-                  <div className="text-xs text-muted">{p.pack.momentCount} Lances</div>
+                  <div className="text-xs text-muted">{p.pack.momentCount} Momentos</div>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <Link href={`/abrir/${p.id}`} className={ghost}>
                       Abrir

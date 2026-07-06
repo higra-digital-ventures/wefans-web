@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const t = await getTemplateServer(id);
-  if (!t) return { title: 'Lance' };
+  if (!t) return { title: 'Momento' };
   return {
     title: `${t.player.name} — ${t.title}`,
     description: `${t.playType} · ${t.competition} · edição ${t.editionType === 'LIMITADA' ? `limitada /${t.editionSize}` : 'circulante'} no wefans.`,

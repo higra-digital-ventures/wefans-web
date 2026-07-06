@@ -45,7 +45,7 @@ export default function PerfilClient({
   const kpis = [
     {
       label: 'Pontuação wefans',
-      hint: 'O valor da sua coleção em pontos — cada Lance seu soma conforme a raridade.',
+      hint: 'O valor da sua coleção em pontos — cada Momento seu soma conforme a raridade.',
       value: me.topShotScore.toLocaleString('pt-BR'),
       sub: percentile ? `top ${percentile.score}% dos colecionadores` : undefined,
     },
@@ -55,11 +55,11 @@ export default function PerfilClient({
       value: me.collectorScore.toLocaleString('pt-BR'),
       sub: percentile ? `top ${percentile.collector}%` : undefined,
     },
-    { label: 'Lances', hint: undefined, value: momentCount.toLocaleString('pt-BR'), sub: undefined },
+    { label: 'Momentos', hint: undefined, value: momentCount.toLocaleString('pt-BR'), sub: undefined },
   ];
   const TABS = [
     { label: 'Visão geral', href: '/perfil', active: true },
-    { label: 'Lances', href: '/colecao' },
+    { label: 'Momentos', href: '/colecao' },
     { label: 'Pacotes', href: '/mercado/pacotes' },
     { label: 'Ofertas', href: '/ofertas' },
     { label: 'Fichas', href: '/fichas' },

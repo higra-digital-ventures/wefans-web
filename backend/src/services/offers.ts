@@ -22,7 +22,7 @@ export async function createOffer(db: PrismaClient, userId: string, input: Creat
     if (moment.ownerId === userId) throw badRequest('Você já é dono deste Momento');
   } else {
     const tpl = await db.template.findUnique({ where: { id: input.templateId } });
-    if (!tpl || tpl.status !== 'PUBLICADO') throw notFound('Lance não encontrado');
+    if (!tpl || tpl.status !== 'PUBLICADO') throw notFound('Momento não encontrado');
   }
 
   const offer = await db.offer.create({

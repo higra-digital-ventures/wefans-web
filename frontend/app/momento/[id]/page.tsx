@@ -298,7 +298,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
         <Panel title="Detalhes">
           <p className="max-w-3xl text-sm leading-relaxed text-neutral-300">
             {t.player.name} ({t.player.club}, camisa {t.player.jersey}) — {t.title.toLowerCase()} na{' '}
-            {t.competition}, temporada 25/26. Lance do tipo {t.playType} registrado em{' '}
+            {t.competition}, temporada 25/26. Momento do tipo {t.playType} registrado em{' '}
             {new Date(t.matchDate).toLocaleDateString('pt-BR')}. Edição{' '}
             {t.editionType === 'LIMITADA' ? `limitada a ${t.editionSize} unidades` : 'circulante'} · exemplar{' '}
             {editionLabel(t, m.serial)}.
@@ -310,7 +310,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               <OwnershipGauge existing={t.mintedCount} listed={listed} locked={locked} burned={burned} legend={false} />
               <p className="-mt-1 text-center text-[11px] text-neutral-400">
                 <Link href={`/lance/${t.id}`} className="underline underline-offset-2 hover:text-white">
-                  Ver todos os Lances da edição
+                  Ver todos os Momentos da edição
                 </Link>
               </p>
             </div>
@@ -470,7 +470,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
               <div>
                 <div className="mb-2 flex items-baseline justify-between text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400">
                   <span>Mais exemplares</span>
-                  <span className="font-normal normal-case tracking-normal text-neutral-500">#Lances</span>
+                  <span className="font-normal normal-case tracking-normal text-neutral-500">#Momentos</span>
                 </div>
                 <ol className="divide-y divide-line/50">
                   {collectors.topCollectors.map((c, i) => (
@@ -544,7 +544,7 @@ export default async function MomentoPage({ params }: { params: Promise<{ id: st
       {moreMoments.length > 0 && (
         <section className="mt-12">
           <h2 className="mb-4 font-display text-2xl uppercase tracking-tight">
-            <span className="text-ink">Mais Lances.</span>{' '}
+            <span className="text-ink">Mais Momentos.</span>{' '}
             <span style={{ color: meta.color }}>{meta.label}s</span>
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

@@ -16,7 +16,7 @@ export default async function MissoesPage() {
           desafios →
         </Link>
       </div>
-      <p className="mb-8 text-muted">Caças ao tesouro fora de campo: monte vitrines, cumpra objetivos especiais e leve Lances de brinde.</p>
+      <p className="mb-8 text-muted">Caças ao tesouro fora de campo: monte vitrines, cumpra objetivos especiais e leve Momentos de brinde.</p>
 
       {quests.length === 0 ? (
         <EmptyState

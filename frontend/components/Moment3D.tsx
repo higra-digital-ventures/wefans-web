@@ -1,6 +1,6 @@
 'use client';
 
-// 3D Moment (seção 11.7): o Lance como um cubo/slab 3D com moldura neon por raridade.
+// 3D Moment (seção 11.7): o Momento como um cubo/slab 3D com moldura neon por raridade.
 // Faces: frente = prancheta do lance · lateral = escudo holográfico · lateral 2 = stats ·
 // verso = marca wefans. Arraste para girar; auto-rotação no idle (desliga com
 // prefers-reduced-motion). Sem post-processing pesado (glow fake por cor).
@@ -305,7 +305,7 @@ function drawBack(ctx: CanvasRenderingContext2D, d: Moment3DData, crest?: HTMLIm
 // escudo à esquerda (+90°), stats à direita (−90°), marca atrás (180°)
 const FRONT_Y = -0.26;
 const FACES = [
-  { key: 'lance', label: 'Lance', icon: '▶', y: FRONT_Y },
+  { key: 'lance', label: 'Momento', icon: '▶', y: FRONT_Y },
   { key: 'escudo', label: 'Escudo', icon: '◈', y: Math.PI / 2 - 0.2 },
   { key: 'stats', label: 'Stats', icon: '≡', y: -Math.PI / 2 + 0.2 },
   { key: 'marca', label: 'Marca', icon: 'W', y: Math.PI },
@@ -852,7 +852,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
           ref={mountRef}
           className="w-full select-none [filter:brightness(1.12)_contrast(1.07)_saturate(1.06)]"
           role="img"
-          aria-label={`Cartão 3D do Lance de ${data.playerName} — arraste para girar`}
+          aria-label={`Cartão 3D do Momento de ${data.playerName} — arraste para girar`}
         />
         {/* sombra de chão: assenta o cubo no espaço */}
         <div

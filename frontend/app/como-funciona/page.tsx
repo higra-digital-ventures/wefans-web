@@ -8,10 +8,10 @@ export const metadata = { title: 'Como funciona — wefans' };
 const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
   {
     id: 'lances',
-    title: 'O que é um Lance?',
+    title: 'O que é um Momento?',
     body: (
       <>
-        Um <strong>Lance</strong> é uma jogada de futebol colecionável — golaço, defesa, drible,
+        Um <strong>Momento</strong> é uma jogada de futebol colecionável — golaço, defesa, drible,
         falta — emitida como exemplar <strong>numerado</strong> (#serial). A mesma jogada pode ter
         vários exemplares (a <em>edição</em>), mas cada número é único e tem dono. Números baixos
         (#1, #2…) e o número da camisa do jogador valem mais para colecionadores.
@@ -66,7 +66,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     title: 'Os dois scores',
     body: (
       <>
-        <strong>Pontuação wefans</strong>: valor da sua coleção em pontos — cada Lance vale
+        <strong>Pontuação wefans</strong>: valor da sua coleção em pontos — cada Momento vale
         conforme o preço pago ou a média (o que for maior), então ela sobe e desce com o mercado.{' '}
         <strong>Score do Colecionador</strong>: pontos fixos por raridade + bônus de desafios e
         checklists — mede o quanto você colecionou, e é ele que dá prioridade nas filas de drops.
@@ -78,10 +78,10 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     title: 'Travar, Queimar e Virar ficha',
     body: (
       <>
-        <strong>Travar</strong>: prende o Lance por 1 ano (não vende, não presenteia) — é como se
+        <strong>Travar</strong>: prende o Momento por 1 ano (não vende, não presenteia) — é como se
         pontua nos Rankings. <strong>Queimar</strong>: destrói o exemplar para sempre e reduz a
         circulação da edição (base dos desafios de bate-troca). <strong>Virar ficha</strong>: queima o
-        Lance em troca de 1 <Link href="/fichas" className="text-accent3 underline">Ficha de Troca</Link>,
+        Momento em troca de 1 <Link href="/fichas" className="text-accent3 underline">Ficha de Troca</Link>,
         que compra pacotes exclusivos.
       </>
     ),
@@ -91,7 +91,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     title: 'Pacotes e Drops',
     body: (
       <>
-        <strong>Pacotes</strong> revelam Lances por sorteio ponderado de raridade (as odds ficam no
+        <strong>Pacotes</strong> revelam Momentos por sorteio ponderado de raridade (as odds ficam no
         card do pacote). <strong>Drops</strong> são lançamentos com fila: você entra na sala de
         espera, recebe uma posição aleatória e uma <strong>janela de 20 minutos</strong> para
         comprar. Quem fica de fora pode tentar os pacotes de repescagem (rebound).
@@ -103,8 +103,8 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     title: 'Jogar: desafios, rankings e Matchday',
     body: (
       <>
-        Seus Lances são peças de jogo: <strong>Desafios</strong> pedem coleções específicas (ou
-        bate-troca) por recompensas; <strong>Rankings</strong> pontuam Lances travados;{' '}
+        Seus Momentos são peças de jogo: <strong>Desafios</strong> pedem coleções específicas (ou
+        bate-troca) por recompensas; <strong>Rankings</strong> pontuam Momentos travados;{' '}
         <strong>Checklists</strong> premiam coleções completas; e o <strong>Matchday</strong> é o
         fantasy diário — escale 5 jogadores, bata o alvo do dia e sobreviva ao mata-mata. Veja o{' '}
         <Link href="/jogar" className="text-accent3 underline">hub Jogar</Link>.

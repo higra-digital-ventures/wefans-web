@@ -80,7 +80,7 @@ export default function OffersPanel({
           {confirming && price && (
             <div className="rounded-lg mt-2 border border-line bg-panel2 p-3">
               <p className="text-sm text-ink">
-                Oferecer <span className="font-bold">{brl(Math.round(Number(price) * 100))}</span> por este Lance?
+                Oferecer <span className="font-bold">{brl(Math.round(Number(price) * 100))}</span> por este Momento?
               </p>
               <p className="mt-0.5 text-xs text-muted">
                 Validade: {OFFER_TTL_DAYS} dias · o valor só sai do saldo se o dono aceitar

@@ -38,7 +38,7 @@ export default async function DropPage({ params }: { params: Promise<{ id: strin
                 <span className="tabular-nums text-sm text-accent3">{brl(p.priceCents)}</span>
               </div>
               <p className="mb-2 text-xs text-muted">
-                {p.momentCount} Lances · {(p.totalSupply - p.soldCount).toLocaleString('pt-BR')} restantes
+                {p.momentCount} Momentos · {(p.totalSupply - p.soldCount).toLocaleString('pt-BR')} restantes
               </p>
               <div className="flex flex-wrap gap-1">
                 {Object.entries(p.oddsJson).map(([tier, prob]) => {

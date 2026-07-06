@@ -50,7 +50,7 @@ export default function QuickBuy({ listingId, priceCents }: { listingId: string;
             start(async () => {
               try {
                 await buyMoment(listingId);
-                toast('É seu! O Lance já está na sua coleção.', 'success');
+                toast('É seu! O Momento já está na sua coleção.', 'success');
                 setConfirming(false);
                 router.refresh();
               } catch (err) {

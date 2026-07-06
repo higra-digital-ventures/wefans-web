@@ -16,7 +16,7 @@ export default async function PacotesMercadoPage() {
       <div className="mb-1 flex items-center justify-between">
         <h1 className="font-display text-4xl uppercase text-ink">Mercado de Pacotes</h1>
         <Link href="/mercado" className="text-sm text-accent3 hover:underline">
-          mercado de Lances →
+          mercado de Momentos →
         </Link>
       </div>
       <p className="mb-8 text-muted">Compre e venda pacotes lacrados (não abertos).</p>

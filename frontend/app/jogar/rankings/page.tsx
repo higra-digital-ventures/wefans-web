@@ -17,7 +17,7 @@ export default async function RankingsPage() {
           <Link href="/jogar/checklists" className="text-accent3 hover:underline">Checklists</Link>
         </span>
       </div>
-      <p className="mb-8 text-muted">A disputa da torcida: trave Lances do seu time ou craque e brigue pelo topo — o pack vai para quem estiver lá no apito final.</p>
+      <p className="mb-8 text-muted">A disputa da torcida: trave Momentos do seu time ou craque e brigue pelo topo — o pack vai para quem estiver lá no apito final.</p>
 
       {boards.length === 0 ? (
         <EmptyState

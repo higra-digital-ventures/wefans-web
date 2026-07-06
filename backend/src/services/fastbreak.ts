@@ -155,15 +155,15 @@ export async function submitLineup(db: PrismaClient, userId: string, dayId: stri
         const lost = await tx.fastBreakLineup.findFirst({ where: { userId, won: false, day: { runId: day.runId, closedAt: { not: null } } } });
         if (lost) throw badRequest('Você foi eliminado deste mata-mata');
       }
-      if (momentIds.length !== day.run.lineupSize) throw badRequest(`Escale exatamente ${day.run.lineupSize} Lances`);
+      if (momentIds.length !== day.run.lineupSize) throw badRequest(`Escale exatamente ${day.run.lineupSize} Momentos`);
       if (captainMomentId && !momentIds.includes(captainMomentId)) throw badRequest('O captain precisa estar na escalação');
 
       const moments = await tx.moment.findMany({
         where: { id: { in: momentIds }, ownerId: userId, burned: false },
         include: { template: true },
       });
-      if (moments.length !== momentIds.length) throw badRequest('Lances inválidos ou não são seus');
-      for (const m of moments) if (isMomentLocked(m)) throw badRequest('Lance travado não pode ser escalado');
+      if (moments.length !== momentIds.length) throw badRequest('Momentos inválidos ou não são seus');
+      for (const m of moments) if (isMomentLocked(m)) throw badRequest('Momento travado não pode ser escalado');
 
       const playerIds = moments.map((m) => m.template.playerId);
       if (new Set(playerIds).size !== playerIds.length) throw badRequest('Escale jogadores distintos');

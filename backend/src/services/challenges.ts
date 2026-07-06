@@ -128,7 +128,7 @@ export async function getChallenge(db: PrismaClient, id: string, userId?: string
 }
 
 /**
- * Montador de Entrada (Builder): submete Moments que cobrem os Lances exigidos.
+ * Montador de Entrada (Builder): submete Moments que cobrem os Momentos exigidos.
  * STANDARD só verifica posse; CRAFTING **queima** a entrada. Concede a recompensa. Atômico.
  */
 export async function submitChallenge(db: PrismaClient, userId: string, challengeId: string, momentIds: string[]) {
@@ -151,7 +151,7 @@ export async function submitChallenge(db: PrismaClient, userId: string, challeng
         if (found.length !== momentIds.length || momentIds.length === 0) throw badRequest('Momentos inválidos ou não são seus');
         for (const m of found) if (isMomentLocked(m)) throw badRequest('Momento travado não pode ser usado');
         const provided = new Set(found.map((m) => m.templateId));
-        for (const reqId of c.requiredTemplateIds) if (!provided.has(reqId)) throw badRequest('Faltam Lances exigidos');
+        for (const reqId of c.requiredTemplateIds) if (!provided.has(reqId)) throw badRequest('Faltam Momentos exigidos');
         moments = found;
       }
 

@@ -41,7 +41,7 @@ export async function listPublishedTeams(db: PrismaClient | Prisma.TransactionCl
   return teams.map(toTeamDTO);
 }
 
-/** Estatísticas do perfil: nº de Lances, distribuição por tier e histórico de pacotes abertos. */
+/** Estatísticas do perfil: nº de Momentos, distribuição por tier e histórico de pacotes abertos. */
 export async function getMyStats(db: PrismaClient, userId: string) {
   const me = await db.user.findUnique({
     where: { id: userId },

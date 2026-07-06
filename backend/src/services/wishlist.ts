@@ -15,7 +15,7 @@ export async function listWishlist(db: PrismaClient, userId: string) {
 
 export async function addWishlist(db: PrismaClient, userId: string, templateId: string) {
   const template = await db.template.findUnique({ where: { id: templateId } });
-  if (!template || template.status !== 'PUBLICADO') throw badRequest('Lance indisponível');
+  if (!template || template.status !== 'PUBLICADO') throw badRequest('Momento indisponível');
   await db.wishlist.upsert({
     where: { userId_templateId: { userId, templateId } },
     create: { userId, templateId },

@@ -212,14 +212,14 @@ function EventCard({
           {e.kind === 'MATCH' ? (
             <>
               <span className="font-bold text-white">{e.label}</span>
-              <span className="text-neutral-500"> — os Lances dele em evidência</span>
+              <span className="text-neutral-500"> — os Momentos dele em evidência</span>
             </>
           ) : (
             <>
           <Username user={e.user} me={me} /> {ACTION[e.kind]}{' '}
-          {e.kind === 'PACK_OPEN' && <span className="font-bold text-white">{e.count} Lances</span>}
+          {e.kind === 'PACK_OPEN' && <span className="font-bold text-white">{e.count} Momentos</span>}
           {e.kind === 'LIST' && (e.count ?? 1) > 1 && (
-            <span className="font-bold text-white">{e.count} Lances</span>
+            <span className="font-bold text-white">{e.count} Momentos</span>
           )}
           {(e.kind === 'CHALLENGE' || e.kind === 'QUEST' || e.kind === 'CHECKIN') && (
             <span className="font-bold text-white">{e.label}</span>
@@ -305,7 +305,7 @@ function EventCard({
         </div>
       )}
 
-      {/* fileira de ações (padrão X): 🔥 · Proposta · ver Lance */}
+      {/* fileira de ações (padrão X): 🔥 · Proposta · ver Momento */}
       <div
         className={`flex items-center gap-5 px-4 py-2 ${boxed ? 'border-t border-white/[0.06]' : ''}`}
       >
@@ -334,7 +334,7 @@ function EventCard({
             href={e.momentId ? `/momento/${e.momentId}` : `/lance/${e.template.id}`}
             className="ml-auto text-[11px] font-semibold text-neutral-500 transition-colors hover:text-white"
           >
-            ver Lance →
+            ver Momento →
           </Link>
         )}
       </div>
@@ -481,7 +481,7 @@ export default async function ExplorarPage({
               </p>
             ) : nearDone.length === 0 ? (
               <p className="text-[12px] text-neutral-400">
-                Colecione Lances para avançar nos{' '}
+                Colecione Momentos para avançar nos{' '}
                 <Link href="/jogar/checklists" className="text-white underline">
                   checklists
                 </Link>

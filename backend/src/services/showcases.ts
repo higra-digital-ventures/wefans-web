@@ -66,7 +66,7 @@ export async function addItem(db: PrismaClient, userId: string, showcaseId: stri
   if (!s || s.ownerId !== userId) throw notFound('Vitrine não encontrada');
   const moment = await db.moment.findUnique({ where: { id: momentId } });
   if (!moment || moment.ownerId !== userId || moment.burned) throw badRequest('Momento inválido');
-  if (await db.showcaseItem.findFirst({ where: { showcaseId, momentId } })) throw badRequest('Lance já está na vitrine');
+  if (await db.showcaseItem.findFirst({ where: { showcaseId, momentId } })) throw badRequest('Momento já está na vitrine');
   const count = await db.showcaseItem.count({ where: { showcaseId } });
   await db.showcaseItem.create({ data: { showcaseId, momentId, order: count } });
   return { ok: true };

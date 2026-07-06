@@ -8,7 +8,7 @@ import type { PublicProfile } from '@/lib/types';
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 const cache = new Map<string, PublicProfile>();
 
-// Mini-perfil no hover (padrão X): pontuação, Lances e atalhos sem sair do feed.
+// Mini-perfil no hover (padrão X): pontuação, Momentos e atalhos sem sair do feed.
 // Só desktop — no touch o clique já leva ao perfil público.
 export default function UserHoverCard({ username, children }: { username: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -68,7 +68,7 @@ export default function UserHoverCard({ username, children }: { username: string
                   <span className="block font-bold tabular-nums text-white">
                     {profile.momentCount.toLocaleString('pt-BR')}
                   </span>
-                  <span className="text-[10px] uppercase tracking-wide text-neutral-500">Lances</span>
+                  <span className="text-[10px] uppercase tracking-wide text-neutral-500">Momentos</span>
                 </span>
               </span>
               <span className="mt-2.5 flex gap-1.5">

@@ -45,7 +45,7 @@ export async function getLeaderboard(db: PrismaClient, id: string, userId?: stri
     take: 50,
   });
 
-  // Lances elegíveis do usuário para travar: do clube (TEAM) ou do jogador (PLAYER),
+  // Momentos elegíveis do usuário para travar: do clube (TEAM) ou do jogador (PLAYER),
   // possuídos, não queimados, não travados e ainda não submetidos.
   let eligible: { id: string; serial: number; playerName: string; points: number }[] = [];
   if (userId && !b.snapshotAt) {

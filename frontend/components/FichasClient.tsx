@@ -36,7 +36,7 @@ export default function FichasClient({
       <div className="rounded-2xl mb-6  border border-line bg-panel p-5">
         <div className="font-display text-3xl text-ink">{tradeTickets}</div>
         <div className="text-sm text-muted">Fichas de Troca disponíveis</div>
-        <p className="mt-2 text-xs text-muted">Troque um Lance por 1 ficha na página do Lance (queima o Lance).</p>
+        <p className="mt-2 text-xs text-muted">Troque um Momento por 1 ficha na página do Momento (queima o Momento).</p>
       </div>
 
       {error && <p className="rounded-lg mb-4  border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-accent">{error}</p>}
@@ -51,7 +51,7 @@ export default function FichasClient({
                 <span className="font-display text-xl text-ink">{p.name}</span>
                 <span className="rounded-full bg-panel2 px-2 py-1 text-xs text-accent3">🎫 {p.ticketCost} fichas</span>
               </div>
-              <p className="text-xs text-muted">{p.momentCount} Lances</p>
+              <p className="text-xs text-muted">{p.momentCount} Momentos</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {Object.entries(p.oddsJson).map(([tier, prob]) => {
                   const meta = TIER_META[tier as Tier];

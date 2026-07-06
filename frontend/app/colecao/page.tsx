@@ -72,7 +72,7 @@ export default async function ColecaoPage({
       <div className="mb-1 flex flex-wrap items-baseline justify-between gap-3">
         <h1 className="font-display text-4xl uppercase text-ink">Minha Coleção</h1>
         {estimatedCents > 0 && (
-          <div className="text-right" title="Soma do preço médio de venda (ASP) de cada Lance seu — estimativa, não cotação">
+          <div className="text-right" title="Soma do preço médio de venda (ASP) de cada Momento seu — estimativa, não cotação">
             <div className="text-[10px] uppercase tracking-[0.15em] text-muted">
               <Term id="precos">Valor estimado</Term> ⓘ
             </div>
@@ -92,7 +92,7 @@ export default async function ColecaoPage({
         )}
       </div>
       <p className="mb-6 text-muted">
-        {moments.length} Lance{moments.length !== 1 ? 's' : ''} · {grouped.length} ediç
+        {moments.length} Momento{moments.length !== 1 ? 's' : ''} · {grouped.length} ediç
         {grouped.length !== 1 ? 'ões' : 'ão'}
         {hasDupes && (
           <>
@@ -170,7 +170,7 @@ export default async function ColecaoPage({
       {moments.length === 0 ? (
         <EmptyState
           title={tier ? 'Nada deste tier ainda' : 'Sua coleção começa aqui'}
-          hint="Abra um pacote e revele seus primeiros Lances numerados."
+          hint="Abra um pacote e revele seus primeiros Momentos numerados."
           cta={{ label: 'Abrir um pacote', href: '/pacotes' }}
         />
       ) : showAll ? (

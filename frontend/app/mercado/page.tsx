@@ -225,7 +225,7 @@ export default async function MercadoPage({
       <SubTabs
         items={[
           { label: 'Explore', href: '/explorar' },
-          { label: 'Lances', href: '/mercado', active: true },
+          { label: 'Momentos', href: '/mercado', active: true },
           { label: 'Packs', href: '/mercado/pacotes' },
           { label: 'Últimas vendas', href: '/mercado/atividade' },
           { label: 'Drops', href: '/drops' },
@@ -575,7 +575,7 @@ export default async function MercadoPage({
             {/* cabeçalho de colunas (tela de trader) */}
             <div className="rounded-t-2xl flex items-center gap-4 border border-b-0 border-white/10 bg-[#101012] px-4 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-500">
               <span className="w-11 shrink-0" aria-hidden />
-              <span className="min-w-0 flex-1">Lance</span>
+              <span className="min-w-0 flex-1">Momento</span>
               <span className="hidden w-14 text-right sm:block">Edição</span>
               <span className="hidden w-20 text-right md:block">Média</span>
               <span className="hidden w-14 text-right sm:block" title="diferença do preço para a média">

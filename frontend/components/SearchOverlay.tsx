@@ -11,7 +11,7 @@ import { TIER_META, isFoil } from '@/lib/tiers';
 import type { TemplateDTO } from '@/lib/types';
 
 // Busca global no padrão do Top Shot: a lupa da top bar abre um overlay full-width
-// com input centrado, "Categorias populares" à esquerda e "Lances populares" ao centro.
+// com input centrado, "Categorias populares" à esquerda e "Momentos populares" ao centro.
 
 // exemplos rotativos no placeholder (nomes reais do catálogo)
 const PLACEHOLDERS = [
@@ -259,7 +259,7 @@ export default function SearchOverlay({
                 <div className="mb-3 flex items-baseline justify-between">
                   <div className="flex items-center gap-2 text-[13px] font-bold text-white">
                     <Icon name="drops" size={16} className="text-neutral-300" />
-                    Lances populares
+                    Momentos populares
                   </div>
                   <Link
                     href="/mercado"

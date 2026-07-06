@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import TacticalBoard from './TacticalBoard';
 
-// Mídia do Lance com dados reais: foto do jogador como base, a trajetória da
+// Mídia do Momento com dados reais: foto do jogador como base, a trajetória da
 // jogada correndo por cima (identidade do produto) e, quando a edição tem clipe,
 // o vídeo entra no hover. Sem foto, cai na prancheta tática de sempre.
 export default function CardMedia({

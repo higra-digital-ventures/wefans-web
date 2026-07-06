@@ -83,7 +83,7 @@ export default function EntrarPage() {
       <h1 className="mb-2 font-display text-4xl uppercase text-ink">
         {mode === 'login' ? 'Entrar' : 'Criar conta'}
       </h1>
-      <p className="mb-8 text-muted">Sua carteira de Lances começa aqui.</p>
+      <p className="mb-8 text-muted">Sua carteira de Momentos começa aqui.</p>
       {hasNext && mode === 'login' && (
         <p className="rounded-lg mb-6 border border-accent3/30 bg-accent3/5 px-3 py-2 text-[13px] text-accent3">
           Entre para continuar de onde você parou — a página te espera.

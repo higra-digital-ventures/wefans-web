@@ -32,7 +32,7 @@ export default async function Image({ params }: { params: { id: string } }) {
           {t?.player.name ?? 'Momentos de Futebol'}
         </div>
         <div style={{ display: 'flex', color: '#a3a3a3', fontSize: 36, marginTop: 12 }}>
-          {t ? `${t.title} · ${t.competition}` : 'Lances numerados, colecionáveis.'}
+          {t ? `${t.title} · ${t.competition}` : 'Momentos numerados, colecionáveis.'}
         </div>
         <div style={{ display: 'flex', marginTop: 48, alignItems: 'center', gap: 16 }}>
           <div style={{ display: 'flex', width: 28, height: 28, borderRadius: 999, background: meta.color }} />

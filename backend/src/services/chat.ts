@@ -2,7 +2,7 @@ import type { PrismaClient } from '@prisma/client';
 import { badRequest, notFound } from '../lib/errors';
 
 /**
- * Chat 1:1 entre colecionadores (negociação de Lances). Conversas são derivadas
+ * Chat 1:1 entre colecionadores (negociação de Momentos). Conversas são derivadas
  * das mensagens (par de usuários) — sem tabela de "conversa". Leitura marca
  * `readAt` nas mensagens recebidas daquele parceiro.
  */

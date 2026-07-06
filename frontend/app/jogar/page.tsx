@@ -79,7 +79,7 @@ export default async function JogarPage() {
       href: '/jogar/matchday',
       name: 'Matchday',
       color: '#21d4e0',
-      description: 'Fantasy diário: escale 5 Lances, bata o alvo do dia e sobreviva ao mata-mata.',
+      description: 'Fantasy diário: escale 5 Momentos, bata o alvo do dia e sobreviva ao mata-mata.',
       status: !me
         ? `${openDays.length} rodada${openDays.length !== 1 ? 's' : ''} aberta${openDays.length !== 1 ? 's' : ''}`
         : pendingDay
@@ -97,7 +97,7 @@ export default async function JogarPage() {
       href: '/jogar/desafios',
       name: 'Desafios',
       color: '#ff2e88',
-      description: 'Feche o álbum com os Lances pedidos — ou bata figurinha — e leve prêmios.',
+      description: 'Feche o álbum com os Momentos pedidos — ou bata figurinha — e leve prêmios.',
       status: claimable
         ? `${claimable.name} pronto — resgatar!`
         : nearest
@@ -105,14 +105,14 @@ export default async function JogarPage() {
           : `${activeChallenges.length} ativo${activeChallenges.length !== 1 ? 's' : ''} agora`,
       statusColor: claimable ? '#22c55e' : undefined,
       deadline: soonestEnd?.endsAt ?? null,
-      reward: 'Prêmio: packs e Lances exclusivos',
+      reward: 'Prêmio: packs e Momentos exclusivos',
       d: 'M18 4V2H6v2H2v3a5 5 0 0 0 5 5h.4A6 6 0 0 0 11 14.9V18H7v4h10v-4h-4v-3.1a6 6 0 0 0 3.6-2.9H17a5 5 0 0 0 5-5V4Z',
     },
     {
       href: '/jogar/rankings',
       name: 'Rankings',
       color: '#9d4edd',
-      description: 'Trave Lances para pontuar no ranking do seu time ou jogador.',
+      description: 'Trave Momentos para pontuar no ranking do seu time ou jogador.',
       status: `${leaderboards.length} ranking${leaderboards.length !== 1 ? 's' : ''} em disputa`,
       deadline: null,
       reward: 'Prêmio: pack para o topo no snapshot',
@@ -125,7 +125,7 @@ export default async function JogarPage() {
       description: 'Caças ao tesouro: monte vitrines e cumpra critérios especiais.',
       status: `${quests.length} missão${quests.length !== 1 ? '~es' : ''}`.replace('~', 'õ'),
       deadline: null,
-      reward: 'Prêmio: Lances de recompensa',
+      reward: 'Prêmio: Momentos de recompensa',
       d: 'M12 2 9.5 8.5 2 9.3l5.5 4.9L5.8 22 12 18.3 18.2 22l-1.7-7.8L22 9.3l-7.5-.8Z',
     },
     {
@@ -158,7 +158,7 @@ export default async function JogarPage() {
     <main className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
       <h1 className="mb-1 font-display text-4xl uppercase text-ink">Jogar</h1>
       <p className="mb-6 text-muted">
-        Seus Lances não são só colecionáveis — são peças de jogo.
+        Seus Momentos não são só colecionáveis — são peças de jogo.
       </p>
 
       {/* Continue jogando: a MINHA próxima ação */}

@@ -76,7 +76,7 @@ export default function MomentActions({
   if (isBurned) {
     return (
       <div className="rounded-2xl border border-line bg-[#0e0e10] p-4 text-sm text-muted">
-        Este Lance foi queimado — fora de circulação.
+        Este Momento foi queimado — fora de circulação.
       </div>
     );
   }
@@ -152,7 +152,7 @@ export default function MomentActions({
                     run(async () => {
                       await buyMoment(listing.id);
                       setConfirming(false);
-                      toast('É seu! O Lance já está na sua coleção.', 'success');
+                      toast('É seu! O Momento já está na sua coleção.', 'success');
                     })
                   }
                 >
@@ -244,11 +244,11 @@ export default function MomentActions({
             <div className="border border-amber-400/40 bg-amber-400/5 p-3">
               <p className="text-xs leading-relaxed text-amber-200">
                 {armed === 'lock' &&
-                  'Travar por 1 ano: este Lance não poderá ser vendido, queimado, presenteado nem usado em troca até lá. Ele continua seu e segue pontuando.'}
+                  'Travar por 1 ano: este Momento não poderá ser vendido, queimado, presenteado nem usado em troca até lá. Ele continua seu e segue pontuando.'}
                 {armed === 'burn' &&
                   'Queimar destrói este exemplar para sempre e reduz a circulação da edição. Não há como desfazer — e você não recebe nada em troca (para ganhar ficha, use "Virar ficha").'}
                 {armed === 'ticket' &&
-                  'Virar ficha queima este Lance em troca de 1 Ficha de Troca. Fichas compram pacotes exclusivos na página Fichas.'}
+                  'Virar ficha queima este Momento em troca de 1 Ficha de Troca. Fichas compram pacotes exclusivos na página Fichas.'}
               </p>
               <div className="mt-2.5 flex gap-2">
                 <button
@@ -258,7 +258,7 @@ export default function MomentActions({
                     run(async () => {
                       if (armed === 'lock') {
                         await lockMoment(momentId);
-                        toast('Lance travado por 1 ano.', 'success');
+                        toast('Momento travado por 1 ano.', 'success');
                       } else if (armed === 'burn') {
                         await burnMoment(momentId);
                         toast('Exemplar queimado — fora de circulação.', 'info');
@@ -297,7 +297,7 @@ export default function MomentActions({
         </>
       ) : (
         <div className="text-sm text-muted">
-          {isAuthed ? 'Não está à venda — faça uma oferta abaixo.' : 'Entre para negociar este Lance.'}
+          {isAuthed ? 'Não está à venda — faça uma oferta abaixo.' : 'Entre para negociar este Momento.'}
         </div>
       )}
     </div>

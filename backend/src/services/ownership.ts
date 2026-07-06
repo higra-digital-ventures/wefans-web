@@ -36,6 +36,6 @@ export function withdrawStub() {
   return {
     status: 'INDISPONIVEL' as const,
     message:
-      'Saque on-chain ainda não está habilitado nesta versão. Quando a integração com a blockchain for ativada (OwnershipProvider), seus Lances poderão ser retirados para uma wallet não-custodial.',
+      'Saque on-chain ainda não está habilitado nesta versão. Quando a integração com a blockchain for ativada (OwnershipProvider), seus Momentos poderão ser retirados para uma wallet não-custodial.',
   };
 }
