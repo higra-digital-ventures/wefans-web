@@ -33,6 +33,7 @@ import type {
   FastBreakStandings,
   FeedEvent,
   FeedPopular,
+  FeedReactions,
   TemplateCollectors,
 } from './types';
 
@@ -248,8 +249,10 @@ export async function getCollectionServer(query = ''): Promise<MomentDTO[] | nul
 
 export async function getFeedServer(
   limit = 30,
-): Promise<{ events: FeedEvent[]; popular: FeedPopular } | null> {
-  return serverFetch<{ events: FeedEvent[]; popular: FeedPopular }>(`/api/v1/feed?limit=${limit}`);
+): Promise<{ events: FeedEvent[]; popular: FeedPopular; reactions?: FeedReactions } | null> {
+  return serverFetch<{ events: FeedEvent[]; popular: FeedPopular; reactions?: FeedReactions }>(
+    `/api/v1/feed?limit=${limit}`,
+  );
 }
 
 export async function getTemplateCollectorsServer(id: string): Promise<TemplateCollectors | null> {

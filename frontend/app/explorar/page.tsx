@@ -4,6 +4,7 @@ import { getCollectionServer, getFeedServer, getWishlistServer, getChecklistsSer
 import SubTabs from '@/components/SubTabs';
 import EmptyState from '@/components/EmptyState';
 import FeedPoller from '@/components/FeedPoller';
+import ReactionButton from '@/components/ReactionButton';
 import TacticalBoard from '@/components/TacticalBoard';
 import UserHoverCard from '@/components/UserHoverCard';
 import { TIER_META, isFoil } from '@/lib/tiers';
@@ -106,7 +107,15 @@ function PriceStory({ priceCents, aspCents }: { priceCents?: number; aspCents?: 
   );
 }
 
-function EventCard({ e, me }: { e: FeedEvent; me?: string | null }) {
+function EventCard({
+  e,
+  me,
+  reaction,
+}: {
+  e: FeedEvent;
+  me?: string | null;
+  reaction?: { count: number; mine: boolean; authed: boolean };
+}) {
   const meta = e.template ? TIER_META[e.template.tier] : null;
   // pull raro (Lendário/Galáctico) ganha moldura foil na cor do tier, como no Top Shot
   const rarePull = e.kind === 'PACK_OPEN' && e.template && isFoil(e.template.tier);
@@ -232,6 +241,18 @@ function EventCard({ e, me }: { e: FeedEvent; me?: string | null }) {
               ? 'Prova de presença no estádio — ganhou um pacote.'
               : 'Recompensa liberada.'}
           </div>
+        </div>
+      )}
+
+      {/* rodapé social: 🔥 */}
+      {reaction && (
+        <div className="flex items-center border-t border-white/[0.06] px-4 py-1.5">
+          <ReactionButton
+            eventKey={e.id}
+            count={reaction.count}
+            reacted={reaction.mine}
+            authed={reaction.authed}
+          />
         </div>
       )}
     </article>
@@ -591,7 +612,16 @@ export default async function ExplorarPage({
                 <span className="shrink-0 text-[10px] text-neutral-500">{timeAgo(e.createdAt)}</span>
               </Link>
             ) : (
-              <EventCard key={e.id} e={e} me={me?.username ?? null} />
+              <EventCard
+                key={e.id}
+                e={e}
+                me={me?.username ?? null}
+                reaction={{
+                  count: feed?.reactions?.counts[e.id] ?? 0,
+                  mine: feed?.reactions?.mine.includes(e.id) ?? false,
+                  authed: !!me,
+                }}
+              />
             );
             return (
               <div key={e.id} className="space-y-3">

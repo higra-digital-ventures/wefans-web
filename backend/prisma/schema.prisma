@@ -97,6 +97,7 @@ model User {
   packListings       PackListing[]
   sentMessages       ChatMessage[]       @relation("MsgFrom")
   receivedMessages   ChatMessage[]       @relation("MsgTo")
+  feedReactions      FeedReaction[]
 
   @@index([favoriteTeamId])
 }
@@ -708,4 +709,19 @@ model ChatMessage {
 
   @@index([fromId, toId, createdAt])
   @@index([toId, readAt])
+}
+
+// ----------------------------- reações do feed (🔥 nos eventos) -----------------------------
+// eventKey = id derivado do evento no feed (tx id, `l-…`, `pack-…`, `ch-…`, …)
+
+model FeedReaction {
+  id        String   @id @default(cuid())
+  userId    String
+  eventKey  String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, eventKey])
+  @@index([eventKey])
 }

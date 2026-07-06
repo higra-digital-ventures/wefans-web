@@ -456,6 +456,11 @@ export type FeedPopular = {
   trending?: { template: TemplateDTO; count: number }[];
 };
 
+export type FeedReactions = {
+  counts: Record<string, number>;
+  mine: string[]; // eventKeys que o usuário logado já reagiu
+};
+
 export type TemplateCollectors = {
   topCollectors: { username: string; count: number }[];
   specialSerials: { serial: number; label: string; owner: string | null; burned: boolean; momentId: string }[];

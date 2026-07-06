@@ -68,6 +68,10 @@ export const cancelListing = (listingId: string) =>
 export const buyMoment = (listingId: string) =>
   request<{ momentId: string; flagged: boolean }>('POST', `/api/v1/listings/${listingId}/buy`);
 
+// 🔥 alterna a reação num evento do feed
+export const reactFeed = (eventKey: string) =>
+  request<{ reacted: boolean; count: number }>('POST', '/api/v1/feed/react', { eventKey });
+
 export const fetchActivity = (limit = 20) =>
   request<{ sales: import('./types').RecentSale[] }>('GET', `/api/v1/market/activity?limit=${limit}`);
 
