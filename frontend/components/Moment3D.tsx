@@ -7,6 +7,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 export interface Moment3DData {
   playerName: string;
@@ -320,6 +321,12 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     setSize();
     mount.appendChild(renderer.domElement);
 
+    // reflexo de ambiente discreto (vidro/metal da moldura e do escudo)
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envTex = pmrem.fromScene(new RoomEnvironment()).texture;
+    scene.environment = envTex;
+    pmrem.dispose();
+
     // slab com uma textura por face [right, left, top, bottom, front, back]
     const plain = new THREE.MeshStandardMaterial({ color: 0x15101c });
     const frontTex = canvasTexture(960, 1200, (c) => {
@@ -410,11 +417,13 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       frontMat,
       new THREE.MeshStandardMaterial({ map: backTex }),
     ];
-    // nitidez em ângulo: anisotropia máxima da GPU em todas as texturas
+    // nitidez em ângulo: anisotropia máxima da GPU em todas as texturas;
+    // env map contido para não lavar o visual escuro
     const maxAniso = renderer.capabilities.getMaxAnisotropy();
     for (const m of mats) {
-      const map = (m as THREE.MeshStandardMaterial).map;
-      if (map) map.anisotropy = maxAniso;
+      const std = m as THREE.MeshStandardMaterial;
+      if (std.map) std.map.anisotropy = maxAniso;
+      if ('envMapIntensity' in std) std.envMapIntensity = 0.35;
     }
     const group = new THREE.Group();
     group.add(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), mats));
@@ -571,6 +580,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
         video.removeAttribute('src');
         video.load();
       }
+      envTex.dispose();
       renderer.dispose();
       mount.removeChild(renderer.domElement);
     };
