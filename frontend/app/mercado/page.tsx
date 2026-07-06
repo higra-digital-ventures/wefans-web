@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getFeedServer, getMarketServer, getChallengesServer, getWishlistServer, getMe } from '@/lib/api-server';
 import LanceCard from '@/components/LanceCard';
 import LoadMoreSentinel from '@/components/LoadMoreSentinel';
+import MobileFilterSheet from '@/components/MobileFilterSheet';
 import EmptyState from '@/components/EmptyState';
 import PriceFilter from '@/components/PriceFilter';
 import SortDropdown from '@/components/SortDropdown';
@@ -163,6 +164,44 @@ export default async function MercadoPage({
     return `/mercado${p.toString() ? `?${p}` : ''}`;
   };
 
+  // grupos do sheet mobile (mesmos hrefs do rail desktop)
+  const filterGroups = [
+    {
+      title: 'Raridade',
+      options: TIER_ORDER.map((t) => ({
+        label: TIER_META[t].label,
+        href: href({ tier: tier === t ? undefined : t, n: undefined }),
+        active: tier === t,
+      })),
+    },
+    {
+      title: 'Selos',
+      options: BADGE_CHIPS.map((b) => ({
+        label: b.label,
+        href: href({ badge: badge === b.v ? undefined : b.v, n: undefined }),
+        active: badge === b.v,
+      })),
+    },
+    {
+      title: 'Edição',
+      options: [
+        { label: 'Limitada', href: href({ ed: ed === 'LE' ? undefined : 'LE', n: undefined }), active: ed === 'LE' },
+        { label: 'Aberta', href: href({ ed: ed === 'CC' ? undefined : 'CC', n: undefined }), active: ed === 'CC' },
+      ],
+    },
+    {
+      title: 'Oportunidade',
+      options: [
+        { label: 'Achados', href: href({ deal: deal ? undefined : '1', n: undefined }), active: !!deal },
+        {
+          label: 'Maior desconto',
+          href: href({ sort: sort === 'desconto' ? undefined : 'desconto', n: undefined }),
+          active: sort === 'desconto',
+        },
+      ],
+    },
+  ];
+
   // py maior no touch (alvo ≥40px); compacto no desktop
   const CHIP =
     'rounded-full border px-3 py-2.5 lg:py-1 text-[11px] font-semibold uppercase tracking-wide transition-colors';
@@ -292,9 +331,10 @@ export default async function MercadoPage({
 
       {/* barra de filtros delineada (bordas brancas), como no print do Top Shot */}
       <div className="mb-2.5 flex flex-wrap items-stretch gap-2.5">
-        <span className="flex w-12 shrink-0 items-center justify-center  border border-white/60 text-white" aria-hidden>
+        <span className="hidden w-12 shrink-0 items-center justify-center border border-white/60 text-white lg:flex" aria-hidden>
           <Icon name="sliders" size={18} />
         </span>
+        <MobileFilterSheet groups={filterGroups} activeCount={activeFilters.length} clearHref="/mercado" />
         <form action="/mercado" className="relative min-w-[260px] flex-1">
           {tier && <input type="hidden" name="tier" value={tier} />}
           {sort && <input type="hidden" name="sort" value={sort} />}
