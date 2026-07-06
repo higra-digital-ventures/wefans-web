@@ -8,6 +8,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import CardMedia from './CardMedia';
 
 export interface Moment3DData {
   playerName: string;
@@ -300,6 +301,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
   const shadowRef = useRef<HTMLDivElement>(null);
   const faceRef = useRef('lance');
   const [face, setFace] = useState<string>('lance');
+  const [glFailed, setGlFailed] = useState(false);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -311,7 +313,14 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     const camera = new THREE.PerspectiveCamera(32, 4 / 5, 0.1, 50);
     camera.position.set(0, 0, 8.2);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      // GPU/driver sem WebGL: cai no CardMedia 2D em vez de tela vazia
+      setGlFailed(true);
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const setSize = () => {
       const w = mount.clientWidth;
@@ -714,6 +723,23 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
       mount.removeChild(renderer.domElement);
     };
   }, []);
+
+  if (glFailed) {
+    return (
+      <div className="relative mx-auto aspect-[4/5] w-full overflow-hidden rounded-2xl border border-white/10">
+        <CardMedia
+          photoUrl={data.photoUrl}
+          videoUrl={data.videoUrl}
+          trajectory={data.trajectory}
+          jersey={data.jersey}
+          color={data.tierColor}
+          foil={data.foil}
+          live
+          alt={data.playerName}
+        />
+      </div>
+    );
+  }
 
   // teclado: ← → giram; 1-4 pulam direto para cada face (a11y)
   const onKeyDown = (e: React.KeyboardEvent) => {
