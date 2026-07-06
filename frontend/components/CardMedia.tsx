@@ -16,6 +16,7 @@ export default function CardMedia({
   live,
   hoverPlay,
   alt,
+  stillOnly,
 }: {
   photoUrl?: string | null;
   videoUrl?: string | null;
@@ -26,6 +27,7 @@ export default function CardMedia({
   live?: boolean;
   hoverPlay?: boolean;
   alt?: string;
+  stillOnly?: boolean; // só imagem + gaiola (sem o clipe) — vitrines
 }) {
   const vref = useRef<HTMLVideoElement>(null);
 
@@ -62,7 +64,7 @@ export default function CardMedia({
         <TacticalBoard bare trajectory={trajectory} jersey={jersey} color={color} foil={foil} live={live} hoverPlay={hoverPlay} />
       </div>
       {/* clipe de teste (CC): entra no hover do card */}
-      {videoUrl && (
+      {videoUrl && !stillOnly && (
         <video
           ref={vref}
           src={videoUrl}

@@ -22,6 +22,7 @@ export default function LanceCard({
   quickBuyListingId,
   hotLabel,
   challengeWanted,
+  stillMedia,
   className = '',
   wishlist,
 }: {
@@ -35,6 +36,7 @@ export default function LanceCard({
   quickBuyListingId?: string; // compra rápida no hover, sem sair da grade (logado)
   hotLabel?: string; // performance do dia ("2 gols hoje") — matchSim → mercado
   challengeWanted?: boolean; // exigido por desafio ativo — demanda de utilidade
+  stillMedia?: boolean; // vitrine: imagem + gaiola, sem o clipe no hover
   className?: string;
   /** estado da wishlist do usuário (undefined = marcador decorativo) */
   wishlist?: { wished: boolean; canWish: boolean };
@@ -94,6 +96,7 @@ export default function LanceCard({
               foil={foil}
               live={live}
               hoverPlay={!live}
+              stillOnly={stillMedia}
               alt={template.player.name}
             />
             {/* glitch/scanlines na entrada do hover */}
