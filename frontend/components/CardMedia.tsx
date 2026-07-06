@@ -73,6 +73,22 @@ export default function CardMedia({
           className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         />
       )}
+      {/* gaiola de LED: padrão de TODO NFT com vídeo — cantoneiras na cor do tier */}
+      {videoUrl && <MediaCage color={color} />}
     </div>
+  );
+}
+
+// cantoneiras de LED em CSS (versão plana da gaiola do cubo) — cor pelo tier
+function MediaCage({ color }: { color: string }) {
+  const arm = 'pointer-events-none absolute z-10 h-4 w-4';
+  const style = { borderColor: color, filter: `drop-shadow(0 0 2px ${color}) drop-shadow(0 0 5px ${color})` };
+  return (
+    <>
+      <span aria-hidden className={`${arm} left-1 top-1 rounded-tl border-l-2 border-t-2`} style={style} />
+      <span aria-hidden className={`${arm} right-1 top-1 rounded-tr border-r-2 border-t-2`} style={style} />
+      <span aria-hidden className={`${arm} bottom-1 left-1 rounded-bl border-b-2 border-l-2`} style={style} />
+      <span aria-hidden className={`${arm} bottom-1 right-1 rounded-br border-b-2 border-r-2`} style={style} />
+    </>
   );
 }
