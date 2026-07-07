@@ -157,45 +157,34 @@ function drawFront(ctx: CanvasRenderingContext2D, d: Moment3DData, photo?: HTMLI
 function drawShield(ctx: CanvasRenderingContext2D, d: Moment3DData, crest?: HTMLImageElement) {
   const w = 200;
   const h = 600;
-  const grad = ctx.createLinearGradient(0, 0, w, h);
-  grad.addColorStop(0, '#2a1740');
-  grad.addColorStop(0.45, d.tierColor);
-  grad.addColorStop(0.55, '#ffffff');
-  grad.addColorStop(0.65, d.tierColor);
-  grad.addColorStop(1, '#170b22');
+  // fundo limpo: só um gradiente vertical calmo — sem banda branca, sem silhueta
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#1b1030');
+  grad.addColorStop(0.5, '#150c22');
+  grad.addColorStop(1, '#0b0712');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
-  // escudo
-  ctx.fillStyle = 'rgba(23,11,34,0.72)';
-  ctx.beginPath();
-  ctx.moveTo(w / 2, 160);
-  ctx.lineTo(w / 2 + 58, 190);
-  ctx.lineTo(w / 2 + 58, 330);
-  ctx.quadraticCurveTo(w / 2 + 58, 420, w / 2, 460);
-  ctx.quadraticCurveTo(w / 2 - 58, 420, w / 2 - 58, 330);
-  ctx.lineTo(w / 2 - 58, 190);
-  ctx.closePath();
-  ctx.fill();
+  // brilho discreto do tier atrás do brasão (radial suave)
+  const glow = ctx.createRadialGradient(w / 2, 300, 12, w / 2, 300, 150);
+  glow.addColorStop(0, `${d.tierColor}3a`);
+  glow.addColorStop(0.6, `${d.tierColor}12`);
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 120, w, 360);
+
   if (crest) {
-    // halo atrás do escudo (vitrine) + brasão maior
-    const halo = ctx.createRadialGradient(w / 2, 310, 10, w / 2, 310, 110);
-    halo.addColorStop(0, 'rgba(255,255,255,0.32)');
-    halo.addColorStop(0.6, `${d.tierColor}2e`);
-    halo.addColorStop(1, 'transparent');
-    ctx.fillStyle = halo;
-    ctx.fillRect(0, 180, w, 280);
-    const cw = 140;
+    const cw = 150;
     const ch = (crest.height / crest.width) * cw;
-    ctx.shadowColor = 'rgba(0,0,0,0.6)';
-    ctx.shadowBlur = 14;
-    ctx.drawImage(crest, w / 2 - cw / 2, 310 - ch / 2, cw, ch);
+    ctx.shadowColor = 'rgba(0,0,0,0.55)';
+    ctx.shadowBlur = 16;
+    ctx.drawImage(crest, w / 2 - cw / 2, 300 - ch / 2, cw, ch);
     ctx.shadowBlur = 0;
   } else {
     const initials = d.club.split(' ').map((p) => p[0]).join('').slice(0, 3).toUpperCase();
     ctx.fillStyle = '#f6eef3';
-    ctx.font = '900 52px system-ui, sans-serif';
+    ctx.font = '900 56px system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(initials, w / 2, 330);
+    ctx.fillText(initials, w / 2, 320);
   }
 }
 
@@ -435,7 +424,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
           drawStats(c, d);
         }),
       }),
-      new THREE.MeshStandardMaterial({ map: shieldTex, metalness: 0.6, roughness: 0.3 }),
+      new THREE.MeshStandardMaterial({ map: shieldTex, metalness: 0.25, roughness: 0.55 }),
       plain,
       plain,
       frontMat,
