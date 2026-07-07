@@ -87,7 +87,7 @@ export default async function MomentPage({ params }: { params: Promise<{ id: str
     getMe(),
     getTemplateMarketServer(id),
     getTemplateCollectorsServer(id),
-    getTemplatesServer(`?tier=`),
+    getTemplatesServer(),
   ]);
   if (!t) notFound();
 
