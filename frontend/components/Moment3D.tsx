@@ -485,7 +485,8 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     scene.add(group);
 
     // gaiola de LED externa (padrão Top Shot): cantoneiras 3D nos 8 cantos de
-    // uma caixa maior, ESTÁTICA — o cubo gira dentro da moldura. Cor = tier.
+    // uma caixa maior que ACOMPANHA a caixa — entra no `group`, gira/embala junto
+    // com o cubo (não é moldura fixa). Cor = tier.
     const cage = new THREE.Group();
     const cageBase = new THREE.Color(d.tierColor).lerp(new THREE.Color('#ffffff'), 0.35);
     const cageMat = new THREE.MeshBasicMaterial({ color: cageBase.clone() });
@@ -532,7 +533,7 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
           spr.scale.setScalar(0.6);
           cage.add(spr);
         }
-    scene.add(cage);
+    group.add(cage);
 
     // poeira de palco: pontos lentos subindo — profundidade barata
     const dustCount = 36;
