@@ -3,9 +3,9 @@ import Link from 'next/link';
 import CardWishlist from './CardWishlist';
 import QuickBuy from './QuickBuy';
 import CardMedia from './CardMedia';
-import TacticalBoard from './TacticalBoard';
-import { TIER_META, isFoil } from '@/lib/tiers';
-import { brl, compact } from '@/lib/format';
+import { TIER_META, isFoil, editionLabel } from '@/lib/tiers';
+import { brl } from '@/lib/format';
+import { clubCrestUrl } from '@/lib/media';
 import type { TemplateDTO } from '@/lib/types';
 
 // Carta de mercado copiada da anatomia do Top Shot (print de referência): card preto,
@@ -43,11 +43,7 @@ export default function MomentCard({
 }) {
   const meta = TIER_META[template.tier];
   const foil = isFoil(template.tier);
-  const burnedCount = template.mintedCount - template.circulatingCount;
   const limited = template.editionType === 'LIMITADA';
-  const supply = limited
-    ? `/${template.editionSize?.toLocaleString('pt-BR')}`
-    : compact(template.circulatingCount);
   // Δ do anúncio vs a média da edição (só quando relevante: ≥5%)
   const rawPct =
     priceCents != null && template.aspCents > 0
@@ -59,7 +55,7 @@ export default function MomentCard({
     <div
       className={`rounded-2xl group relative overflow-hidden  border border-white/[0.06] bg-[#050505] transition-colors duration-150 hover:border-white/20 ${className}`}
     >
-      {/* marcador (wishlist) — clicável quando a página fornece o estado */}
+      {/* ícones no topo-direito: wishlist + câmera (snapshot), como no Top Shot */}
       {wishlist ? (
         <CardWishlist templateId={template.id} initial={wishlist.wished} canWish={wishlist.canWish} />
       ) : (
@@ -67,10 +63,23 @@ export default function MomentCard({
           <Icon name="bookmark" size={20} />
         </span>
       )}
+      <span
+        aria-hidden
+        className="absolute right-3 top-11 z-10 text-neutral-500 opacity-70 transition-opacity group-hover:opacity-100"
+      >
+        <Icon name="camera" size={20} />
+      </span>
+
+      {/* cabeçalho: NOME no topo (composição da referência do Top Shot) */}
+      <div className="px-5 pr-14 pt-4">
+        <h3 className="line-clamp-2 font-display text-[20px] uppercase leading-[1.05] tracking-tight text-white">
+          {template.player.name}
+        </h3>
+      </div>
 
       {/* mídia em perspectiva (slab 3D); no hover desvira e preenche o card
           enquanto o lance "toca" (glitch + bola na trajetória) — Top Shot */}
-      <div className="px-5 pb-2 pt-7" style={{ perspective: '650px' }}>
+      <div className="px-6 pb-2 pt-4" style={{ perspective: '650px' }}>
         <div className="wf-cube-bob relative mx-auto w-[78%]">
           {/* cantoneiras neon (viewfinder, como no Top Shot) — moldura fixa, o cubo gira dentro */}
           <span aria-hidden className="wf-corner -left-2.5 -top-2.5 rounded-tl border-l-2 border-t-2" />
@@ -108,11 +117,6 @@ export default function MomentCard({
                 className="absolute left-1.5 top-1.5  bg-black/50 px-1 py-0.5 tabular-nums text-[8px] text-white/80 transition-opacity duration-150 group-hover:opacity-0"
               >
                 ▶
-              </span>
-            )}
-            {serial !== undefined && (
-              <span className="absolute bottom-1.5 left-1.5  bg-black/60 px-1 py-0.5 tabular-nums text-[9px] text-white">
-                #{serial}
               </span>
             )}
             {challengeWanted && (
@@ -180,21 +184,23 @@ export default function MomentCard({
         </div>
       </div>
 
-      <div className="px-4 pb-4 pt-4">
-        {/* Tier /N (LE) — como "Common /4000 (LE)" */}
-        <div className="flex flex-wrap items-center gap-1.5 text-[12px]">
-          <span className="font-bold text-white">{meta.label}</span>
+      <div className="px-5 pb-4 pt-3">
+        {/* tier (cor da raridade) + serial/edição — "LEGENDARY  #/39" */}
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
+          <span className="font-bold uppercase tracking-wide" style={{ color: meta.color }}>
+            {meta.label}
+          </span>
           <span
-            className={`font-semibold ${!limited && template.emissionClosed ? 'text-amber-300' : 'text-neutral-400'}`}
+            className="tabular-nums text-neutral-400"
             title={
               limited
                 ? `Edição limitada: só ${template.editionSize?.toLocaleString('pt-BR')} exemplares existirão`
                 : template.emissionClosed
-                  ? `Emissão encerrada: o supply congelou em ${template.circulatingCount.toLocaleString('pt-BR')} — nunca mais aumenta`
+                  ? `Emissão encerrada: supply congelado em ${template.circulatingCount.toLocaleString('pt-BR')}`
                   : 'Edição circulante: novos exemplares ainda podem ser criados'
             }
           >
-            {limited ? supply : `${template.emissionClosed ? 'Encerrada' : 'Aberta'} · ${supply}`}
+            {editionLabel(template, serial)}
           </span>
           {limited && (
             <span
@@ -209,34 +215,37 @@ export default function MomentCard({
               {template.parallel}
             </span>
           )}
+        </div>
+
+        {/* data | set (competição) */}
+        <div className="mt-1.5 flex items-center gap-2 text-[12px] text-neutral-400">
+          <span className="tabular-nums">{new Date(template.matchDate).toLocaleDateString('pt-BR')}</span>
+          <span className="text-neutral-700">|</span>
+          <span className="truncate">{template.competition} 2025</span>
+        </div>
+
+        {/* título do lance (uma linha) */}
+        <div className="mt-1 line-clamp-1 text-[12px] text-neutral-500">{template.title}</div>
+
+        {/* rodapé: selo do tier + scrubber + escudo do clube (como na referência) */}
+        <div className="mt-3 flex items-center gap-2.5">
           <span
-            className="ml-auto h-4 w-4 rounded-full"
+            className="h-4 w-4 shrink-0 rounded-full"
             style={{ background: `radial-gradient(circle at 35% 35%, ${meta.color}, #111 85%)` }}
             aria-hidden
           />
+          <span aria-hidden className="h-px flex-1 bg-gradient-to-r from-white/20 via-white/5 to-transparent" />
+          <img
+            src={clubCrestUrl(template.player.club)}
+            alt={template.player.club}
+            className="h-7 w-7 shrink-0 object-contain opacity-90"
+            loading="lazy"
+          />
         </div>
 
-        <div className="mt-1.5 font-display text-[22px] uppercase leading-[1.04] text-white">
-          {template.player.name}
-        </div>
-        <div className="mt-2 line-clamp-2 text-[12px] leading-snug text-neutral-400">
-          {template.title}
-        </div>
-
-        {/* como o "Burned · Supply" do Top Shot: destruídos e o que restou circulando */}
-        <div
-          className="mt-2.5 truncate text-[11px] text-neutral-500"
-          title="Burned: exemplares queimados para sempre (bate-troca/fichas). Supply: exemplares que ainda existem."
-        >
-          Burned: {compact(burnedCount)} · Supply:{' '}
-          {template.circulatingCount.toLocaleString('pt-BR')}
-        </div>
-        <div className="mt-0.5 truncate text-[11px] text-neutral-500">
-          {template.competition} · {template.playType} (Brasileirão 2025)
-        </div>
-
-        {/* rodapé contextual: mercado (Menor preço/Média) · dono (Média/Pago) · catálogo (Média) */}
-        <div className="mt-3.5 space-y-1 border-t border-white/10 pt-2.5">
+        {/* preço (mercado/coleção) — só quando há contexto de valor */}
+        {(priceCents != null || paidCents != null) && (
+        <div className="mt-3 space-y-1 border-t border-white/10 pt-2.5">
           {priceCents != null && (
             <div className="flex items-baseline justify-between">
               <span className="text-[12px] text-neutral-300" title="O anúncio mais barato desta edição à venda agora">
@@ -286,6 +295,7 @@ export default function MomentCard({
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );

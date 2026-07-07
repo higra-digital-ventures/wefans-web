@@ -154,10 +154,11 @@ body {
 }
 .wf-corner {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: rgba(33, 212, 224, 0.8);
-  filter: drop-shadow(0 0 4px rgba(33, 212, 224, 0.55));
+  width: 22px;
+  height: 22px;
+  border-width: 2px;
+  border-color: rgba(210, 248, 255, 0.92);
+  filter: drop-shadow(0 0 6px rgba(33, 212, 224, 0.7));
   animation: wf-corner-pulse 3.2s ease-in-out infinite;
   pointer-events: none;
 }
