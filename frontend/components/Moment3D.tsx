@@ -490,10 +490,11 @@ export default function Moment3D({ data }: { data: Moment3DData }) {
     const cage = new THREE.Group();
     const cageBase = new THREE.Color(d.tierColor).lerp(new THREE.Color('#ffffff'), 0.35);
     const cageMat = new THREE.MeshBasicMaterial({ color: cageBase.clone() });
-    const CW = 3.5;
-    const CH = 4.1;
-    const CD = 2.6;
-    const armLen = 0.55;
+    // moldura justa: só uma folga pequena além da caixa (W2.4 H3.0 D1.0)
+    const CW = 2.9;
+    const CH = 3.5;
+    const CD = 1.5;
+    const armLen = 0.5;
     const armTk = 0.05;
     for (const sx of [-1, 1])
       for (const sy of [-1, 1])
