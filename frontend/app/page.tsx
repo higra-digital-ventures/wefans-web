@@ -158,7 +158,7 @@ export default async function Home() {
       {/* landing de visitante: proposta de valor */}
       <Link
         href="/entrar"
-        className="rounded-lg mb-10 flex flex-wrap items-center justify-between gap-4 border border-accent3/40 bg-accent3/5 px-6 py-4 transition-colors hover:bg-accent3/10"
+        className="rounded-lg mb-10 flex flex-wrap items-center justify-between gap-4 border border-white/10 bg-accent3/5 px-6 py-4 transition-colors hover:bg-accent3/10"
       >
         <div>
           <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-accent3">Comece agora</div>
