@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 import { closeDay } from '../services/fastbreak';
+import { tickDrops } from '../services/drops';
 
 // Runner de cron no backend (seções 1 e 10.1): promove conteúdo agendado, expira
 // ofertas, encerra drops vencidos e fecha rodadas passadas do Matchday.
@@ -21,9 +22,13 @@ export async function cronTick(db: PrismaClient, log: (msg: string, meta?: unkno
   const expired = await db.offer.updateMany({ where: { status: 'ACTIVE', expiresAt: { lt: now } }, data: { status: 'EXPIRED' } });
   if (expired.count > 0) log(`cron: ${expired.count} oferta(s) expirada(s)`);
 
-  // 3) drops vencidos
-  const ended = await db.drop.updateMany({ where: { status: { in: ['SCHEDULED', 'WAITING', 'LIVE'] }, endsAt: { lt: now } }, data: { status: 'ENDED' } });
-  if (ended.count > 0) log(`cron: ${ended.count} drop(s) encerrado(s)`);
+  // 3) ciclo dos drops (padrão Top Shot): abre sala de espera, INICIA no horário
+  // (sorteia a fila) e encerra no fim — tudo automático, sem admin.
+  const drops = await tickDrops(db);
+  if (drops.opened > 0) log(`cron: ${drops.opened} sala(s) de espera aberta(s)`);
+  if (drops.started > 0) log(`cron: ${drops.started} drop(s) iniciado(s)`);
+  if (drops.ended > 0) log(`cron: ${drops.ended} drop(s) encerrado(s)`);
+  const ended = { count: drops.ended };
 
   // 4) fecha rodadas do Matchday com gameDate anterior a hoje (UTC)
   const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));

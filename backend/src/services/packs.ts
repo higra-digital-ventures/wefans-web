@@ -4,10 +4,11 @@ import { toMomentDTO, toPackDTO, toPackInventoryDTO, toTemplateDTO } from '../li
 import { withDbRetry } from '../lib/tx';
 import { mintPack } from './mint';
 
-/** Pacotes à venda (não-ticketOnly, com estoque). Drop/fila entram na Fase 6. */
+/** Loja 24/7 (padrão Top Shot): só packs always-on — sem ticket e sem drop.
+ * Packs de elite ficam exclusivos do drop (escassez = evento cronometrado). */
 export async function listPacks(db: PrismaClient) {
   const packs = await db.pack.findMany({
-    where: { ticketOnly: false },
+    where: { ticketOnly: false, dropId: null },
     orderBy: { priceCents: 'asc' },
   });
   return packs.map(toPackDTO);
@@ -42,6 +43,7 @@ export async function buyPack(db: PrismaClient, userId: string, packId: string) 
     const pack = await tx.pack.findUnique({ where: { id: packId } });
     if (!pack) throw notFound('Pacote não encontrado');
     if (pack.ticketOnly) throw badRequest('Pacote trocável apenas por Fichas de Troca');
+    if (pack.dropId) throw badRequest('Pacote exclusivo do drop — compre na fila do lançamento');
 
     // Reserva de estoque atômica.
     const reserved = await tx.pack.updateMany({

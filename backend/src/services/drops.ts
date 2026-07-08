@@ -108,6 +108,38 @@ export async function startDrop(db: PrismaClient, dropId: string) {
   );
 }
 
+/** Relógio dos drops (padrão Top Shot: começa sozinho no horário).
+ * Roda periodicamente: abre a sala de espera, inicia no startsAt (sorteia a fila)
+ * e encerra no endsAt — sem depender de um admin apertar o botão. */
+export async function tickDrops(db: PrismaClient) {
+  const now = new Date();
+  // 1) abre a sala de espera quando chega a hora
+  const opened = await db.drop.updateMany({
+    where: { status: 'SCHEDULED', waitingRoomOpensAt: { lte: now } },
+    data: { status: 'WAITING' },
+  });
+  // 2) inicia no horário (gera posições + janelas)
+  const toStart = await db.drop.findMany({
+    where: { status: { in: ['SCHEDULED', 'WAITING'] }, startsAt: { lte: now } },
+    select: { id: true },
+  });
+  let started = 0;
+  for (const d of toStart) {
+    try {
+      await startDrop(db, d.id);
+      started++;
+    } catch {
+      // já iniciado / corrida entre ticks — ignora
+    }
+  }
+  // 3) encerra quando passa do fim
+  const ended = await db.drop.updateMany({
+    where: { status: { in: ['WAITING', 'LIVE'] }, endsAt: { lte: now } },
+    data: { status: 'ENDED' },
+  });
+  return { opened: opened.count, started, ended: ended.count };
+}
+
 /** Compra na janela (ou via rebound se a janela passou e o drop tem rebound). */
 export async function buyDropPack(db: PrismaClient, userId: string, dropId: string, packId: string) {
   return withDbRetry(() =>
