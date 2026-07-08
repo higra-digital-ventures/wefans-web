@@ -309,41 +309,6 @@ export default async function MercadoPage({
         </section>
       )}
 
-      {/* da sua wishlist, à venda agora — a conversão mais quente da página */}
-      {wishOnSale.length > 0 && (
-        <section className="mb-6 border border-accent3/25 bg-accent3/[0.04] p-3">
-          <div className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-accent3">
-            <Icon name="bookmark" filled size={13} />
-            Da sua wishlist, à venda agora
-          </div>
-          <div className="scrollbar-none -mx-1 flex gap-2.5 overflow-x-auto px-1 pb-1">
-            {wishOnSale.map(({ template: t, minCents, momentId, count }) => {
-              const m = TIER_META[t.tier];
-              return (
-                <Link
-                  key={t.id}
-                  href={`/moment/${t.id}`}
-                  className="rounded-2xl w-[128px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-accent3/50"
-                >
-                  <div className="mx-auto w-[80%]">
-                    <div className="aspect-[4/5] overflow-hidden rounded-lg border" style={{ borderColor: `${m.color}66` }}>
-                      <TacticalBoard trajectory={t.trajectory} jersey={t.player.jersey} color={m.color} foil={isFoil(t.tier)} />
-                    </div>
-                  </div>
-                  <div className="mt-1.5 truncate text-[11px] font-bold text-white">{t.player.name}</div>
-                  <div className="flex items-baseline justify-between text-[10px]">
-                    <span className="font-bold tabular-nums text-white">{brl(minCents)}</span>
-                    <span className="tabular-nums text-neutral-500">
-                      {count > 1 ? `${count} à venda` : 'só 1'}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
       {/* barra de filtros delineada (bordas brancas), como no print do Top Shot */}
       <div className="mb-2.5 flex flex-wrap items-stretch gap-2.5">
         <span className="hidden w-12 shrink-0 items-center justify-center border border-white/60 text-white lg:flex" aria-hidden>
@@ -564,6 +529,40 @@ export default async function MercadoPage({
         </aside>
 
         <div>
+          {/* da sua wishlist, à venda agora — nudge discreto no topo dos resultados */}
+          {wishOnSale.length > 0 && (
+            <section className="rounded-2xl mb-4 border border-white/10 bg-white/[0.02] p-3">
+              <div className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-accent3">
+                <Icon name="bookmark" filled size={13} />
+                Da sua wishlist, à venda agora
+              </div>
+              <div className="scrollbar-none -mx-1 flex gap-2.5 overflow-x-auto px-1 pb-1">
+                {wishOnSale.map(({ template: t, minCents, count }) => {
+                  const m = TIER_META[t.tier];
+                  return (
+                    <Link
+                      key={t.id}
+                      href={`/moment/${t.id}`}
+                      className="rounded-2xl w-[128px] shrink-0 border border-white/10 bg-[#08080a] p-2 transition-colors hover:border-accent3/50"
+                    >
+                      <div className="mx-auto w-[80%]">
+                        <div className="aspect-[4/5] overflow-hidden rounded-lg border" style={{ borderColor: `${m.color}66` }}>
+                          <TacticalBoard trajectory={t.trajectory} jersey={t.player.jersey} color={m.color} foil={isFoil(t.tier)} />
+                        </div>
+                      </div>
+                      <div className="mt-1.5 truncate text-[11px] font-bold text-white">{t.player.name}</div>
+                      <div className="flex items-baseline justify-between text-[10px]">
+                        <span className="font-bold tabular-nums text-white">{brl(minCents)}</span>
+                        <span className="tabular-nums text-neutral-500">
+                          {count > 1 ? `${count} à venda` : 'só 1'}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          )}
           {listings.length === 0 ? (
             <EmptyState
               title="Nada à venda com esse filtro"
