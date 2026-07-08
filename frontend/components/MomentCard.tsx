@@ -185,7 +185,7 @@ export default function MomentCard({
         </div>
       </div>
 
-      <div className="px-5 pb-4 pt-3">
+      <div className="px-5 pb-4 pt-6">
         {/* tier (cor da raridade) + serial/edição — "LEGENDARY  #/39" */}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
           <span className="font-bold uppercase tracking-wide" style={{ color: meta.color }}>
