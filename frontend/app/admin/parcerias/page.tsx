@@ -1,7 +1,9 @@
 import { adminGet } from '@/lib/api-server';
 import AdminAction from '@/components/AdminAction';
 import AdminCreateTeam from '@/components/AdminCreateTeam';
-import type { AdminTeam } from '@/lib/types';
+import AdminRoyaltyConfig from '@/components/AdminRoyaltyConfig';
+import { brl } from '@/lib/format';
+import type { AdminTeam, PlatformConfig } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,8 +15,13 @@ const PARTNER_COLOR: Record<string, string> = {
 };
 
 export default async function AdminParcerias() {
-  const data = await adminGet<{ teams: AdminTeam[] }>('/admin/teams');
+  const [data, cfg] = await Promise.all([
+    adminGet<{ teams: AdminTeam[] }>('/admin/teams'),
+    adminGet<{ config: PlatformConfig }>('/admin/config'),
+  ]);
   const teams = data?.teams ?? [];
+  const config = cfg?.config ?? { platformFeeBps: 500, clubRoyaltyBps: 500, primaryClubBps: 3000 };
+  const totalEarned = teams.reduce((s, t) => s + (t.earningsCents ?? 0), 0);
 
   return (
     <main>
@@ -25,9 +32,17 @@ export default async function AdminParcerias() {
       </p>
 
       <div className="mb-6">
+        <AdminRoyaltyConfig initial={config} />
+      </div>
+
+      <div className="mb-6">
         <AdminCreateTeam />
       </div>
 
+      <p className="mb-3 text-sm text-muted">
+        Total acumulado em royalties dos times:{' '}
+        <span className="font-bold text-accent3">{brl(totalEarned)}</span>
+      </p>
       <div className="rounded-2xl border border-line bg-panel">
         <table className="w-full text-sm">
           <thead>
@@ -37,6 +52,7 @@ export default async function AdminParcerias() {
               <th className="px-4 py-3">Parceria</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Momentos</th>
+              <th className="px-4 py-3 text-right">Ganhos (royalties)</th>
               <th className="px-4 py-3 text-right">Ações</th>
             </tr>
           </thead>
@@ -50,6 +66,9 @@ export default async function AdminParcerias() {
                 <td className={`px-4 py-2.5 ${PARTNER_COLOR[t.partnerStatus] ?? 'text-muted'}`}>{t.partnerStatus}</td>
                 <td className="px-4 py-2.5 text-muted">{t.status}</td>
                 <td className="px-4 py-2.5 text-muted">{t.templateCount}</td>
+                <td className="px-4 py-2.5 text-right font-semibold tabular-nums text-accent3">
+                  {t.earningsCents > 0 ? brl(t.earningsCents) : '—'}
+                </td>
                 <td className="px-4 py-2.5 text-right">
                   {t.status !== 'PUBLICADO' ? (
                     <AdminAction

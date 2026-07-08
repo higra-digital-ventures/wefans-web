@@ -333,6 +333,13 @@ export type AdminTeam = {
   publishAt: string | null;
   stadium: { id: string; name: string; city: string } | null;
   templateCount: number;
+  earningsCents: number;
+};
+
+export type PlatformConfig = {
+  platformFeeBps: number;
+  clubRoyaltyBps: number;
+  primaryClubBps: number;
 };
 
 export type AdminTemplate = {
