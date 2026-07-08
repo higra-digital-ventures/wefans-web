@@ -9,7 +9,15 @@ import { useToast } from './Toaster';
 // Compra rápida direto da grade (padrão Top Shot): o CTA do hover abre um
 // mini-confirm no próprio card, sem carregar a página do Momento.
 // Vive dentro de um <Link> — todo clique aqui bloqueia a navegação.
-export default function QuickBuy({ listingId, priceCents }: { listingId: string; priceCents: number }) {
+export default function QuickBuy({
+  listingId,
+  priceCents,
+  bar = false,
+}: {
+  listingId: string;
+  priceCents: number;
+  bar?: boolean; // true = botão fixo full-width na base do card (não overlay do hover)
+}) {
   const [confirming, setConfirming] = useState(false);
   const [pending, start] = useTransition();
   const router = useRouter();
@@ -27,7 +35,11 @@ export default function QuickBuy({ listingId, priceCents }: { listingId: string;
           stop(e);
           setConfirming(true);
         }}
-        className="rounded-lg absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
+        className={
+          bar
+            ? 'rounded-lg block w-full bg-accent py-2.5 text-center text-[13px] font-bold uppercase tracking-[0.06em] text-white transition-opacity hover:opacity-90'
+            : 'rounded-lg absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100'
+        }
       >
         Comprar · {brl(priceCents)}
       </button>
@@ -37,7 +49,11 @@ export default function QuickBuy({ listingId, priceCents }: { listingId: string;
   return (
     <span
       onClick={stop}
-      className="absolute inset-x-2 bottom-2 z-10 block border border-white/25 bg-black/95 p-2"
+      className={
+        bar
+          ? 'rounded-lg block border border-white/25 bg-black/95 p-2'
+          : 'absolute inset-x-2 bottom-2 z-10 block border border-white/25 bg-black/95 p-2'
+      }
     >
       <span className="block text-center text-[11px] font-semibold text-white">
         Confirmar compra por {brl(priceCents)}?

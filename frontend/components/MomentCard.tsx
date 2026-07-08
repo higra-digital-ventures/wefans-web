@@ -143,18 +143,6 @@ export default function MomentCard({
                 {hotLabel}
               </span>
             )}
-            {priceCents != null && quickBuyListingId ? (
-              <QuickBuy listingId={quickBuyListingId} priceCents={priceCents} />
-            ) : priceCents != null ? (
-              <span className="rounded-lg absolute inset-x-2 bottom-2 translate-y-2 bg-accent py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
-                Ver e comprar · {brl(priceCents)}
-              </span>
-            ) : null}
-            {priceCents == null && paidCents != null && (
-              <span className="rounded-lg absolute inset-x-2 bottom-2 translate-y-2 bg-white py-1.5 text-center text-[11px] font-bold uppercase tracking-[0.06em] text-black opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
-                Ver · Vender
-              </span>
-            )}
           </div>
           {/* face lateral do cubo: arte do set (grid na cor do tier, camisa e jogada) */}
           <div
@@ -244,60 +232,52 @@ export default function MomentCard({
           />
         </div>
 
-        {/* preço (mercado/coleção) — só quando há contexto de valor */}
-        {(priceCents != null || paidCents != null) && (
-        <div className="mt-3 space-y-1 border-t border-white/10 pt-2.5">
-          {priceCents != null && (
-            <div className="flex items-baseline justify-between">
-              <span className="text-[12px] text-neutral-300" title="O anúncio mais barato desta edição à venda agora">
-                Menor preço
-              </span>
-              <span className="text-[15px] font-bold text-white">{brl(priceCents)}</span>
-            </div>
-          )}
-          <div className="flex items-baseline justify-between">
-            <span className="text-[12px] text-neutral-500" title="Preço médio das últimas vendas desta edição">
-              Média ⓘ
+      </div>
+
+      {/* CTA de compra fixo na base + linha de preço embaixo (padrão Top Shot):
+          seção própria, separada por hairline, ocupando a largura do card */}
+      {priceCents != null ? (
+        <div className="border-t border-white/10 p-3">
+          {quickBuyListingId ? (
+            <QuickBuy bar listingId={quickBuyListingId} priceCents={priceCents} />
+          ) : (
+            <span className="rounded-lg block bg-accent py-2.5 text-center text-[13px] font-bold uppercase tracking-[0.06em] text-white">
+              Comprar · {brl(priceCents)}
             </span>
-            <span className={`font-semibold ${paidCents != null ? 'text-[15px] font-bold text-white' : 'text-[12px] text-neutral-400'}`}>
-              {template.aspCents > 0 ? brl(template.aspCents) : '—'}
+          )}
+          <div className="mt-2 flex items-center justify-between text-[11px]">
+            <span className="text-neutral-400" title="O anúncio mais barato desta edição à venda agora">
+              Menor preço <span className="font-bold text-white">{brl(priceCents)}</span>
+              {marketPct != null && (
+                <span className={`font-bold ${marketPct < 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {' '}
+                  {marketPct > 0 ? '+' : ''}
+                  {marketPct}%
+                </span>
+              )}
+            </span>
+            <span className="text-neutral-500" title="Preço médio das últimas vendas desta edição">
+              Média {template.aspCents > 0 ? brl(template.aspCents) : '—'}
             </span>
           </div>
-          {/* a conta que o comprador faria de cabeça: pedindo x% vs a média */}
-          {marketPct != null && (
-            <div className="flex items-baseline justify-between">
-              <span className="text-[11px] text-neutral-600">vs média</span>
-              <span
-                className={`text-[11px] font-bold tabular-nums ${marketPct < 0 ? 'text-emerald-400' : 'text-red-400'}`}
-                title={marketPct < 0 ? 'abaixo da média — achado' : 'acima da média'}
-              >
-                {marketPct > 0 ? '+' : ''}
-                {marketPct}%
-              </span>
-            </div>
-          )}
-          {paidCents != null && (
-            <div className="flex items-baseline justify-between">
-              <span className="text-[12px] text-neutral-500" title="Quanto você pagou neste exemplar">
-                Pago
-              </span>
-              <span
-                className={`text-[12px] font-bold tabular-nums ${
-                  template.aspCents > 0
-                    ? template.aspCents >= paidCents
-                      ? 'text-emerald-400'
-                      : 'text-red-400'
-                    : 'text-neutral-400'
-                }`}
-                title={template.aspCents > 0 ? (template.aspCents >= paidCents ? 'a média está acima do que você pagou' : 'a média está abaixo do que você pagou') : undefined}
-              >
-                {brl(paidCents)}
-              </span>
-            </div>
-          )}
         </div>
-        )}
-      </div>
+      ) : paidCents != null ? (
+        <div className="border-t border-white/10 p-3">
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="text-neutral-500" title="Quanto você pagou neste exemplar">
+              Pago <span className="font-bold tabular-nums text-white">{brl(paidCents)}</span>
+            </span>
+            <span
+              className={`font-bold tabular-nums ${
+                template.aspCents > 0 ? (template.aspCents >= paidCents ? 'text-emerald-400' : 'text-red-400') : 'text-neutral-400'
+              }`}
+              title="Preço médio das últimas vendas desta edição"
+            >
+              Média {template.aspCents > 0 ? brl(template.aspCents) : '—'}
+            </span>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 
