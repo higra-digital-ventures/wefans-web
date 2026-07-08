@@ -180,9 +180,14 @@ function EventCard({
       }
     >
       {milestone && (
-        <div className="flex items-center gap-1.5 border-b border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300">
-          <Icon name="trophy" size={12} />
-          {e.record ? 'Maior venda da semana' : 'Serial #1 — o primeiro exemplar'}
+        <div className="relative flex items-center gap-2 overflow-hidden border-b border-amber-400/40 bg-gradient-to-r from-amber-400/20 via-amber-400/[0.07] to-transparent px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200">
+          {/* fio de brilho no topo — dá o acabamento "dourado" */}
+          <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-amber-300/70 via-amber-300/20 to-transparent" />
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-400/20 text-amber-300 ring-1 ring-amber-400/40">
+            <Icon name="trophy" size={11} />
+          </span>
+          <span>{e.record ? 'Maior venda da semana' : 'Serial #1 — o primeiro exemplar'}</span>
+          <Icon name="trophy" size={44} className="pointer-events-none absolute -right-2 -top-2 rotate-12 text-amber-400/[0.06]" aria-hidden />
         </div>
       )}
       {/* cabeçalho: avatar + @user + ação + tempo (MATCH tem frase própria, sem usuário) */}
