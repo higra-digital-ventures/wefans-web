@@ -22,7 +22,7 @@ export default function MobileFilterSheet({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex h-12 items-center gap-2 border border-white/60 px-4 text-[11px] font-bold uppercase tracking-[0.12em] text-white lg:hidden"
+        className="rounded-lg flex h-12 items-center gap-2 border border-white/15 px-4 text-[11px] font-bold uppercase tracking-[0.12em] text-white lg:hidden"
       >
         <Icon name="sliders" size={14} />
         Filtros

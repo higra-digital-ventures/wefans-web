@@ -32,7 +32,7 @@ export default function PriceFilter({ pmin, pmax }: { pmin?: string; pmax?: stri
     'w-14 bg-transparent py-2 text-sm tabular-nums text-white outline-none placeholder:text-neutral-500';
 
   return (
-    <div className="flex items-center gap-1.5 border border-white/60 px-3">
+    <div className="rounded-lg flex items-center gap-1.5 border border-white/15 px-3">
       <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400">R$</span>
       <input
         inputMode="numeric"

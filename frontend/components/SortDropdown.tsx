@@ -34,7 +34,7 @@ export default function SortDropdown({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-full min-h-[48px] items-center gap-2 border border-white/60 bg-black px-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white hover:border-white"
+        className="rounded-lg flex h-full min-h-[48px] items-center gap-2 border border-white/15 bg-black px-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white hover:border-white/40"
       >
         {active.label}
         <Icon name="chevronDown" size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />

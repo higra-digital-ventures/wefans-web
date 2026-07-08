@@ -311,7 +311,7 @@ export default async function MercadoPage({
 
       {/* barra de filtros delineada (bordas brancas), como no print do Top Shot */}
       <div className="mb-2.5 flex flex-wrap items-stretch gap-2.5">
-        <span className="hidden w-12 shrink-0 items-center justify-center border border-white/60 text-white lg:flex" aria-hidden>
+        <span className="rounded-lg hidden w-12 shrink-0 items-center justify-center border border-white/15 text-white lg:flex" aria-hidden>
           <Icon name="sliders" size={18} />
         </span>
         <MobileFilterSheet groups={filterGroups} activeCount={activeFilters.length} clearHref="/mercado" />
@@ -328,7 +328,7 @@ export default async function MercadoPage({
             name="q"
             defaultValue={q ?? ''}
             placeholder="Busque por jogadores, times e sets"
-            className="rounded-lg h-12 w-full  border border-white/60 bg-transparent pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-white"
+            className="rounded-lg h-12 w-full  border border-white/15 bg-transparent pl-10 pr-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-white/40"
           />
         </form>
         <PriceFilter pmin={pmin} pmax={pmax} />
@@ -339,8 +339,8 @@ export default async function MercadoPage({
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <Link
           href="/mercado"
-          className={` border px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
-            hasFilter ? 'border-white text-white hover:bg-white/10' : 'border-white/25 text-neutral-500'
+          className={`rounded-full border px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
+            hasFilter ? 'border-white/50 text-white hover:bg-white/10' : 'border-white/15 text-neutral-500'
           }`}
         >
           Clear
@@ -348,7 +348,7 @@ export default async function MercadoPage({
         <Link
           href={href({ deal: deal ? undefined : '1' })}
           scroll={false}
-          className={`${CHIP} ${deal ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300' : 'border-white/40 text-white hover:bg-white/10'}`}
+          className={`${CHIP} ${deal ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300' : 'border-white/20 text-white hover:bg-white/10'}`}
           title="Anúncios abaixo do preço médio da edição"
         >
           Achados
@@ -358,7 +358,7 @@ export default async function MercadoPage({
             key={t}
             href={href({ tier: tier === t ? undefined : t })}
             scroll={false}
-            className={`${CHIP} ${tier === t ? 'border-white bg-white text-black' : 'border-white/40 text-white hover:bg-white/10'}`}
+            className={`${CHIP} ${tier === t ? 'border-white bg-white text-black' : 'border-white/20 text-white hover:bg-white/10'}`}
           >
             {TIER_META[t].label}s
           </Link>
@@ -368,7 +368,7 @@ export default async function MercadoPage({
             key={b.v}
             href={href({ badge: badge === b.v ? undefined : b.v })}
             scroll={false}
-            className={`${CHIP} ${badge === b.v ? 'border-white bg-white text-black' : 'border-white/40 text-white hover:bg-white/10'}`}
+            className={`${CHIP} ${badge === b.v ? 'border-white bg-white text-black' : 'border-white/20 text-white hover:bg-white/10'}`}
           >
             {b.label}
           </Link>
@@ -378,7 +378,7 @@ export default async function MercadoPage({
             key={t}
             href={href({ tier: tier === t ? undefined : t })}
             scroll={false}
-            className={`${CHIP} ${tier === t ? 'border-white bg-white text-black' : 'border-white/40 text-white hover:bg-white/10'}`}
+            className={`${CHIP} ${tier === t ? 'border-white bg-white text-black' : 'border-white/20 text-white hover:bg-white/10'}`}
           >
             {TIER_META[t].label}s
           </Link>
@@ -389,10 +389,10 @@ export default async function MercadoPage({
             href={href({ g: g ? undefined : '1', n: undefined })}
             scroll={false}
             title="Um card por edição, com o menor preço"
-            className={`flex items-center gap-2 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors ${
+            className={`rounded-lg flex items-center gap-2 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors ${
               groupByEdition
                 ? 'border-white bg-white text-black'
-                : 'border-white/25 text-neutral-400 hover:border-white/50 hover:text-white'
+                : 'border-white/15 text-neutral-400 hover:border-white/40 hover:text-white'
             }`}
           >
             Por edição
@@ -404,7 +404,7 @@ export default async function MercadoPage({
             className={`rounded-lg flex items-center gap-2 border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.15em] transition-colors ${
               sort === 'desconto'
                 ? 'border-emerald-400 bg-emerald-400/15 text-emerald-300'
-                : 'border-white/25 text-neutral-400 hover:border-white/50 hover:text-white'
+                : 'border-white/15 text-neutral-400 hover:border-white/40 hover:text-white'
             }`}
           >
             Maior desconto
@@ -415,7 +415,7 @@ export default async function MercadoPage({
             scroll={false}
             aria-label="Grade confortável"
             title="Grade confortável"
-            className={`flex h-9 w-9 items-center justify-center  border ${!dense && effVis !== 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
+            className={`rounded-lg flex h-9 w-9 items-center justify-center border ${!dense && effVis !== 'list' ? 'border-white/50 text-white' : 'border-white/15 text-neutral-500 hover:text-white'}`}
           >
             <Icon name="grid" size={16} />
           </Link>
@@ -424,7 +424,7 @@ export default async function MercadoPage({
             scroll={false}
             aria-label="Modo lista"
             title="Modo lista"
-            className={`flex h-9 w-9 items-center justify-center border ${effVis === 'list' ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
+            className={`rounded-lg flex h-9 w-9 items-center justify-center border ${effVis === 'list' ? 'border-white/50 text-white' : 'border-white/15 text-neutral-500 hover:text-white'}`}
           >
             <Icon name="list" size={16} />
           </Link>
@@ -433,7 +433,7 @@ export default async function MercadoPage({
             scroll={false}
             aria-label="Grade densa"
             title="Grade densa"
-            className={`flex h-9 w-9 items-center justify-center  border ${dense ? 'border-white text-white' : 'border-white/30 text-neutral-500 hover:text-white'}`}
+            className={`rounded-lg flex h-9 w-9 items-center justify-center border ${dense ? 'border-white/50 text-white' : 'border-white/15 text-neutral-500 hover:text-white'}`}
           >
             <Icon name="gridDense" size={16} />
           </Link>
@@ -451,7 +451,7 @@ export default async function MercadoPage({
             href={href({ ...fl.clear, n: undefined })}
             scroll={false}
             title={`Remover filtro: ${fl.label}`}
-            className="flex items-center gap-1.5 border border-white/20 bg-white/5 px-2 py-0.5 text-[11px] font-semibold text-neutral-200 transition-colors hover:border-white/50 hover:text-white"
+            className="rounded-full flex items-center gap-1.5 border border-white/20 bg-white/5 px-2 py-0.5 text-[11px] font-semibold text-neutral-200 transition-colors hover:border-white/40 hover:text-white"
           >
             {fl.label}
             <Icon name="close" size={10} />
@@ -521,7 +521,7 @@ export default async function MercadoPage({
               </div>
             </div>
             {hasFilter && (
-              <Link href="/mercado" className="block border border-white/25 py-2 text-center text-[10px] font-bold uppercase tracking-[0.15em] text-white hover:bg-white/10">
+              <Link href="/mercado" className="rounded-lg block border border-white/15 py-2 text-center text-[10px] font-bold uppercase tracking-[0.15em] text-white hover:bg-white/10">
                 Limpar filtros
               </Link>
             )}
@@ -673,7 +673,7 @@ export default async function MercadoPage({
             <Link
               href={href({ n: String(size + 24) })}
               scroll={false}
-              className="mt-4 block border border-white/15 py-2.5 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
+              className="rounded-lg mt-4 block border border-white/15 py-2.5 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
             >
               Carregar mais ({(groupByEdition ? editionGroups.length : listings.length) - size} restantes)
             </Link>
