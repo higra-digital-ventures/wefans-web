@@ -452,7 +452,7 @@ async function main() {
     data: {
       name: 'Pack da Rodada 24/7',
       priceCents: 2000,
-      momentCount: 3,
+      momentCount: 5, // pacote de valor: mais Momentos, odds um pouco mais baixas
       oddsJson: { COMUM: 0.62, TORCIDA: 0.25, RARO: 0.11, LENDARIO: 0.019, GALACTICO: 0.001 },
       guaranteeTier: null,
       totalSupply: 10000,
@@ -465,7 +465,7 @@ async function main() {
     data: {
       name: 'Pack Prova de Presença',
       priceCents: 0,
-      momentCount: 3,
+      momentCount: 1, // recompensa de check-in: um Momento único
       oddsJson: { COMUM: 0.7, TORCIDA: 0.2, RARO: 0.09, LENDARIO: 0.01 },
       guaranteeTier: null,
       totalSupply: 100000,
