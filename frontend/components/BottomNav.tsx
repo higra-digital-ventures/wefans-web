@@ -4,22 +4,31 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Icon, { type IconName } from './Icon';
 
-// Navegação inferior fixa no mobile (padrão de app): os 5 destinos principais
-// sempre a um toque. Ícones do set central: outline, preenchido quando ativo (padrão X).
+// Navegação inferior fixa no mobile (padrão de app): os MESMOS 5 destinos do
+// desktop (consistência entre plataformas). Perfil fica no avatar do topo, que
+// também aparece no mobile. Ícones do set central: outline, preenchido no ativo.
 const ITEMS: { label: string; href: string; icon: IconName }[] = [
-  { label: 'Mercado', href: '/mercado', icon: 'market' },
   { label: 'Explorar', href: '/explorar', icon: 'explore' },
+  { label: 'Pacotes', href: '/pacotes', icon: 'drops' },
+  { label: 'Mercado', href: '/mercado', icon: 'market' },
   { label: 'Jogar', href: '/jogar', icon: 'play' },
   { label: 'Coleção', href: '/colecao', icon: 'collection' },
-  { label: 'Perfil', href: '/perfil', icon: 'user' },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const isActive = (href: string) =>
-    href === '/mercado'
-      ? pathname.startsWith('/mercado') || pathname.startsWith('/moment') || pathname.startsWith('/edicao') || pathname.startsWith('/lance')
-      : pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href === '/mercado')
+      return (
+        pathname.startsWith('/mercado') ||
+        pathname.startsWith('/moment') ||
+        pathname.startsWith('/edicao') ||
+        pathname.startsWith('/lance')
+      );
+    if (href === '/pacotes')
+      return ['/pacotes', '/pacote', '/drops', '/drop', '/abrir'].some((p) => pathname.startsWith(p));
+    return pathname.startsWith(href);
+  };
 
   return (
     <nav

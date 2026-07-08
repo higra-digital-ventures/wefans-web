@@ -22,7 +22,18 @@ const NAV: {
   children?: { label: string; href: string }[];
 }[] = [
   { label: 'Explorar', href: '/explorar', icon: 'explore' },
-  { label: 'Drops', href: '/drops', icon: 'drops' },
+  {
+    // umbrella "Pacotes": agrupa as 3 superfícies (loja 24/7, drops, revenda)
+    // num só conceito — em vez de três itens soltos e sobrepostos
+    label: 'Pacotes',
+    href: '/pacotes',
+    icon: 'drops',
+    children: [
+      { label: 'Loja de Pacotes', href: '/pacotes' },
+      { label: 'Drops (lançamentos)', href: '/drops' },
+      { label: 'Revenda de pacotes', href: '/mercado/pacotes' },
+    ],
+  },
   { label: 'Mercado', href: '/mercado', icon: 'market' },
   {
     label: 'Jogar',
@@ -42,9 +53,15 @@ const NAV: {
   { label: 'Coleção', href: '/colecao', icon: 'collection' },
 ];
 
+// menu completo (hambúrguer no mobile): os 5 principais + superfícies de pacote + vitrines
 const MOBILE_ITEMS = [
-  ...NAV.map((n) => ({ label: n.label, href: n.href })),
-  { label: 'Pacotes', href: '/pacotes' },
+  { label: 'Explorar', href: '/explorar' },
+  { label: 'Loja de Pacotes', href: '/pacotes' },
+  { label: 'Drops', href: '/drops' },
+  { label: 'Mercado', href: '/mercado' },
+  { label: 'Jogar', href: '/jogar' },
+  { label: 'Coleção', href: '/colecao' },
+  { label: 'Revenda de pacotes', href: '/mercado/pacotes' },
   { label: 'Vitrines', href: '/vitrines' },
 ];
 
@@ -58,10 +75,19 @@ export default function NavClient({
   searchCategories: { label: string; q: string }[];
 }) {
   const pathname = usePathname();
-  const isActive = (href: string) =>
-    href === '/mercado'
-      ? pathname.startsWith('/mercado') || pathname.startsWith('/moment') || pathname.startsWith('/edicao') || pathname.startsWith('/lance')
-      : pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href === '/mercado')
+      return (
+        pathname.startsWith('/mercado') ||
+        pathname.startsWith('/moment') ||
+        pathname.startsWith('/edicao') ||
+        pathname.startsWith('/lance')
+      );
+    // "Pacotes" cobre loja, pacote avulso, drops e a tela de abertura
+    if (href === '/pacotes')
+      return ['/pacotes', '/pacote', '/drops', '/drop', '/abrir'].some((p) => pathname.startsWith(p));
+    return pathname.startsWith(href);
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[#050505]/95 backdrop-blur">
