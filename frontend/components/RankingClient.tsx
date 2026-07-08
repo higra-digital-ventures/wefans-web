@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { lockToLeaderboard, snapshotLeaderboard } from '@/lib/api-client';
+import Icon from '@/components/Icon';
 import type { LeaderboardDetail } from '@/lib/types';
 
 export default function RankingClient({
@@ -69,11 +70,11 @@ export default function RankingClient({
               ))}
             </select>
             <button
-              className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="rounded-lg flex items-center justify-center gap-1.5 bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
               disabled={!momentId || pending}
               onClick={() => run(() => lockToLeaderboard(board.id, momentId))}
             >
-              🔒 Travar
+              <Icon name="lock" size={14} /> Travar
             </button>
           </div>
         )}

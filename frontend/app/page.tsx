@@ -178,25 +178,25 @@ export default async function Home() {
         <div className="grid gap-3 sm:grid-cols-3">
           {[
             {
-              emoji: '⚽',
+              icon: 'ball' as const,
               t: 'Craque em alta',
               d: 'Quando o jogador da jogada decide um clássico, faz gol ou é convocado, a procura pelos Momentos dele sobe — e o preço acompanha.',
             },
             {
-              emoji: '🔒',
+              icon: 'lock' as const,
               t: 'Escassez',
               d: 'Edições limitadas nunca aumentam; exemplares queimados e emissões encerradas congelam o supply para sempre.',
             },
             {
-              emoji: '⭐',
+              icon: 'star' as const,
               t: 'Colecionabilidade',
               d: 'Seriais baixos (#1, #7) e o número da camisa do craque valem um extra para os colecionadores.',
             },
           ].map((f) => (
             <div key={f.t} className="rounded-2xl border border-line bg-[#0e0e10] p-4">
-              <div className="text-2xl" aria-hidden>
-                {f.emoji}
-              </div>
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent3/10 text-accent3" aria-hidden>
+                <Icon name={f.icon} size={20} />
+              </span>
               <div className="mt-2 font-display text-lg uppercase text-ink">{f.t}</div>
               <div className="mt-1 text-[12px] leading-snug text-muted">{f.d}</div>
             </div>

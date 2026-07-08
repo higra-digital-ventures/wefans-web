@@ -115,9 +115,9 @@ export default function MomentCard({
             {!live && listingPriceCents == null && !hotLabel && (
               <span
                 aria-hidden
-                className="absolute left-1.5 top-1.5  bg-black/50 px-1 py-0.5 tabular-nums text-[8px] text-white/80 transition-opacity duration-150 group-hover:opacity-0"
+                className="absolute left-1.5 top-1.5 flex items-center bg-black/50 px-1 py-0.5 text-white/80 transition-opacity duration-150 group-hover:opacity-0"
               >
-                ▶
+                <Icon name="play" size={10} />
               </span>
             )}
             {challengeWanted && (
