@@ -11,6 +11,8 @@ import {
   createTeamWithStadium,
   createTemplate,
   getMetrics,
+  getPlatformConfig,
+  updatePlatformConfig,
   listAuditLog,
   listFlaggedTransactions,
   resolveFlaggedTransaction,
@@ -40,6 +42,22 @@ export async function adminRoutes(app: FastifyInstance) {
 
   // ----- parcerias -----
   app.get('/admin/teams', async () => ({ teams: await listTeamsAdmin(prisma) }));
+
+  // config de royalties (editável): taxas em BPS (0..10000)
+  app.get('/admin/config', async () => ({ config: await getPlatformConfig(prisma) }));
+
+  app.post('/admin/config', async (req) => {
+    const input = z
+      .object({
+        platformFeeBps: z.number().int().min(0).max(10_000),
+        clubRoyaltyBps: z.number().int().min(0).max(10_000),
+        primaryClubBps: z.number().int().min(0).max(10_000),
+      })
+      .parse(req.body);
+    const res = await updatePlatformConfig(prisma, input);
+    await audit(prisma, req.userId!, 'config.update', 'royalties', res);
+    return { config: res };
+  });
 
   app.post('/admin/teams', async (req) => {
     const input = z

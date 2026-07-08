@@ -1,7 +1,7 @@
 import { Prisma, Tier } from '@prisma/client';
 import { conflict } from '../lib/errors';
 import { recomputeUserScores } from '../lib/scores';
-import { PRIMARY_CLUB_BPS, creditTeam } from '../lib/royalty';
+import { getRoyaltyConfig, creditTeam } from '../lib/royalty';
 
 // Serviço de mint REUTILIZÁVEL (web, API e check-in usam o mesmo). Deve rodar dentro
 // de uma $transaction. A unicidade do serial é garantida por um UPDATE ... RETURNING
@@ -118,6 +118,7 @@ export async function mintPack(tx: Prisma.TransactionClient, userId: string, pac
   }
 
   const priceShare = Math.floor(pack.priceCents / pack.momentCount);
+  const royaltyCfg = await getRoyaltyConfig(tx);
   const mintedIds: string[] = [];
   let scoreSum = 0;
 
@@ -142,7 +143,7 @@ export async function mintPack(tx: Prisma.TransactionClient, userId: string, pac
     });
     // royalty primário: parte do valor do pack vai pro clube parceiro do Momento
     if (slot.template.teamId && priceShare > 0) {
-      const clubShare = Math.round((priceShare * PRIMARY_CLUB_BPS) / 10_000);
+      const clubShare = Math.round((priceShare * royaltyCfg.primaryClubBps) / 10_000);
       await creditTeam(tx, slot.template.teamId, clubShare, 'PRIMARY', moment.id, 'Royalty de pacote');
     }
     mintedIds.push(moment.id);

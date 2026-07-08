@@ -1,6 +1,7 @@
 import { Prisma, type PrismaClient, Tier, EditionType } from '@prisma/client';
 import { badRequest, notFound } from '../lib/errors';
 import { recomputeUserScores } from '../lib/scores';
+import { getRoyaltyConfig } from '../lib/royalty';
 import { withDbRetry } from '../lib/tx';
 
 // Zona administrativa (seção 10): parceria por time, ciclo de publicação, métricas,
@@ -54,7 +55,31 @@ export async function listTeamsAdmin(db: PrismaClient) {
     publishAt: t.publishAt?.toISOString() ?? null,
     stadium: t.homeStadium ? { id: t.homeStadium.id, name: t.homeStadium.name, city: t.homeStadium.city } : null,
     templateCount: t._count.templates,
+    earningsCents: t.earningsCents,
   }));
+}
+
+// Config de royalties (editável pela administração)
+export async function getPlatformConfig(db: PrismaClient) {
+  return getRoyaltyConfig(db);
+}
+
+export async function updatePlatformConfig(
+  db: PrismaClient,
+  input: { platformFeeBps: number; clubRoyaltyBps: number; primaryClubBps: number },
+) {
+  const clamp = (n: number) => Math.max(0, Math.min(10_000, Math.round(n)));
+  const data = {
+    platformFeeBps: clamp(input.platformFeeBps),
+    clubRoyaltyBps: clamp(input.clubRoyaltyBps),
+    primaryClubBps: clamp(input.primaryClubBps),
+  };
+  await db.platformConfig.upsert({
+    where: { id: 'singleton' },
+    create: { id: 'singleton', ...data },
+    update: data,
+  });
+  return data;
 }
 
 export async function createTeamWithStadium(

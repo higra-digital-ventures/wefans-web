@@ -4,7 +4,7 @@ import { toListingDTO, toTemplateDTO } from '../lib/dto';
 import { isMomentLocked } from '../lib/moment';
 import { recomputeUserScores } from '../lib/scores';
 import { withDbRetry } from '../lib/tx';
-import { PLATFORM_FEE_BPS, CLUB_ROYALTY_BPS, creditTeam } from '../lib/royalty';
+import { getRoyaltyConfig, creditTeam } from '../lib/royalty';
 
 const ASP_WINDOW = 10; // média móvel sobre as últimas N vendas
 const TX_OPTS = { timeout: 15_000, maxWait: 10_000 } as const;
@@ -63,8 +63,9 @@ export async function settleSale(
   const oldAsp = moment.template.aspCents;
   // Split: vendedor sempre -10% (5% plataforma + 5% clube). O clube só fatura
   // com vínculo (template.teamId); sem parceria, a fatia do clube vira plataforma.
-  const platformFee = Math.round((price * PLATFORM_FEE_BPS) / 10_000);
-  const clubSlice = Math.round((price * CLUB_ROYALTY_BPS) / 10_000);
+  const cfg = await getRoyaltyConfig(tx);
+  const platformFee = Math.round((price * cfg.platformFeeBps) / 10_000);
+  const clubSlice = Math.round((price * cfg.clubRoyaltyBps) / 10_000);
   const teamId = moment.template.teamId;
   const clubCut = teamId ? clubSlice : 0;
   const platformCut = platformFee + (teamId ? 0 : clubSlice);

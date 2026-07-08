@@ -574,6 +574,15 @@ model Team {
   @@index([homeStadiumId])
 }
 
+// Config editável pela administração (singleton). Taxas de royalty em BPS.
+model PlatformConfig {
+  id             String   @id @default("singleton")
+  platformFeeBps Int      @default(500) // 5% taxa da plataforma (revenda)
+  clubRoyaltyBps Int      @default(500) // 5% royalty do clube (revenda)
+  primaryClubBps Int      @default(3000) // 30% do clube no pack (primário)
+  updatedAt      DateTime @updatedAt
+}
+
 // Extrato de royalties do time (base das negociações de licença): cada entrada é
 // a parte do clube numa venda primária (pack) ou secundária (revenda).
 model TeamEarning {
