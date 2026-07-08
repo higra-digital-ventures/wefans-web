@@ -19,6 +19,7 @@ import MomentActions from '@/components/MomentActions';
 import OffersPanel from '@/components/OffersPanel';
 import ShareButton from '@/components/ShareButton';
 import WishlistButton from '@/components/WishlistButton';
+import SignupWall from '@/components/SignupWall';
 import { TIER_META, editionLabel, isFoil } from '@/lib/tiers';
 import { brl, compact, dateTime, timeAgo } from '@/lib/format';
 import { clubCrestUrl } from '@/lib/media';
@@ -239,39 +240,57 @@ export default async function MomentPage({ params }: { params: Promise<{ id: str
               <div>
                 <div className="text-[10px] uppercase tracking-[0.15em] text-neutral-500">Menor preço</div>
                 <div className="text-[26px] font-bold leading-tight text-white">
-                  {tm?.floorCents != null ? brl(tm.floorCents) : '—'}
+                  {!me ? (
+                    <span className="select-none blur-[7px]" aria-hidden>
+                      R$ 00,00
+                    </span>
+                  ) : tm?.floorCents != null ? (
+                    brl(tm.floorCents)
+                  ) : (
+                    '—'
+                  )}
                 </div>
-                {(() => {
-                  const floorC = tm?.floorCents;
-                  const asp = tm?.aspCents ?? 0;
-                  if (floorC == null || asp <= 0) return null;
-                  const pct = Math.round(((floorC - asp) / asp) * 100);
-                  if (Math.abs(pct) < 5) return null;
-                  return (
-                    <div
-                      className={`text-[11px] font-bold tabular-nums ${pct < 0 ? 'text-emerald-400' : 'text-red-400'}`}
-                      title={`Diferença do menor preço para a média das vendas (${brl(asp)})`}
+                {me &&
+                  (() => {
+                    const floorC = tm?.floorCents;
+                    const asp = tm?.aspCents ?? 0;
+                    if (floorC == null || asp <= 0) return null;
+                    const pct = Math.round(((floorC - asp) / asp) * 100);
+                    if (Math.abs(pct) < 5) return null;
+                    return (
+                      <div
+                        className={`text-[11px] font-bold tabular-nums ${pct < 0 ? 'text-emerald-400' : 'text-red-400'}`}
+                        title={`Diferença do menor preço para a média das vendas (${brl(asp)})`}
+                      >
+                        {pct > 0 ? '+' : ''}
+                        {pct}% vs média
+                      </div>
+                    );
+                  })()}
+              </div>
+              {me && (
+                <div className="text-right text-[11px] text-neutral-400">
+                  {listed} à venda · Média: {tm ? brl(tm.aspCents) : '—'}
+                  {trend && (
+                    <span
+                      className={`ml-1 font-bold ${trend === 'up' ? 'text-emerald-400' : 'text-red-400'}`}
+                      title={`Tendência: as últimas vendas estão ${trend === 'up' ? 'acima' : 'abaixo'} das anteriores`}
                     >
-                      {pct > 0 ? '+' : ''}
-                      {pct}% vs média
-                    </div>
-                  );
-                })()}
-              </div>
-              <div className="text-right text-[11px] text-neutral-400">
-                {listed} à venda · Média: {tm ? brl(tm.aspCents) : '—'}
-                {trend && (
-                  <span
-                    className={`ml-1 font-bold ${trend === 'up' ? 'text-emerald-400' : 'text-red-400'}`}
-                    title={`Tendência: as últimas vendas estão ${trend === 'up' ? 'acima' : 'abaixo'} das anteriores`}
-                  >
-                    {trend === 'up' ? '↑' : '↓'}
-                  </span>
-                )}
-              </div>
+                      {trend === 'up' ? '↑' : '↓'}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
-            {floorMomentId ? (
+            {!me ? (
+              <Link
+                href="/entrar"
+                className="rounded-lg flex items-center justify-center gap-2 bg-accent py-3 text-[13px] font-bold uppercase tracking-[0.06em] text-white transition-opacity hover:opacity-90"
+              >
+                <Icon name="gift" size={15} /> Criar conta grátis para comprar
+              </Link>
+            ) : floorMomentId ? (
               <MomentActions
                 momentId={floorMomentId}
                 listing={floorM?.listing ?? null}
@@ -308,19 +327,21 @@ export default async function MomentPage({ params }: { params: Promise<{ id: str
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm sm:grid-cols-4">
-            {[
-              { label: 'Supply', v: compact(t.circulatingCount) },
-              { label: 'À venda', v: String(listed) },
-              { label: 'Média', v: t.aspCents > 0 ? brl(t.aspCents) : '—' },
-              { label: 'Colecionadores', v: String(collectors?.topCollectors.length ?? 0) + '+' },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="font-semibold text-ink">{s.v}</div>
-                <div className="text-[10px] uppercase tracking-wide text-muted">{s.label}</div>
-              </div>
-            ))}
-          </div>
+          {me && (
+            <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm sm:grid-cols-4">
+              {[
+                { label: 'Supply', v: compact(t.circulatingCount) },
+                { label: 'À venda', v: String(listed) },
+                { label: 'Média', v: t.aspCents > 0 ? brl(t.aspCents) : '—' },
+                { label: 'Colecionadores', v: String(collectors?.topCollectors.length ?? 0) + '+' },
+              ].map((s) => (
+                <div key={s.label}>
+                  <div className="font-semibold text-ink">{s.v}</div>
+                  <div className="text-[10px] uppercase tracking-wide text-muted">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -359,6 +380,7 @@ export default async function MomentPage({ params }: { params: Promise<{ id: str
         </section>
       )}
 
+      {me ? (
       <div className="space-y-4">
         <Panel title="Detalhes">
           <p className="max-w-3xl text-sm leading-relaxed text-neutral-300">
@@ -588,6 +610,12 @@ export default async function MomentPage({ params }: { params: Promise<{ id: str
           </Panel>
         )}
       </div>
+      ) : (
+        <SignupWall
+          title="O resto é para membros"
+          hint="Histórico de vendas, colecionadores, ofertas e todos os seriais aparecem quando você cria a conta — e você ganha seu primeiro pacote de Momentos."
+        />
+      )}
 
       {moreMoments.length > 0 && (
         <section className="mt-12">
@@ -604,7 +632,7 @@ export default async function MomentPage({ params }: { params: Promise<{ id: str
       )}
 
       {/* CTA sticky no mobile: o menor preço e a compra nunca somem no scroll */}
-      {tm?.floorCents != null && !floorIsMine && (
+      {me && tm?.floorCents != null && !floorIsMine && (
         <div className="fixed inset-x-0 bottom-14 z-30 flex items-center justify-between gap-3 border-t border-white/15 bg-[#0a0a0b]/95 px-4 py-2.5 backdrop-blur lg:hidden">
           <div>
             <div className="text-[9px] uppercase tracking-[0.15em] text-neutral-500">Menor preço</div>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getCollectionServer, getFeedServer, getMarketPulseServer, getWishlistServer, getChecklistsServer, getMe } from '@/lib/api-server';
 import SubTabs from '@/components/SubTabs';
 import EmptyState from '@/components/EmptyState';
+import SignupWall from '@/components/SignupWall';
 import FeedPoller from '@/components/FeedPoller';
 import MoversPanel from '@/components/MoversPanel';
 import ReactionButton from '@/components/ReactionButton';
@@ -455,6 +456,14 @@ export default async function ExplorarPage({
     // Feed centralizado (padrão X): leitura vertical pede coluna limitada —
     // fullscreen fica para as grades (mercado/coleção) e apps (chat).
     <main className="mx-auto w-full max-w-[1360px] px-4 py-8 lg:px-8">
+      {!me && (
+        <div className="mb-6">
+          <SignupWall
+            title="Entre no jogo"
+            hint="O feed completo, o mercado e os drops abrem quando você cria a conta — e o primeiro pacote de Momentos é por nossa conta."
+          />
+        </div>
+      )}
       <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,680px)_300px] lg:justify-center">
         {/* rail pessoal (como o do Explore do Top Shot) */}
         <aside className="space-y-5 lg:sticky lg:top-[88px] lg:self-start">

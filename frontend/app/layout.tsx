@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { Sofia_Sans_Extra_Condensed, Roboto_Flex, Roboto_Mono } from 'next/font/google';
 import './globals.css';
 import TopBar from '@/components/TopBar';
+import VisitorBanner from '@/components/VisitorBanner';
 import SiteFooter from '@/components/SiteFooter';
 import OfflineBanner from '@/components/OfflineBanner';
 import Toaster from '@/components/Toaster';
@@ -40,6 +41,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Toaster>
           <Suspense fallback={<div className="h-[72px] border-b border-line" />}>
             <TopBar />
+          </Suspense>
+          <Suspense fallback={null}>
+            <VisitorBanner />
           </Suspense>
           {children}
           <SiteFooter />

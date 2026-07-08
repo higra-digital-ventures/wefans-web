@@ -6,6 +6,7 @@ import MomentCard from '@/components/MomentCard';
 import LoadMoreSentinel from '@/components/LoadMoreSentinel';
 import MobileFilterSheet from '@/components/MobileFilterSheet';
 import EmptyState from '@/components/EmptyState';
+import SignupWall from '@/components/SignupWall';
 import PriceFilter from '@/components/PriceFilter';
 import SortDropdown from '@/components/SortDropdown';
 import SubTabs from '@/components/SubTabs';
@@ -529,6 +530,14 @@ export default async function MercadoPage({
         </aside>
 
         <div>
+          {!me && (
+            <div className="mb-5">
+              <SignupWall
+                title="Preços e compra são para membros"
+                hint="Crie a conta grátis para ver os preços, girar os Momentos em 3D e negociar — e revele seu primeiro pacote por nossa conta."
+              />
+            </div>
+          )}
           {/* da sua wishlist, à venda agora — nudge discreto no topo dos resultados */}
           {wishOnSale.length > 0 && (
             <section className="rounded-2xl mb-4 border border-white/10 bg-white/[0.02] p-3">
@@ -661,6 +670,7 @@ export default async function MercadoPage({
                       challengeWanted={challengeWantedIds.has(l.template.id)}
                       href={`/moment/${l.template.id}`}
                       wishlist={{ wished: wishedIds.has(l.template.id), canWish: !!me }}
+                      locked={!me}
                     />
                   </div>
                 ),

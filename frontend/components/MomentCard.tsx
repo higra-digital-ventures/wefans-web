@@ -23,6 +23,7 @@ export default function MomentCard({
   hotLabel,
   challengeWanted,
   stillMedia,
+  locked,
   className = '',
   wishlist,
 }: {
@@ -37,6 +38,7 @@ export default function MomentCard({
   hotLabel?: string; // performance do dia ("2 gols hoje") — matchSim → mercado
   challengeWanted?: boolean; // exigido por desafio ativo — demanda de utilidade
   stillMedia?: boolean; // vitrine: imagem + gaiola, sem o clipe no hover
+  locked?: boolean; // visitante deslogado: mídia sem vídeo, preço borrado, sem comprar
   className?: string;
   /** estado da wishlist do usuário (undefined = marcador decorativo) */
   wishlist?: { wished: boolean; canWish: boolean };
@@ -105,10 +107,17 @@ export default function MomentCard({
               color={meta.color}
               foil={foil}
               live={live}
-              hoverPlay={!live}
-              stillOnly={stillMedia}
+              hoverPlay={!live && !locked}
+              stillOnly={stillMedia || locked}
               alt={template.player.name}
             />
+            {locked && (
+              <span className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-transparent to-transparent p-2">
+                <span className="flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white/90 backdrop-blur-sm">
+                  <Icon name="lock" size={9} /> vídeo 3D ao criar conta
+                </span>
+              </span>
+            )}
             {/* glitch/scanlines na entrada do hover */}
             <div aria-hidden className="wf-glitch pointer-events-none absolute inset-0" />
             {/* chip de play (some enquanto o lance toca) */}
@@ -236,7 +245,27 @@ export default function MomentCard({
 
       {/* CTA de compra fixo na base + linha de preço embaixo (padrão Top Shot):
           seção própria, separada por hairline, ocupando a largura do card */}
-      {priceCents != null ? (
+      {locked ? (
+        <div className="border-t border-white/10 p-3">
+          <span className="rounded-lg flex items-center justify-center gap-1.5 bg-accent py-2.5 text-[13px] font-bold uppercase tracking-[0.06em] text-white">
+            <Icon name="lock" size={13} /> Entrar para ver
+          </span>
+          <div className="mt-2 flex items-center justify-between text-[11px] text-neutral-500">
+            <span>
+              Menor preço{' '}
+              <span className="select-none blur-[5px]" aria-hidden>
+                R$ 00,00
+              </span>
+            </span>
+            <span>
+              Média{' '}
+              <span className="select-none blur-[5px]" aria-hidden>
+                R$ 000
+              </span>
+            </span>
+          </div>
+        </div>
+      ) : priceCents != null ? (
         <div className="border-t border-white/10 p-3">
           {quickBuyListingId ? (
             <QuickBuy bar listingId={quickBuyListingId} priceCents={priceCents} />
