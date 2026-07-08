@@ -562,14 +562,32 @@ model Team {
   partnerStatus String    @default("PROSPECT") // PROSPECT|ATIVO|PAUSADO|ENCERRADO
   status        String    @default("RASCUNHO") // RASCUNHO|AGENDADO|PUBLICADO|ENCERRADO
   publishAt     DateTime?
+  earningsCents Int       @default(0) // acumulado de royalties (licenciamento/parceria)
 
-  homeStadium  Stadium?   @relation(fields: [homeStadiumId], references: [id])
+  homeStadium  Stadium?      @relation(fields: [homeStadiumId], references: [id])
   templates    Template[]
-  favoritedBy  User[]     @relation("UserFavoriteTeam")
-  homeFixtures Fixture[]  @relation("HomeFixtures")
-  awayFixtures Fixture[]  @relation("AwayFixtures")
+  favoritedBy  User[]        @relation("UserFavoriteTeam")
+  homeFixtures Fixture[]     @relation("HomeFixtures")
+  awayFixtures Fixture[]     @relation("AwayFixtures")
+  earnings     TeamEarning[]
 
   @@index([homeStadiumId])
+}
+
+// Extrato de royalties do time (base das negociações de licença): cada entrada é
+// a parte do clube numa venda primária (pack) ou secundária (revenda).
+model TeamEarning {
+  id          String   @id @default(cuid())
+  teamId      String
+  amountCents Int
+  kind        String // PRIMARY | ROYALTY
+  momentId    String? // referência solta (Moments podem ser destruídos)
+  memo        String?
+  createdAt   DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
 }
 
 model Stadium {

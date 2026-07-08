@@ -1,6 +1,7 @@
 import { Prisma, Tier } from '@prisma/client';
 import { conflict } from '../lib/errors';
 import { recomputeUserScores } from '../lib/scores';
+import { PRIMARY_CLUB_BPS, creditTeam } from '../lib/royalty';
 
 // Serviço de mint REUTILIZÁVEL (web, API e check-in usam o mesmo). Deve rodar dentro
 // de uma $transaction. A unicidade do serial é garantida por um UPDATE ... RETURNING
@@ -16,6 +17,7 @@ interface PoolTemplate {
   tier: Tier;
   parallel: string;
   aspCents: number;
+  teamId: string | null; // clube parceiro que fatura o royalty primário
 }
 
 interface MintablePack {
@@ -89,13 +91,13 @@ export async function mintPack(tx: Prisma.TransactionClient, userId: string, pac
   let pool = pack.setId
     ? await tx.template.findMany({
         where: { status: 'PUBLICADO', setId: pack.setId },
-        select: { id: true, tier: true, parallel: true, aspCents: true },
+        select: { id: true, tier: true, parallel: true, aspCents: true, teamId: true },
       })
     : [];
   if (pool.length === 0) {
     pool = await tx.template.findMany({
       where: { status: 'PUBLICADO' },
-      select: { id: true, tier: true, parallel: true, aspCents: true },
+      select: { id: true, tier: true, parallel: true, aspCents: true, teamId: true },
     });
   }
   if (pool.length === 0) throw conflict('Nenhum Momento publicado para criar');
@@ -138,6 +140,11 @@ export async function mintPack(tx: Prisma.TransactionClient, userId: string, pac
     await tx.transaction.create({
       data: { type: 'MINT', momentId: moment.id, buyerId: userId, amountCents: acquiredPriceCents },
     });
+    // royalty primário: parte do valor do pack vai pro clube parceiro do Momento
+    if (slot.template.teamId && priceShare > 0) {
+      const clubShare = Math.round((priceShare * PRIMARY_CLUB_BPS) / 10_000);
+      await creditTeam(tx, slot.template.teamId, clubShare, 'PRIMARY', moment.id, 'Royalty de pacote');
+    }
     mintedIds.push(moment.id);
     scoreSum += topShotScore;
   }

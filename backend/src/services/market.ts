@@ -4,8 +4,8 @@ import { toListingDTO, toTemplateDTO } from '../lib/dto';
 import { isMomentLocked } from '../lib/moment';
 import { recomputeUserScores } from '../lib/scores';
 import { withDbRetry } from '../lib/tx';
+import { PLATFORM_FEE_BPS, CLUB_ROYALTY_BPS, creditTeam } from '../lib/royalty';
 
-const FEE_BPS = 500; // 5% taxa da plataforma
 const ASP_WINDOW = 10; // média móvel sobre as últimas N vendas
 const TX_OPTS = { timeout: 15_000, maxWait: 10_000 } as const;
 
@@ -61,8 +61,14 @@ export async function settleSale(
   if (buyerId === sellerId) throw badRequest('Comprador e vendedor são o mesmo');
 
   const oldAsp = moment.template.aspCents;
-  const fee = Math.round((price * FEE_BPS) / 10_000);
-  const proceeds = price - fee;
+  // Split: vendedor sempre -10% (5% plataforma + 5% clube). O clube só fatura
+  // com vínculo (template.teamId); sem parceria, a fatia do clube vira plataforma.
+  const platformFee = Math.round((price * PLATFORM_FEE_BPS) / 10_000);
+  const clubSlice = Math.round((price * CLUB_ROYALTY_BPS) / 10_000);
+  const teamId = moment.template.teamId;
+  const clubCut = teamId ? clubSlice : 0;
+  const platformCut = platformFee + (teamId ? 0 : clubSlice);
+  const proceeds = price - platformFee - clubSlice;
 
   const rows = await tx.$queryRaw<Array<{ balanceCents: number }>>(Prisma.sql`
     UPDATE "User" SET "balanceCents" = "balanceCents" - ${price}
@@ -73,14 +79,17 @@ export async function settleSale(
   const buyerBalance = Number(rows[0].balanceCents);
 
   const seller = await tx.user.update({ where: { id: sellerId }, data: { balanceCents: { increment: proceeds } } });
+  if (teamId && clubCut > 0) {
+    await creditTeam(tx, teamId, clubCut, 'ROYALTY', momentId, `Royalty de revenda: ${moment.template.title}`);
+  }
 
   const newScore = Math.round((Math.max(price, oldAsp) / 100) * 10);
   await tx.moment.update({ where: { id: momentId }, data: { ownerId: buyerId, acquiredPriceCents: price, topShotScore: newScore } });
 
   const flagged = oldAsp > 0 && price > oldAsp * 3; // anti-anômalo (Conduta)
-  await tx.transaction.create({ data: { type: txType, momentId, buyerId, sellerId, amountCents: price, feeCents: fee, flagged } });
+  await tx.transaction.create({ data: { type: txType, momentId, buyerId, sellerId, amountCents: price, feeCents: platformCut, flagged } });
   await tx.walletTransaction.create({ data: { userId: buyerId, type: 'PURCHASE', amountCents: -price, balanceAfterCents: buyerBalance, memo: `Compra: ${moment.template.title}` } });
-  await tx.walletTransaction.create({ data: { userId: sellerId, type: 'SALE', amountCents: proceeds, balanceAfterCents: seller.balanceCents, memo: `Venda: ${moment.template.title} (taxa ${fee})` } });
+  await tx.walletTransaction.create({ data: { userId: sellerId, type: 'SALE', amountCents: proceeds, balanceAfterCents: seller.balanceCents, memo: `Venda: ${moment.template.title} (taxa ${platformFee}${clubCut > 0 ? ` · royalty clube ${clubCut}` : ''})` } });
 
   const recent = await tx.transaction.findMany({
     where: { type: { in: ['BUY', 'OFFER_ACCEPT'] }, moment: { templateId: moment.templateId } },
@@ -94,7 +103,7 @@ export async function settleSale(
   await recomputeUserScores(tx, buyerId);
   await recomputeUserScores(tx, sellerId);
 
-  return { momentId, priceCents: price, feeCents: fee, balanceCents: buyerBalance, flagged };
+  return { momentId, priceCents: price, feeCents: platformCut, balanceCents: buyerBalance, flagged };
 }
 
 export async function buyMoment(db: PrismaClient, buyerId: string, listingId: string) {
