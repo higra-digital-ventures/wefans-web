@@ -78,8 +78,9 @@ export default function MomentCard({
       </div>
 
       {/* mídia em perspectiva (slab 3D); no hover desvira e preenche o card
-          enquanto o lance "toca" (glitch + bola na trajetória) — Top Shot */}
-      <div className="px-6 pb-2 pt-4" style={{ perspective: '650px' }}>
+          enquanto o lance "toca" (glitch + bola na trajetória) — Top Shot.
+          pt maior: respiro entre o nome e a animação (folga do ícone de câmera) */}
+      <div className="px-6 pb-2 pt-8" style={{ perspective: '650px' }}>
         <div className="wf-cube-bob relative mx-auto w-[78%]">
           {/* cantoneiras neon (viewfinder, como no Top Shot) — moldura fixa, o cubo gira dentro */}
           <span aria-hidden className="wf-corner -left-2.5 -top-2.5 rounded-tl border-l-2 border-t-2" />
