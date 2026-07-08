@@ -18,7 +18,26 @@ export async function registerUser(db: Db, input: RegisterInput): Promise<User> 
   });
   if (existing) throw conflict('E-mail ou usuário já cadastrado');
   const passwordHash = bcrypt.hashSync(input.password, 10);
-  return db.user.create({ data: { email: input.email, username: input.username, passwordHash } });
+  const user = await db.user.create({ data: { email: input.email, username: input.username, passwordHash } });
+  await grantWelcomePack(db, user.id);
+  return user;
+}
+
+/** Gancho de aquisição: todo novo colecionador ganha um pacote grátis lacrado
+ * (o "pegue os primeiros grátis"). Concede um pack always-on gratuito; abre no
+ * tour /bem-vindo ou na coleção. Sem pack grátis disponível, não faz nada. */
+async function grantWelcomePack(db: Db, userId: string) {
+  const pack = await db.pack.findFirst({
+    where: { priceCents: 0, ticketOnly: false, dropId: null },
+    orderBy: { totalSupply: 'desc' },
+  });
+  if (!pack) return;
+  const reserved = await db.pack.updateMany({
+    where: { id: pack.id, soldCount: { lt: pack.totalSupply } },
+    data: { soldCount: { increment: 1 } },
+  });
+  if (reserved.count === 0) return;
+  await db.packInventory.create({ data: { packId: pack.id, ownerId: userId } });
 }
 
 export async function authenticate(db: Db, email: string, password: string): Promise<User> {
