@@ -172,6 +172,44 @@ export default async function Home() {
         </span>
       </Link>
 
+      {/* por que colecionar: a tese de valorização em 3 forças que o torcedor entende */}
+      <section className="mb-10">
+        <SectionTitle white="Por que colecionar." colored="Como um Momento valoriza" />
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            {
+              emoji: '⚽',
+              t: 'Craque em alta',
+              d: 'Quando o jogador da jogada decide um clássico, faz gol ou é convocado, a procura pelos Momentos dele sobe — e o preço acompanha.',
+            },
+            {
+              emoji: '🔒',
+              t: 'Escassez',
+              d: 'Edições limitadas nunca aumentam; exemplares queimados e emissões encerradas congelam o supply para sempre.',
+            },
+            {
+              emoji: '⭐',
+              t: 'Colecionabilidade',
+              d: 'Seriais baixos (#1, #7) e o número da camisa do craque valem um extra para os colecionadores.',
+            },
+          ].map((f) => (
+            <div key={f.t} className="rounded-2xl border border-line bg-[#0e0e10] p-4">
+              <div className="text-2xl" aria-hidden>
+                {f.emoji}
+              </div>
+              <div className="mt-2 font-display text-lg uppercase text-ink">{f.t}</div>
+              <div className="mt-1 text-[12px] leading-snug text-muted">{f.d}</div>
+            </div>
+          ))}
+        </div>
+        <Link
+          href="/como-funciona#valoriza"
+          className="mt-3 inline-block text-[12px] font-semibold text-accent3 hover:underline"
+        >
+          Entenda como o valor se forma →
+        </Link>
+      </section>
+
       {rares.length > 0 && (
         <section className="mb-10">
           <SectionTitle white="Raridade em campo." colored="Lendários e Galácticos" />

@@ -19,6 +19,24 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     ),
   },
   {
+    id: 'valoriza',
+    title: 'Por que um Momento valoriza',
+    body: (
+      <>
+        Um Momento sobe de preço por três forças que todo torcedor entende:{' '}
+        <strong>1) Craque em alta</strong> — quando o jogador da jogada decide um clássico, faz gol
+        ou é convocado, a procura pelos Momentos dele cresce e o menor preço sobe (o desempenho em
+        campo puxa a demanda). <strong>2) Escassez</strong> — quanto menos exemplares existem, mais
+        disputado: edições <strong>Limitadas</strong> nunca aumentam, exemplares <strong>queimados</strong>{' '}
+        somem da circulação, e quando a <strong>emissão encerra</strong> o supply congela para sempre.{' '}
+        <strong>3) Colecionabilidade</strong> — seriais baixos (#1, #7) e o número da camisa do craque
+        valem um extra. Você acompanha tudo isso no próprio card: <strong>Menor preço</strong>,{' '}
+        <strong>Média</strong> e a variação <em>vs média</em> mostram se está valorizando. É o mesmo
+        motor do NBA Top Shot, adaptado ao futebol brasileiro.
+      </>
+    ),
+  },
+  {
     id: 'raridades',
     title: 'Raridades (tiers)',
     body: (
