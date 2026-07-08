@@ -421,7 +421,7 @@ async function main() {
 
   const mainPack = await prisma.pack.create({
     data: {
-      name: 'Rookie Pack',
+      name: 'Pack Base',
       dropId: drop.id,
       setId: baseSet.id,
       priceCents: 4000, // R$ 40
@@ -452,7 +452,7 @@ async function main() {
   // Rip Pack 24/7 — sempre à venda, sem fila (faixa "Rip Packs" da página de drops)
   await prisma.pack.create({
     data: {
-      name: 'Pack da Rodada 24/7',
+      name: 'Pack Golaços da Rodada',
       priceCents: 2000,
       setId: sets[2].id, // Golaços da Rodada
       momentCount: 5, // pacote de valor: mais Momentos, odds um pouco mais baixas
@@ -492,7 +492,7 @@ async function main() {
   });
   const reboundPack = await prisma.pack.create({
     data: {
-      name: 'Flash Pack',
+      name: 'Pack Estreias',
       dropId: reboundDrop.id,
       setId: sets[1].id, // Estreias
       priceCents: 2500,
