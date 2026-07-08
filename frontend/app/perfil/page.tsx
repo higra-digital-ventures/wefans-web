@@ -51,7 +51,14 @@ export default async function PerfilPage() {
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {pinned.map((m) => (
-              <MomentCard key={m.id} template={m.template} serial={m.serial} href={`/moment/${m.template.id}`} />
+              <MomentCard
+                key={m.id}
+                template={m.template}
+                serial={m.serial}
+                listingPriceCents={m.listingPriceCents}
+                paidCents={m.acquiredPriceCents}
+                href={`/moment/${m.template.id}`}
+              />
             ))}
           </div>
         )}
