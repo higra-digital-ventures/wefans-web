@@ -10,17 +10,20 @@ export async function listPacks(db: PrismaClient) {
   const packs = await db.pack.findMany({
     where: { ticketOnly: false, dropId: null },
     orderBy: { priceCents: 'asc' },
+    include: { set: { include: { series: true } } },
   });
   return packs.map(toPackDTO);
 }
 
 /** Detalhe do pacote + Momentos possíveis (catálogo publicado) agrupados por tier (seção 11.6). */
 export async function getPackDetail(db: PrismaClient, packId: string) {
-  const pack = await db.pack.findUnique({ where: { id: packId } });
+  const pack = await db.pack.findUnique({ where: { id: packId }, include: { set: { include: { series: true } } } });
   if (!pack) throw notFound('Pacote não encontrado');
+  // Momentos possíveis = catálogo do Set do pack (o que ele realmente entrega).
+  // Sem Set, cai para o catálogo global.
   const templates = await db.template.findMany({
-    where: { status: 'PUBLICADO' },
-    include: { player: true },
+    where: { status: 'PUBLICADO', ...(pack.setId ? { setId: pack.setId } : {}) },
+    include: { player: true, set: { include: { series: true } } },
     orderBy: [{ tier: 'desc' }, { title: 'asc' }],
   });
   return { pack: toPackDTO(pack), possibleLances: templates.map(toTemplateDTO) };

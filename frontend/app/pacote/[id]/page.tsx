@@ -32,8 +32,18 @@ export default async function PackDetailPage({ params }: { params: Promise<{ id:
               {pack.momentCount} Momentos · {remaining > 0 ? `${remaining.toLocaleString('pt-BR')} disponíveis` : 'esgotado'}
               {pack.guaranteeTier && ` · garante ${TIER_META[pack.guaranteeTier].label}+`}
             </p>
+            {pack.setName && (
+              <p className="mt-1 text-sm text-neutral-400">
+                Coleção <span className="text-neutral-200">{pack.setName}</span>
+                {pack.seriesName ? ` · ${pack.seriesName}` : ''}
+              </p>
+            )}
             <div className="mt-3 flex flex-wrap gap-1.5">
-              {Object.entries(pack.oddsJson).map(([tier, p]) => {
+              {[...TIER_ORDER]
+                .reverse()
+                .filter((tier) => (pack.oddsJson[tier] ?? 0) > 0)
+                .map((tier) => [tier, pack.oddsJson[tier]] as [Tier, number])
+                .map(([tier, p]) => {
                 const meta = TIER_META[tier as Tier];
                 return (
                   <span

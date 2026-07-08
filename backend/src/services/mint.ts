@@ -23,6 +23,7 @@ interface MintablePack {
   oddsJson: Prisma.JsonValue;
   guaranteeTier: Tier | null;
   priceCents: number;
+  setId?: string | null; // se definido, o pack sorteia só deste Set (coleção)
 }
 
 function drawTier(odds: Odds): Tier {
@@ -83,10 +84,20 @@ async function mintSlot(
 
 /** Minta pack.momentCount Moments para o usuário. Retorna os Moments criados (com template+player). */
 export async function mintPack(tx: Prisma.TransactionClient, userId: string, pack: MintablePack) {
-  const pool = await tx.template.findMany({
-    where: { status: 'PUBLICADO' },
-    select: { id: true, tier: true, parallel: true, aspCents: true },
-  });
+  // Pack ligado a um Set sorteia só daquele Set (padrão Top Shot: um pack revela
+  // Moments da sua coleção). Se o Set não tiver catálogo, cai para o pool global.
+  let pool = pack.setId
+    ? await tx.template.findMany({
+        where: { status: 'PUBLICADO', setId: pack.setId },
+        select: { id: true, tier: true, parallel: true, aspCents: true },
+      })
+    : [];
+  if (pool.length === 0) {
+    pool = await tx.template.findMany({
+      where: { status: 'PUBLICADO' },
+      select: { id: true, tier: true, parallel: true, aspCents: true },
+    });
+  }
   if (pool.length === 0) throw conflict('Nenhum Momento publicado para criar');
 
   const byTier = new Map<Tier, PoolTemplate[]>();

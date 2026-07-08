@@ -210,6 +210,11 @@ export default async function MomentPage({ params }: { params: Promise<{ id: str
             <span className="bg-panel2 px-2 py-0.5 text-[10px] font-bold uppercase text-neutral-300">
               {t.competition} (2025)
             </span>
+            {t.setName && (
+              <span className="bg-panel2 px-2 py-0.5 text-[10px] font-bold uppercase text-accent3" title={t.seriesName ? `Coleção ${t.setName} · ${t.seriesName}` : `Coleção ${t.setName}`}>
+                Set {t.setName}
+              </span>
+            )}
             {t.parallel !== 'BASE' && (
               <span className="bg-panel2 px-2 py-0.5 text-[10px] font-bold uppercase text-ink">{t.parallel}</span>
             )}

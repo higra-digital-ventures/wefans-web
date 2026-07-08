@@ -423,6 +423,7 @@ async function main() {
     data: {
       name: 'Rookie Pack',
       dropId: drop.id,
+      setId: baseSet.id,
       priceCents: 4000, // R$ 40
       momentCount: 3,
       oddsJson: { COMUM: 0.6, TORCIDA: 0.2, RARO: 0.15, LENDARIO: 0.045, GALACTICO: 0.005 },
@@ -438,6 +439,7 @@ async function main() {
     data: {
       name: 'Pack das Fichas — Lendário',
       priceCents: 0,
+      setId: baseSet.id,
       momentCount: 3,
       oddsJson: { RARO: 0.7, LENDARIO: 0.25, GALACTICO: 0.05 },
       guaranteeTier: Tier.RARO,
@@ -452,6 +454,7 @@ async function main() {
     data: {
       name: 'Pack da Rodada 24/7',
       priceCents: 2000,
+      setId: sets[2].id, // Golaços da Rodada
       momentCount: 5, // pacote de valor: mais Momentos, odds um pouco mais baixas
       oddsJson: { COMUM: 0.62, TORCIDA: 0.25, RARO: 0.11, LENDARIO: 0.019, GALACTICO: 0.001 },
       guaranteeTier: null,
@@ -465,6 +468,7 @@ async function main() {
     data: {
       name: 'Pack Prova de Presença',
       priceCents: 0,
+      setId: baseSet.id,
       momentCount: 1, // recompensa de check-in: um Momento único
       oddsJson: { COMUM: 0.7, TORCIDA: 0.2, RARO: 0.09, LENDARIO: 0.01 },
       guaranteeTier: null,
@@ -490,6 +494,7 @@ async function main() {
     data: {
       name: 'Flash Pack',
       dropId: reboundDrop.id,
+      setId: sets[1].id, // Estreias
       priceCents: 2500,
       momentCount: 3,
       oddsJson: { COMUM: 0.55, TORCIDA: 0.25, RARO: 0.15, LENDARIO: 0.045, GALACTICO: 0.005 },

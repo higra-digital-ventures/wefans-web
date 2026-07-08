@@ -127,6 +127,7 @@ model Set {
 
   series    Series     @relation(fields: [seriesId], references: [id])
   templates Template[]
+  packs     Pack[]
 
   @@index([seriesId])
 }
@@ -213,6 +214,7 @@ model Pack {
   id            String   @id @default(cuid())
   name          String
   dropId        String?
+  setId         String? // coleção (Set) a que o pack pertence — o mint sorteia deste Set
   priceCents    Int
   momentCount   Int      @default(3)
   oddsJson      Json // { COMUM:.6, TORCIDA:.2, RARO:.15, LENDARIO:.045, GALACTICO:.005 }
@@ -223,10 +225,12 @@ model Pack {
   ticketOnly    Boolean  @default(false) // trocável apenas por Fichas de Troca (regra 13)
 
   drop          Drop?           @relation(fields: [dropId], references: [id])
+  set           Set?            @relation(fields: [setId], references: [id])
   inventories   PackInventory[]
   rewardFixtures Fixture[] // fixtures que dão este pacote no check-in
 
   @@index([dropId])
+  @@index([setId])
 }
 
 model PackInventory {

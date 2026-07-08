@@ -28,12 +28,18 @@ function dropDTO(d: {
 }
 
 export async function listDrops(db: PrismaClient) {
-  const drops = await db.drop.findMany({ orderBy: { startsAt: 'asc' }, include: { packs: true } });
+  const drops = await db.drop.findMany({
+    orderBy: { startsAt: 'asc' },
+    include: { packs: { include: { set: { include: { series: true } } } } },
+  });
   return drops.map((d) => ({ ...dropDTO(d), packs: d.packs.map(toPackDTO) }));
 }
 
 export async function getDrop(db: PrismaClient, dropId: string, userId?: string) {
-  const drop = await db.drop.findUnique({ where: { id: dropId }, include: { packs: true } });
+  const drop = await db.drop.findUnique({
+    where: { id: dropId },
+    include: { packs: { include: { set: { include: { series: true } } } } },
+  });
   if (!drop) throw notFound('Drop não encontrado');
   const queueCount = await db.queueEntry.count({ where: { dropId } });
 

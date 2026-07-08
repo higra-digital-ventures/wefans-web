@@ -55,6 +55,12 @@ export default function PackCard({ pack }: { pack: PackDTO }) {
           <p className="text-xs text-muted">
             {pack.momentCount} Momento{pack.momentCount > 1 ? 's' : ''} por pacote
           </p>
+          {pack.setName && (
+            <p className="mt-0.5 text-[11px] text-neutral-500">
+              Coleção <span className="text-neutral-300">{pack.setName}</span>
+              {pack.seriesName ? ` · ${pack.seriesName}` : ''}
+            </p>
+          )}
         </div>
         <span
           className={`shrink-0 rounded-full bg-panel2 px-2.5 py-1 tabular-nums text-sm font-semibold ${

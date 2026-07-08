@@ -56,6 +56,8 @@ export type TemplateDTO = {
   aspCents: number;
   setId: string | null;
   seriesId: string;
+  setName?: string | null;
+  seriesName?: string | null;
   teamId: string | null;
   videoUrl?: string | null; // clipe de teste (Wikimedia CC)
   player: PlayerDTO;
@@ -438,6 +440,9 @@ export type PackDTO = {
   soldCount: number;
   ticketOnly: boolean;
   dropId: string | null;
+  setId?: string | null;
+  setName?: string | null;
+  seriesName?: string | null;
 };
 
 export type PackInventoryDTO = { id: string; opened: boolean; createdAt: string; pack: PackDTO };

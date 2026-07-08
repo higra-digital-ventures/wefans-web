@@ -19,7 +19,9 @@ type TxWithActors = Transaction & {
   seller?: { username: string } | null;
 };
 
-type TemplateWithPlayer = Template & { player: Player };
+// Set/Series podem vir incluídos (opcional) para expor os nomes nos DTOs
+type SetLite = { name: string; series?: { name: string } | null } | null;
+type TemplateWithPlayer = Template & { player: Player; set?: SetLite };
 type MomentWithTemplate = Moment & { template: TemplateWithPlayer; listing?: Listing | null };
 type PackInventoryWithPack = PackInventory & { pack: Pack };
 
@@ -75,6 +77,8 @@ export function toTemplateDTO(t: TemplateWithPlayer) {
     aspCents: t.aspCents,
     setId: t.setId,
     seriesId: t.seriesId,
+    setName: t.set?.name ?? null,
+    seriesName: t.set?.series?.name ?? null,
     teamId: t.teamId,
     videoUrl: t.videoUrl ?? null,
     player: {
@@ -122,7 +126,7 @@ export function toListingDTO(l: Listing & { seller?: { username: string } | null
   };
 }
 
-export function toPackDTO(p: Pack) {
+export function toPackDTO(p: Pack & { set?: SetLite }) {
   return {
     id: p.id,
     name: p.name,
@@ -134,6 +138,9 @@ export function toPackDTO(p: Pack) {
     soldCount: p.soldCount,
     ticketOnly: p.ticketOnly,
     dropId: p.dropId,
+    setId: p.setId ?? null,
+    setName: p.set?.name ?? null,
+    seriesName: p.set?.series?.name ?? null,
   };
 }
 
