@@ -168,7 +168,7 @@ function EventCard({
     <article
       className={
         boxed
-          ? `my-2.5 border bg-[#0c0c0e] ${milestone ? 'border-amber-400/60' : mine ? 'border-accent3/50' : 'border-white/10'}`
+          ? `rounded-2xl my-2.5 overflow-hidden border bg-[#0c0c0e] ${milestone ? 'border-amber-400/60' : mine ? 'border-accent3/50' : 'border-white/10'}`
           : 'border-b border-white/[0.06]'
       }
       style={
