@@ -5,10 +5,19 @@ import type { AdminUser } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminUsuarios({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  const { q } = await searchParams;
-  const data = await adminGet<{ users: AdminUser[] }>(`/admin/users${q ? `?q=${encodeURIComponent(q)}` : ''}`);
+const PAGE = 50;
+
+export default async function AdminUsuarios({ searchParams }: { searchParams: Promise<{ q?: string; p?: string }> }) {
+  const { q, p } = await searchParams;
+  const page = Math.max(1, Number(p) || 1);
+  const qs = new URLSearchParams();
+  if (q) qs.set('q', q);
+  qs.set('p', String(page));
+  const data = await adminGet<{ users: AdminUser[]; total: number }>(`/admin/users?${qs.toString()}`);
   const users = data?.users ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE));
+  const pageLink = (n: number) => `/admin/usuarios?${q ? `q=${encodeURIComponent(q)}&` : ''}p=${n}`;
 
   return (
     <main>
@@ -70,6 +79,28 @@ export default async function AdminUsuarios({ searchParams }: { searchParams: Pr
           </tbody>
         </table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-3 text-sm">
+          {page > 1 ? (
+            <a href={pageLink(page - 1)} className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink">
+              ← Anterior
+            </a>
+          ) : (
+            <span className="rounded-lg border border-line/40 px-3 py-1.5 text-neutral-600">← Anterior</span>
+          )}
+          <span className="text-muted">
+            {page} / {totalPages}
+          </span>
+          {page < totalPages ? (
+            <a href={pageLink(page + 1)} className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink">
+              Próxima →
+            </a>
+          ) : (
+            <span className="rounded-lg border border-line/40 px-3 py-1.5 text-neutral-600">Próxima →</span>
+          )}
+        </div>
+      )}
     </main>
   );
 }

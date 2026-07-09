@@ -13,17 +13,58 @@ const STATUS_COLOR: Record<string, string> = {
   ENCERRADO: 'text-accent',
 };
 
-export default async function AdminConteudo() {
-  const data = await adminGet<{ templates: AdminTemplate[] }>('/admin/templates');
+const STATUSES = ['RASCUNHO', 'AGENDADO', 'PUBLICADO', 'ENCERRADO'];
+const PAGE = 50;
+
+export default async function AdminConteudo({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; status?: string; p?: string }>;
+}) {
+  const { q, status, p } = await searchParams;
+  const page = Math.max(1, Number(p) || 1);
+  const qs = new URLSearchParams();
+  if (q) qs.set('q', q);
+  if (status) qs.set('status', status);
+  qs.set('p', String(page));
+  const data = await adminGet<{ templates: AdminTemplate[]; total: number }>(`/admin/templates?${qs.toString()}`);
   const templates = data?.templates ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE));
+  const pageLink = (n: number) => {
+    const u = new URLSearchParams();
+    if (q) u.set('q', q);
+    if (status) u.set('status', status);
+    u.set('p', String(n));
+    return `/admin/conteudo?${u.toString()}`;
+  };
 
   return (
     <main>
       <h1 className="mb-2 font-display text-3xl uppercase text-ink">Conteúdo</h1>
-      <p className="mb-6 text-sm text-muted">
+      <p className="mb-4 text-sm text-muted">
         Ciclo de publicação (seção 10.1): RASCUNHO → AGENDADO (cron publica) → PUBLICADO → ENCERRADO.
         Nada nasce visível.
       </p>
+
+      <form action="/admin/conteudo" className="mb-3 flex flex-wrap gap-2">
+        <input
+          name="q"
+          defaultValue={q ?? ''}
+          placeholder="Buscar por Momento ou jogador"
+          className="rounded-lg w-full max-w-xs border border-white/15 bg-panel2 px-3 py-2 text-sm text-ink outline-none focus:border-white/40"
+        />
+        <select name="status" defaultValue={status ?? ''} className="rounded-lg border border-white/15 bg-panel2 px-3 py-2 text-sm text-ink">
+          <option value="">Todos os status</option>
+          {STATUSES.map((st) => (
+            <option key={st} value={st}>
+              {st}
+            </option>
+          ))}
+        </select>
+        <button className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white">Filtrar</button>
+      </form>
+      <p className="mb-3 text-xs text-muted">{total} resultado(s)</p>
 
       <div className="rounded-2xl overflow-x-auto  border border-line bg-panel">
         <table className="w-full min-w-[760px] text-sm">
@@ -89,6 +130,28 @@ export default async function AdminConteudo() {
           </tbody>
         </table>
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-3 text-sm">
+          {page > 1 ? (
+            <a href={pageLink(page - 1)} className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink">
+              ← Anterior
+            </a>
+          ) : (
+            <span className="rounded-lg border border-line/40 px-3 py-1.5 text-neutral-600">← Anterior</span>
+          )}
+          <span className="text-muted">
+            {page} / {totalPages}
+          </span>
+          {page < totalPages ? (
+            <a href={pageLink(page + 1)} className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink">
+              Próxima →
+            </a>
+          ) : (
+            <span className="rounded-lg border border-line/40 px-3 py-1.5 text-neutral-600">Próxima →</span>
+          )}
+        </div>
+      )}
     </main>
   );
 }

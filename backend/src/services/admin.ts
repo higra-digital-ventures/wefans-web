@@ -292,17 +292,23 @@ export async function deletePack(db: PrismaClient, id: string) {
 
 // ---- gestão de usuários ----
 
-export async function listUsersAdmin(db: PrismaClient, q?: string) {
-  const where: Prisma.UserWhereInput = q
-    ? { OR: [{ username: { contains: q, mode: 'insensitive' } }, { email: { contains: q, mode: 'insensitive' } }] }
+export async function listUsersAdmin(db: PrismaClient, opts: { q?: string; skip?: number; take?: number } = {}) {
+  const take = Math.min(100, Math.max(1, opts.take ?? 50));
+  const skip = Math.max(0, opts.skip ?? 0);
+  const where: Prisma.UserWhereInput = opts.q
+    ? { OR: [{ username: { contains: opts.q, mode: 'insensitive' } }, { email: { contains: opts.q, mode: 'insensitive' } }] }
     : {};
-  const users = await db.user.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-    take: 50,
-    include: { _count: { select: { moments: true } } },
-  });
-  return users.map((u) => ({
+  const [total, users] = await Promise.all([
+    db.user.count({ where }),
+    db.user.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+      include: { _count: { select: { moments: true } } },
+    }),
+  ]);
+  const rows = users.map((u) => ({
     id: u.id,
     username: u.username,
     email: u.email,
@@ -312,6 +318,7 @@ export async function listUsersAdmin(db: PrismaClient, q?: string) {
     momentCount: u._count.moments,
     createdAt: u.createdAt.toISOString(),
   }));
+  return { users: rows, total };
 }
 
 export async function setUserSuspended(db: PrismaClient, id: string, suspended: boolean) {
@@ -425,19 +432,43 @@ export async function setContentStatus(
 
 // ------------------------------------------------------------------ cadastro de conteúdo
 
-export async function listTemplatesAdmin(db: PrismaClient) {
-  const templates = await db.template.findMany({
-    include: { player: true, team: { select: { name: true } } },
-    orderBy: [{ status: 'asc' }, { title: 'asc' }],
-    take: 200,
-  });
+export async function listTemplatesAdmin(
+  db: PrismaClient,
+  opts: { q?: string; status?: string; skip?: number; take?: number } = {},
+) {
+  const take = Math.min(100, Math.max(1, opts.take ?? 50));
+  const skip = Math.max(0, opts.skip ?? 0);
+  const where: Prisma.TemplateWhereInput = {
+    ...(opts.status ? { status: opts.status } : {}),
+    ...(opts.q
+      ? {
+          OR: [
+            { title: { contains: opts.q, mode: 'insensitive' } },
+            { player: { name: { contains: opts.q, mode: 'insensitive' } } },
+          ],
+        }
+      : {}),
+  };
+  const [total, templates] = await Promise.all([
+    db.template.count({ where }),
+    db.template.findMany({
+      where,
+      include: { player: true, team: { select: { name: true } } },
+      orderBy: [{ status: 'asc' }, { title: 'asc' }],
+      skip,
+      take,
+    }),
+  ]);
+  const pageIds = templates.map((t) => t.id);
   // painel de emissão (a lição do crash do Top Shot): antes de mintar mais,
   // o admin vê o impacto — floor, média e quantos anúncios cada edição segura
-  const floors = await db.listing.groupBy({
-    by: ['momentId'],
-    where: { status: 'ACTIVE' },
-    _min: { priceCents: true },
-  });
+  const floors = pageIds.length
+    ? await db.listing.groupBy({
+        by: ['momentId'],
+        where: { status: 'ACTIVE', moment: { templateId: { in: pageIds } } },
+        _min: { priceCents: true },
+      })
+    : [];
   const momentIds = floors.map((f) => f.momentId);
   const moments = momentIds.length
     ? await db.moment.findMany({ where: { id: { in: momentIds } }, select: { id: true, templateId: true } })
@@ -452,7 +483,7 @@ export async function listTemplatesAdmin(db: PrismaClient) {
     const cur = floorByTemplate.get(tid);
     if (cur == null || f._min.priceCents < cur) floorByTemplate.set(tid, f._min.priceCents);
   }
-  return templates.map((t) => ({
+  const rows = templates.map((t) => ({
     id: t.id,
     title: t.title,
     player: t.player.name,
@@ -468,6 +499,7 @@ export async function listTemplatesAdmin(db: PrismaClient) {
     status: t.status,
     publishAt: t.publishAt?.toISOString() ?? null,
   }));
+  return { templates: rows, total };
 }
 
 export async function createPlayer(db: PrismaClient, input: { name: string; club: string; position: string; jersey: number; nationality: string }) {

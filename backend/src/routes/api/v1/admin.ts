@@ -156,8 +156,9 @@ export async function adminRoutes(app: FastifyInstance) {
 
   // gestão de usuários
   app.get('/admin/users', async (req) => {
-    const { q } = z.object({ q: z.string().optional() }).parse(req.query);
-    return { users: await listUsersAdmin(prisma, q) };
+    const { q, p } = z.object({ q: z.string().optional(), p: z.coerce.number().int().min(1).optional() }).parse(req.query);
+    const take = 50;
+    return listUsersAdmin(prisma, { q, skip: ((p ?? 1) - 1) * take, take });
   });
   app.post('/admin/users/:id/suspend', async (req) => {
     const { id } = idParam.parse(req.params);
@@ -237,7 +238,13 @@ export async function adminRoutes(app: FastifyInstance) {
   });
 
   // ----- cadastro -----
-  app.get('/admin/templates', async () => ({ templates: await listTemplatesAdmin(prisma) }));
+  app.get('/admin/templates', async (req) => {
+    const { q, status, p } = z
+      .object({ q: z.string().optional(), status: z.string().optional(), p: z.coerce.number().int().min(1).optional() })
+      .parse(req.query);
+    const take = 50;
+    return listTemplatesAdmin(prisma, { q, status, skip: ((p ?? 1) - 1) * take, take });
+  });
 
   app.post('/admin/players', async (req) => {
     const input = z
