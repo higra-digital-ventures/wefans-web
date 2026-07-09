@@ -664,7 +664,8 @@ async function main() {
     templates.find((t) => t.tier === Tier.RARO)!,
     templates.find((t) => t.tier === Tier.LENDARIO)!,
     templates.find((t) => t.tier === Tier.GALACTICO)!,
-    templates.find((t) => t.competition === 'Copa do Brasil')!, // garante 3 competições p/ a Missão
+    templates.find((t) => t.competition === 'Copa do Brasil')!, // garante 2ª competição p/ a Missão
+    templates.find((t) => t.competition === 'Libertadores')!, // garante a 3ª competição p/ a Missão
   ];
   const ownedMoments = [];
   let topShotScore = 0;

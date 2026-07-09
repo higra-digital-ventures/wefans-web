@@ -51,7 +51,7 @@ const accept = await post(`/offers/${offer.id}/accept`, { momentId: raro.id }, c
 check('oferta aceita → venda executada', !!accept.momentId);
 check('Momento transferido ao comprador (admin)', (await get(`/moments/${raro.id}`)).moment.ownerUsername === 'admin');
 const cAfter = (await get('/me', cAuth)).user.balanceCents;
-check('vendedor recebeu preço − 5%', cAfter - cBefore === 5000 - Math.round(5000 * 0.05), `${cAfter - cBefore}`);
+check('vendedor recebeu preço − 10% (5% plataforma + 5% clube)', cAfter - cBefore === 5000 - 2 * Math.round(5000 * 0.05), `${cAfter - cBefore}`);
 // oferta cancelável
 const off2 = (await post('/offers', { templateId: raro.template.id, priceCents: 1000 }, aAuth)).offer;
 check('cancelar oferta', (await del(`/offers/${off2.id}`, aAuth)).ok === true);

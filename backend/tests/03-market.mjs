@@ -43,7 +43,7 @@ const activity = (await j(await fetch(`${API}/market/activity`))).sales;
 console.log(`Venda 0: ASP=${asp0} preço=${price0} taxa=${fee0} | Venda 1: ASP=${asp1} preço=${price1} taxa=${fee1}`);
 check('vendedor não compra o próprio anúncio (400)', ownBuy.status === 400, String(ownBuy.status));
 check('comprador debitado por ambas as compras', bAfterDeposit.balanceCents - bAfter.balanceCents === price0 + price1);
-check('vendedor creditado (preço - 5%) nas duas', sAfter.balanceCents - sBefore.balanceCents === (price0 - fee0) + (price1 - fee1));
+check('vendedor creditado (preço − 10%: 5% plataforma + 5% clube) nas duas', sAfter.balanceCents - sBefore.balanceCents === (price0 - 2 * fee0) + (price1 - 2 * fee1), `${sAfter.balanceCents - sBefore.balanceCents}`);
 check('dono do Momento 0 agora é o comprador', mom0.ownerUsername === bAfter.username, mom0.ownerUsername);
 check('venda normal NÃO sinalizada', buy0.flagged === false);
 check('venda 5×ASP sinalizada (anti-anômalo)', buy1.flagged === true);

@@ -31,7 +31,7 @@ run_suite() {
 
 # 04-checkin precisa do id de um jogo agendado do time seguido (argumento).
 scheduled_fixture() {
-  psql -d wefans -tAc "SELECT f.id FROM \"Fixture\" f JOIN \"Team\" t ON t.id=f.\"homeTeamId\" OR t.id=f.\"awayTeamId\" WHERE t.name='Serpentes FC' AND f.status='SCHEDULED' LIMIT 1;" 2>/dev/null | tr -d '[:space:]'
+  node --input-type=module -e 'import "dotenv/config";import{PrismaClient} from "@prisma/client";const p=new PrismaClient();const f=await p.fixture.findFirst({where:{status:"SCHEDULED"},select:{id:true}});process.stdout.write(f?.id||"");await p.$disconnect()' 2>/dev/null | tr -d '[:space:]'
 }
 
 run_suite tests/01-auth.sh

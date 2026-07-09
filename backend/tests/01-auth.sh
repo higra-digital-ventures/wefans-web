@@ -46,14 +46,14 @@ check "novo access funciona em /me" "$(curl -s "$API/me" -H "authorization: Bear
 echo "7) Times públicos + escolher time seguido (cookie)"
 TEAMS=$(curl -s "$API/teams")
 TEAM_ID=$(echo "$TEAMS" | jget 'd.teams[0].id'); TEAM_NAME=$(echo "$TEAMS" | jget 'd.teams[0].name')
-check "nº de times publicados" "$(echo "$TEAMS" | jget 'd.teams.length')" "5"
+check "nº de times publicados" "$(echo "$TEAMS" | jget 'd.teams.length')" "20"
 SETFAV=$(curl -s -b "$JAR" -X PATCH "$API/me" -H 'content-type: application/json' -d "{\"favoriteTeamId\":\"$TEAM_ID\"}")
 check "time seguido definido" "$(echo "$SETFAV" | jget 'd.user.favoriteTeam.name')" "$TEAM_NAME"
 
 echo "8) Login do usuário semeado (bearer) + senha errada"
 LOGIN=$(curl -s -X POST "$API/auth/login" -H 'content-type: application/json' -d '{"email":"colecionador@wefans.test","password":"wefans123"}')
 LA=$(echo "$LOGIN" | jget 'd.accessToken')
-check "topShotScore do colecionador" "$(curl -s "$API/me" -H "authorization: Bearer $LA" | jget 'd.user.topShotScore')" "26100"
+check "topShotScore do colecionador" "$(curl -s "$API/me" -H "authorization: Bearer $LA" | jget 'd.user.topShotScore')" "26150"
 check "senha errada → 401" "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$API/auth/login" -H 'content-type: application/json' -d '{"email":"colecionador@wefans.test","password":"errada"}')" "401"
 
 echo "9) Logout limpa a sessão"
