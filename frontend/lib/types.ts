@@ -318,11 +318,26 @@ export type FastBreakStandings = {
 // ----- admin (Fase 10) -----
 export type AdminMetrics = {
   users: number;
+  suspended: number;
   moments: { total: number; burned: number };
   market: { activeListings: number; sales: number; volumeCents: number; feesCents: number; flaggedTx: number };
+  revenue: { platformFeesCents: number; clubEarningsCents: number; clubPaidOutCents: number; clubUnpaidCents: number };
+  packs: { sold: number; supply: number };
+  drops: Record<string, number>;
   checkins: Record<string, number>;
   reviewPending: number;
   templates: Record<string, number>;
+};
+
+export type AdminUser = {
+  id: string;
+  username: string;
+  email: string;
+  balanceCents: number;
+  isAdmin: boolean;
+  suspended: boolean;
+  momentCount: number;
+  createdAt: string;
 };
 
 export type AdminTeam = {
@@ -334,6 +349,8 @@ export type AdminTeam = {
   stadium: { id: string; name: string; city: string } | null;
   templateCount: number;
   earningsCents: number;
+  paidOutCents: number;
+  unpaidCents: number;
 };
 
 export type PlatformConfig = {
@@ -365,6 +382,8 @@ export type AdminPack = {
   oddsJson: Record<string, number>;
   ticketOnly: boolean;
   sealed: boolean;
+  setId: string | null;
+  dropId: string | null;
   setName: string | null;
   dropName: string | null;
 };

@@ -66,10 +66,20 @@ export default async function AdminParcerias() {
                 <td className={`px-4 py-2.5 ${PARTNER_COLOR[t.partnerStatus] ?? 'text-muted'}`}>{t.partnerStatus}</td>
                 <td className="px-4 py-2.5 text-muted">{t.status}</td>
                 <td className="px-4 py-2.5 text-muted">{t.templateCount}</td>
-                <td className="px-4 py-2.5 text-right font-semibold tabular-nums text-accent3">
-                  {t.earningsCents > 0 ? brl(t.earningsCents) : '—'}
+                <td className="px-4 py-2.5 text-right tabular-nums">
+                  <div className="font-semibold text-accent3">{t.earningsCents > 0 ? brl(t.earningsCents) : '—'}</div>
+                  {t.unpaidCents > 0 && <div className="text-[11px] text-amber-300">a repassar {brl(t.unpaidCents)}</div>}
                 </td>
                 <td className="px-4 py-2.5 text-right">
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                  {t.unpaidCents > 0 && (
+                    <AdminAction
+                      path={`/admin/teams/${t.id}/payout`}
+                      label="Repassar"
+                      variant="primary"
+                      confirmText={`Repassar ${brl(t.unpaidCents)} ao ${t.name}?`}
+                    />
+                  )}
                   {t.status !== 'PUBLICADO' ? (
                     <AdminAction
                       path={`/admin/teams/${t.id}/release`}
@@ -85,6 +95,7 @@ export default async function AdminParcerias() {
                       confirmText={`Ocultar o conteúdo de ${t.name} das telas públicas?`}
                     />
                   )}
+                  </div>
                 </td>
               </tr>
             ))}

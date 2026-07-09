@@ -4,32 +4,42 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminPost } from '@/lib/api-client';
 import { TIER_META, TIER_ORDER } from '@/lib/tiers';
-import type { AdminSet, AdminDrop, Tier } from '@/lib/types';
+import type { AdminSet, AdminDrop, AdminPack, Tier } from '@/lib/types';
 
-// Monta um pack: preço, nº de Momentos, supply, odds por tier, garantia, Set e
-// (opcional) drop. Odds em % (salvas como fração). Sem drop = Loja 24/7.
-export default function AdminCreatePack({ sets, drops }: { sets: AdminSet[]; drops: AdminDrop[] }) {
+const pctFrom = (frac: number | undefined) => (frac ? String(Math.round(frac * 1000) / 10) : '0');
+
+// Monta (ou edita, com `initial`) um pack: preço, nº de Momentos, supply, odds
+// por tier, garantia, Set e (opcional) drop. Odds em % (salvas como fração).
+export default function AdminCreatePack({
+  sets,
+  drops,
+  initial,
+}: {
+  sets: AdminSet[];
+  drops: AdminDrop[];
+  initial?: AdminPack;
+}) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [f, setF] = useState({
-    name: '',
-    price: '20',
-    momentCount: '3',
-    totalSupply: '1000',
-    guarantee: '' as '' | Tier,
-    setId: sets[0]?.id ?? '',
-    dropId: '',
-    sealed: true,
-    ticketOnly: false,
+    name: initial?.name ?? '',
+    price: initial ? String(initial.priceCents / 100) : '20',
+    momentCount: String(initial?.momentCount ?? 3),
+    totalSupply: String(initial?.totalSupply ?? 1000),
+    guarantee: (initial?.guaranteeTier ?? '') as '' | Tier,
+    setId: initial?.setId ?? sets[0]?.id ?? '',
+    dropId: initial?.dropId ?? '',
+    sealed: initial?.sealed ?? true,
+    ticketOnly: initial?.ticketOnly ?? false,
   });
   // odds em % por tier
   const [odds, setOdds] = useState<Record<Tier, string>>({
-    COMUM: '60',
-    TORCIDA: '20',
-    RARO: '15',
-    LENDARIO: '4.5',
-    GALACTICO: '0.5',
+    COMUM: initial ? pctFrom(initial.oddsJson.COMUM) : '60',
+    TORCIDA: initial ? pctFrom(initial.oddsJson.TORCIDA) : '20',
+    RARO: initial ? pctFrom(initial.oddsJson.RARO) : '15',
+    LENDARIO: initial ? pctFrom(initial.oddsJson.LENDARIO) : '4.5',
+    GALACTICO: initial ? pctFrom(initial.oddsJson.GALACTICO) : '0.5',
   });
   const oddsSum = TIER_ORDER.reduce((s, t) => s + (Number(odds[t]) || 0), 0);
   const ok = f.name && f.setId && Number(f.momentCount) >= 1 && Number(f.totalSupply) >= 1 && oddsSum > 0;
@@ -37,7 +47,7 @@ export default function AdminCreatePack({ sets, drops }: { sets: AdminSet[]; dro
 
   return (
     <div className="rounded-2xl border border-line bg-panel p-4">
-      <h3 className="mb-3 text-sm font-semibold text-ink">Novo pack</h3>
+      <h3 className="mb-3 text-sm font-semibold text-ink">{initial ? 'Editar pack' : 'Novo pack'}</h3>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <label className="flex flex-col gap-1 lg:col-span-3">
           <span className="text-[11px] uppercase tracking-wide text-muted">Nome</span>
@@ -138,7 +148,7 @@ export default function AdminCreatePack({ sets, drops }: { sets: AdminSet[]; dro
                 const v = Number(odds[t]) || 0;
                 if (v > 0) oddsFrac[t] = v / 100;
               }
-              await adminPost('/admin/packs', {
+              await adminPost(initial ? `/admin/packs/${initial.id}` : '/admin/packs', {
                 name: f.name,
                 priceCents: Math.round(Number(f.price) * 100),
                 momentCount: Number(f.momentCount),
@@ -157,7 +167,7 @@ export default function AdminCreatePack({ sets, drops }: { sets: AdminSet[]; dro
           });
         }}
       >
-        {pending ? 'Criando…' : 'Criar pack'}
+        {pending ? 'Salvando…' : initial ? 'Salvar alterações' : 'Criar pack'}
       </button>
     </div>
   );

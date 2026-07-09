@@ -8,6 +8,7 @@ const NAV = [
   { href: '/admin/parcerias', label: 'Parcerias' },
   { href: '/admin/conteudo', label: 'Conteúdo' },
   { href: '/admin/drops', label: 'Drops & Packs' },
+  { href: '/admin/usuarios', label: 'Usuários' },
   { href: '/admin/jogos', label: 'Jogos' },
   { href: '/admin/fraude', label: 'Fraude' },
   { href: '/admin/conduta', label: 'Conduta' },

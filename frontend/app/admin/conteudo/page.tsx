@@ -78,7 +78,7 @@ export default async function AdminConteudo() {
                     <AdminAction path={`/admin/content/template/${t.id}/status`} body={{ action: 'publish' }} label="Publicar" variant="primary" />
                   )}
                   {t.status === 'PUBLICADO' && (
-                    <AdminAction path={`/admin/content/template/${t.id}/status`} body={{ action: 'end' }} label="Encerrar" variant="danger" confirmText="Encerrar esta edição (não minta mais)?" />
+                    <AdminAction path={`/admin/content/template/${t.id}/status`} body={{ action: 'end' }} label="Encerrar emissão" variant="danger" confirmText="Encerrar a emissão desta edição? Congela o supply — não sai mais em packs." />
                   )}
                   {t.status !== 'RASCUNHO' && t.status !== 'PUBLICADO' && (
                     <AdminAction path={`/admin/content/template/${t.id}/status`} body={{ action: 'draft' }} label="Rascunho" />

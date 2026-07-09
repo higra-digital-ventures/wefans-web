@@ -13,15 +13,24 @@ export default async function AdminDashboard() {
   ]);
   if (!metrics) return <p className="text-muted">Falha ao carregar métricas.</p>;
 
+  const sellThrough = metrics.packs.supply > 0 ? Math.round((metrics.packs.sold / metrics.packs.supply) * 100) : 0;
+  const dropsLive = metrics.drops.LIVE ?? 0;
+  const dropsScheduled = (metrics.drops.SCHEDULED ?? 0) + (metrics.drops.WAITING ?? 0);
   const cards = [
-    { label: 'Usuários', value: String(metrics.users) },
+    { label: 'Usuários', value: `${metrics.users}${metrics.suspended ? ` (${metrics.suspended} susp.)` : ''}` },
     { label: 'Momentos (queimados)', value: `${metrics.moments.total} (${metrics.moments.burned})` },
     { label: 'Anúncios ativos', value: String(metrics.market.activeListings) },
     { label: 'Vendas', value: String(metrics.market.sales) },
     { label: 'Volume', value: brl(metrics.market.volumeCents) },
-    { label: 'Taxas arrecadadas', value: brl(metrics.market.feesCents) },
     { label: 'Tx sinalizadas', value: String(metrics.market.flaggedTx) },
-    { label: 'Fraude pendente', value: String(metrics.reviewPending) },
+    { label: 'Packs vendidos', value: `${metrics.packs.sold}/${metrics.packs.supply} · ${sellThrough}%` },
+    { label: 'Drops (ao vivo/agendados)', value: `${dropsLive}/${dropsScheduled}` },
+  ];
+  const revenue = [
+    { label: 'Taxas da plataforma', value: brl(metrics.revenue.platformFeesCents), color: 'text-white' },
+    { label: 'Royalties dos clubes', value: brl(metrics.revenue.clubEarningsCents), color: 'text-accent3' },
+    { label: 'Repassado aos clubes', value: brl(metrics.revenue.clubPaidOutCents), color: 'text-emerald-300' },
+    { label: 'A repassar (pendente)', value: brl(metrics.revenue.clubUnpaidCents), color: 'text-amber-300' },
   ];
 
   return (
@@ -35,6 +44,18 @@ export default async function AdminDashboard() {
             <div className="mt-1 text-xs text-muted">{c.label}</div>
           </div>
         ))}
+      </div>
+
+      <div className="mb-8">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted">Receita &amp; royalties</h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {revenue.map((c) => (
+            <div key={c.label} className="rounded-2xl border border-line bg-panel p-4">
+              <div className={`font-display text-2xl ${c.color}`}>{c.value}</div>
+              <div className="mt-1 text-xs text-muted">{c.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="rounded-2xl mb-8 flex flex-wrap items-center gap-3  border border-line bg-panel p-4">

@@ -4,11 +4,36 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminPost } from '@/lib/api-client';
 
-// Cria um drop AGENDADO. O cron abre a sala/inicia/encerra sozinho nos horários.
-export default function AdminCreateDrop() {
+type DropInitial = {
+  id: string;
+  name: string;
+  waitingRoomOpensAt: string;
+  startsAt: string;
+  endsAt: string;
+  requiredCollectorScore: number;
+  hasRebound: boolean;
+};
+
+const toLocalInput = (isoStr?: string) => {
+  if (!isoStr) return '';
+  const dt = new Date(isoStr);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+};
+
+// Cria (ou edita, com `initial`) um drop. Novo nasce AGENDADO; o cron abre a
+// sala/inicia/encerra sozinho nos horários.
+export default function AdminCreateDrop({ initial }: { initial?: DropInitial }) {
   const router = useRouter();
   const [pending, start] = useTransition();
-  const [f, setF] = useState({ name: '', waiting: '', starts: '', ends: '', score: '0', rebound: true });
+  const [f, setF] = useState({
+    name: initial?.name ?? '',
+    waiting: toLocalInput(initial?.waitingRoomOpensAt),
+    starts: toLocalInput(initial?.startsAt),
+    ends: toLocalInput(initial?.endsAt),
+    score: String(initial?.requiredCollectorScore ?? 0),
+    rebound: initial?.hasRebound ?? true,
+  });
   const [error, setError] = useState<string | null>(null);
   const ok = f.name && f.waiting && f.starts && f.ends;
   const field = 'rounded-lg border border-white/15 bg-panel2 px-3 py-2 text-sm text-ink outline-none focus:border-white/40';
@@ -16,7 +41,7 @@ export default function AdminCreateDrop() {
 
   return (
     <div className="rounded-2xl border border-line bg-panel p-4">
-      <h3 className="mb-3 text-sm font-semibold text-ink">Novo drop (agendado)</h3>
+      <h3 className="mb-3 text-sm font-semibold text-ink">{initial ? 'Editar drop' : 'Novo drop (agendado)'}</h3>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 sm:col-span-2">
           <span className="text-[11px] uppercase tracking-wide text-muted">Nome</span>
@@ -51,7 +76,7 @@ export default function AdminCreateDrop() {
           setError(null);
           start(async () => {
             try {
-              await adminPost('/admin/drops', {
+              await adminPost(initial ? `/admin/drops/${initial.id}` : '/admin/drops', {
                 name: f.name,
                 waitingRoomOpensAt: iso(f.waiting),
                 startsAt: iso(f.starts),
@@ -59,7 +84,7 @@ export default function AdminCreateDrop() {
                 requiredCollectorScore: Number(f.score) || 0,
                 hasRebound: f.rebound,
               });
-              setF({ name: '', waiting: '', starts: '', ends: '', score: '0', rebound: true });
+              if (!initial) setF({ name: '', waiting: '', starts: '', ends: '', score: '0', rebound: true });
               router.refresh();
             } catch (e) {
               setError(e instanceof Error ? e.message : 'Erro');
@@ -67,7 +92,7 @@ export default function AdminCreateDrop() {
           });
         }}
       >
-        {pending ? 'Criando…' : 'Criar drop (agendado)'}
+        {pending ? 'Salvando…' : initial ? 'Salvar alterações' : 'Criar drop (agendado)'}
       </button>
     </div>
   );
