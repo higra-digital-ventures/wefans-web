@@ -13,6 +13,11 @@ import {
   getMetrics,
   getPlatformConfig,
   updatePlatformConfig,
+  listDropsAdmin,
+  createDrop,
+  listSetsAdmin,
+  listPacksAdmin,
+  createPack,
   listAuditLog,
   listFlaggedTransactions,
   resolveFlaggedTransaction,
@@ -45,6 +50,47 @@ export async function adminRoutes(app: FastifyInstance) {
 
   // config de royalties (editável): taxas em BPS (0..10000)
   app.get('/admin/config', async () => ({ config: await getPlatformConfig(prisma) }));
+
+  // Drops & Packs (montar lançamentos e pacotes)
+  app.get('/admin/drops', async () => ({ drops: await listDropsAdmin(prisma) }));
+  app.get('/admin/sets', async () => ({ sets: await listSetsAdmin(prisma) }));
+  app.get('/admin/packs', async () => ({ packs: await listPacksAdmin(prisma) }));
+
+  app.post('/admin/drops', async (req) => {
+    const input = z
+      .object({
+        name: z.string().min(1),
+        waitingRoomOpensAt: z.string().min(1),
+        startsAt: z.string().min(1),
+        endsAt: z.string().min(1),
+        requiredCollectorScore: z.number().int().min(0),
+        hasRebound: z.boolean(),
+      })
+      .parse(req.body);
+    const res = await createDrop(prisma, input);
+    await audit(prisma, req.userId!, 'drop.create', res.id, { name: input.name });
+    return { id: res.id };
+  });
+
+  app.post('/admin/packs', async (req) => {
+    const input = z
+      .object({
+        name: z.string().min(1),
+        priceCents: z.number().int().min(0),
+        momentCount: z.number().int().min(1).max(40),
+        totalSupply: z.number().int().min(1),
+        guaranteeTier: z.enum(['COMUM', 'TORCIDA', 'RARO', 'LENDARIO', 'GALACTICO']).nullable(),
+        odds: z.record(z.string(), z.number().min(0)),
+        setId: z.string().nullable(),
+        dropId: z.string().nullable(),
+        sealed: z.boolean(),
+        ticketOnly: z.boolean(),
+      })
+      .parse(req.body);
+    const res = await createPack(prisma, input);
+    await audit(prisma, req.userId!, 'pack.create', res.id, { name: input.name });
+    return { id: res.id };
+  });
 
   app.post('/admin/config', async (req) => {
     const input = z

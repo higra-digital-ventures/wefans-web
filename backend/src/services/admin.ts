@@ -82,6 +82,115 @@ export async function updatePlatformConfig(
   return data;
 }
 
+// ---------------------------------------------------------------- Drops & Packs
+
+export async function listDropsAdmin(db: PrismaClient) {
+  const drops = await db.drop.findMany({
+    orderBy: { startsAt: 'desc' },
+    include: { packs: { select: { id: true } } },
+  });
+  return drops.map((d) => ({
+    id: d.id,
+    name: d.name,
+    status: d.status,
+    waitingRoomOpensAt: d.waitingRoomOpensAt.toISOString(),
+    startsAt: d.startsAt.toISOString(),
+    endsAt: d.endsAt.toISOString(),
+    requiredCollectorScore: d.requiredCollectorScore,
+    hasRebound: d.hasRebound,
+    packCount: d.packs.length,
+  }));
+}
+
+export async function createDrop(
+  db: PrismaClient,
+  input: {
+    name: string;
+    waitingRoomOpensAt: string;
+    startsAt: string;
+    endsAt: string;
+    requiredCollectorScore: number;
+    hasRebound: boolean;
+  },
+) {
+  const waiting = new Date(input.waitingRoomOpensAt);
+  const starts = new Date(input.startsAt);
+  const ends = new Date(input.endsAt);
+  if (!(starts > waiting) || !(ends > starts)) {
+    throw badRequest('Datas inválidas: sala < início < fim');
+  }
+  return db.drop.create({
+    data: {
+      name: input.name,
+      waitingRoomOpensAt: waiting,
+      startsAt: starts,
+      endsAt: ends,
+      requiredCollectorScore: input.requiredCollectorScore,
+      hasRebound: input.hasRebound,
+      status: 'SCHEDULED',
+    },
+  });
+}
+
+export async function listSetsAdmin(db: PrismaClient) {
+  const sets = await db.set.findMany({ include: { series: { select: { name: true } } }, orderBy: { name: 'asc' } });
+  return sets.map((s) => ({ id: s.id, name: s.name, seriesName: s.series.name }));
+}
+
+export async function listPacksAdmin(db: PrismaClient) {
+  const packs = await db.pack.findMany({
+    orderBy: { priceCents: 'asc' },
+    include: { set: { select: { name: true } }, drop: { select: { name: true } } },
+  });
+  return packs.map((p) => ({
+    id: p.id,
+    name: p.name,
+    priceCents: p.priceCents,
+    momentCount: p.momentCount,
+    totalSupply: p.totalSupply,
+    soldCount: p.soldCount,
+    guaranteeTier: p.guaranteeTier,
+    oddsJson: p.oddsJson,
+    ticketOnly: p.ticketOnly,
+    sealed: p.sealed,
+    setName: p.set?.name ?? null,
+    dropName: p.drop?.name ?? null,
+  }));
+}
+
+export async function createPack(
+  db: PrismaClient,
+  input: {
+    name: string;
+    priceCents: number;
+    momentCount: number;
+    totalSupply: number;
+    guaranteeTier: Tier | null;
+    odds: Record<string, number>;
+    setId: string | null;
+    dropId: string | null;
+    sealed: boolean;
+    ticketOnly: boolean;
+  },
+) {
+  const sum = Object.values(input.odds).reduce((a, b) => a + b, 0);
+  if (sum <= 0) throw badRequest('Odds inválidas: soma deve ser > 0');
+  return db.pack.create({
+    data: {
+      name: input.name,
+      priceCents: input.priceCents,
+      momentCount: input.momentCount,
+      totalSupply: input.totalSupply,
+      guaranteeTier: input.guaranteeTier ?? null,
+      oddsJson: input.odds as Prisma.InputJsonValue,
+      setId: input.setId ?? null,
+      dropId: input.dropId ?? null,
+      sealed: input.sealed,
+      ticketOnly: input.ticketOnly,
+    },
+  });
+}
+
 export async function createTeamWithStadium(
   db: PrismaClient,
   input: { name: string; stadiumName: string; city: string; lat: number; lng: number; radiusMeters?: number },
