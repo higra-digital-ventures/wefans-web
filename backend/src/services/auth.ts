@@ -45,6 +45,7 @@ export async function authenticate(db: Db, email: string, password: string): Pro
   if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
     throw unauthorized('Credenciais inválidas');
   }
+  if (user.suspended) throw unauthorized('Conta suspensa — fale com o suporte');
   return user;
 }
 

@@ -14,9 +14,10 @@ export async function audit(db: PrismaClient, userId: string, action: string, ta
 // ------------------------------------------------------------------ métricas
 
 export async function getMetrics(db: PrismaClient) {
-  const [users, moments, burned, listings, sales, fees, checkinsByStatus, reviewPending, templatesByStatus, flaggedTx] =
+  const [users, suspended, moments, burned, listings, sales, fees, checkinsByStatus, reviewPending, templatesByStatus, flaggedTx, clubAgg, packAgg, dropsByStatus] =
     await Promise.all([
       db.user.count(),
+      db.user.count({ where: { suspended: true } }),
       db.moment.count(),
       db.moment.count({ where: { burned: true } }),
       db.listing.count({ where: { status: 'ACTIVE' } }),
@@ -26,9 +27,15 @@ export async function getMetrics(db: PrismaClient) {
       db.checkIn.count({ where: { status: 'REVIEW' } }),
       db.template.groupBy({ by: ['status'], _count: true }),
       db.transaction.count({ where: { flagged: true } }),
+      db.team.aggregate({ _sum: { earningsCents: true, paidOutCents: true } }),
+      db.pack.aggregate({ _sum: { soldCount: true, totalSupply: true } }),
+      db.drop.groupBy({ by: ['status'], _count: true }),
     ]);
+  const clubEarnings = clubAgg._sum.earningsCents ?? 0;
+  const clubPaidOut = clubAgg._sum.paidOutCents ?? 0;
   return {
     users,
+    suspended,
     moments: { total: moments, burned },
     market: {
       activeListings: listings,
@@ -37,6 +44,14 @@ export async function getMetrics(db: PrismaClient) {
       feesCents: fees._sum.feeCents ?? 0,
       flaggedTx,
     },
+    revenue: {
+      platformFeesCents: fees._sum.feeCents ?? 0,
+      clubEarningsCents: clubEarnings,
+      clubPaidOutCents: clubPaidOut,
+      clubUnpaidCents: Math.max(0, clubEarnings - clubPaidOut),
+    },
+    packs: { sold: packAgg._sum.soldCount ?? 0, supply: packAgg._sum.totalSupply ?? 0 },
+    drops: Object.fromEntries(dropsByStatus.map((d) => [d.status, d._count])),
     checkins: Object.fromEntries(checkinsByStatus.map((c) => [c.status, c._count])),
     reviewPending,
     templates: Object.fromEntries(templatesByStatus.map((t) => [t.status, t._count])),
@@ -56,6 +71,8 @@ export async function listTeamsAdmin(db: PrismaClient) {
     stadium: t.homeStadium ? { id: t.homeStadium.id, name: t.homeStadium.name, city: t.homeStadium.city } : null,
     templateCount: t._count.templates,
     earningsCents: t.earningsCents,
+    paidOutCents: t.paidOutCents,
+    unpaidCents: Math.max(0, t.earningsCents - t.paidOutCents),
   }));
 }
 
@@ -153,6 +170,8 @@ export async function listPacksAdmin(db: PrismaClient) {
     oddsJson: p.oddsJson,
     ticketOnly: p.ticketOnly,
     sealed: p.sealed,
+    setId: p.setId,
+    dropId: p.dropId,
     setName: p.set?.name ?? null,
     dropName: p.drop?.name ?? null,
   }));
@@ -188,6 +207,151 @@ export async function createPack(
       sealed: input.sealed,
       ticketOnly: input.ticketOnly,
     },
+  });
+}
+
+// ---- editar/cancelar drops & packs ----
+
+export async function updateDrop(
+  db: PrismaClient,
+  id: string,
+  input: Partial<{ name: string; waitingRoomOpensAt: string; startsAt: string; endsAt: string; requiredCollectorScore: number; hasRebound: boolean }>,
+) {
+  const drop = await db.drop.findUnique({ where: { id } });
+  if (!drop) throw notFound('Drop não encontrado');
+  if (drop.status === 'LIVE' || drop.status === 'ENDED') throw badRequest('Só dá para editar drops agendados ou em espera');
+  const data: Prisma.DropUpdateInput = {};
+  if (input.name !== undefined) data.name = input.name;
+  if (input.waitingRoomOpensAt) data.waitingRoomOpensAt = new Date(input.waitingRoomOpensAt);
+  if (input.startsAt) data.startsAt = new Date(input.startsAt);
+  if (input.endsAt) data.endsAt = new Date(input.endsAt);
+  if (input.requiredCollectorScore !== undefined) data.requiredCollectorScore = input.requiredCollectorScore;
+  if (input.hasRebound !== undefined) data.hasRebound = input.hasRebound;
+  await db.drop.update({ where: { id }, data });
+  return { ok: true };
+}
+
+export async function cancelDrop(db: PrismaClient, id: string) {
+  const drop = await db.drop.findUnique({ where: { id } });
+  if (!drop) throw notFound('Drop não encontrado');
+  await db.drop.update({ where: { id }, data: { status: 'ENDED' } });
+  return { ok: true };
+}
+
+export async function updatePack(
+  db: PrismaClient,
+  id: string,
+  input: Partial<{
+    name: string;
+    priceCents: number;
+    momentCount: number;
+    totalSupply: number;
+    guaranteeTier: Tier | null;
+    odds: Record<string, number>;
+    setId: string | null;
+    dropId: string | null;
+    sealed: boolean;
+    ticketOnly: boolean;
+  }>,
+) {
+  const pack = await db.pack.findUnique({ where: { id } });
+  if (!pack) throw notFound('Pacote não encontrado');
+  const data: Prisma.PackUpdateInput = {};
+  if (input.name !== undefined) data.name = input.name;
+  if (input.priceCents !== undefined) data.priceCents = input.priceCents;
+  if (input.momentCount !== undefined) data.momentCount = input.momentCount;
+  if (input.totalSupply !== undefined) {
+    if (input.totalSupply < pack.soldCount) throw badRequest('Supply não pode ser menor que o já vendido');
+    data.totalSupply = input.totalSupply;
+  }
+  if (input.guaranteeTier !== undefined) data.guaranteeTier = input.guaranteeTier;
+  if (input.odds !== undefined) data.oddsJson = input.odds as Prisma.InputJsonValue;
+  if (input.setId !== undefined) data.set = input.setId ? { connect: { id: input.setId } } : { disconnect: true };
+  if (input.dropId !== undefined) data.drop = input.dropId ? { connect: { id: input.dropId } } : { disconnect: true };
+  if (input.sealed !== undefined) data.sealed = input.sealed;
+  if (input.ticketOnly !== undefined) data.ticketOnly = input.ticketOnly;
+  await db.pack.update({ where: { id }, data });
+  return { ok: true };
+}
+
+/** Tira o pack de venda: congela o supply no que já foi vendido (esgota). */
+export async function takePackOffSale(db: PrismaClient, id: string) {
+  const pack = await db.pack.findUnique({ where: { id } });
+  if (!pack) throw notFound('Pacote não encontrado');
+  await db.pack.update({ where: { id }, data: { totalSupply: pack.soldCount } });
+  return { ok: true };
+}
+
+export async function deletePack(db: PrismaClient, id: string) {
+  const pack = await db.pack.findUnique({ where: { id }, include: { _count: { select: { inventories: true } } } });
+  if (!pack) throw notFound('Pacote não encontrado');
+  if (pack.soldCount > 0 || pack._count.inventories > 0) throw badRequest('Não dá para apagar um pacote já vendido/aberto — use "tirar de venda"');
+  await db.pack.delete({ where: { id } });
+  return { ok: true };
+}
+
+// ---- gestão de usuários ----
+
+export async function listUsersAdmin(db: PrismaClient, q?: string) {
+  const where: Prisma.UserWhereInput = q
+    ? { OR: [{ username: { contains: q, mode: 'insensitive' } }, { email: { contains: q, mode: 'insensitive' } }] }
+    : {};
+  const users = await db.user.findMany({
+    where,
+    orderBy: { createdAt: 'desc' },
+    take: 50,
+    include: { _count: { select: { moments: true } } },
+  });
+  return users.map((u) => ({
+    id: u.id,
+    username: u.username,
+    email: u.email,
+    balanceCents: u.balanceCents,
+    isAdmin: u.isAdmin,
+    suspended: u.suspended,
+    momentCount: u._count.moments,
+    createdAt: u.createdAt.toISOString(),
+  }));
+}
+
+export async function setUserSuspended(db: PrismaClient, id: string, suspended: boolean) {
+  await db.user.update({ where: { id }, data: { suspended } });
+  return { ok: true, suspended };
+}
+
+export async function adjustUserBalance(db: PrismaClient, id: string, deltaCents: number, memo: string) {
+  return db.$transaction(async (tx) => {
+    const rows = await tx.$queryRaw<Array<{ balanceCents: number }>>(Prisma.sql`
+      UPDATE "User" SET "balanceCents" = "balanceCents" + ${deltaCents}
+      WHERE "id" = ${id} AND "balanceCents" + ${deltaCents} >= 0
+      RETURNING "balanceCents"
+    `);
+    if (rows.length === 0) throw badRequest('Saldo ficaria negativo (ou usuário inexistente)');
+    const balanceAfter = Number(rows[0].balanceCents);
+    await tx.walletTransaction.create({
+      data: {
+        userId: id,
+        type: deltaCents >= 0 ? 'DEPOSIT' : 'WITHDRAW',
+        amountCents: deltaCents,
+        balanceAfterCents: balanceAfter,
+        memo: memo || 'Ajuste administrativo',
+      },
+    });
+    return { balanceCents: balanceAfter };
+  });
+}
+
+// ---- payout de royalties ----
+
+export async function payoutTeam(db: PrismaClient, teamId: string) {
+  return db.$transaction(async (tx) => {
+    const team = await tx.team.findUnique({ where: { id: teamId } });
+    if (!team) throw notFound('Time não encontrado');
+    const unpaid = team.earningsCents - team.paidOutCents;
+    if (unpaid <= 0) throw badRequest('Nada a repassar');
+    await tx.team.update({ where: { id: teamId }, data: { paidOutCents: team.earningsCents } });
+    await tx.teamEarning.updateMany({ where: { teamId, paidAt: null }, data: { paidAt: new Date() } });
+    return { paidCents: unpaid };
   });
 }
 

@@ -73,6 +73,7 @@ model User {
   showInFeed     Boolean  @default(true) // opt-out do feed público do Explorar (privacidade)
   notificationsSeenAt DateTime @default(now()) // marca d'água de leitura das notificações
   isAdmin        Boolean  @default(false)
+  suspended      Boolean  @default(false) // conta suspensa pela administração (bloqueia login)
   favoriteTeamId String? // time seguido (check-in, A2)
   checkinStreak  Int      @default(0)
   createdAt      DateTime @default(now())
@@ -563,6 +564,7 @@ model Team {
   status        String    @default("RASCUNHO") // RASCUNHO|AGENDADO|PUBLICADO|ENCERRADO
   publishAt     DateTime?
   earningsCents Int       @default(0) // acumulado de royalties (licenciamento/parceria)
+  paidOutCents  Int       @default(0) // já repassado ao clube (payout)
 
   homeStadium  Stadium?      @relation(fields: [homeStadiumId], references: [id])
   templates    Template[]
@@ -592,6 +594,7 @@ model TeamEarning {
   kind        String // PRIMARY | ROYALTY
   momentId    String? // referência solta (Moments podem ser destruídos)
   memo        String?
+  paidAt      DateTime? // quando foi repassado ao clube (payout)
   createdAt   DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)

@@ -15,9 +15,18 @@ import {
   updatePlatformConfig,
   listDropsAdmin,
   createDrop,
+  updateDrop,
+  cancelDrop,
   listSetsAdmin,
   listPacksAdmin,
   createPack,
+  updatePack,
+  takePackOffSale,
+  deletePack,
+  listUsersAdmin,
+  setUserSuspended,
+  adjustUserBalance,
+  payoutTeam,
   listAuditLog,
   listFlaggedTransactions,
   resolveFlaggedTransaction,
@@ -90,6 +99,87 @@ export async function adminRoutes(app: FastifyInstance) {
     const res = await createPack(prisma, input);
     await audit(prisma, req.userId!, 'pack.create', res.id, { name: input.name });
     return { id: res.id };
+  });
+
+  // editar/cancelar drops & packs
+  const dropEdit = z.object({
+    name: z.string().min(1).optional(),
+    waitingRoomOpensAt: z.string().optional(),
+    startsAt: z.string().optional(),
+    endsAt: z.string().optional(),
+    requiredCollectorScore: z.number().int().min(0).optional(),
+    hasRebound: z.boolean().optional(),
+  });
+  app.post('/admin/drops/:id', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const res = await updateDrop(prisma, id, dropEdit.parse(req.body));
+    await audit(prisma, req.userId!, 'drop.update', id);
+    return res;
+  });
+  app.post('/admin/drops/:id/cancel', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const res = await cancelDrop(prisma, id);
+    await audit(prisma, req.userId!, 'drop.cancel', id);
+    return res;
+  });
+
+  const packEdit = z.object({
+    name: z.string().min(1).optional(),
+    priceCents: z.number().int().min(0).optional(),
+    momentCount: z.number().int().min(1).max(40).optional(),
+    totalSupply: z.number().int().min(1).optional(),
+    guaranteeTier: z.enum(['COMUM', 'TORCIDA', 'RARO', 'LENDARIO', 'GALACTICO']).nullable().optional(),
+    odds: z.record(z.string(), z.number().min(0)).optional(),
+    setId: z.string().nullable().optional(),
+    dropId: z.string().nullable().optional(),
+    sealed: z.boolean().optional(),
+    ticketOnly: z.boolean().optional(),
+  });
+  app.post('/admin/packs/:id', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const res = await updatePack(prisma, id, packEdit.parse(req.body));
+    await audit(prisma, req.userId!, 'pack.update', id);
+    return res;
+  });
+  app.post('/admin/packs/:id/offsale', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const res = await takePackOffSale(prisma, id);
+    await audit(prisma, req.userId!, 'pack.offsale', id);
+    return res;
+  });
+  app.post('/admin/packs/:id/delete', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const res = await deletePack(prisma, id);
+    await audit(prisma, req.userId!, 'pack.delete', id);
+    return res;
+  });
+
+  // gestão de usuários
+  app.get('/admin/users', async (req) => {
+    const { q } = z.object({ q: z.string().optional() }).parse(req.query);
+    return { users: await listUsersAdmin(prisma, q) };
+  });
+  app.post('/admin/users/:id/suspend', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const { suspended } = z.object({ suspended: z.boolean() }).parse(req.body);
+    const res = await setUserSuspended(prisma, id, suspended);
+    await audit(prisma, req.userId!, suspended ? 'user.suspend' : 'user.unsuspend', id);
+    return res;
+  });
+  app.post('/admin/users/:id/balance', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const { deltaCents, memo } = z.object({ deltaCents: z.number().int(), memo: z.string().optional() }).parse(req.body);
+    const res = await adjustUserBalance(prisma, id, deltaCents, memo ?? '');
+    await audit(prisma, req.userId!, 'user.balance', id, { deltaCents });
+    return res;
+  });
+
+  // payout de royalties
+  app.post('/admin/teams/:id/payout', async (req) => {
+    const { id } = idParam.parse(req.params);
+    const res = await payoutTeam(prisma, id);
+    await audit(prisma, req.userId!, 'team.payout', id, res);
+    return res;
   });
 
   app.post('/admin/config', async (req) => {
