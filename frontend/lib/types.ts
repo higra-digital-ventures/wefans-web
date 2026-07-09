@@ -342,6 +342,35 @@ export type PlatformConfig = {
   primaryClubBps: number;
 };
 
+export type AdminDrop = {
+  id: string;
+  name: string;
+  status: string;
+  waitingRoomOpensAt: string;
+  startsAt: string;
+  endsAt: string;
+  requiredCollectorScore: number;
+  hasRebound: boolean;
+  packCount: number;
+};
+
+export type AdminPack = {
+  id: string;
+  name: string;
+  priceCents: number;
+  momentCount: number;
+  totalSupply: number;
+  soldCount: number;
+  guaranteeTier: Tier | null;
+  oddsJson: Record<string, number>;
+  ticketOnly: boolean;
+  sealed: boolean;
+  setName: string | null;
+  dropName: string | null;
+};
+
+export type AdminSet = { id: string; name: string; seriesName: string };
+
 export type AdminTemplate = {
   id: string;
   title: string;
